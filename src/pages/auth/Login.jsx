@@ -1,5 +1,5 @@
-// components/Login.js
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
@@ -9,8 +9,12 @@ import login from "../../assets/login.png";
 
 
 import { useLoginForm } from "./useLoginForm";
+import SplashScreen from "../../components/uiComponent/SplashScreen";
+
 
 const Login = () => {
+
+   const [isSplashVisible, setIsSplashVisible] = useState(true);
   const {
     formik,
   
@@ -19,7 +23,17 @@ const Login = () => {
  
     togglePasswordVisibility,
   } = useLoginForm();
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
+
+
+   useEffect(() => {
+    const timer = setTimeout(() => setIsSplashVisible(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+   if (isSplashVisible) {
+    return <SplashScreen />;
+  }
 
   return (
     <div className="flex min-h-screen bg-[#CCA547] flex items-center">

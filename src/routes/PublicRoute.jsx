@@ -1,6 +1,5 @@
 import { lazy, Suspense, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import adminLogo from "../assets/adminLogo.png";
+import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
 
@@ -55,7 +54,7 @@ function PublicRoute() {
     <Suspense
       fallback={
         <div className="w-full h-screen flex items-center justify-center">
-          <img src={adminLogo} alt="Admin Logo" className="w-24 h-24 animate-pulse" />
+          <LoaderSpinner />
         </div>
       }
     >
