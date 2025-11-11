@@ -42,7 +42,7 @@ const DataTable = ({
                           <img
                             src={value}
                             alt={row.name}
-                            className="w-24 sm:w-32 md:w-48 object-cover rounded-md shadow-sm "
+                            className="w-24 sm:w-32 md:w-48 object-cover rounded-md shadow-sm"
                           />
                         </div>
                         {col.render(row)}
