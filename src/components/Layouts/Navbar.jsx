@@ -58,7 +58,9 @@ function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
       <div className="flex items-center gap-4">
 
         {/* Profile Dropdown */}
-        <div className="relative flex items-center gap-2"> 
+        <div className="relative "> 
+
+          <div className="flex items-center gap-2">
           <GoBell className="w-8 h-8"/>
           <button
             onClick={() => {
@@ -79,6 +81,7 @@ function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
                 }`}
             />
           </button>
+          </div>
 
           {/* Profile Dropdown Menu */}
           {isProfileDropdownOpen && (
