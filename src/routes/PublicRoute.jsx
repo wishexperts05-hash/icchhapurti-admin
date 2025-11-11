@@ -11,7 +11,7 @@ const PasswordResetSuccessfully = lazy(() =>
   import("../pages/auth/PasswordResetSuccefully")
 );
 
-const Dashboard = lazy(() => import("../pages/module/Dashboard/Dashboard"));
+const Dashboard = lazy(() => import("../pages/module/Dashboard/Dashboard")); // Kept for reference
 // const Alerts = lazy(() => import("../pages/module/Dashboard/Alerts"));
 
 const AdminProfile = lazy(() =>
@@ -24,7 +24,15 @@ const EditProfile = lazy(() =>
 const Layout = lazy(() => import("../components/Layouts/Layout"));
 
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
+import UserDetails from "../pages/module/userManagement/userdetails.jsx";
+import UserManagement from "../pages/module/userManagement/usermanagement.jsx";
+// --------------------------Order Management-------------------------------------
 
+import {
+  OrderManagement,
+  OrderDetails,
+} from "../pages/module/OrderManagement/index";
+// --------------------------------------------------------------------------------
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
@@ -48,26 +56,41 @@ function PublicRoute() {
         />
 
         {/* Protected Routes with Layout */}
-        {/* <Route element={<ProtectedRoute />}> */}
-          <Route path="/" element={<Layout />}>
-            {/* Dashboard */}
-            <Route
-              path="dashboard"
-              element={
-                <Dashboard
-                  activeItem={activeItem}
-                  setActiveItem={setActiveItem}
-                />
-              }
-            />
-            {/* Admin Profile */}
-            <Route path="adminProfile" element={<AdminProfile />} />
-            <Route path="adminProfile/editProfile" element={<EditProfile />} />
+        {/* The path for the Layout is now `/dashboard` to house the protected content */}
+        {/* You might want to wrap this in <ProtectedRoute /> eventually */}
+        <Route path="/dashboard" element={<Layout />}>
+          {/* User Management is set as the index (default) route for /dashboard */}
+          <Route
+            index // This route will be rendered when the path is exactly "/dashboard"
+            element={
+              <UserManagement
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            }
+          />
+          <Route path="UserManagement" element={<UserManagement />} />
+          {/* User Details route - nested under /dashboard, uses :userId parameter */}
+          <Route path="user-details/:userId" element={<UserDetails />} />
 
-            {/* 404 Not Found */}
-            {/* <Route path="*" element={<NotFound />} /> */}
-          </Route>
-        {/* </Route> */}
+          {/* Other Protected Routes (now relative to /dashboard) */}
+
+          {/* Admin Profile */}
+          <Route path="adminProfile" element={<AdminProfile />} />
+          <Route path="adminProfile/editProfile" element={<EditProfile />} />
+
+          {/* --------------------------Order Management------------------------------------- */}
+          <Route path="order-management" element={<OrderManagement />} />
+          <Route
+            path="order-management/order-details"
+            element={<OrderDetails />}
+          />
+
+          {/* -------------------------------------------------------------------------------- */}
+
+          {/* 404 Not Found */}
+          {/* <Route path="*" element={<NotFound />} /> */}
+        </Route>
       </Routes>
     </Suspense>
   );
