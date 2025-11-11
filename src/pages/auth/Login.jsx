@@ -4,7 +4,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import login from "../../assets/login.png";
 
 
