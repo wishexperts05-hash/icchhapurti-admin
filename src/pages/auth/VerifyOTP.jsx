@@ -1,19 +1,22 @@
 import { useRef, useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import logo from "../../assets/TifstayWbg.png";
-import useLogin from "../../hooks/auth/useLogin";
-import tiffinImg from "../../assets/BgImgLogin.png"
+import {  useNavigate } from "react-router-dom";
+
+
+
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { allNavigationItems } from "../../utils/sidebarHelpers";
+import useLogin from "../../hooks/auth/useLogin";
+import verify from "../../assets/verify.png";
+// import { allNavigationItems } from "../../utils/sidebarHelpers";
 
 const VerifyOtp = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const inputRef = useRef([]);
   const [timer, setTimer] = useState(59);
   const navigate = useNavigate();
-  const { verifyOtp, resendOtp, loading, subAdminAccess } = useLogin();
-  const location = useLocation();
-  const [verified, setVerified] = useState(false);
+  // const { verifyOtp, resendOtp, loading, subAdminAccess } = useLogin();
+    const { resendOtp   } = useLogin();
+  // const location = useLocation();
+  // const [verified, setVerified] = useState(false);
 
   const email = sessionStorage.getItem("email");
 
@@ -27,23 +30,23 @@ const VerifyOtp = () => {
     }
   }, [timer]);
 
-  useEffect(() => {
-    if (verified && subAdminAccess) {
-      const isAdminLoggedIn = sessionStorage.getItem("isAdminLoggedIn") === "true";
-      const isSubAdminLoggedIn = sessionStorage.getItem("isSubAdminLoggedIn") === "true";
+  // useEffect(() => {
+  //   if (verified && subAdminAccess) {
+  //     const isAdminLoggedIn = sessionStorage.getItem("isAdminLoggedIn") === "true";
+  //     const isSubAdminLoggedIn = sessionStorage.getItem("isSubAdminLoggedIn") === "true";
 
-      if (isSubAdminLoggedIn) {
-        if (subAdminAccess.length > 0) {
-          const firstAccessibleRoute = getFirstAccessibleRoute(subAdminAccess);
-          navigate(firstAccessibleRoute);
-          setVerified(false);
-        }
-      } else if (isAdminLoggedIn) {
-        navigate("/dashboard");
-        setVerified(false);
-      }
-    }
-  }, [verified, subAdminAccess, navigate]);
+  //     if (isSubAdminLoggedIn) {
+  //       if (subAdminAccess.length > 0) {
+  //         const firstAccessibleRoute = getFirstAccessibleRoute(subAdminAccess);
+  //         navigate(firstAccessibleRoute);
+  //         setVerified(false);
+  //       }
+  //     } else if (isAdminLoggedIn) {
+  //       navigate("/dashboard");
+  //       setVerified(false);
+  //     }
+  //   }
+  // }, [verified, subAdminAccess, navigate]);
 
   const handleInputChange = (e, index) => {
     if (/^[0-9]$/.test(e.target.value) || e.target.value === "") {
@@ -62,120 +65,101 @@ const VerifyOtp = () => {
     }
   };
 
-  const hasSubAdminAccess = (accessData, moduleName) => {
-    if (!accessData || !Array.isArray(accessData)) return false;
+  // const hasSubAdminAccess = (accessData, moduleName) => {
+  //   if (!accessData || !Array.isArray(accessData)) return false;
 
-    const module = accessData.find(item =>
-      item.moduleName === moduleName ||
-      (item.parentModuleName && item.parentModuleName === moduleName)
-    );
+  //   const module = accessData.find(item =>
+  //     item.moduleName === moduleName ||
+  //     (item.parentModuleName && item.parentModuleName === moduleName)
+  //   );
 
-    return module && module.accessTypes && module.accessTypes.length > 0;
-  };
+  //   return module && module.accessTypes && module.accessTypes.length > 0;
+  // };
 
-  const getFirstAccessibleRoute = (accessData) => {
-    if (!accessData || !Array.isArray(accessData)) {
-      return "/dashboard";
-    }
+  // const getFirstAccessibleRoute = (accessData) => {
+  //   if (!accessData || !Array.isArray(accessData)) {
+  //     return "/dashboard";
+  //   }
 
-    const accessibleRoutes = [];
-    allNavigationItems.forEach(item => {
-      if (item.hasSubmenu && item.subItems) {
-        const accessibleSubItems = item.subItems.filter(subItem =>
-          hasSubAdminAccess(accessData, subItem.title)
-        );
+  //   const accessibleRoutes = [];
+    // allNavigationItems.forEach(item => {
+    //   if (item.hasSubmenu && item.subItems) {
+    //     const accessibleSubItems = item.subItems.filter(subItem =>
+    //       hasSubAdminAccess(accessData, subItem.title)
+    //     );
 
-        if (accessibleSubItems.length > 0) {
-          const firstSubItem = accessibleSubItems[0];
-          accessibleRoutes.push({
-            url: firstSubItem.url,
-            title: firstSubItem.title,
-            priority: getRoutePriority(firstSubItem.url)
-          });
-        }
-      }
-      else if (!item.hasSubmenu) {
-        const hasAccess = hasSubAdminAccess(accessData, item.title);
-        if (hasAccess && item.url && item.url !== "") {
-          accessibleRoutes.push({
-            url: item.url,
-            title: item.title,
-            priority: getRoutePriority(item.url)
-          });
-        }
-      }
-    });
+    //     if (accessibleSubItems.length > 0) {
+    //       const firstSubItem = accessibleSubItems[0];
+    //       accessibleRoutes.push({
+    //         url: firstSubItem.url,
+    //         title: firstSubItem.title,
+    //         priority: getRoutePriority(firstSubItem.url)
+    //       });
+    //     }
+    //   }
+    //   else if (!item.hasSubmenu) {
+    //     const hasAccess = hasSubAdminAccess(accessData, item.title);
+    //     if (hasAccess && item.url && item.url !== "") {
+    //       accessibleRoutes.push({
+    //         url: item.url,
+    //         title: item.title,
+    //         priority: getRoutePriority(item.url)
+    //       });
+    //     }
+    //   }
+    // });
 
-    if (accessibleRoutes.length === 0) {
-      return "/dashboard";
-    }
+  //   if (accessibleRoutes.length === 0) {
+  //     return "/dashboard";
+  //   }
 
-    accessibleRoutes.sort((a, b) => a.priority - b.priority);
-    const firstRoute = accessibleRoutes[0];
-    return firstRoute.url;
-  };
+  //   accessibleRoutes.sort((a, b) => a.priority - b.priority);
+  //   const firstRoute = accessibleRoutes[0];
+  //   return firstRoute.url;
+  // };
 
-  const getRoutePriority = (url) => {
-    const priorityMap = {
-      "/dashboard": 1,
-      "/customers": 2,
-      "/pg-hostel-owner": 3,
-      "/tiffin-restaurant-provider": 4,
-      "/feature-facilities": 5,
-      "/pg-hostel-listing": 6,
-      "/restaurant-listing": 7,
-      "/pg-hostel-bookings": 8,
-      "/restaurant-orders": 9,
-      "/payments-overview": 10,
-      "/wallet-transactions": 11,
-      "/deposit-transactions": 12,
-      "/deposit-refund-requests": 13,
-      "/payout-history": 14,
-      "/coupon": 15,
-      "/reviews": 16,
-      "/analytics": 17,
-      "/cms/banner": 18,
-      "/cms/static-page": 19,
-      "/cms/notification-management": 20,
-      "/chats": 21,
-      "/settings/commission": 22,
-      "/settings/cashback": 23,
-      "/sub-admin/roles": 24,
-      "/sub-admin/users": 25,
-      "/sub-admin/user-permissions": 26
-    };
+  // const getRoutePriority = (url) => {
+  //   const priorityMap = {
+  //     "/dashboard": 1,
+  //     "/customers": 2,
+  //     "/pg-hostel-owner": 3,
+  //     "/tiffin-restaurant-provider": 4,
+  //     "/feature-facilities": 5,
+  //     "/pg-hostel-listing": 6,
+  //     "/restaurant-listing": 7,
+  //     "/pg-hostel-bookings": 8,
+  //     "/restaurant-orders": 9,
+  //     "/payments-overview": 10,
+  //     "/wallet-transactions": 11,
+  //     "/deposit-transactions": 12,
+  //     "/deposit-refund-requests": 13,
+  //     "/payout-history": 14,
+  //     "/coupon": 15,
+  //     "/reviews": 16,
+  //     "/analytics": 17,
+  //     "/cms/banner": 18,
+  //     "/cms/static-page": 19,
+  //     "/cms/notification-management": 20,
+  //     "/chats": 21,
+  //     "/settings/commission": 22,
+  //     "/settings/cashback": 23,
+  //     "/sub-admin/roles": 24,
+  //     "/sub-admin/users": 25,
+  //     "/sub-admin/user-permissions": 26
+  //   };
 
-    return priorityMap[url] || 999;
-  };
+  //   return priorityMap[url] || 999;
+  // };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const otpString = otp.join("").trim();
-    const isLogin = location.state?.isLogin;
-    const data = {
-      otp: otpString,
-      email: email,
-      ...(isLogin && { isLogin })
-    };
-
-    const isValid = await verifyOtp(data);
-
-    if (isValid) {
-      const isAdminLoggedIn = sessionStorage.getItem("isAdminLoggedIn") === "true";
-      const isSubAdminLoggedIn = sessionStorage.getItem("isSubAdminLoggedIn") === "true";
-
-      if (isLogin) {
-        if (isAdminLoggedIn) {
-          navigate("/dashboard");
-        } else if (isSubAdminLoggedIn) {
-          setVerified(true);
-        } else {
-          navigate("/dashboard");
-        }
-      } else {
-        navigate("/reset-password");
-      }
-    }
+     e.preventDefault();
+  const otpString = otp.join("").trim();
+  if (otpString.length < 4) {
+    alert("OTP is required");
+    return;
+  }
+  navigate("/reset-password");
+    
   };
 
   const handleResend = async () => {
@@ -186,35 +170,30 @@ const VerifyOtp = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-[#CCA547]">
       {/* Right Section - Hero Image */}
-      <div className="hidden md:flex w-1/2 relative">
-        <img
-          src={tiffinImg}
-          alt="Tiffin Food"
-          className="w-full h-screen object-cover"
-        />
-        <div className="absolute bottom-9 left-1/2 transform -translate-x-1/2 text-white text-center text-4xl font-bold drop-shadow-lg animate-slideFromLeft">
-          Comfort <span className="text-orange-300">Food.. </span> <br />
-          Comfortable <span className="text-orange-300">Stay.. </span>
-        </div>
-      </div>
+     <div className="hidden md:flex w-1/2 justify-center items-center ">
+         <div className="w-[641px] h-[636px]">
+           <img
+             src={verify}
+             alt="Reset Password Illustration"
+             className=" object-cover "
+           />
+         </div>
+       </div>
 
-      <div className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 lg:px-20 bg-stone-50">
-        {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <img
-            src={logo}
-            alt="Tifstay"
-            className="object-contain"
-            style={{ width: "200px", height: "auto" }}
-          />
-        </div>
+      <div className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 lg:px-20 ">
+      <div className="w-[589px] h-[601px] bg-[#FFFFFF] rounded-2xl p-5 flex flex-col items-center justify-center shadow-lg">
+    
+    <div className="flex flex-col gap-4 items-center mb-4">
+            <h2 className="text-3xl font-bold mb-2 text-[#262626]">
+           Verify Code
+          </h2>
+          <p className="text-[#262626] mb-4 text-center">
+            Please enter OTP received on your email id
+          </p>
+          </div>
 
-        <h2 className="text-3xl font-bold mb-2 text-gray-800">Verify Your Code</h2>
-        <p className="text-gray-500 mb-8 text-center">
-          We have sent an OTP to {sessionStorage.getItem("email")}. <br /> Enter the 4-digit code below.
-        </p>
 
         <form onSubmit={handleSubmit} className="space-y-5 w-full max-w-md">
           <div className="flex justify-center py-2 gap-4 ">
@@ -256,22 +235,16 @@ const VerifyOtp = () => {
           <div className="flex justify-center w-full">
             <button
               type="submit"
-              disabled={loading || (verified && subAdminAccess?.length === 0)}
+              // disabled={loading || (verified && subAdminAccess?.length === 0)}
               className="w-full flex justify-center items-center text-white font-bold 
-          bg-blue-600 py-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:bg-gray-400"
+          bg-[#CCA547] py-3 rounded-lg hover:bg-[#CCA547] transition duration-200 disabled:bg-gray-400"
             >
-              {loading || (verified && subAdminAccess?.length === 0) ? (
-                <>
-                  <AiOutlineLoading3Quarters className="animate-spin text-lg mr-2" />
-                  {verified && subAdminAccess?.length === 0 ? "Loading Access..." : "Verifying..."}
-                </>
-              ) : (
-                "Verify"
-              )}
+             Verify
             </button>
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 };
