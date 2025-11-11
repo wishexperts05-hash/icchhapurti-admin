@@ -34,7 +34,7 @@ const BreadCrumb = ({ linkText }) => {
                 color: "#372E2E",
                 fontWeight: 700, // Make it bold
               }}
-              style={{ color: "#e65d00" }}
+              style={{ color: "#CCA547" }}
             >
               {item.text}
             </Typography>
@@ -47,7 +47,7 @@ const BreadCrumb = ({ linkText }) => {
               onClick={() => handleClick(item)}
               key={index}
               className="text-[#372E2E] font-bold hover:underline cursor-pointer"
-              style={{ color: "#e65d00" }}
+              style={{ color: "#CCA547" }}
               sx={{
                 fontWeight: 700, // Make it bold
                 cursor: "pointer",
