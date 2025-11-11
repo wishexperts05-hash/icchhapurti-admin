@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
+import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
 
 // ---------------------------- Lazy Imports ----------------------------
 const Login = lazy(() => import("../pages/auth/Login"));
@@ -12,21 +13,26 @@ const PasswordResetSuccessfully = lazy(() =>
 );
 
 const Dashboard = lazy(() => import("../pages/module/Dashboard/Dashboard"));
-// const Alerts = lazy(() => import("../pages/module/Dashboard/Alerts"));
-
 const AdminProfile = lazy(() =>
   import("../pages/module/adminProfile/AdminProfile")
 );
 const EditProfile = lazy(() =>
   import("../pages/module/adminProfile/EditProfile")
 );
-// const NotFound = lazy(() => import("../pages/module/offers&Discount/NotFound"));
 const Layout = lazy(() => import("../components/Layouts/Layout"));
 
-import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
+// ---------------------------- Promoter Management ----------------------------
+const PromoterManagement = lazy(() =>
+  import("../pages/module/promotermanagement/PromoterManagement")
+);
+const PromoterManagementEdit = lazy(() =>
+  import("../pages/module/promotermanagement/PromoterManagementEdit")
+);
+const PromoterManagementAdd = lazy(() =>
+  import("../pages/module/promotermanagement/PromoterManagementAdd")
+);
 
-// --------------------------Order Management-------------------------------------
-
+// ---------------------------- Order Management ----------------------------
 import {
   OrderManagement,
   OrderDetails,
@@ -37,6 +43,13 @@ import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
+  const navigate = useNavigate();
+
+  // Reusable navigate-back function
+  const handleNavigateBack = () => {
+    navigate("/promotermanagement");
+  };
+
   return (
     <Suspense
       fallback={
@@ -46,7 +59,7 @@ function PublicRoute() {
       }
     >
       <Routes>
-        {/* Authentication Routes */}
+        {/* ---------------------------- Authentication Routes ---------------------------- */}
         <Route path="/" element={<Login />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -56,7 +69,8 @@ function PublicRoute() {
           element={<PasswordResetSuccessfully />}
         />
 
-        {/* Protected Routes with Layout */}
+        {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
+        {/* Uncomment ProtectedRoute when ready */}
         {/* <Route element={<ProtectedRoute />}> */}
         <Route path="/" element={<Layout />}>
           {/* Dashboard */}
@@ -69,26 +83,44 @@ function PublicRoute() {
               />
             }
           />
-          {/* Admin Profile */}
+
+          {/* ---------------------------- Admin Profile ---------------------------- */}
           <Route path="adminProfile" element={<AdminProfile />} />
           <Route path="adminProfile/editProfile" element={<EditProfile />} />
 
-          {/* --------------------------Order Management------------------------------------- */}
+          {/* ---------------------------- Promoter Management ---------------------------- */}
+          <Route path="promotermanagement" element={<PromoterManagement />} />
+          <Route
+            path="promotermanagementedit"
+            element={
+              <PromoterManagementEdit
+                onCancel={handleNavigateBack}
+                onSave={handleNavigateBack}
+              />
+            }
+          />
+          <Route
+            path="promotermanagementadd"
+            element={
+              <PromoterManagementAdd
+                onCancel={handleNavigateBack}
+                onAdd={handleNavigateBack}
+              />
+            }
+          />
+
+          {/* -------------------------- Order Management -------------------------- */}
           <Route path="order-management" element={<OrderManagement />} />
           <Route
             path="order-management/order-details"
             element={<OrderDetails />}
           />
-          <Route path="staff-Management" element={<StaffManagement />} />
+          <Route path="staff-management" element={<StaffManagement />} />
           <Route path="addStaff" element={<AddStaffForm />} />
-        {/* -------------------------------------------------------------------------------- */}
-
-        {/* 404 Not Found */}
-        {/* <Route path="*" element={<NotFound />} /> */}
-      </Route>
-      {/* </Route> */}
-    </Routes>
-    </Suspense >
+        </Route>
+        {/* </Route> */}
+      </Routes>
+    </Suspense>
   );
 }
 
