@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from "react";
-// 1. Import useNavigate
 import { Route, Routes, useNavigate } from "react-router-dom";
+import adminLogo from "../assets/adminLogo.png";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
 
@@ -14,14 +14,12 @@ const PasswordResetSuccessfully = lazy(() =>
 );
 
 const Dashboard = lazy(() => import("../pages/module/Dashboard/Dashboard"));
-
 const AdminProfile = lazy(() =>
   import("../pages/module/adminProfile/AdminProfile")
 );
 const EditProfile = lazy(() =>
   import("../pages/module/adminProfile/EditProfile")
 );
-
 const Layout = lazy(() => import("../components/Layouts/Layout"));
 
 // ---------------------------- Promoter Management ----------------------------
@@ -35,11 +33,20 @@ const PromoterManagementAdd = lazy(() =>
   import("../pages/module/promotermanagement/PromoterManagementAdd")
 );
 
+// ---------------------------- Order Management ----------------------------
+import {
+  OrderManagement,
+  OrderDetails,
+} from "../pages/module/OrderManagement/index";
+import StaffManagement from "../pages/module/staffManagement/staffList/staffListing";
+import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
+// --------------------------------------------------------------------------------
+
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
-  const navigate = useNavigate(); // 2. Initialize navigate
+  const navigate = useNavigate();
 
-  // 3. Create a function to handle navigation back to the list
+  // Reusable navigate-back function
   const handleNavigateBack = () => {
     navigate("/promotermanagement");
   };
@@ -48,7 +55,7 @@ function PublicRoute() {
     <Suspense
       fallback={
         <div className="w-full h-screen flex items-center justify-center">
-          <LoaderSpinner />
+          <img src={adminLogo} alt="Admin Logo" className="w-24 h-24 animate-pulse" />
         </div>
       }
     >
@@ -64,9 +71,10 @@ function PublicRoute() {
         />
 
         {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
+        {/* Uncomment ProtectedRoute when ready */}
         {/* <Route element={<ProtectedRoute />}> */}
         <Route path="/" element={<Layout />}>
-          {/* ---------------------------- Dashboard ---------------------------- */}
+          {/* Dashboard */}
           <Route
             path="dashboard"
             element={
@@ -82,13 +90,9 @@ function PublicRoute() {
           <Route path="adminProfile/editProfile" element={<EditProfile />} />
 
           {/* ---------------------------- Promoter Management ---------------------------- */}
-          <Route
-            path="promotermanagement"
-            element={<PromoterManagement />}
-          />
+          <Route path="promotermanagement" element={<PromoterManagement />} />
           <Route
             path="promotermanagementedit"
-            // 4. Pass the navigation function as props
             element={
               <PromoterManagementEdit
                 onCancel={handleNavigateBack}
@@ -98,7 +102,6 @@ function PublicRoute() {
           />
           <Route
             path="promotermanagementadd"
-            // 5. Pass the navigation function as props
             element={
               <PromoterManagementAdd
                 onCancel={handleNavigateBack}
@@ -106,6 +109,15 @@ function PublicRoute() {
               />
             }
           />
+
+          {/* -------------------------- Order Management -------------------------- */}
+          <Route path="order-management" element={<OrderManagement />} />
+          <Route
+            path="order-management/order-details"
+            element={<OrderDetails />}
+          />
+          <Route path="staff-management" element={<StaffManagement />} />
+          <Route path="addStaff" element={<AddStaffForm />} />
         </Route>
         {/* </Route> */}
       </Routes>

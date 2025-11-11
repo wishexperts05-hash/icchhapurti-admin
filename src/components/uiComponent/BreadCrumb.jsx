@@ -1,5 +1,3 @@
-
-
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
@@ -25,32 +23,31 @@ const BreadCrumb = ({ linkText }) => {
         separator={<NavigateNextIcon fontSize="medium" />}
         aria-label="breadcrumb"
         className="inline "
-        style={{ color: "#004AAD" }}
+        style={{ color: "#cca547" }}
       >
         {linkText.map((item, index) => {
           return !item.href ? (
             <Typography
-              className="text-[#372E2E] font-semibold"
+              className="text-[#cca547] font-semibold"
               key={index}
               sx={{
-                color: "#372E2E",
+                color: "#cca547",
                 fontWeight: 700, // Make it bold
-
               }}
-              style={{ color: "#e65d00" }}
+              style={{ color: "#CCA547" }}
             >
               {item.text}
             </Typography>
           ) : (
             <Link
               underline="hover"
-              color="#372E2E"
+              color="#cca547"
               fontWeight={500}
               /* href={item.href} */
               onClick={() => handleClick(item)}
               key={index}
               className="text-[#372E2E] font-bold hover:underline cursor-pointer"
-              style={{ color: "#e65d00" }}
+              style={{ color: "#CCA547" }}
               sx={{
                 fontWeight: 700, // Make it bold
                 cursor: "pointer",

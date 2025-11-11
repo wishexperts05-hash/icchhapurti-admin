@@ -1,196 +1,231 @@
-import React, { useState } from "react";
-import { FiSearch } from "react-icons/fi";
+import { Users } from "lucide-react";
+import React from "react";
 
-export default function DataTable({
+const DataTable = ({
   columns,
   data,
-  searchPlaceholder = "Search...",
-  showAddButton = false,
-  addButtonText = "Add New",
-  onAddClick,
-  renderActions,
-  showEntries = true,
-  showSearch = true,
-  showPagination = true,
-}) {
-  const [entriesPerPage, setEntriesPerPage] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  // Filter data based on search
-  const filteredData = data.filter((row) =>
-    Object.values(row).some((value) =>
-      String(value).toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
-
-  // Pagination logic
-  const totalEntries = filteredData.length;
-  const totalPages = Math.ceil(totalEntries / entriesPerPage);
-  const startIndex = (currentPage - 1) * entriesPerPage;
-  const endIndex = Math.min(startIndex + entriesPerPage, totalEntries);
-  const paginatedData = filteredData.slice(startIndex, endIndex);
-
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const getPageNumbers = () => {
-    const pages = [];
-    const maxVisible = 3;
-    
-    if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage <= 2) {
-        pages.push(1, 2, 3);
-      } else if (currentPage >= totalPages - 1) {
-        pages.push(totalPages - 2, totalPages - 1, totalPages);
-      } else {
-        pages.push(currentPage - 1, currentPage, currentPage + 1);
-      }
-    }
-    return pages;
-  };
-
+  actions = [],
+  currentPage = 1,
+  usersPerPage = 5,
+  onToggleStatus,
+}) => {
   return (
-    <div>
-      {/* Controls */}
-      <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
-        {showEntries && (
-          <div className="flex items-center gap-3 text-gray-700 text-sm">
-            <label>Show</label>
-            <select
-              value={entriesPerPage}
-              onChange={(e) => {
-                setEntriesPerPage(Number(e.target.value));
-                setCurrentPage(1);
-              }}
-              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            >
-              <option value={10}>10</option>
-              <option value={25}>25</option>
-              <option value={50}>50</option>
-            </select>
-            <span>Entries</span>
-          </div>
-        )}
-
-        {showSearch && (
-          <div className="relative w-80">
-            <FiSearch className="absolute top-3 left-3 text-gray-400 text-lg" />
-            <input
-              type="text"
-              placeholder={searchPlaceholder}
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="border border-gray-300 rounded-md pl-10 pr-4 py-2.5 w-full text-[15px] placeholder-gray-400 shadow-sm"
-            />
-          </div>
-        )}
-
-        {showAddButton && (
-          <button
-            onClick={onAddClick}
-            className="bg-[#CCA547] text-white text-base font-medium px-5 py-2.5"
-          >
-            {addButtonText}
-          </button>
-        )}
-      </div>
-
-      {/* Table */}
-      <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
-        <table className="min-w-full text-[15px] text-gray-700">
-          <thead className="bg-gray-100 text-gray-700 font-semibold border-b border-gray-300">
-            <tr>
-              {columns.map((col, index) => (
-                <th
-                  key={index}
-                  className="px-6 py-3 text-left"
-                  style={{ width: col.width }}
-                >
-                  {col.header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedData.length > 0 ? (
-              paginatedData.map((row, rowIndex) => (
-                <tr
-                  key={rowIndex}
-                  className="border-b last:border-none hover:bg-gray-50 transition-colors text-gray-800"
-                >
-                  {columns.map((col, colIndex) => (
-                    <td key={colIndex} className="px-6 py-3">
-                      {col.render ? col.render(row, rowIndex) : row[col.field]}
-                    </td>
-                  ))}
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan={columns.length}
-                  className="px-6 py-8 text-center text-gray-500"
-                >
-                  No data found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      {showPagination && totalEntries > 0 && (
-        <div className="flex justify-between items-center mt-6 text-sm text-gray-600">
-          <p>
-            Showing {startIndex + 1} to {endIndex} of {totalEntries} Entries
-          </p>
-          <div className="flex gap-2">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`px-3 py-1.5 border border-yellow-400 rounded-md text-yellow-500 hover:bg-yellow-50 ${
-                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-            >
-              Previous
-            </button>
-            {getPageNumbers().map((page) => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`px-3 py-1.5 rounded-md ${
-                  currentPage === page
-                    ? "bg-yellow-400 text-white"
-                    : "border border-yellow-400 text-yellow-500 hover:bg-yellow-50"
-                }`}
+    <div className="w-full overflow-x-auto overflow-y-auto m-w-[500px] rounded-t-2xl shadow-2xl">
+      <table className="min-w-full text-center table-auto bg-[#FFFFFF] rounded-t-2xl overflow-hidden shadow">
+        <thead>
+          <tr className="border-b border-border/50 bg-[#F7F7F7] h-[60px] ">
+            {columns.map((col, index) => (
+              <th
+                key={index}
+                className="px-4 text-black py-3 min-w-[80px] text-sm sm:text-sm font-semibold"
               >
-                {page}
-              </button>
+                {col.header}
+              </th>
             ))}
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`px-3 py-1.5 border border-yellow-400 rounded-md text-yellow-500 hover:bg-yellow-50 ${
-                currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      )}
+          </tr>
+        </thead>
+        <tbody>
+          {data && data.length > 0 ? (
+            data.map((row, rowIndex) => (
+              <tr
+                key={row.id || rowIndex}
+                className="border-b border-border/50 hover:bg-blue-50  transition-colors duration-200 group "
+              >
+                {columns.map((col, colIndex) => {
+                  const value = row[col.field];
+
+                  if (col.field === "banner") {
+                    return (
+                      <td key={colIndex} className="px-4 py-3 align-middle">
+                        {" "}
+                        <div className="flex justify-center">
+                          <img
+                            src={value}
+                            alt={row.name}
+                            className="w-24 sm:w-32 md:w-48 object-cover rounded-md shadow-sm "
+                          />
+                        </div>
+                        {col.render(row)}
+                      </td>
+                    );
+                  }
+
+                  if (col.field === "status" || col.field === "isActive") {
+                    const displayValue =
+                      value === true
+                        ? "Active"
+                        : value === false
+                        ? "Blocked"
+                        : value;
+
+                    return (
+                      <td key={colIndex} className="px-4 py-3 align-middle">
+                        <span
+                          onClick={() => onToggleStatus?.(row)}
+                          className={`px-2 py-1 rounded-full text-xs sm:text-sm font-medium cursor-pointer hover:scale-105 transition-transform ${
+                            displayValue === "Active" ||
+                            displayValue === "Approved" ||
+                            displayValue === "Paid" ||
+                            displayValue === "Paid" ||
+                            displayValue === "Confirmed" ||
+                            displayValue === "Ongoing" ||
+                            displayValue === "Shown"
+                              ? "bg-green-100 text-green-700"
+                              : displayValue === "Pending" ||
+                                displayValue === "Upcoming" ||
+                                displayValue === "Blocked" ||
+                                displayValue === "Created"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-red-100 text-red-700"
+                          }`}
+                        >
+                          {displayValue}
+                        </span>
+                      </td>
+                    );
+                  }
+
+                  if (col.field === "action") {
+                    return (
+                      <td key={colIndex} className="px-4 py-3 align-middle">
+                        <div className="flex gap-2 sm:gap-1 justify-center ">
+                          {actions.map((action, idx) => {
+                            const isDisabledAction =
+                              action.disableCondition?.(row) || false;
+
+                            // Case 1: Custom render
+                            if (action.render) {
+                              return (
+                                <React.Fragment key={idx}>
+                                  {action.render(row)}
+                                </React.Fragment>
+                              );
+                            }
+
+                            // Case 2: Icon-only
+                            if (action.icon && !action.label) {
+                              const iconElement =
+                                typeof action.icon === "function"
+                                  ? action.icon(row)
+                                  : action.icon;
+                              return (
+                                <button
+                                  key={idx}
+                                  title={action.title || ""}
+                                  className={`p-2 rounded transition ${
+                                    isDisabledAction
+                                      ? "cursor-not-allowed opacity-40"
+                                      : "hover:bg-blue-100 hover:text-[#004AAD]"
+                                  }`}
+                                  onClick={() =>
+                                    !isDisabledAction && action.onClick?.(row)
+                                  }
+                                  disabled={isDisabledAction}
+                                  type="button"
+                                >
+                                  {iconElement}
+                                </button>
+                              );
+                            }
+
+                            // Case 3: Label button (e.g., "Pay Amount")
+                            return (
+                              <button
+                                key={idx}
+                                title={action.title || ""}
+                                className={`flex items-center gap-2 px-3 py-1 rounded text-sm sm:text-sm transition
+        ${action.className || "bg-gray-200 text-black hover:bg-gray-300"}
+        ${isDisabledAction ? "opacity-40 cursor-not-allowed" : ""}
+      `}
+                                onClick={() =>
+                                  !isDisabledAction && action.onClick?.(row)
+                                }
+                                disabled={isDisabledAction} // ✅ Critical for accessibility & form behavior
+                                type="button"
+                              >
+                                {action.icon && (
+                                  <span className="flex items-center">
+                                    {action.icon}
+                                  </span>
+                                )}
+                                {action.label && (
+                                  <span className="text-[16px]">
+                                    {action.label}
+                                  </span>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </td>
+                    );
+                  }
+
+                  // Add here column fields that need text wrapping like address
+                  return (
+                    <td
+                      key={colIndex}
+                      className={`px-4 py-3 align-middle ${
+                        col.field === "address" ||
+                        col.field === "firstAddress" ||
+                        col.field === "fullAddress"
+                          ? "whitespace-normal break-words text-center truncate max-w-[200px]"
+                          : ""
+                      }`}
+                    >
+                      {col.render
+                        ? col.render(row) // ✅ use custom render if provided
+                        : col.field === "srNo"
+                        ? (currentPage - 1) * usersPerPage + rowIndex + 1
+                        : [
+                            "createdAt",
+                            "updatedAt",
+                            "startDate",
+                            "endDate",
+                            "expireDate",
+                            "payoutDate",
+                            "date",
+                          ].includes(col.field)
+                        ? (() => {
+                            if (
+                              typeof value === "string" &&
+                              value.includes("/")
+                            ) {
+                              const [day, month, year] = value.split("/");
+                              return new Date(
+                                `${year}-${month}-${day}`
+                              ).toLocaleDateString("en-GB");
+                            }
+                            const d = new Date(value);
+                            return d.toLocaleDateString("en-GB") || "-";
+                          })()
+                        : value !== undefined && value !== null && value !== ""
+                        ? value
+                        : "-"}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={columns.length} className="text-center py-12">
+                <div className="text-muted-foreground">
+                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg sm:text-sm font-medium">
+                    No data found
+                  </p>
+                  <p className="text-sm">
+                    Try adjusting your search or filters
+                  </p>
+                </div>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
+
+export default DataTable;
