@@ -19,6 +19,7 @@ const Login = () => {
  
     togglePasswordVisibility,
   } = useLoginForm();
+  const navigate = useNavigate()
 
   return (
     <div className="flex min-h-screen bg-[#CCA547] flex items-center">
