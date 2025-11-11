@@ -1,5 +1,3 @@
-
-
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
@@ -35,7 +33,6 @@ const BreadCrumb = ({ linkText }) => {
               sx={{
                 color: "#372E2E",
                 fontWeight: 700, // Make it bold
-
               }}
               style={{ color: "#e65d00" }}
             >
