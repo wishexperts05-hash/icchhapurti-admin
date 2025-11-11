@@ -1,6 +1,8 @@
 import { lazy, Suspense, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+// 1. Import useNavigate
+import { Route, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
+import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
 
 // ---------------------------- Lazy Imports ----------------------------
 const Login = lazy(() => import("../pages/auth/Login"));
@@ -12,7 +14,6 @@ const PasswordResetSuccessfully = lazy(() =>
 );
 
 const Dashboard = lazy(() => import("../pages/module/Dashboard/Dashboard"));
-// const Alerts = lazy(() => import("../pages/module/Dashboard/Alerts"));
 
 const AdminProfile = lazy(() =>
   import("../pages/module/adminProfile/AdminProfile")
@@ -20,14 +21,29 @@ const AdminProfile = lazy(() =>
 const EditProfile = lazy(() =>
   import("../pages/module/adminProfile/EditProfile")
 );
-// const NotFound = lazy(() => import("../pages/module/offers&Discount/NotFound"));
+
 const Layout = lazy(() => import("../components/Layouts/Layout"));
 
-import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
-
+// ---------------------------- Promoter Management ----------------------------
+const PromoterManagement = lazy(() =>
+  import("../pages/module/promotermanagement/PromoterManagement")
+);
+const PromoterManagementEdit = lazy(() =>
+  import("../pages/module/promotermanagement/PromoterManagementEdit")
+);
+const PromoterManagementAdd = lazy(() =>
+  import("../pages/module/promotermanagement/PromoterManagementAdd")
+);
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
+  const navigate = useNavigate(); // 2. Initialize navigate
+
+  // 3. Create a function to handle navigation back to the list
+  const handleNavigateBack = () => {
+    navigate("/promotermanagement");
+  };
+
   return (
     <Suspense
       fallback={
@@ -37,7 +53,7 @@ function PublicRoute() {
       }
     >
       <Routes>
-        {/* Authentication Routes */}
+        {/* ---------------------------- Authentication Routes ---------------------------- */}
         <Route path="/" element={<Login />} />
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -47,26 +63,50 @@ function PublicRoute() {
           element={<PasswordResetSuccessfully />}
         />
 
-        {/* Protected Routes with Layout */}
+        {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
         {/* <Route element={<ProtectedRoute />}> */}
-          <Route path="/" element={<Layout />}>
-            {/* Dashboard */}
-            <Route
-              path="dashboard"
-              element={
-                <Dashboard
-                  activeItem={activeItem}
-                  setActiveItem={setActiveItem}
-                />
-              }
-            />
-            {/* Admin Profile */}
-            <Route path="adminProfile" element={<AdminProfile />} />
-            <Route path="adminProfile/editProfile" element={<EditProfile />} />
+        <Route path="/" element={<Layout />}>
+          {/* ---------------------------- Dashboard ---------------------------- */}
+          <Route
+            path="dashboard"
+            element={
+              <Dashboard
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            }
+          />
 
-            {/* 404 Not Found */}
-            {/* <Route path="*" element={<NotFound />} /> */}
-          </Route>
+          {/* ---------------------------- Admin Profile ---------------------------- */}
+          <Route path="adminProfile" element={<AdminProfile />} />
+          <Route path="adminProfile/editProfile" element={<EditProfile />} />
+
+          {/* ---------------------------- Promoter Management ---------------------------- */}
+          <Route
+            path="promotermanagement"
+            element={<PromoterManagement />}
+          />
+          <Route
+            path="promotermanagementedit"
+            // 4. Pass the navigation function as props
+            element={
+              <PromoterManagementEdit
+                onCancel={handleNavigateBack}
+                onSave={handleNavigateBack}
+              />
+            }
+          />
+          <Route
+            path="promotermanagementadd"
+            // 5. Pass the navigation function as props
+            element={
+              <PromoterManagementAdd
+                onCancel={handleNavigateBack}
+                onAdd={handleNavigateBack}
+              />
+            }
+          />
+        </Route>
         {/* </Route> */}
       </Routes>
     </Suspense>
