@@ -23,15 +23,15 @@ const BreadCrumb = ({ linkText }) => {
         separator={<NavigateNextIcon fontSize="medium" />}
         aria-label="breadcrumb"
         className="inline "
-        style={{ color: "#004AAD" }}
+        style={{ color: "#cca547" }}
       >
         {linkText.map((item, index) => {
           return !item.href ? (
             <Typography
-              className="text-[#372E2E] font-semibold"
+              className="text-[#cca547] font-semibold"
               key={index}
               sx={{
-                color: "#372E2E",
+                color: "#cca547",
                 fontWeight: 700, // Make it bold
               }}
               style={{ color: "#CCA547" }}
@@ -41,7 +41,7 @@ const BreadCrumb = ({ linkText }) => {
           ) : (
             <Link
               underline="hover"
-              color="#372E2E"
+              color="#cca547"
               fontWeight={500}
               /* href={item.href} */
               onClick={() => handleClick(item)}
