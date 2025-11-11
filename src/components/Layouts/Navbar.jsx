@@ -6,7 +6,7 @@ import user from "../../../src/assets/user.png";
 import useLogin from "../../hooks/auth/useLogin";
 import { useSetRecoilState } from "recoil";
 import { adminAuthState, subAdminAuthState } from "../../state/auth/authenticatedState";
-import { FaRegBell } from "react-icons/fa6";
+import { GoBell } from "react-icons/go";
 
 function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -58,8 +58,10 @@ function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
       <div className="flex items-center gap-4">
 
         {/* Profile Dropdown */}
-        <div className="relative flex items-center gap-2"> 
-          <FaRegBell className="w-8 h-8"/>
+        <div className="relative "> 
+
+          <div className="flex items-center gap-2">
+          <GoBell className="w-8 h-8"/>
           <button
             onClick={() => {
               setIsProfileDropdownOpen(!isProfileDropdownOpen);
@@ -79,6 +81,7 @@ function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
                 }`}
             />
           </button>
+          </div>
 
           {/* Profile Dropdown Menu */}
           {isProfileDropdownOpen && (
