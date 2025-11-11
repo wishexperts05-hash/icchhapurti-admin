@@ -8,21 +8,7 @@ export default function UserDetails() {
     const user = location.state?.user; // User data is retrieved from state
 
     // If no user data, redirect back
-    if (!user) {
-        return (
-            <div className="min-h-screen bg-gray-50 p-8">
-                <div className="max-w-6xl mx-auto text-center">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">No User Data Found</h2>
-                    <button
-                        onClick={() => navigate('/dashboard')} // IMPORTANT CHANGE: Use /dashboard for UserManagement
-                        className="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-600"
-                    >
-                        Back to User Management
-                    </button>
-                </div>
-            </div>
-        );
-    }
+    
 
     return (
         <div className="min-h-screen bg-gray-50 p-8 bg-white mb-2">
@@ -62,7 +48,7 @@ export default function UserDetails() {
                             className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-md"
                         />
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 mb-1">{user.userName}</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-1"></h2>
                             <p className="text-gray-600 text-base">Maharashtra, India</p>
                         </div>
                     </div>
@@ -82,16 +68,14 @@ export default function UserDetails() {
                             {/* Name */}
                             <div className="flex items-start">
                                 <div className="w-56 font-bold text-gray-900">Name :</div>
-                                <div className="flex-1 text-gray-800">{user.userName}</div>
+                                <div className="flex-1 text-gray-800"></div>
                             </div>
 
                             {/* Email */}
                             <div className="flex items-start">
                                 <div className="w-56 font-bold text-gray-900">E-Mail Id :</div>
                                 <div className="flex-1 text-gray-800">
-                                    {user.email === "example@gmail.com"
-                                        ? (user.id === 1 ? `Dheeraj@gmail.com` : `user${user.id}@gmail.com`) // Added a simple logic for unique email
-                                        : user.email}
+                                    
                                 </div>
                             </div>
 
@@ -128,16 +112,14 @@ export default function UserDetails() {
                             {/* Name */}
                             <div className="flex items-start">
                                 <div className="w-56 font-bold text-gray-900">current  wallet balance :</div>
-                                <div className="flex-1 text-gray-800">{user.userName}</div>
+                                <div className="flex-1 text-gray-800"></div>
                             </div>
 
                             {/* Email */}
                             <div className="flex items-start">
                                 <div className="w-56 font-bold text-gray-900">coins :</div>
                                 <div className="flex-1 text-gray-800">
-                                    {user.email === "example@gmail.com"
-                                        ? (user.id === 1 ? `8` : `9`) // Added a simple logic for unique email
-                                        : user.email}
+                                   
                                 </div>
                             </div>
 

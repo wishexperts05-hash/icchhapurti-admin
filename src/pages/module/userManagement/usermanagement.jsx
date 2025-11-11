@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FiSearch, FiEye } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-
+import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 // DataTable Component
 function DataTable({
   columns,
@@ -250,7 +250,7 @@ export default function UserManagement({ activeItem, setActiveItem }) {
   const handleView = (user) => {
     // IMPORTANT CHANGE: Use the user ID in the path for routing
     console.log("Navigating to user details with:", user);
-    navigate(`user-details/${user.id}`, { state: { user } });
+    navigate(`/user-management/user-details`);
   };
 
   const handleBlock = (user) => {
@@ -317,10 +317,12 @@ export default function UserManagement({ activeItem, setActiveItem }) {
     <div className="min-h-screen bg-gray-50 p-8 bg-white">
       <div className="max-w-7xl mx-auto">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-          <span className="text-gray-400">⊞</span>
-          <span className="text-blue-600">User Management</span>
-        </div>
+        <BreadCrumb
+                linkText={[
+                    { text: "usermanagement", href: "/staff-Management" },
+                
+                ]}
+            />
 
         {/* Page Title */}
         <h1 className="text-3xl font-semibold text-gray-800 mb-8">
