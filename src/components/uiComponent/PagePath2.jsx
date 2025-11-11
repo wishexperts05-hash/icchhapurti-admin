@@ -107,14 +107,14 @@ const PagePath2 = ({
         )}
                 {showExtraButton && extraButtonText && (
           <button
-            className={`bg-[#e65d00] text-white px-6 py-[8.8px] rounded-xl 
+            className={`bg-[#CCA547] text-white px-6 py-[8.8px] rounded-xl 
               flex justify-center items-center gap-2 cursor-pointer 
               font-medium shadow-md 
               transition duration-300
               ${
                 disabled
                   ? "bg-gray-400 cursor-not-allowed opacity-60"
-                  : "hover:bg-[#e65d00]/90 hover:shadow-lg"
+                  : "hover:bg-[#CCA547]/90 hover:shadow-lg"
               }`}
             onClick={disabled ? undefined : onExtraClick}
             disabled={disabled}

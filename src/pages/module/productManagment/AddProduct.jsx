@@ -183,7 +183,7 @@ const AddProduct = () => {
         <div className="flex justify-center gap-4 mt-8">
           <Button
             type={Button}
-            variant={4}
+            variant={2}
             text="Cancel"
             onClick={() => navigate("/product-management")}
             // className="px-6 py-2 border border-yellow-600 text-yellow-700 rounded-md hover:bg-yellow-50"
@@ -192,7 +192,7 @@ const AddProduct = () => {
         
            <Button
             type={Button}
-            variant={3}
+            variant={1}
             text="Add"
             // className="px-6 py-2 border border-yellow-600 text-yellow-700 rounded-md hover:bg-yellow-50"
           />

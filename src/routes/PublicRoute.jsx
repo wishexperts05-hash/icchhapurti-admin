@@ -1,11 +1,9 @@
 import { lazy, Suspense, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
-<<<<<<< HEAD
 import ProductManagment from "../pages/module/productManagment/ProductManagment";
-=======
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
->>>>>>> c1b47e0ed6db9df7bf6f8fad730d06947293dd99
+import { useNavigate } from "react-router-dom";
 
 // ---------------------------- Lazy Imports ----------------------------
 const Login = lazy(() => import("../pages/auth/Login"));
@@ -41,15 +39,12 @@ import {
   OrderManagement,
   OrderDetails,
 } from "../pages/module/OrderManagement/index";
-<<<<<<< HEAD
 import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
-=======
 import StaffManagement from "../pages/module/staffManagement/staffList/staffListing";
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
->>>>>>> c1b47e0ed6db9df7bf6f8fad730d06947293dd99
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -126,7 +121,6 @@ function PublicRoute() {
             path="order-management/order-details"
             element={<OrderDetails />}
           />
-<<<<<<< HEAD
 
           {/* -------------------------------------Product Managment ------------------------------------------- */}
            <Route path="product-management" element={<ProductManagment/>} />
@@ -142,10 +136,8 @@ function PublicRoute() {
           {/* <Route path="*" element={<NotFound />} /> */}
 
 
-=======
           <Route path="staff-management" element={<StaffManagement />} />
           <Route path="addStaff" element={<AddStaffForm />} />
->>>>>>> c1b47e0ed6db9df7bf6f8fad730d06947293dd99
         </Route>
         {/* </Route> */}
         
