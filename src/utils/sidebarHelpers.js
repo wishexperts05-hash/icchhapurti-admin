@@ -245,8 +245,8 @@ export const allNavigationItems = [
   },
   {
     id: 6,
-    title: "Coupon",
-    url: "/coupon",
+    title: "Product Managment",
+    url: "/productMangment",
     icon: RiCoupon2Line,
     badge: null,
     color: "pink",
