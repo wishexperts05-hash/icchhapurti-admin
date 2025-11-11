@@ -1,6 +1,5 @@
 import { lazy, Suspense, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import adminLogo from "../assets/adminLogo.png";
 import ProtectedRoute from "../routes/ProtectedRoute";
 
 // ---------------------------- Lazy Imports ----------------------------
@@ -26,13 +25,6 @@ const Layout = lazy(() => import("../components/Layouts/Layout"));
 
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
 
-// --------------------------Order Management-------------------------------------
-
-import {
-  OrderManagement,
-  OrderDetails,
-} from "../pages/module/OrderManagement/index";
-// --------------------------------------------------------------------------------
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
@@ -40,7 +32,7 @@ function PublicRoute() {
     <Suspense
       fallback={
         <div className="w-full h-screen flex items-center justify-center">
-          <img src={adminLogo} alt="" />
+          <LoaderSpinner />
         </div>
       }
     >
@@ -57,33 +49,24 @@ function PublicRoute() {
 
         {/* Protected Routes with Layout */}
         {/* <Route element={<ProtectedRoute />}> */}
-        <Route path="/" element={<Layout />}>
-          {/* Dashboard */}
-          <Route
-            path="dashboard"
-            element={
-              <Dashboard
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
-              />
-            }
-          />
-          {/* Admin Profile */}
-          <Route path="adminProfile" element={<AdminProfile />} />
-          <Route path="adminProfile/editProfile" element={<EditProfile />} />
+          <Route path="/" element={<Layout />}>
+            {/* Dashboard */}
+            <Route
+              path="dashboard"
+              element={
+                <Dashboard
+                  activeItem={activeItem}
+                  setActiveItem={setActiveItem}
+                />
+              }
+            />
+            {/* Admin Profile */}
+            <Route path="adminProfile" element={<AdminProfile />} />
+            <Route path="adminProfile/editProfile" element={<EditProfile />} />
 
-          {/* --------------------------Order Management------------------------------------- */}
-          <Route path="order-management" element={<OrderManagement />} />
-          <Route
-            path="order-management/order-details"
-            element={<OrderDetails />}
-          />
-
-          {/* -------------------------------------------------------------------------------- */}
-
-          {/* 404 Not Found */}
-          {/* <Route path="*" element={<NotFound />} /> */}
-        </Route>
+            {/* 404 Not Found */}
+            {/* <Route path="*" element={<NotFound />} /> */}
+          </Route>
         {/* </Route> */}
       </Routes>
     </Suspense>
