@@ -17,17 +17,17 @@ const Button = ({
     switch (variant) {
       //save and update button
       case 1:
-        return `bg-[#e65d00] text-white px-6 py-3 rounded-xl 
+        return `bg-[#CCA547] text-white px-6 py-3 rounded-xl 
                 flex justify-center items-center gap-2 cursor-pointer 
                 font-medium shadow-md 
-                hover:bg-[#e65d00]/90 hover:shadow-lg 
+                hover:bg-[#CCA547]/90 hover:shadow-lg 
                 transition duration-300`;
 
       //Cancel button
       case 2:
-        return `border border-[#e65d00] text-[#e65d00] px-6 py-3 rounded-xl
+        return `border border-[#CCA547] text-[#CCA547] px-6 py-3 rounded-xl
                 flex justify-center items-center gap-2 cursor-pointer 
-                font-medium hover:bg-[#e65d00] hover:shadow-lg hover:text-white
+                font-medium hover:bg-[#CCA547] hover:shadow-lg hover:text-white
                 transition duration-300`;
 
       //Approve button

@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
-import validator from "validator";
+
 import * as Yup from "yup";
-import useLogin from "../../hooks/auth/useLogin";
+
 
 export const loginValidationSchema = Yup.object({
   email: Yup.string()
@@ -16,7 +16,7 @@ export const loginValidationSchema = Yup.object({
 });
 
 export const useLoginForm = () => {
-  const { adminLogin, loading, subAdminLogin } = useLogin();
+
   const [selectedRole, setSelectedRole] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -29,29 +29,10 @@ export const useLoginForm = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleLoginSubmit = async (values) => {
-    if (!selectedRole) {
-      alert("Please select a role");
-      return;
-    }
-
-    try {
-      const sanitizedEmail = validator.trim(values.email);
-      const sanitizedPassword = validator.trim(values.password);
-      let isSuccess = false;
-
-      if (selectedRole === "admin") {
-        isSuccess = true
-      } else if (selectedRole === "subadmin") {
-        isSuccess = true
-      }
-
-      if (isSuccess) {
-        navigate("/dashboard")
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const handleLoginSubmit = async () => {
+   
+    navigate("/dashboard");
+    
   };
 
   const formik = useFormik({
@@ -66,7 +47,7 @@ export const useLoginForm = () => {
     formik,
     selectedRole,
     showPassword,
-    loading,
+
     handleRoleSelect,
     togglePasswordVisibility,
   };

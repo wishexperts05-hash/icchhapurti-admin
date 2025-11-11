@@ -31,6 +31,8 @@ import {
   OrderManagement,
   OrderDetails,
 } from "../pages/module/OrderManagement/index";
+import StaffManagement from "../pages/module/staffManagement/staffList/staffListing";
+import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -77,15 +79,16 @@ function PublicRoute() {
             path="order-management/order-details"
             element={<OrderDetails />}
           />
+          <Route path="staff-Management" element={<StaffManagement />} />
+          <Route path="addStaff" element={<AddStaffForm />} />
+        {/* -------------------------------------------------------------------------------- */}
 
-          {/* -------------------------------------------------------------------------------- */}
-
-          {/* 404 Not Found */}
-          {/* <Route path="*" element={<NotFound />} /> */}
-        </Route>
-        {/* </Route> */}
-      </Routes>
-    </Suspense>
+        {/* 404 Not Found */}
+        {/* <Route path="*" element={<NotFound />} /> */}
+      </Route>
+      {/* </Route> */}
+    </Routes>
+    </Suspense >
   );
 }
 

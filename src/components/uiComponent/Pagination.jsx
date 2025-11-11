@@ -90,7 +90,7 @@ const Pagination = ({
   }
   // console.log(renderPageNumbers)
   return (
-    <div className="flex items-center justify-between gap-4 flex-wrap px-4 py-2 w-full bottom-sticky bg-white border-t-4 border-blue-700">
+    <div className="flex items-center justify-between gap-4 flex-wrap px-4 py-2 w-full bottom-sticky bg-white border-t-4 border-[#cca547]">
       {/* <div className="flex gap-2 items-center">
         <div>Rows per page</div>
         <select
@@ -115,9 +115,9 @@ const Pagination = ({
       <div className="flex items-center gap-2">
         {/* Previous Button */}
         <button
-          className={`text-base w-[30px] h-[30px] flex items-center justify-center rounded-md border border-blue-700 bg-blue-700 text-white ${currentPage === 1
+          className={`text-base w-[30px] h-[30px] flex items-center justify-center rounded-md border border-yellow-700 bg-yellow-700 text-white ${currentPage === 1
               ? "cursor-not-allowed opacity-70"
-              : "hover:bg-blue-500"
+              : "hover:bg-[#cca547]"
             }`}
           onClick={handlePrevClick}
           disabled={currentPage === 1}
@@ -132,10 +132,10 @@ const Pagination = ({
               key={index}
               className={`w-[30px] h-[30px] flex items-center justify-center rounded-md text-sm font-medium border 
                                 ${page === currentPage
-                  ? "bg-blue-700 text-white"
+                  ? "bg-yellow-700 text-white"
                   : page === "..."
                     ? "text-gray-400 cursor-not-allowed opacity-60"
-                    : "text-blue-700 hover:bg-blue-100"
+                    : "text-yellow-700 hover:bg-yellow-100"
                 }`}
               onClick={() => typeof page === "number" && handlePageClick(page)}
               disabled={page === "..."}
@@ -147,9 +147,9 @@ const Pagination = ({
 
         {/* Next Button */}
         <button
-          className={`text-base w-[30px] h-[30px] flex items-center justify-center rounded-md border border-blue-700 bg-blue-700 text-white ${currentPage === totalPages || totalPages === 0
+          className={`text-base w-[30px] h-[30px] flex items-center justify-center rounded-md border border-yellow-700 bg-yellow-700 text-white ${currentPage === totalPages || totalPages === 0
               ? "cursor-not-allowed opacity-70"
-              : "hover:bg-blue-500"
+              : "hover:bg-[#cca547]"
             }`}
           onClick={handleNextClick}
           disabled={currentPage === totalPages || totalPages === 0}
