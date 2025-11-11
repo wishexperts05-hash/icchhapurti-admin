@@ -6,6 +6,7 @@ import user from "../../../src/assets/user.png";
 import useLogin from "../../hooks/auth/useLogin";
 import { useSetRecoilState } from "recoil";
 import { adminAuthState, subAdminAuthState } from "../../state/auth/authenticatedState";
+import { FaRegBell } from "react-icons/fa6";
 
 function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -32,7 +33,7 @@ function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
   };
   return (
     <div
-      className={`fixed top-0 right-0 h-[72px] bg-white border-b border-gray-200 p-4 flex items-center justify-between z-40 transition-all duration-300 ${isMobile ? "left-0" : isSidebarOpen ? "left-72" : "left-20"
+      className={`fixed top-0 right-0 h-[72px] bg-[#FACD34] border-b border-gray-200 p-4 flex items-center justify-between z-40 transition-all duration-300 ${isMobile ? "left-0" : isSidebarOpen ? "left-72" : "left-20"
         }`}
       style={{ boxShadow: "0 4px 8px -2px rgba(0, 0, 0, 0.1)" }}
     >
@@ -57,7 +58,8 @@ function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
       <div className="flex items-center gap-4">
 
         {/* Profile Dropdown */}
-        <div className="relative">
+        <div className="relative flex items-center gap-2"> 
+          <FaRegBell className="w-8 h-8"/>
           <button
             onClick={() => {
               setIsProfileDropdownOpen(!isProfileDropdownOpen);
