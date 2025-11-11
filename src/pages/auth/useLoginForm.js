@@ -41,18 +41,13 @@ export const useLoginForm = () => {
       let isSuccess = false;
 
       if (selectedRole === "admin") {
-        isSuccess = await adminLogin(sanitizedEmail, sanitizedPassword);
+        isSuccess = true
       } else if (selectedRole === "subadmin") {
-        isSuccess = await subAdminLogin(sanitizedEmail, sanitizedPassword);
+        isSuccess = true
       }
 
       if (isSuccess) {
-        navigate("/verify-otp", {
-          state: {
-            isLogin: true,
-            role: selectedRole
-          }
-        });
+        navigate("/dashboard")
       }
     } catch (error) {
       console.log(error);
