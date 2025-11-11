@@ -90,7 +90,7 @@ export const allNavigationItems = [
   {
     id: 1,
     title: "Staff Management",
-    url: "/dashboard",
+    url: "/",
     icon: Home,
     badge: null,
     color: "blue",
@@ -98,7 +98,7 @@ export const allNavigationItems = [
   {
     id: 1,
     title: "User Management",
-    url: "/dashboard",
+    url: "/",
     icon: Home,
     badge: null,
     color: "blue",
@@ -106,7 +106,7 @@ export const allNavigationItems = [
   {
     id: 1,
     title: "Promoter Management",
-    url: "/dashboard",
+    url: "/",
     icon: Home,
     badge: null,
     color: "blue",
@@ -114,7 +114,7 @@ export const allNavigationItems = [
   {
     id: 1,
     title: "Product Management",
-    url: "/dashboard",
+    url: "/",
     icon: Home,
     badge: null,
     color: "blue",
@@ -122,7 +122,7 @@ export const allNavigationItems = [
   {
     id: 1,
     title: "Order Management",
-    url: "/dashboard",
+    url: "/",
     icon: Home,
     badge: null,
     color: "blue",
@@ -130,7 +130,7 @@ export const allNavigationItems = [
   {
     id: 1,
     title: "Offer Management",
-    url: "/dashboard",
+    url: "/",
     icon: Home,
     badge: null,
     color: "blue",
@@ -138,7 +138,7 @@ export const allNavigationItems = [
   {
     id: 1,
     title: "Blog Management",
-    url: "/dashboard",
+    url: "/",
     icon: Home,
     badge: null,
     color: "blue",

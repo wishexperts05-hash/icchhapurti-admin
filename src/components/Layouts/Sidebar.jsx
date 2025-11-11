@@ -110,9 +110,9 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
 
   const getIconBgClass = (color, isActive) => {
     if (isActive) {
-      return "bg-[#004AAD] text-white shadow-sm";
+      return "bg-white text-gray-700";
     }
-    return "bg-gray-100 text-gray-600 group-hover:bg-[#004AAD] group-hover:text-white";
+    return "bg-white text-gray-700";
   };
 
   const renderSubItems = (subItems, level = 1, parentId = null) => {
@@ -131,41 +131,38 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
                     ? handleToggle(subItem.id, subItem.subItems, parentId ? [parentId] : [])
                     : handleSubItemClick(subItem.url, parentId)
                 }
-                className={`flex items-center w-full px-3 py-2.5 rounded-lg transition-all duration-200 group hover:shadow-sm mb-1 ${
+                className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 group mb-1 ${
                   isSubActive
-                    ? "bg-blue-50 border border-blue-200 shadow-sm"
-                    : "hover:bg-gray-50 border border-transparent"
+                    ? "bg-yellow-400 text-gray-900"
+                    : "hover:bg-gray-100 text-gray-700"
                 }`}
               >
                 <div
-                  className={`flex items-center justify-center w-6 h-6 rounded-md transition-all duration-200 micro-bounce ${
+                  className={`flex items-center justify-center w-6 h-6 rounded-md transition-all duration-200 ${
                     isSubActive
-                      ? "bg-[#004AAD] text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 group-hover:bg-[#004AAD] group-hover:text-white"
+                      ? "bg-white text-gray-700"
+                      : "bg-white text-gray-700"
                   }`}
                 >
-                  <subItem.icon className="h-3 w-3" />
+                  <subItem.icon className="h-4 w-4" />
                 </div>
                 {isOpen && (
                   <div className="flex items-center justify-between w-full ml-3">
                     <span
                       className={`text-sm font-medium transition-colors duration-200 ${
-                        isSubActive ? "text-blue-700" : "text-gray-700"
+                        isSubActive ? "text-gray-900" : "text-gray-700"
                       }`}
                     >
                       {subItem.title}
                     </span>
                     {hasSubSubmenu && (
                       <ChevronDown
-                        className={`h-3 w-3 text-gray-400 transition-transform duration-200 ${
+                        className={`h-4 w-4 text-gray-600 transition-transform duration-200 ${
                           isSubExpanded ? "rotate-180" : ""
                         }`}
                       />
                     )}
                   </div>
-                )}
-                {isSubActive && !hasSubSubmenu && (
-                  <div className="ml-auto w-2 h-2 bg-blue-500 rounded-full shadow-sm" />
                 )}
               </button>
 
@@ -209,12 +206,12 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
         ${isOpen ? "w-72" : isMobile ? "w-0" : "w-20"} 
         ${isMobile && !isOpen ? "-translate-x-full" : "translate-x-0"}
         transition-all duration-300 ease-in-out
-        bg-white border-r border-gray-200 shadow-lg
-        backdrop-blur-xl h-screen flex flex-col
+        bg-white border-r border-gray-200
+        h-screen flex flex-col
       `}
       >
         {isMobile && !isOpen ? null : (
-          <div className="flex items-center justify-between p-4 border-b border-gray-100 shadow-lg">
+          <div className="flex items-center justify-between p-4 border-b border-gray-200">
             {isOpen && (
               <div className="flex items-center space-x-3 animate-slide-in-left">
                 <div className="h-auto w-48">
@@ -229,12 +226,12 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
             {!isMobile && (
               <button
                 onClick={toggleSidebar}
-                className="p-2 rounded-lg hover:bg-blue-50 transition-all duration-200 group hover:shadow-md micro-bounce"
+                className="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
               >
                 {isOpen ? (
-                  <ChevronLeft className="h-6 w-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
+                  <ChevronLeft className="h-5 w-5 text-gray-600" />
                 ) : (
-                  <ChevronRight className="h-6 w-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
+                  <ChevronRight className="h-5 w-5 text-gray-600" />
                 )}
               </button>
             )}
@@ -243,17 +240,17 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
 
         <div className="flex-1 flex flex-col overflow-y-auto scrollbar-hide">
           <div className="flex-1 p-3 overflow-y-auto scrollbar-hide">
-            <div className="space-y-2">
+            <div className="space-y-1">
               {navigationItems.map((item, index) => {
                 const isActive = isItemActive(item.url, item.subItems);
                 const isExpanded = expandedItems.includes(item.id);
                 const hasSubmenu = item.hasSubmenu;
 
                 const buttonClasses = [
-                  "relative group h-12 rounded-xl transition-all duration-300 hover:shadow-lg w-full card-hover-effect",
+                  "relative group rounded-lg transition-all duration-200 w-full",
                   isActive
-                    ? "bg-blue-50 border border-blue-200 shadow-md"
-                    : "hover:bg-gray-50 border border-transparent",
+                    ? "bg-yellow-400 text-gray-900"
+                    : "hover:bg-gray-100 text-gray-700",
                   !isOpen && !isMobile ? "justify-center" : "",
                 ].join(" ");
 
@@ -262,11 +259,10 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
                     <button
                       onClick={() => handleItemClick(item)}
                       className={buttonClasses}
-                      style={{ animationDelay: `${index * 50}ms` }}
                     >
-                      <div className="flex items-center w-full px-3">
+                      <div className="flex items-center w-full px-4 py-3">
                         <div
-                          className={`flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200 micro-bounce ${getIconBgClass(
+                          className={`flex items-center justify-center w-6 h-6 rounded-md transition-all duration-200 ${getIconBgClass(
                             item.color,
                             isActive
                           )}`}
@@ -275,17 +271,17 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
                         </div>
 
                         {isOpen && (
-                          <div className="flex items-center justify-between w-full ml-3 animate-text-reveal">
+                          <div className="flex items-center justify-between w-full ml-3">
                             <span
                               className={`font-medium text-sm truncate transition-colors duration-200 ${
-                                isActive ? "text-blue-700" : "text-gray-700"
+                                isActive ? "text-gray-900" : "text-gray-700"
                               }`}
                             >
                               {item.title}
                             </span>
                             {hasSubmenu && (
                               <ChevronDown
-                                className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
+                                className={`h-4 w-4 text-gray-600 transition-transform duration-200 ${
                                   isExpanded ? "rotate-180" : ""
                                 }`}
                               />
@@ -293,14 +289,10 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
                           </div>
                         )}
                       </div>
-
-                      {isActive && (
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#004AAD] rounded-l-full shadow-lg" />
-                      )}
                     </button>
 
                     {hasSubmenu && isExpanded && isOpen && (
-                      <div className="mt-2 ml-4">
+                      <div className="mt-1 ml-2">
                         {renderSubItems(item.subItems, 1, item.id)}
                       </div>
                     )}
@@ -311,19 +303,19 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
           </div>
 
           {/* Logout */}
-          <div className="px-3 pb-3 border-t-2 border-[#e65d00]/40">
+          <div className="px-3 pb-3 border-t border-gray-200">
             <button
               onClick={handleLogout}
-              className={`mt-2 relative group py-1 rounded-xl transition-all duration-300 hover:shadow-lg w-full card-hover-effect flex items-center px-3 bg-[#e65d00]/20 border border-[#e65d00]/20 hover:bg-[#e65d00]`}
+              className={`mt-3 relative group py-3 rounded-lg transition-all duration-200 w-full flex items-center px-4 hover:bg-gray-100 text-gray-700`}
             >
-              <div className="flex items-center justify-center rounded-lg transition-all duration-200 micro-bounce text-white">
-                <div className="bg-[#e65d00] p-1 rounded-md">
+              <div className="flex items-center justify-center rounded-lg transition-all duration-200">
+                <div className="bg-white p-1 rounded-md">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
                     height="20"
                     fill="currentColor"
-                    className="bi bi-box-arrow-right"
+                    className="bi bi-box-arrow-right text-gray-700"
                     viewBox="0 0 16 16"
                   >
                     <path
@@ -338,7 +330,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
                 </div>
 
                 {isOpen && (
-                  <span className="ml-3 font-medium text-sm text-[#e65d00] group-hover:text-white">
+                  <span className="ml-3 font-medium text-sm text-gray-700">
                     Log out
                   </span>
                 )}
