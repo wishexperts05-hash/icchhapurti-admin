@@ -4,7 +4,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import logo from "../../assets/TifstayWbg.png";
 // import tiffinImg from "../../assets/BgImgLogin.png";
 import adminImage from "../../assets/student_3551373.png";
@@ -35,6 +35,7 @@ const Login = () => {
     handleRoleSelect,
     togglePasswordVisibility,
   } = useLoginForm();
+  const navigate = useNavigate()
 
   return (
     <div className="flex min-h-screen">
@@ -191,13 +192,9 @@ const SubmitButton = ({ loading, selectedRole }) => (
     type="submit"
     className="w-full flex justify-center items-center text-white font-bold 
     bg-blue-600 py-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:bg-gray-400"
-    disabled={loading || !selectedRole}
+    onClick={()=>navigate('/dashboard')}
   >
-    {loading ? (
-      <AiOutlineLoading3Quarters className="animate-spin text-lg" />
-    ) : (
-      `Log In as ${selectedRole ? roles.find(role => role.id === selectedRole)?.label : '...'}`
-    )}
+  Login
   </button>
 );
 

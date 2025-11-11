@@ -1,58 +1,19 @@
-import React, { useState, useEffect, useMemo } from "react";
-// import Logo from "../../assets/TifstayWbg.png";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronDown,
-} from "lucide-react";
-import { useSetRecoilState } from "recoil";
-import { adminAuthState, subAdminAuthState } from "../../state/auth/authenticatedState";
-import useLogin from "../../hooks/auth/useLogin";
+import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import AnimationCSS from "./AnimationCSS";
-import {
-  filterNavigationItems,
-  allNavigationItems,
-  debugAccessibleModules
-} from "../../utils/sidebarHelpers";
+import { allNavigationItems } from "../../utils/sidebarHelpers";
 
 const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
-  const setAdminInfo = useSetRecoilState(adminAuthState);
-  const setSubAdminInfo = useSetRecoilState(subAdminAuthState);
-  const { resetAdminLogin, resetSubAdminAccess, subAdminAccess } = useLogin();
-  const isAdminLoggedIn = sessionStorage.getItem("isAdminLoggedIn") === "true";
-  const isSubAdminLoggedIn = sessionStorage.getItem("isSubAdminLoggedIn") === "true";
   const [expandedItems, setExpandedItems] = useState([]);
 
-  console.log("subAdminAccess", subAdminAccess);
-  console.log("isAdminLoggedIn", isAdminLoggedIn);
-  console.log("isSubAdminLoggedIn", isSubAdminLoggedIn);
+  // ✅ Use all navigation items directly
+  const navigationItems = allNavigationItems;
 
-  const navigationItems = useMemo(() => {
-    return filterNavigationItems(
-      allNavigationItems,
-      subAdminAccess,
-      isAdminLoggedIn
-    );
-  }, [subAdminAccess, isAdminLoggedIn]);
-
-  useEffect(() => {
-    if (!isAdminLoggedIn && subAdminAccess) {
-      console.log("Accessible Modules:", navigationItems.map(item => item.title));
-      navigationItems.forEach(item => {
-        if (item.subItems) {
-          console.log(`- ${item.title} sub-items:`, item.subItems.map(sub => sub.title));
-        }
-      });
-      
-      debugAccessibleModules(subAdminAccess, allNavigationItems);
-    }
-  }, [navigationItems, isAdminLoggedIn, subAdminAccess, isSubAdminLoggedIn]);
-
-  // Navigation and active state helpers
+  // Check if a menu/submenu is active
   const isItemActive = (itemUrl, subItems = []) => {
     if (currentPath === itemUrl) return true;
     if (currentPath.startsWith(itemUrl + "/") && itemUrl !== "/") return true;
@@ -89,7 +50,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
     return false;
   };
 
-  // Handlers
+  // Handle expand/collapse
   const handleToggle = (id, subItems = [], parentPath = []) => {
     setExpandedItems((prev) => {
       const isAlreadyOpen = prev.includes(id);
@@ -99,17 +60,6 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
         const index = prev.indexOf(id);
         return prev.slice(0, index);
       } else {
-        if (
-          subItems.length > 0 &&
-          !subItems.some((subItem) => isSubItemActive(subItem.url))
-        ) {
-          const firstSubItem = subItems[0];
-          if (firstSubItem.subItems && firstSubItem.subItems.length > 0) {
-            navigate(firstSubItem.subItems[0].url);
-          } else {
-            navigate(firstSubItem.url);
-          }
-        }
         return newPath;
       }
     });
@@ -120,9 +70,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
       handleToggle(item.id, item.subItems, []);
     } else {
       navigate(item.url);
-      if (isMobile) {
-        setIsOpen(false);
-      }
+      if (isMobile) setIsOpen(false);
     }
   };
 
@@ -131,34 +79,15 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
     if (!expandedItems.includes(parentId)) {
       setExpandedItems((prev) => [...prev, parentId]);
     }
-    if (isMobile) {
-      setIsOpen(false);
-    }
+    if (isMobile) setIsOpen(false);
   };
 
-  const handleLogout = () => {
-    sessionStorage.clear();
-    localStorage.clear();
-    resetAdminLogin();
-    resetSubAdminAccess();
-    setAdminInfo({ isAuthenticated: false });
-    setSubAdminInfo({ isAuthenticated: false });
-    navigate("/");
-  };
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-
+  // Auto-expand active menus
   useEffect(() => {
     const autoExpandMenus = () => {
       const newExpandedItems = [];
 
       navigationItems.forEach((item) => {
-        // if (item.title === "CMS") {
-        //   newExpandedItems.push(item.id);
-        // }
-        
         if (item.hasSubmenu && isItemActive(item.url, item.subItems)) {
           newExpandedItems.push(item.id);
 
@@ -252,9 +181,20 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
     );
   };
 
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    localStorage.clear();
+    navigate("/");
+  };
+
   return (
     <>
       <AnimationCSS />
+
       {/* Mobile Overlay */}
       {isMobile && isOpen && (
         <div
@@ -279,8 +219,9 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
               <div className="flex items-center space-x-3 animate-slide-in-left">
                 <div className="h-auto w-48">
                   <img 
-                  // src={Logo} 
-                  alt="Logo" className="w-full" />
+                    // src={Logo} 
+                    alt="Logo" className="w-full" 
+                  />
                 </div>
               </div>
             )}
@@ -300,8 +241,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
           </div>
         )}
 
-        <div className={`flex-1 flex flex-col overflow-y-auto scrollbar-hide`}>
-          {/* Navigation Items */}
+        <div className="flex-1 flex flex-col overflow-y-auto scrollbar-hide">
           <div className="flex-1 p-3 overflow-y-auto scrollbar-hide">
             <div className="space-y-2">
               {navigationItems.map((item, index) => {
@@ -343,26 +283,13 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
                             >
                               {item.title}
                             </span>
-                            <div className="flex items-center gap-2">
-                              {item.badge && (
-                                <span
-                                  className={`px-2 py-1 text-xs font-medium rounded-full transition-all duration-200 micro-bounce ${
-                                    item.badge === "New"
-                                      ? "bg-green-100 text-green-700 border border-green-200 animate-pulse-custom"
-                                      : "bg-blue-100 text-blue-700 border border-blue-200"
-                                  }`}
-                                >
-                                  {item.badge}
-                                </span>
-                              )}
-                              {hasSubmenu && (
-                                <ChevronDown
-                                  className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
-                                    isExpanded ? "rotate-180" : ""
-                                  }`}
-                                />
-                              )}
-                            </div>
+                            {hasSubmenu && (
+                              <ChevronDown
+                                className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
+                                  isExpanded ? "rotate-180" : ""
+                                }`}
+                              />
+                            )}
                           </div>
                         )}
                       </div>
@@ -383,7 +310,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
             </div>
           </div>
 
-          {/* Logout Button */}
+          {/* Logout */}
           <div className="px-3 pb-3 border-t-2 border-[#e65d00]/40">
             <button
               onClick={handleLogout}
