@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
 
@@ -43,13 +43,6 @@ import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
-  const navigate = useNavigate();
-
-  // Reusable navigate-back function
-  const handleNavigateBack = () => {
-    navigate("/promotermanagement");
-  };
-
   return (
     <Suspense
       fallback={
@@ -94,8 +87,6 @@ function PublicRoute() {
             path="promotermanagementedit"
             element={
               <PromoterManagementEdit
-                onCancel={handleNavigateBack}
-                onSave={handleNavigateBack}
               />
             }
           />
@@ -103,8 +94,6 @@ function PublicRoute() {
             path="promotermanagementadd"
             element={
               <PromoterManagementAdd
-                onCancel={handleNavigateBack}
-                onAdd={handleNavigateBack}
               />
             }
           />
