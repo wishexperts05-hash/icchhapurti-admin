@@ -12,7 +12,7 @@ const PasswordResetSuccessfully = lazy(() =>
 );
 
 const Dashboard = lazy(() => import("../pages/module/Dashboard/Dashboard"));
-const Alerts = lazy(() => import("../pages/module/Dashboard/Alerts"));
+// const Alerts = lazy(() => import("../pages/module/Dashboard/Alerts"));
 
 const AdminProfile = lazy(() =>
   import("../pages/module/adminProfile/AdminProfile")
