@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import ProductManagment from "../pages/module/productManagment/ProductManagment";
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
-import { useNavigate } from "react-router-dom";
 
 // ---------------------------- Lazy Imports ----------------------------
 const Login = lazy(() => import("../pages/auth/Login"));
