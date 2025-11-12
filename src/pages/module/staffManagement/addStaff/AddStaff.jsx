@@ -19,17 +19,18 @@ const validationSchema = Yup.object().shape({
 });
 
 const AddStaffForm = () => {
-    const navigate = useNavigate();
     const location = useLocation();
+    const navigate = useNavigate();
     const isEditMode = location.pathname.includes("editStaff");
+    const staffData = location.state?.staffData || null;
 
     const initialValues = {
-        staffName: "",
-        phoneNumber: "",
-        dob: "",
-        email: "",
-        location: "",
-        referralCode: "",
+        staffName: staffData?.name || "",
+        phoneNumber: staffData?.phone || "",
+        dob: staffData?.dob || "",
+        email: staffData?.email || "",
+        location: staffData?.location || "",
+        referralCode: staffData?.referralCode || "",
     };
 
     const handleSubmit = (values, { resetForm }) => {
@@ -40,17 +41,19 @@ const AddStaffForm = () => {
     };
 
     const handleCancel = () => {
-        navigate("/staff-Management"); 
+        navigate("/staff-Management");
     };
 
     return (
         <div className=" bg-gray-50 min-h-screen">
             <BreadCrumb
                 linkText={[
+                    {text:"Dashboard"},
                     { text: "Staff Management", href: "/staff-Management" },
-                    { text: "Add New Staff" },
+                    { text: isEditMode ? "Edit Staff" : "Add New Staff" },
                 ]}
             />
+
             <PagePath2
                 title={isEditMode ? "Edit Staff" : "Add New Staff"}
                 description="Fill in the staff details below to add or update staff information."
@@ -69,7 +72,7 @@ const AddStaffForm = () => {
                             <FormField label="Email" name="email" type="email" placeholder="Enter email address" />
                             <FormField label="Staff Location" name="location" placeholder="Enter staff location" />
                             <FormField label="Assign Referral Code" name="referralCode" placeholder="Enter referral code" />
-                           <hr className="text-black col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4"/>
+                            <hr className="text-black col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4" />
                             <div className="col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4">
                                 <Button text="Cancel" variant={2} type="button" onClick={handleCancel} />
                                 <Button text={isEditMode ? "Update Staff" : "Add Staff"} type="submit" variant={1} />
