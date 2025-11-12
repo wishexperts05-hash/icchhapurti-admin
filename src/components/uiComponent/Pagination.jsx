@@ -90,7 +90,7 @@ const Pagination = ({
   }
   // console.log(renderPageNumbers)
   return (
-    <div className="flex items-center justify-between gap-4 flex-wrap px-4 py-2 w-full bottom-sticky bg-white border-t-4 border-[#cca547]">
+    <div className="flex items-center justify-between gap-4 flex-wrap px-4 py-2 w-full bottom-sticky bg-white border-t-4 border-[#cca547] shadow-lg rounded-b-2xl">
       {/* <div className="flex gap-2 items-center">
         <div>Rows per page</div>
         <select
