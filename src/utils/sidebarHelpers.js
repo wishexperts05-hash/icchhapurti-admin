@@ -1,3 +1,4 @@
+import { listItemButtonClasses } from "@mui/material";
 import {
   BarChart3,
   Users,
@@ -14,9 +15,11 @@ import {
   Clock,
   CreditCard,
   BanknoteArrowUp,
+  Users2Icon,
+  SplitSquareHorizontalIcon,
 } from "lucide-react";
 
-import { RiCoupon2Line } from "react-icons/ri";
+import { RiCoupon2Line, RiListSettingsFill, RiProductHuntFill, RiUserSettingsFill } from "react-icons/ri";
 
 export const hasSubAdminAccess = (subAdminAccess, moduleName) => {
   if (!subAdminAccess || !Array.isArray(subAdminAccess)) return false;
@@ -88,47 +91,48 @@ export const allNavigationItems = [
     color: "blue",
   },
   {
-    id: 1,
-    title: "Staff Management",
-    url: "/",
-    icon: Home,
-    badge: null,
-    color: "blue",
-  },
-  {
-    id: 1,
+    id: 3,
     title: "User Management",
     url: "/",
-    icon: Home,
+    icon: RiUserSettingsFill,
     badge: null,
     color: "blue",
   },
   {
-    id: 1,
+    id: 2,
+    title: "Staff Management",
+    url: "/staff-management",
+    icon: Users2Icon,
+    badge: null,
+    color: "blue",
+  },
+  
+  {
+    id: 4,
     title: "Promoter Management",
-    url: "/",
-    icon: Home,
+    url: "/promotermanagement",
+    icon: Award,
     badge: null,
     color: "blue",
   },
   {
-    id: 1,
+    id: 5,
     title: "Product Management",
-    url: "/",
-    icon: Home,
+    url: "/product-management",
+    icon: SplitSquareHorizontalIcon,
     badge: null,
     color: "blue",
   },
   {
-    id: 1,
+    id: 6,
     title: "Order Management",
     url: "/order-management",
-    icon: Home,
+    icon: RiListSettingsFill,
     badge: null,
     color: "blue",
   },
   {
-    id: 1,
+    id: 7,
     title: "Offer Management",
     url: "/",
     icon: Home,
@@ -136,7 +140,7 @@ export const allNavigationItems = [
     color: "blue",
   },
   {
-    id: 1,
+    id: 8,
     title: "Blog Management",
     url: "/",
     icon: Home,
@@ -144,7 +148,7 @@ export const allNavigationItems = [
     color: "blue",
   },
   {
-    id: 2,
+    id: 9,
     title: "Reward Management",
     url: "/customers",
     icon: Users,
@@ -171,7 +175,7 @@ export const allNavigationItems = [
     ],
   },
   {
-    id: 3,
+    id: 10,
     title: " Refer & Earn ",
     url: "/feature-facilities",
     icon: FileText,
@@ -198,7 +202,7 @@ export const allNavigationItems = [
     ],
   },
   {
-    id: 4,
+    id: 11,
     title: "Report & Analytics",
     url: "/pg-hostel-bookings",
     icon: Calendar,
@@ -231,7 +235,7 @@ export const allNavigationItems = [
         color: "yellow",
       },
       {
-        id: 93,
+        id: 44,
         title: "Blocked User & Staffs",
         url: "/cms/notification-management",
         icon: MessageSquare,
@@ -241,7 +245,7 @@ export const allNavigationItems = [
     ],
   },
   {
-    id: 5,
+    id: 12,
     title: "Commission Settings",
     url: "/payments-overview",
     icon: BarChart3,
@@ -284,8 +288,7 @@ export const allNavigationItems = [
     ],
   },
   {
-    id: 6,
-
+    id: 13,
     title: "Target Management",
     url: "/coupon",
     icon: RiCoupon2Line,
@@ -293,7 +296,7 @@ export const allNavigationItems = [
     color: "pink",
   },
   {
-    id: 7,
+    id: 14,
     title: "Country Management",
     url: "/reviews",
     icon: Star,
@@ -301,15 +304,15 @@ export const allNavigationItems = [
     color: "yellow",
   },
   {
-    id: 8,
-    title: "Product Managment",
-    url: "/productMangment",
+    id: 15,
+     title: "Product Managment",
+      url: "/productMangment",
     icon: PieChart,
     badge: null,
     color: "gray",
   },
   {
-    id: 8,
+    id: 16,
     title: "Theme Customization",
     url: "/analytics",
     icon: PieChart,
@@ -317,7 +320,7 @@ export const allNavigationItems = [
     color: "gray",
   },
   {
-    id: 8,
+    id: 17,
     title: "Manage Redeem Request",
     url: "/analytics",
     icon: PieChart,
@@ -325,7 +328,7 @@ export const allNavigationItems = [
     color: "gray",
   },
   {
-    id: 8,
+    id: 18,
     title: "Chat Support System",
     url: "/analytics",
     icon: PieChart,
@@ -333,7 +336,7 @@ export const allNavigationItems = [
     color: "gray",
   },
   {
-    id: 8,
+    id: 19,
     title: "Admin Role Management",
     url: "/analytics",
     icon: PieChart,
@@ -341,7 +344,7 @@ export const allNavigationItems = [
     color: "gray",
   },
   {
-    id: 8,
+    id: 20,
     title: "Comment & Reviews",
     url: "/analytics",
     icon: PieChart,
@@ -349,7 +352,7 @@ export const allNavigationItems = [
     color: "gray",
   },
   {
-    id: 9,
+    id: 21,
     title: "App Management",
     url: "/cms/banner",
     icon: Settings,
@@ -358,7 +361,7 @@ export const allNavigationItems = [
     hasSubmenu: true,
     subItems: [
       {
-        id: 91,
+        id: 61,
         title: "Terms & Conditions",
         url: "/cms/banner",
         icon: FileText,
@@ -366,7 +369,7 @@ export const allNavigationItems = [
         color: "blue",
       },
       {
-        id: 92,
+        id: 62,
         title: "Privicy Policy",
         url: "/cms/static-page",
         icon: Settings,
@@ -374,7 +377,7 @@ export const allNavigationItems = [
         color: "purple",
       },
       {
-        id: 93,
+        id: 63,
         title: "Manage Banner",
         url: "/cms/notification-management",
         icon: MessageSquare,
@@ -382,7 +385,7 @@ export const allNavigationItems = [
         color: "yellow",
       },
       {
-        id: 93,
+        id: 64,
         title: "Help & Support",
         url: "/cms/notification-management",
         icon: MessageSquare,
@@ -390,7 +393,7 @@ export const allNavigationItems = [
         color: "yellow",
       },
       {
-        id: 93,
+        id: 65,
         title: "Other Settings",
         url: "/cms/notification-management",
         icon: MessageSquare,
@@ -398,13 +401,5 @@ export const allNavigationItems = [
         color: "yellow",
       },
     ],
-  },
-  {
-    id: 11,
-    title: "My Profile",
-    url: "/chats",
-    icon: MessageSquare,
-    badge: null,
-    color: "gray",
   },
 ];
