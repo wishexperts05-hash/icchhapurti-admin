@@ -286,6 +286,8 @@ export const allNavigationItems = [
   },
   {
     id: 6,
+   
+  
     title: "Target Management",
     url: "/coupon",
     icon: RiCoupon2Line,
@@ -302,8 +304,8 @@ export const allNavigationItems = [
   },
   {
     id: 8,
-    title: "Notification Management",
-    url: "/analytics",
+     title: "Product Managment",
+      url: "/productMangment",
     icon: PieChart,
     badge: null,
     color: "gray",

@@ -67,6 +67,9 @@ const StaffManagement = () => {
     const handleAttendance = () => {
         navigate("/attendanceListing")
     }
+    const handleSales = () =>{
+         navigate("/attendanceListing")
+    }
     const columns = [
         {
             header: "Staff Name",
@@ -130,15 +133,14 @@ const StaffManagement = () => {
                 onClick={handleAddStaff}
             />
             <PagePath2
-                showAddButton={true}
-                addButtonText="Attendance"
-                onClick={handleAttendance}
+                showAddButton
+                showExtraButton
+                extraButtonText="Attendance"
+                addButtonText="Sale"
+                onClick={handleSales}
+                onExtraClick={handleAttendance}
             />
 
-            {/* Top Buttons */}
-            <div className="flex gap-3 mb-4 justify-end">
-                <Button text="Sales" variant={1} onClick={() => alert("Sales")} />
-            </div>
 
             {/* Data Table */}
             <DataTable

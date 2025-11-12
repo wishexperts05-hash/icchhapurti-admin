@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
+import ProductManagment from "../pages/module/productManagment/ProductManagment";
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
 
 // ---------------------------- Lazy Imports ----------------------------
@@ -41,19 +42,16 @@ import {
 
 // ---------------------------- Staff Management ----------------------------
 import StaffManagement from "../pages/module/staffManagement/staffList/StaffListing";
+import AddProduct from "../pages/module/productManagment/AddProduct";
+import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
+import EditProduct from "../pages/module/productManagment/EditProduct";
+import ViewProduct from "../pages/module/productManagment/ViewProduct";
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
 import AttendanceListing from "../pages/module/staffManagement/attendance/AttendanceListing";
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
-  const navigate = useNavigate();
-
-  // Reusable navigate-back function
-  const handleNavigateBack = () => {
-    navigate("/promotermanagement");
-  };
-
   return (
     <Suspense
       fallback={
@@ -98,8 +96,6 @@ function PublicRoute() {
             path="promotermanagementedit"
             element={
               <PromoterManagementEdit
-                onCancel={handleNavigateBack}
-                onSave={handleNavigateBack}
               />
             }
           />
@@ -107,8 +103,6 @@ function PublicRoute() {
             path="promotermanagementadd"
             element={
               <PromoterManagementAdd
-                onCancel={handleNavigateBack}
-                onAdd={handleNavigateBack}
               />
             }
           />
@@ -121,12 +115,26 @@ function PublicRoute() {
           />
 
   {/* -------------------------- Staff Management -------------------------- */}
+          {/* -------------------------------------Product Managment ------------------------------------------- */}
+           <Route path="product-management" element={<ProductManagment/>} />
+           <Route path="/product-management/add-product" element={<AddProduct />} />
+           <Route path="/product-management/product-edit" element={<EditProduct />} />
+           <Route path="/product-management/product-view" element={<ViewProduct />} />
+           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
+
+
+
+
+          {/* 404 Not Found */}
+          {/* <Route path="*" element={<NotFound />} /> */}
+
 
           <Route path="staff-management" element={<StaffManagement />} />
           <Route path="addStaff" element={<AddStaffForm />} />
           <Route path="attendanceListing" element={<AttendanceListing />} />
         </Route>
         {/* </Route> */}
+        
       </Routes>
     </Suspense>
   );

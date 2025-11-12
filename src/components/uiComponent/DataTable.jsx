@@ -10,8 +10,8 @@ const DataTable = ({
   onToggleStatus,
 }) => {
   return (
-    <div className="w-full overflow-x-auto overflow-y-auto m-w-[500px] rounded-t-2xl shadow-xl">
-      <table className="min-w-full text-center table-auto bg-[#FFFFFF] rounded-t-2xl overflow-hidden shadow">
+    <div className="w-full overflow-x-auto overflow-y-auto m-w-[500px] rounded-t-2xl shadow-black">
+      <table className="min-w-full text-center table-auto bg-[#FFFFFF] rounded-t-2xl overflow-hidden shadow-black">
         <thead >
           <tr className="border-b border-border/50 bg-[#F7F7F7] h-[60px] ">
             {columns.map((col, index) => (

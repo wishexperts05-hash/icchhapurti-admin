@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import AnimationCSS from "./AnimationCSS";
 import { allNavigationItems } from "../../utils/sidebarHelpers";
+import logo from "../../assets/logo.png"
 
 const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
   const location = useLocation();
@@ -213,11 +214,11 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
         {isMobile && !isOpen ? null : (
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             {isOpen && (
-              <div className="flex items-center space-x-3 animate-slide-in-left">
-                <div className="h-auto w-48">
+              <div className="flex items-center space-x-3 animate-slide-in-left w-full">
+                <div className="h-16 w-full flex items-center justify-center">
                   <img 
-                    // src={Logo} 
-                    alt="Logo" className="w-full" 
+                    src={logo} 
+                    alt="Logo" className="object-cover w-full h-full" 
                   />
                 </div>
               </div>
