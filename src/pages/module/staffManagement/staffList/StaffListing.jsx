@@ -64,7 +64,12 @@ const StaffManagement = () => {
     const handleAddStaff = () => {
         navigate("/addStaff")
     };
-
+    const handleAttendance = () => {
+        navigate("/attendanceListing")
+    }
+    const handleSales = () =>{
+         navigate("/attendanceListing")
+    }
     const columns = [
         {
             header: "Staff Name",
@@ -97,8 +102,8 @@ const StaffManagement = () => {
             icon: (row) => (
                 <MdOutlineBlock
                     className={`w-5 h-5 ${row.status
-                            ? "text-yellow-600 cursor-pointer"
-                            : "text-gray-400 cursor-pointer"
+                        ? "text-yellow-600 cursor-pointer"
+                        : "text-gray-400 cursor-pointer"
                         }`}
                     title={row.status ? "Unblock" : "Block"}
                 />
@@ -108,7 +113,7 @@ const StaffManagement = () => {
         },
     ];
     return (
-        <div className=" bg-gray-50 min-h-screen">
+        <div className=" bg-gray-50 min-h-screen shadow-2xl">
             {/* Breadcrumb Section */}
             <BreadCrumb
                 linkText={[
@@ -127,12 +132,15 @@ const StaffManagement = () => {
                 addButtonText="Add New Staff"
                 onClick={handleAddStaff}
             />
+            <PagePath2
+                showAddButton
+                showExtraButton
+                extraButtonText="Attendance"
+                addButtonText="Sale"
+                onClick={handleSales}
+                onExtraClick={handleAttendance}
+            />
 
-            {/* Top Buttons */}
-            <div className="flex gap-3 mb-4 justify-end">
-                <Button text="Attendance" variant={1} onClick={() => alert("Attendance")} />
-                <Button text="Sales" variant={1} onClick={() => alert("Sales")} />
-            </div>
 
             {/* Data Table */}
             <DataTable
