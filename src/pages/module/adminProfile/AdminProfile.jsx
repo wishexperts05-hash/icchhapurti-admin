@@ -67,6 +67,12 @@ const AdminProfile = () => {
                                             {adminProfile?.admin?.email || "-"}
                                         </div>
                                     </div>
+                                     <div className="flex flex-col gap-2 w-full">
+                                        <span className="font-medium text-[#004AAD]">Password</span>
+                                        <div className="px-3 py-3 border border-[#CCA547]/80 rounded-lg shadow-sm w-full">
+                                            {adminProfile?.admin?.password || "-"}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* Divider */}
