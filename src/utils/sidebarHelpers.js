@@ -1,3 +1,4 @@
+import { listItemButtonClasses } from "@mui/material";
 import {
   BarChart3,
   Users,
@@ -14,9 +15,11 @@ import {
   Clock,
   CreditCard,
   BanknoteArrowUp,
+  Users2Icon,
+  SplitSquareHorizontalIcon,
 } from "lucide-react";
 
-import { RiCoupon2Line } from "react-icons/ri";
+import { RiCoupon2Line, RiListSettingsFill, RiProductHuntFill, RiUserSettingsFill } from "react-icons/ri";
 
 export const hasSubAdminAccess = (subAdminAccess, moduleName) => {
   if (!subAdminAccess || !Array.isArray(subAdminAccess)) return false;
@@ -88,26 +91,27 @@ export const allNavigationItems = [
     color: "blue",
   },
   {
-    id: 2,
-    title: "Staff Management",
-    url: "/staff-management",
-    icon: Home,
+    id: 3,
+    title: "User Management",
+    url: "/",
+    icon: RiUserSettingsFill,
     badge: null,
     color: "blue",
   },
   {
-    id: 3,
-    title: "User Management",
-    url: "/",
-    icon: Home,
+    id: 2,
+    title: "Staff Management",
+    url: "/staff-management",
+    icon: Users2Icon,
     badge: null,
     color: "blue",
   },
+  
   {
     id: 4,
     title: "Promoter Management",
     url: "/promotermanagement",
-    icon: Home,
+    icon: Award,
     badge: null,
     color: "blue",
   },
@@ -115,7 +119,7 @@ export const allNavigationItems = [
     id: 5,
     title: "Product Management",
     url: "/product-management",
-    icon: Home,
+    icon: SplitSquareHorizontalIcon,
     badge: null,
     color: "blue",
   },
@@ -123,7 +127,7 @@ export const allNavigationItems = [
     id: 6,
     title: "Order Management",
     url: "/order-management",
-    icon: Home,
+    icon: RiListSettingsFill,
     badge: null,
     color: "blue",
   },
