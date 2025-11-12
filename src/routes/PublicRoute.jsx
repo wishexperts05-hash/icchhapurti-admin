@@ -44,6 +44,8 @@ import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
 import StaffManagement from "../pages/module/staffManagement/staffList/staffListing";
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
+import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
+import EditShipingCost from "../pages/module/productManagment/EditShipingCost"
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -116,9 +118,8 @@ function PublicRoute() {
            <Route path="/product-management/product-edit" element={<EditProduct />} />
            <Route path="/product-management/product-view" element={<ViewProduct />} />
            <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
-
-
-
+            <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
+            <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
