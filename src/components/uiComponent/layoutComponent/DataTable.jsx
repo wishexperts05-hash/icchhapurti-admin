@@ -87,8 +87,7 @@ const DataTable = ({
                             <button
                               key={idx}
                               title={action.title}
-                             className="p-2 rounded hover:bg-blue-100 hover:text-[#004AAD] transition"
-
+                              className="p-2 rounded hover:bg-blue-100 hover:text-[#004AAD] transition"
                               onClick={() => action.onClick?.(row)}
                             >
                               {action.icon}

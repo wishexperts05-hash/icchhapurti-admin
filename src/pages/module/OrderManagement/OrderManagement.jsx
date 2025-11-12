@@ -5,8 +5,10 @@ import { Box } from "@mui/material";
 import DataTable from "../../../components/uiComponent/DataTable";
 import { FiEye, FiTrash2 } from "react-icons/fi";
 import { FaRegEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const OrderManagement = () => {
+  const navigate = useNavigate();
   const data = [
     {
       orderId: "OI6798",
@@ -121,7 +123,7 @@ const OrderManagement = () => {
               icon: <FiEye className="w-5 h-5 text-[#CCA547]" />,
               title: "View",
               onClick: (row) => {
-                // navigate(`/pg-hostel-owner/hostel-owner-details/${row._id}`);
+                navigate(`/order-management/order-details`);
               },
               className: "hover:bg-blue-100 hover:text-[#004AAD]",
             },
