@@ -47,7 +47,7 @@ export default function UserManagement({ activeItem, setActiveItem }) {
       referrer: "Dev Kumar",
       isBlocked: true
     },
-    // Add more dummy data to test pagination
+    
     ...Array.from({ length: 25 }, (_, i) => ({
       id: i + 6,
       userName: `User ${i + 6}`,
