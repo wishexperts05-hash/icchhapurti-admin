@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import ProductManagment from "../pages/module/productManagment/ProductManagment";
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
@@ -50,7 +50,9 @@ import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
-
+import Usermanagement from "../pages/module/userManagement/usermanagement";
+import UserDetails from "../pages/module/userManagement/userdetails";
+// --------------------------------------------------------------------------------
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
@@ -115,12 +117,14 @@ function PublicRoute() {
             path="order-management/order-details"
             element={<OrderDetails />}
           />
+          <Route path="user-management" element={<Usermanagement />} />
+          <Route path="user-management/user-details" element={<UserDetails />} />
 
           {/* -------------------------- Staff Management -------------------------- */}
           <Route path="staff-management" element={<StaffManagement />} />
           <Route path="addStaff" element={<AddStaffForm />} />
           <Route path="attendanceListing" element={<AttendanceListing />} />
-          <Route path="salesListing" element={<StaffSales />}/>
+          <Route path="salesListing" element={<StaffSales />} />
           {/* -------------------------------------Product Managment ------------------------------------------- */}
           <Route path="product-management" element={<ProductManagment />} />
           <Route path="/product-management/add-product" element={<AddProduct />} />
