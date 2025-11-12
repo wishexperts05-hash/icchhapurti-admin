@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import ProductManagment from "../pages/module/productManagment/ProductManagment";
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
@@ -44,6 +44,8 @@ import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
 import StaffManagement from "../pages/module/staffManagement/staffList/staffListing";
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
+import Usermanagement from "../pages/module/userManagement/usermanagement";
+import UserDetails from "../pages/module/userManagement/userdetails";
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -109,6 +111,8 @@ function PublicRoute() {
             path="order-management/order-details"
             element={<OrderDetails />}
           />
+          <Route path="user-management" element={<Usermanagement />}/>
+          <Route path="user-management/user-details" element={<UserDetails />} />
 
           {/* -------------------------------------Product Managment ------------------------------------------- */}
            <Route path="product-management" element={<ProductManagment/>} />
