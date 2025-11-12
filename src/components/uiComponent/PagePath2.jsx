@@ -19,7 +19,7 @@ const PagePath2 = ({
   disabled = false,
 }) => {
   return (
-    <div className="bg-white p-4 mb-4 border-b rounded-t-2xl border-black">
+    <div className="bg-white p-4 mb-4 shadow-lg rounded-t-2xl ">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h2 className="text-2xl font-semibold flex-shrink-0">{title}</h2>
 

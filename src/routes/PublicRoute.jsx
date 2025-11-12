@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
 
@@ -37,8 +37,12 @@ import {
   OrderManagement,
   OrderDetails,
 } from "../pages/module/OrderManagement/index";
-import StaffManagement from "../pages/module/staffManagement/staffList/staffListing";
+
+
+// ---------------------------- Staff Management ----------------------------
+import StaffManagement from "../pages/module/staffManagement/staffList/StaffListing";
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
+import AttendanceListing from "../pages/module/staffManagement/attendance/AttendanceListing";
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -115,8 +119,12 @@ function PublicRoute() {
             path="order-management/order-details"
             element={<OrderDetails />}
           />
+
+  {/* -------------------------- Staff Management -------------------------- */}
+
           <Route path="staff-management" element={<StaffManagement />} />
           <Route path="addStaff" element={<AddStaffForm />} />
+          <Route path="attendanceListing" element={<AttendanceListing />} />
         </Route>
         {/* </Route> */}
       </Routes>
