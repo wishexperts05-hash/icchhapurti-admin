@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import ProductManagment from "../pages/module/productManagment/ProductManagment";
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
@@ -38,12 +38,20 @@ import {
   OrderManagement,
   OrderDetails,
 } from "../pages/module/OrderManagement/index";
+
+
+// ---------------------------- Staff Management ----------------------------
+import StaffManagement from "../pages/module/staffManagement/staffList/StaffListing";
+import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
+import AttendanceListing from "../pages/module/staffManagement/attendance/AttendanceListing";
+import StaffSales from "../pages/module/staffManagement/Sales/SalesListing";
+// --------------------------------------------------------------------------------
 import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
-import StaffManagement from "../pages/module/staffManagement/staffList/staffListing";
-import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
+import Usermanagement from "../pages/module/userManagement/usermanagement";
+import UserDetails from "../pages/module/userManagement/userdetails";
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -109,13 +117,20 @@ function PublicRoute() {
             path="order-management/order-details"
             element={<OrderDetails />}
           />
+          <Route path="user-management" element={<Usermanagement />} />
+          <Route path="user-management/user-details" element={<UserDetails />} />
 
+          {/* -------------------------- Staff Management -------------------------- */}
+          <Route path="staff-Management" element={<StaffManagement />} />
+          <Route path="addStaff" element={<AddStaffForm />} />
+          <Route path="attendanceListing" element={<AttendanceListing />} />
+          <Route path="salesListing" element={<StaffSales />} />
           {/* -------------------------------------Product Managment ------------------------------------------- */}
-           <Route path="product-management" element={<ProductManagment/>} />
-           <Route path="/product-management/add-product" element={<AddProduct />} />
-           <Route path="/product-management/product-edit" element={<EditProduct />} />
-           <Route path="/product-management/product-view" element={<ViewProduct />} />
-           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
+          <Route path="product-management" element={<ProductManagment />} />
+          <Route path="/product-management/add-product" element={<AddProduct />} />
+          <Route path="/product-management/product-edit" element={<EditProduct />} />
+          <Route path="/product-management/product-view" element={<ViewProduct />} />
+          <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
 
 
 
@@ -124,11 +139,10 @@ function PublicRoute() {
           {/* <Route path="*" element={<NotFound />} /> */}
 
 
-          <Route path="staff-management" element={<StaffManagement />} />
-          <Route path="addStaff" element={<AddStaffForm />} />
+
         </Route>
         {/* </Route> */}
-        
+
       </Routes>
     </Suspense>
   );
