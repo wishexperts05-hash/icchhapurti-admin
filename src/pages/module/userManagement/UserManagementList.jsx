@@ -3,6 +3,7 @@ import { FiSearch, FiEye } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import DataTable from "../../../components/uiComponent/DataTable";
+import PagePath2 from "../../../components/uiComponent/PagePath2";
 
 export default function UserManagement({ activeItem, setActiveItem }) {
   const navigate = useNavigate();
@@ -175,38 +176,13 @@ export default function UserManagement({ activeItem, setActiveItem }) {
         </h1>
         
         {/* Search and Entries Controls */}
-        <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
-          <div className="flex items-center gap-3 text-gray-700 text-sm">
-            <label>Show</label>
-            <select
-              value={entriesPerPage}
-              onChange={(e) => {
-                setEntriesPerPage(Number(e.target.value));
-                setCurrentPage(1);
-              }}
-              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            >
-              <option value={10}>10</option>
-              <option value={25}>25</option>
-              <option value={50}>50</option>
-            </select>
-            <span>Entries</span>
-          </div>
-
-          <div className="relative w-80">
-            <FiSearch className="absolute top-3 left-3 text-gray-400 text-lg" />
-            <input
-              type="text"
-              placeholder="Search"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="border border-gray-300 rounded-md pl-10 pr-4 py-2.5 w-full text-[15px] placeholder-gray-400 shadow-sm"
+        <PagePath2
+                title="User Management"
+               showSearch={true}
+                searchTerm={searchTerm}
+                
+               
             />
-          </div>
-        </div>
 
         {/* DataTable */}
         <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
