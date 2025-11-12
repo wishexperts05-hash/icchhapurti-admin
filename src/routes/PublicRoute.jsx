@@ -1,7 +1,9 @@
 import { lazy, Suspense, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
+import ProductManagment from "../pages/module/productManagment/ProductManagment";
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
+import { useNavigate } from "react-router-dom";
 
 // ---------------------------- Lazy Imports ----------------------------
 const Login = lazy(() => import("../pages/auth/Login"));
@@ -37,6 +39,10 @@ import {
   OrderManagement,
   OrderDetails,
 } from "../pages/module/OrderManagement/index";
+import AddProduct from "../pages/module/productManagment/AddProduct";
+import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
+import EditProduct from "../pages/module/productManagment/EditProduct";
+import ViewProduct from "../pages/module/productManagment/ViewProduct";
 import StaffManagement from "../pages/module/staffManagement/staffList/staffListing";
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
 import Usermanagement from "../pages/module/userManagement/usermanagement";
@@ -45,13 +51,6 @@ import UserDetails from "../pages/module/userManagement/userdetails";
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
-  const navigate = useNavigate();
-
-  // Reusable navigate-back function
-  const handleNavigateBack = () => {
-    navigate("/promotermanagement");
-  };
-
   return (
     <Suspense
       fallback={
@@ -96,8 +95,6 @@ function PublicRoute() {
             path="promotermanagementedit"
             element={
               <PromoterManagementEdit
-                onCancel={handleNavigateBack}
-                onSave={handleNavigateBack}
               />
             }
           />
@@ -105,8 +102,6 @@ function PublicRoute() {
             path="promotermanagementadd"
             element={
               <PromoterManagementAdd
-                onCancel={handleNavigateBack}
-                onAdd={handleNavigateBack}
               />
             }
           />
@@ -119,10 +114,26 @@ function PublicRoute() {
           />
           <Route path="user-management" element={<Usermanagement />}/>
           <Route path="user-management/user-details" element={<UserDetails />} />
+
+          {/* -------------------------------------Product Managment ------------------------------------------- */}
+           <Route path="product-management" element={<ProductManagment/>} />
+           <Route path="/product-management/add-product" element={<AddProduct />} />
+           <Route path="/product-management/product-edit" element={<EditProduct />} />
+           <Route path="/product-management/product-view" element={<ViewProduct />} />
+           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
+
+
+
+
+          {/* 404 Not Found */}
+          {/* <Route path="*" element={<NotFound />} /> */}
+
+
           <Route path="staff-management" element={<StaffManagement />} />
           <Route path="addStaff" element={<AddStaffForm />} />
         </Route>
         {/* </Route> */}
+        
       </Routes>
     </Suspense>
   );

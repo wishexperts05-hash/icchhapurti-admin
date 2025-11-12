@@ -1,38 +1,20 @@
-import React from 'react';
-import { User } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
+import { LuWallet } from "react-icons/lu";
+import { FaRegUser } from "react-icons/fa6";
 
 export default function UserDetails() {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const user = location.state?.user; // User data is retrieved from state
-
-    // If no user data, redirect back
     
-
     return (
         <div className="min-h-screen bg-gray-50 p-8 bg-white mb-2">
             <div className="max-w-6xl mx-auto">
                 {/* Breadcrumb */}
-                <div className="flex items-center gap-3 text-sm mb-6">
-                    <div className="w-6 h-6 bg-black flex items-center justify-center">
-                        <div className="grid grid-cols-2 gap-0.5 w-3 h-3">
-                            <div className="bg-white"></div>
-                            <div className="bg-white"></div>
-                            <div className="bg-white"></div>
-                            <div className="bg-white"></div>
-                        </div>
-                    </div>
-                    <span className="text-gray-400">›</span>
-                    <button
-                        onClick={() => navigate('/dashboard')} // IMPORTANT CHANGE: Use /dashboard for UserManagement
-                        className="text-gray-700 hover:text-blue-500"
-                    >
-                        User Management
-                    </button>
-                    <span className="text-gray-400">›</span>
-                    <span className="text-blue-500 font-medium">View User</span>
-                </div>
+                <BreadCrumb
+                    linkText={[
+                        { text: "User Management", href: "/user-management" },
+                        { text: "View User" },
+                    ]}
+                />
 
                 {/* Page Title */}
                 <h1 className="text-3xl font-bold text-gray-900 mb-8">User Details</h1>
@@ -56,9 +38,9 @@ export default function UserDetails() {
 
                 {/* User Information Card */}
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 ">
-                    <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 ">
+                    <div className="bg-gray-50 px-6 py-4 border-b border-gray-500 ">
                         <div className="flex items-center gap-3">
-                            <User className="w-5 h-5 text-gray-800" />
+                            <FaRegUser className="w-5 h-5 text-gray-800" />
                             <h3 className="text-lg font-bold text-gray-900">User Information</h3>
                         </div>
                     </div>
@@ -68,14 +50,14 @@ export default function UserDetails() {
                             {/* Name */}
                             <div className="flex items-start">
                                 <div className="w-56 font-bold text-gray-900">Name :</div>
-                                <div className="flex-1 text-gray-800"></div>
+                                <div className="flex-1 text-gray-800"> Dheejraj jhadhav</div>
                             </div>
 
                             {/* Email */}
                             <div className="flex items-start">
                                 <div className="w-56 font-bold text-gray-900">E-Mail Id :</div>
                                 <div className="flex-1 text-gray-800">
-                                    
+                                    ayushi@gmail.com
                                 </div>
                             </div>
 
@@ -96,35 +78,40 @@ export default function UserDetails() {
                                 <div className="w-56 font-bold text-gray-900">Address :</div>
                                 <div className="flex-1 text-gray-800">Maharashtra, India</div>
                             </div>
+                               {/* Referral Name */}
+                            <div className="flex items-start">
+                                <div className="w-56 font-bold text-gray-900">Referral Name :</div>
+                                <div className="flex-1 text-gray-800">Jeo Deo</div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 mt-8">
-                    <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <div className="bg-gray-50 px-6 py-4 border-b border-gray-500 px-2">
                         <div className="flex items-center gap-3">
-                            <User className="w-5 h-5 text-gray-800" />
+                            <LuWallet className="w-5 h-5 text-gray-800" />
                             <h3 className="text-lg font-bold text-gray-900">wallet</h3>
                         </div>
                     </div>
 
                     <div className="p-8 bg-gray-50">
                         <div className="space-y-6">
-                            {/* Name */}
+                            {/* current */}
                             <div className="flex items-start">
                                 <div className="w-56 font-bold text-gray-900">current  wallet balance :</div>
-                                <div className="flex-1 text-gray-800"></div>
+                                <div className="flex-1 text-gray-800">677</div>
                             </div>
 
-                            {/* Email */}
+                            {/* coins */}
                             <div className="flex items-start">
                                 <div className="w-56 font-bold text-gray-900">coins :</div>
                                 <div className="flex-1 text-gray-800">
-                                   
+                                    465768
                                 </div>
                             </div>
 
-                        
-                           
+
+
                         </div>
                     </div>
                 </div>
