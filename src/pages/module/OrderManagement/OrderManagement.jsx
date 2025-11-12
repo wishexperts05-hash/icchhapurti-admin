@@ -3,6 +3,8 @@ import PagePath2 from "../../../components/uiComponent/PagePath2";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import { Box } from "@mui/material";
 import DataTable from "../../../components/uiComponent/DataTable";
+import { FiEye, FiTrash2 } from "react-icons/fi";
+import { FaRegEdit } from "react-icons/fa";
 
 const OrderManagement = () => {
   const data = [
@@ -114,6 +116,33 @@ const OrderManagement = () => {
           data={data}
           currentPage={1}
           usersPerPage={5}
+          actions={[
+            {
+              icon: <FiEye className="w-5 h-5 text-[#FF6B00]" />,
+              title: "View",
+              onClick: (row) => {
+                // navigate(`/pg-hostel-owner/hostel-owner-details/${row._id}`);
+              },
+              className: "hover:bg-blue-100 hover:text-[#004AAD]",
+            },
+            {
+              icon: <FaRegEdit className="w-5 h-5 text-[#FF6B00]" />,
+              title: "Edit",
+              onClick: (row) => {
+                // navigate(`/pg-hostel-owner/edit-hostel-owner/${row._id}`);
+              },
+
+              className: "hover:bg-blue-100 hover:text-[#004AAD]",
+            },
+            {
+              icon: <FiTrash2 className="w-5 h-5 text-[#FF6B00]" />,
+              title: "Delete",
+              onClick: (row) => {
+                // handleDelete(row?._id);
+              },
+              className: "hover:bg-blue-100 hover:text-[#004AAD]",
+            },
+          ]}
         />
       </Box>
     </Box>
