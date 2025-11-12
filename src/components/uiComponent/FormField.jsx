@@ -85,7 +85,7 @@ export default function FormField({
         <>
           <label
             htmlFor={name}
-            className="text-sm font-medium text-gray-700 mb-1"
+            className="text-sm font-medium text-[#004AAD] mb-1"
           >
             {label}
           </label>
@@ -114,7 +114,7 @@ export default function FormField({
               }
             }}
             onBlur={formik.handleBlur}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="border border-[#CCA547]/80 rounded-lg px-3 py-2 focus:outline-none"
           />
         </>
       ) : fieldType === "input" && type === "textarea" ? (
@@ -133,7 +133,7 @@ export default function FormField({
             disabled={disabled}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="border border-[#CCA547]/80 rounded-lg px-3 py-2 focus:outline-none"
           />
         </>
       ) : (
