@@ -50,8 +50,8 @@ import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
-import Usermanagement from "../pages/module/userManagement/usermanagement";
-import UserDetails from "../pages/module/userManagement/userdetails";
+import UserManagement from "../pages/module/userManagement/UserManagementList";
+import UserDetails from "../pages/module/userManagement/UserManagementDetails";
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -117,7 +117,7 @@ function PublicRoute() {
             path="order-management/order-details"
             element={<OrderDetails />}
           />
-          <Route path="user-management" element={<Usermanagement />} />
+          <Route path="user-management" element={<UserManagement />} />
           <Route path="user-management/user-details" element={<UserDetails />} />
 
           {/* -------------------------- Staff Management -------------------------- */}
