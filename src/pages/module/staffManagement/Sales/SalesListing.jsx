@@ -16,8 +16,6 @@ const StaffSales = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
-
-    // 🔸 Dummy Data (replace with API data)
     const directSalesData = [
         {
             id: 1,
