@@ -145,14 +145,14 @@ export default function UserManagement({ activeItem, setActiveItem }) {
 
         {/* Search and Entries Controls */}
         <PagePath2
-          title="User Management"
+         
           showSearch={true}
           searchTerm={searchTerm}
           handleSearchTerm={handleSearchTerm}
         />
 
         {/* Data Table */}
-        <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
+        <div className="">
           <DataTable
             columns={columns}
             data={currentItems.map((item, index) => ({

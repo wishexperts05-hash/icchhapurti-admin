@@ -7,7 +7,7 @@ import { FaRegUser } from "react-icons/fa6";
 export default function UserDetails() {
     
     return (
-        <div className="min-h-screen bg-gray-50 p-8 bg-white mb-2">
+        <div className="">
             <div className="max-w-6xl mx-auto">
                 {/* Breadcrumb */}
                 <BreadCrumb
