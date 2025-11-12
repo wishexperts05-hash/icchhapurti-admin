@@ -50,15 +50,10 @@ import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
-<<<<<<< HEAD
-import StaffManagement from "../pages/module/staffManagement/staffList/staffListing";
-import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
-import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
-import EditShipingCost from "../pages/module/productManagment/EditShipingCost"
-=======
 import UserManagement from "../pages/module/userManagement/UserManagementList";
 import UserDetails from "../pages/module/userManagement/UserManagementDetails";
->>>>>>> 9255da6aaf5bc30a07fb72f3486326e367196c37
+import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
+import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -133,7 +128,6 @@ function PublicRoute() {
           <Route path="attendanceListing" element={<AttendanceListing />} />
           <Route path="salesListing" element={<StaffSales />} />
           {/* -------------------------------------Product Managment ------------------------------------------- */}
-<<<<<<< HEAD
            <Route path="product-management" element={<ProductManagment/>} />
            <Route path="/product-management/add-product" element={<AddProduct />} />
            <Route path="/product-management/product-edit" element={<EditProduct />} />
@@ -141,16 +135,6 @@ function PublicRoute() {
            <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
             <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
             <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
-=======
-          <Route path="product-management" element={<ProductManagment />} />
-          <Route path="/product-management/add-product" element={<AddProduct />} />
-          <Route path="/product-management/product-edit" element={<EditProduct />} />
-          <Route path="/product-management/product-view" element={<ViewProduct />} />
-          <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
-
-
-
->>>>>>> 9255da6aaf5bc30a07fb72f3486326e367196c37
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
