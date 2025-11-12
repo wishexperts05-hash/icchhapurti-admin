@@ -4,7 +4,6 @@ import { MdOutlineBlock } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
-import Button from "../../../../components/uiComponent/Button";
 import Pagination from "../../../../components/uiComponent/Pagination";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 const StaffManagement = () => {
@@ -58,8 +57,9 @@ const StaffManagement = () => {
     };
 
     const handleEdit = (row) => {
-        alert(`Edit ${row.name}`);
+        navigate("/editStaff", { state: { staffData: row } });
     };
+
 
     const handleAddStaff = () => {
         navigate("/addStaff")
@@ -75,10 +75,11 @@ const StaffManagement = () => {
             header: "Staff Name",
             field: "name",
             render: (row) => (
-                <div className="text-center">
-                    <div className="font-medium">{row.name}</div>
-                    <div className="text-gray-500 text-xs">{row.code}</div>
+                <div className="flex flex-col justify-center h-full text-center leading-tight">
+                    <span className="font-semibold text-gray-900">{row.name}</span>
+                    <span className="flex justify-center text-start text-gray-500 text-xs">{row.code}</span>
                 </div>
+
             ),
         },
         { header: "Phone No.", field: "phone" },
@@ -155,7 +156,7 @@ const StaffManagement = () => {
                                     onClick={() => a.onClick(row)}
                                     className="p-2 rounded-full hover:bg-gray-100 transition"
                                     title={a.title}
-                                    disabled={a.disableCondition?.(row)} // support conditional disabling
+                                    disabled={a.disableCondition?.(row)}
                                 >
                                     {typeof a.icon === "function" ? a.icon(row) : a.icon}
                                 </button>

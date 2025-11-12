@@ -52,6 +52,7 @@ import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
 import Usermanagement from "../pages/module/userManagement/usermanagement";
 import UserDetails from "../pages/module/userManagement/userdetails";
+import StaffMapPage from "../pages/module/staffManagement/attendance/StaffMapPage";
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -123,8 +124,11 @@ function PublicRoute() {
           {/* -------------------------- Staff Management -------------------------- */}
           <Route path="staff-Management" element={<StaffManagement />} />
           <Route path="addStaff" element={<AddStaffForm />} />
+          <Route path="editStaff" element={<AddStaffForm />} />
           <Route path="attendanceListing" element={<AttendanceListing />} />
           <Route path="salesListing" element={<StaffSales />} />
+          <Route path="/staff-map/:id" element={<StaffMapPage />} />
+
           {/* -------------------------------------Product Managment ------------------------------------------- */}
           <Route path="product-management" element={<ProductManagment />} />
           <Route path="/product-management/add-product" element={<AddProduct />} />
