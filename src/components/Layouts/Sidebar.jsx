@@ -214,7 +214,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
         {isMobile && !isOpen ? null : (
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             {isOpen && (
-              <div className="flex items-center space-x-3 animate-slide-in-left w-fullt">
+              <div className="flex items-center space-x-3 animate-slide-in-left w-full">
                 <div className="h-16 w-full flex items-center justify-center">
                   <img 
                     src={logo} 
