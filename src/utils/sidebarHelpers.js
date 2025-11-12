@@ -122,7 +122,7 @@ export const allNavigationItems = [
   {
     id: 1,
     title: "Order Management",
-    url: "/",
+    url: "/order-management",
     icon: Home,
     badge: null,
     color: "blue",
@@ -168,7 +168,6 @@ export const allNavigationItems = [
         badge: null,
         color: "purple",
       },
-     
     ],
   },
   {
@@ -196,7 +195,7 @@ export const allNavigationItems = [
         badge: null,
         color: "purple",
       },
-      ],
+    ],
   },
   {
     id: 4,
@@ -282,12 +281,11 @@ export const allNavigationItems = [
         badge: null,
         color: "yellow",
       },
-      ],
+    ],
   },
   {
     id: 6,
-   
-  
+
     title: "Target Management",
     url: "/coupon",
     icon: RiCoupon2Line,
@@ -304,8 +302,8 @@ export const allNavigationItems = [
   },
   {
     id: 8,
-     title: "Product Managment",
-      url: "/productMangment",
+    title: "Product Managment",
+    url: "/productMangment",
     icon: PieChart,
     badge: null,
     color: "gray",

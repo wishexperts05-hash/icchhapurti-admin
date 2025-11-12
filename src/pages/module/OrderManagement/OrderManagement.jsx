@@ -118,7 +118,7 @@ const OrderManagement = () => {
           usersPerPage={5}
           actions={[
             {
-              icon: <FiEye className="w-5 h-5 text-[#FF6B00]" />,
+              icon: <FiEye className="w-5 h-5 text-[#CCA547]" />,
               title: "View",
               onClick: (row) => {
                 // navigate(`/pg-hostel-owner/hostel-owner-details/${row._id}`);
@@ -126,7 +126,7 @@ const OrderManagement = () => {
               className: "hover:bg-blue-100 hover:text-[#004AAD]",
             },
             {
-              icon: <FaRegEdit className="w-5 h-5 text-[#FF6B00]" />,
+              icon: <FaRegEdit className="w-5 h-5 text-[#34C759]" />,
               title: "Edit",
               onClick: (row) => {
                 // navigate(`/pg-hostel-owner/edit-hostel-owner/${row._id}`);
@@ -134,14 +134,14 @@ const OrderManagement = () => {
 
               className: "hover:bg-blue-100 hover:text-[#004AAD]",
             },
-            {
-              icon: <FiTrash2 className="w-5 h-5 text-[#FF6B00]" />,
-              title: "Delete",
-              onClick: (row) => {
-                // handleDelete(row?._id);
-              },
-              className: "hover:bg-blue-100 hover:text-[#004AAD]",
-            },
+            // {
+            //   icon: <FiTrash2 className="w-5 h-5 text-[#FF6B00]" />,
+            //   title: "Delete",
+            //   onClick: (row) => {
+            //     // handleDelete(row?._id);
+            //   },
+            //   className: "hover:bg-blue-100 hover:text-[#004AAD]",
+            // },
           ]}
         />
       </Box>

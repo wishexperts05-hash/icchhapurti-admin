@@ -3,7 +3,6 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import ProductManagment from "../pages/module/productManagment/ProductManagment";
 import LoaderSpinner from "../components/uiComponent/LoaderSpinner";
-import { useNavigate } from "react-router-dom";
 
 // ---------------------------- Lazy Imports ----------------------------
 const Login = lazy(() => import("../pages/auth/Login"));
@@ -91,45 +90,53 @@ function PublicRoute() {
           <Route path="promotermanagement" element={<PromoterManagement />} />
           <Route
             path="promotermanagementedit"
-            element={
-              <PromoterManagementEdit
-              />
-            }
+            element={<PromoterManagementEdit />}
           />
           <Route
             path="promotermanagementadd"
-            element={
-              <PromoterManagementAdd
-              />
-            }
+            element={<PromoterManagementAdd />}
           />
 
           {/* -------------------------- Order Management -------------------------- */}
-          <Route path="order-management" element={<OrderManagement />} />
+          <Route
+            path="order-management"
+            element={<OrderManagement />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
           <Route
             path="order-management/order-details"
             element={<OrderDetails />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
           />
 
           {/* -------------------------------------Product Managment ------------------------------------------- */}
-           <Route path="product-management" element={<ProductManagment/>} />
-           <Route path="/product-management/add-product" element={<AddProduct />} />
-           <Route path="/product-management/product-edit" element={<EditProduct />} />
-           <Route path="/product-management/product-view" element={<ViewProduct />} />
-           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
-
-
-
+          <Route path="product-management" element={<ProductManagment />} />
+          <Route
+            path="/product-management/add-product"
+            element={<AddProduct />}
+          />
+          <Route
+            path="/product-management/product-edit"
+            element={<EditProduct />}
+          />
+          <Route
+            path="/product-management/product-view"
+            element={<ViewProduct />}
+          />
+          <Route
+            path="/product-management/shipping-cost"
+            element={<ManageShippingCost />}
+          />
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
-
 
           <Route path="staff-management" element={<StaffManagement />} />
           <Route path="addStaff" element={<AddStaffForm />} />
         </Route>
         {/* </Route> */}
-        
       </Routes>
     </Suspense>
   );
