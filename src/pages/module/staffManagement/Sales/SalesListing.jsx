@@ -171,18 +171,11 @@ const StaffSales = () => {
                     />
                 </div>
 
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPagesDirect}
-                    totalItems={totalItemsDirect}
-                    itemsPerPage={itemsPerPage}
-                    onPageChange={handlePageChange}
-                />
             </div>
 
             {/* Indirect Sales Section */}
             <div className="bg-white rounded-2xl shadow-md border border-gray-200">
-                <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <div className="flex items-center justify-between px-4 border-b border-gray-200">
                     <h3 className="text-lg font-semibold">Indirect Sales</h3>
                     <PagePath2
                         showSelect
@@ -201,13 +194,6 @@ const StaffSales = () => {
                     />
                 </div>
 
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPagesIndirect}
-                    totalItems={totalItemsIndirect}
-                    itemsPerPage={itemsPerPage}
-                    onPageChange={handlePageChange}
-                />
             </div>
         </div>
     );

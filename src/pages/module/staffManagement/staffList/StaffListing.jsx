@@ -64,11 +64,11 @@ const StaffManagement = () => {
     const handleAddStaff = () => {
         navigate("/addStaff")
     };
-    const handleAttendance = () => {
+    const handleAttendence = () => {
         navigate("/attendanceListing")
     }
-    const handleSales = () =>{
-         navigate("/attendanceListing")
+    const handleSales = () => {
+        navigate("/salesListing")
     }
     const columns = [
         {
@@ -135,10 +135,10 @@ const StaffManagement = () => {
             <PagePath2
                 showAddButton
                 showExtraButton
-                extraButtonText="Attendance"
-                addButtonText="Sale"
-                onClick={handleSales}
-                onExtraClick={handleAttendance}
+                extraButtonText="Sale"
+                addButtonText="Attendence"
+                onClick={handleAttendence}
+                onExtraClick={handleSales}
             />
 
 
