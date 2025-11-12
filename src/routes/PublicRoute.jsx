@@ -52,6 +52,8 @@ import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
 import UserManagement from "../pages/module/userManagement/UserManagementList";
 import UserDetails from "../pages/module/userManagement/UserManagementDetails";
+import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
+import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -126,14 +128,13 @@ function PublicRoute() {
           <Route path="attendanceListing" element={<AttendanceListing />} />
           <Route path="salesListing" element={<StaffSales />} />
           {/* -------------------------------------Product Managment ------------------------------------------- */}
-          <Route path="product-management" element={<ProductManagment />} />
-          <Route path="/product-management/add-product" element={<AddProduct />} />
-          <Route path="/product-management/product-edit" element={<EditProduct />} />
-          <Route path="/product-management/product-view" element={<ViewProduct />} />
-          <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
-
-
-
+           <Route path="product-management" element={<ProductManagment/>} />
+           <Route path="/product-management/add-product" element={<AddProduct />} />
+           <Route path="/product-management/product-edit" element={<EditProduct />} />
+           <Route path="/product-management/product-view" element={<ViewProduct />} />
+           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
+            <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
+            <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
