@@ -13,7 +13,7 @@ const PasswordResetSuccessfully = lazy(() =>
   import("../pages/auth/PasswordResetSuccefully")
 );
 
-const Dashboard = lazy(() => import("../pages/module/Dashboard/Dashboard"));
+const Dashboard = lazy(() => import("../pages/module/dashboard/Dashboard"));
 const AdminProfile = lazy(() =>
   import("../pages/module/adminProfile/AdminProfile")
 );
