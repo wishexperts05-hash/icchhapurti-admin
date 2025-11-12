@@ -55,7 +55,7 @@ const AddStaffForm = () => {
                 title={isEditMode ? "Edit Staff" : "Add New Staff"}
                 description="Fill in the staff details below to add or update staff information."
             />
-            <div className="bg-white shadow-md border border-gray-200 rounded-b-xl p-6">
+            <div className="bg-white shadow-md rounded-b-xl p-6">
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
@@ -69,6 +69,7 @@ const AddStaffForm = () => {
                             <FormField label="Email" name="email" type="email" placeholder="Enter email address" />
                             <FormField label="Staff Location" name="location" placeholder="Enter staff location" />
                             <FormField label="Assign Referral Code" name="referralCode" placeholder="Enter referral code" />
+                           <hr className="text-black col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4"/>
                             <div className="col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4">
                                 <Button text="Cancel" variant={2} type="button" onClick={handleCancel} />
                                 <Button text={isEditMode ? "Update Staff" : "Add Staff"} type="submit" variant={1} />
