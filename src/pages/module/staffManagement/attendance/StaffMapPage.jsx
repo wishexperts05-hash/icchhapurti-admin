@@ -25,7 +25,7 @@ const StaffMapPage = () => {
         linkText={[
           { text: "Dashboard" },
           { text: "Staff Management", href: "/staff-Management" },
-          { text: "Attendence List", href: "/attendanceListing" },
+          { text: "Attendence List", href: "/staff-Management/attendanceListing" },
           { text: "Map View" },
         ]}
       />
@@ -63,7 +63,7 @@ const StaffMapPage = () => {
             <div>
               <label className="text-sm font-medium text-gray-600">Travel Mode</label>
               <div className="bg-white border border-gray-300 rounded-[8px] px-4 py-3 flex items-center gap-2">
-                <BusFront size={16} className="text-yellow-600" />
+                {/* <BusFront size={16} className="text-yellow-600" /> */}
                 {staffTravel.travelMode}
               </div>
             </div>
@@ -74,7 +74,7 @@ const StaffMapPage = () => {
                 Distance Covered
               </label>
               <div className="bg-white border border-gray-300 rounded-[8px] px-4 py-3 flex items-center gap-2">
-                <Ruler size={16} className="text-yellow-600" />
+                
                 {staffTravel.distance}
               </div>
             </div>

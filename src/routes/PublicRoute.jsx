@@ -45,6 +45,7 @@ import StaffManagement from "../pages/module/staffManagement/staffList/StaffList
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
 import AttendanceListing from "../pages/module/staffManagement/attendance/AttendanceListing";
 import StaffSales from "../pages/module/staffManagement/Sales/SalesListing";
+import StaffMapPage from "../pages/module/staffManagement/attendance/StaffMapPage";
 // --------------------------------------------------------------------------------
 import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
@@ -122,11 +123,11 @@ function PublicRoute() {
 
           {/* -------------------------- Staff Management -------------------------- */}
           <Route path="staff-Management" element={<StaffManagement />} />
-          <Route path="addStaff" element={<AddStaffForm />} />
-          <Route path="editStaff" element={<AddStaffForm />} />
-          <Route path="attendanceListing" element={<AttendanceListing />} />
-          <Route path="salesListing" element={<StaffSales />} />
-          <Route path="/staff-map/:id" element={<StaffMapPage />} />
+          <Route path="/staff-Management/addStaff" element={<AddStaffForm />} />
+          <Route path="/staff-Management/editStaff" element={<AddStaffForm />} />
+          <Route path="/staff-Management/attendanceListing" element={<AttendanceListing />} />
+          <Route path="/staff-Management/salesListing" element={<StaffSales />} />
+          <Route path="/staff-Management/staff-map/:id" element={<StaffMapPage />} />
 
           {/* -------------------------------------Product Managment ------------------------------------------- */}
           <Route path="product-management" element={<ProductManagment />} />

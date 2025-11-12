@@ -6,6 +6,7 @@ import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import Pagination from "../../../../components/uiComponent/Pagination";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
+import { FaRegEdit } from "react-icons/fa";
 const StaffManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -13,7 +14,7 @@ const StaffManagement = () => {
     const navigate = useNavigate();
     const handleSearchTerm = (e) => {
         setSearchTerm(e.target.value);
-        setCurrentPage(1); // Reset to first page when searching
+        setCurrentPage(1); 
     };
 
     const [staffData, setStaffData] = useState([
@@ -57,18 +58,18 @@ const StaffManagement = () => {
     };
 
     const handleEdit = (row) => {
-        navigate("/editStaff", { state: { staffData: row } });
+        navigate("/staff-Management/editStaff", { state: { staffData: row } });
     };
 
 
     const handleAddStaff = () => {
-        navigate("/addStaff")
+        navigate("/staff-Management/addStaff")
     };
     const handleAttendence = () => {
-        navigate("/attendanceListing")
+        navigate("/staff-Management/attendanceListing")
     }
     const handleSales = () => {
-        navigate("/salesListing")
+        navigate("/staff-Management/salesListing")
     }
     const columns = [
         {
@@ -90,12 +91,12 @@ const StaffManagement = () => {
 
     const actions = [
         {
-            icon: <Pencil className="w-4 h-4 text-green-600" />,
+            icon: <FaRegEdit className="w-5 h-5 text-green-600" />,
             onClick: handleEdit,
             title: "Edit",
         },
         {
-            icon: <Trash2 className="w-4 h-4 text-red-600" />,
+            icon: <Trash2 className="w-5 h-5 text-red-600" />,
             onClick: handleDelete,
             title: "Delete",
         },
