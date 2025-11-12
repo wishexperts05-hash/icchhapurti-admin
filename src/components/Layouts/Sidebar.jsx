@@ -304,19 +304,20 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
           </div>
 
           {/* Logout */}
-          <div className="px-3 pb-3 border-t border-gray-200">
+         {/* Logout Button */}
+          <div className="px-3 pb-3 border-t-2 border-[#e65d00]/40">
             <button
               onClick={handleLogout}
-              className={`mt-3 relative group py-3 rounded-lg transition-all duration-200 w-full flex items-center px-4 hover:bg-gray-100 text-gray-700`}
+              className={`mt-2 relative group py-1 rounded-xl transition-all duration-300 hover:shadow-lg w-full card-hover-effect flex items-center px-3 bg-[#e65d00]/20 border border-[#e65d00]/20 hover:bg-[#e65d00]`}
             >
-              <div className="flex items-center justify-center rounded-lg transition-all duration-200">
-                <div className="bg-white p-1 rounded-md">
+              <div className="flex items-center justify-center rounded-lg transition-all duration-200 micro-bounce text-white">
+                <div className="bg-[#e65d00] p-1 rounded-md">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
                     height="20"
                     fill="currentColor"
-                    className="bi bi-box-arrow-right text-gray-700"
+                    className="bi bi-box-arrow-right"
                     viewBox="0 0 16 16"
                   >
                     <path
@@ -331,7 +332,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
                 </div>
 
                 {isOpen && (
-                  <span className="ml-3 font-medium text-sm text-gray-700">
+                  <span className="ml-3 font-medium text-sm text-[#e65d00] group-hover:text-white">
                     Log out
                   </span>
                 )}
