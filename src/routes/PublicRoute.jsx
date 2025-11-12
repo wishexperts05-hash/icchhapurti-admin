@@ -121,7 +121,7 @@ function PublicRoute() {
           <Route path="user-management/user-details" element={<UserDetails />} />
 
           {/* -------------------------- Staff Management -------------------------- */}
-          <Route path="staff-management" element={<StaffManagement />} />
+          <Route path="staff-Management" element={<StaffManagement />} />
           <Route path="addStaff" element={<AddStaffForm />} />
           <Route path="attendanceListing" element={<AttendanceListing />} />
           <Route path="salesListing" element={<StaffSales />} />
