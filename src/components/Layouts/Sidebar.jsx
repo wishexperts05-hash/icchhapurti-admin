@@ -311,7 +311,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
               className={`mt-2 relative group py-1 rounded-xl transition-all duration-300 hover:shadow-lg w-full card-hover-effect flex items-center px-3 bg-[#e65d00]/20 border border-[#e65d00]/20 hover:bg-[#e65d00]`}
             >
               <div className="flex items-center justify-center rounded-lg transition-all duration-200 micro-bounce text-white">
-                <div className="bg-[#e65d00] p-1 rounded-md">
+                <div className="bg-[#ce0808] p-1 rounded-md">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -332,7 +332,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
                 </div>
 
                 {isOpen && (
-                  <span className="ml-3 font-medium text-sm text-[#e65d00] group-hover:text-white">
+                  <span className="ml-3 font-medium text-sm text-[#ce0808] group-hover:text-white">
                     Log out
                   </span>
                 )}
