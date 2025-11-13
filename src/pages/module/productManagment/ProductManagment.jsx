@@ -17,7 +17,7 @@ const ProductManagment = () => {
 
   const navigate = useNavigate();
 
-    const { fetchProductList, productList, } =
+    const { fetchProductList, productList,loading } =
     useProductManagement();
 
       const [searchQuery, setSearchQuery] = useState("");
