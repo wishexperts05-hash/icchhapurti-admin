@@ -7,13 +7,22 @@ import { FaTimes, FaPlus } from "react-icons/fa";
 import Button from "../../../components/uiComponent/Button";
 import returnIcon from "../../../assets/returnProduct.png";
 import { useNavigate } from "react-router-dom";
+import Added from "../../../assets/Added.png";
 
 const EditProduct = () => {
   const [productImages, setProductImages] = useState([]);
   const [easyReturn, setEasyReturn] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [visible, setVisible] = useState(true);
   const navigate = useNavigate();
 
+  //    const editProduct = () => {
+  //   setShowSuccessModal(true);
+  //   setTimeout(() => {
+  //     navigate("/product-management");
+  //     setTimeout(() => setShowSuccessModal(false), 2000);
+  //   }, 2000);
+  // };
   // 🧠 Formik setup
   const formik = useFormik({
     initialValues: {
@@ -42,6 +51,13 @@ const EditProduct = () => {
         visible,
         productImages,
       };
+      setShowSuccessModal(true);
+
+      // Simulate API call delay (optional)
+      setTimeout(() => {
+        navigate("/product-management");
+        setShowSuccessModal(false);
+      }, 2000);
       console.log("📝 Updated Product:", updatedProduct);
       // Call your API here to update the product
       // e.g. axios.put(`/api/products/${id}`, updatedProduct)
@@ -153,7 +169,9 @@ const EditProduct = () => {
         {/* Price */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div>
-            <label className="block text-gray-700 font-medium mb-2">Price:</label>
+            <label className="block text-gray-700 font-medium mb-2">
+              Price:
+            </label>
             <input
               name="price"
               type="text"
@@ -303,6 +321,23 @@ const EditProduct = () => {
           <Button variant={1} text="Save Changes" type="submit" />
         </div>
       </form>
+      {/* 🔸 Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-70 flex items-center justify-center z-50">
+          {/* <motion.div
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="bg-white p-6 rounded-xl shadow-md text-center w-80"
+                      > */}
+          <div className="bg-white p-6 rounded-xl shadow-md text-center w-80">
+            <div className="flex justify-center text-green-500 text-6xl mb-2">
+              <img src={Added} alt="TrashBin" />
+            </div>
+            <p className="font-semibold text-lg">Product Edited Successfully</p>
+            {/* </motion.div> */}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

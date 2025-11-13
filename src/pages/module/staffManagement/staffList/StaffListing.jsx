@@ -58,18 +58,18 @@ const StaffManagement = () => {
     };
 
     const handleEdit = (row) => {
-        navigate("/staff-Management/editStaff", { state: { staffData: row } });
+        navigate("/staff-management/editStaff", { state: { staffData: row } });
     };
 
 
     const handleAddStaff = () => {
-        navigate("/staff-Management/addStaff")
+        navigate("/staff-management/addStaff")
     };
     const handleAttendence = () => {
-        navigate("/staff-Management/attendanceListing")
+        navigate("/staff-management/attendanceListing")
     }
     const handleSales = () => {
-        navigate("/staff-Management/salesListing")
+        navigate("/staff-management/salesListing")
     }
     const columns = [
         {

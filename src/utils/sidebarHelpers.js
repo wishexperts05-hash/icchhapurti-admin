@@ -93,7 +93,7 @@ export const allNavigationItems = [
   {
     id: 3,
     title: "User Management",
-    url: "/",
+    url: "/user-management",
     icon: RiUserSettingsFill,
     badge: null,
     color: "blue",

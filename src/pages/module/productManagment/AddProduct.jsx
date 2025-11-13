@@ -16,15 +16,7 @@ const AddProduct = () => {
   const navigate = useNavigate();
 
 
-   const addProduct = () => {
-   
-    // simulate delete success
-    setTimeout(() => {
-      setShowSuccessModal(true);
-      navigate("/product-management");
-      setTimeout(() => setShowSuccessModal(false), 2000);
-    }, 500);
-  };
+ 
 
   //  Formik setup
   const formik = useFormik({
@@ -54,7 +46,12 @@ const AddProduct = () => {
         visible,
         productImages,
       };
-      console.log(" Submitted Product Data:", productData);
+         setShowSuccessModal(true);
+    setTimeout(() => {   
+      navigate("/product-management");
+      setTimeout(() => setShowSuccessModal(false), 2000);
+    }, 2000);
+      console.log("✅ Submitted Product Data:", productData);
       // You can call your API here
     },
   });
@@ -259,7 +256,7 @@ const AddProduct = () => {
             text="Cancel"
             onClick={() => navigate("/product-management")}
           />
-          <Button variant={1} text="Add" type="submit" onClick={addProduct} />
+          <Button variant={1} text="Add" type="submit"  />
         </div>
       </form>
 
@@ -276,7 +273,7 @@ const AddProduct = () => {
                   <div className= "flex justify-center text-green-500 text-6xl mb-2">
                     <img src={Added} alt="TrashBin" />
                   </div>
-                  <p className="font-semibold text-lg">Product Deleted Successfully</p>
+                  <p className="font-semibold text-lg">Product Added Successfully</p>
                 {/* </motion.div> */}
                 </div>
               </div>

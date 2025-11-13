@@ -36,11 +36,11 @@ const EditStaff = () => {
     console.log("Staff Updated:", values);
     alert("Staff updated successfully!");
     resetForm();
-    navigate("/staff-Management");
+    navigate("/staff-management");
   };
 
   const handleCancel = () => {
-    navigate("/staff-Management");
+    navigate("/staff-management");
   };
 
   return (
@@ -48,7 +48,7 @@ const EditStaff = () => {
       <BreadCrumb
         linkText={[
           { text: "Dashboard" },
-          { text: "Staff Management", href: "/staff-Management" },
+          { text: "Staff Management", href: "/staff-management" },
           { text: "Edit Staff" },
         ]}
       />
