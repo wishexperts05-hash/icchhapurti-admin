@@ -94,10 +94,10 @@ const useLogin = () => {
         setOtpRes(res);
         setLoading(false);
         toast.success(res?.message);
-        sessionStorage.setItem("token", res?.token);
-        sessionStorage.setItem("adminId", res?.user?._id);
-        sessionStorage.setItem("adminName", res?.user?.fullName);
-        sessionStorage.setItem("adminProfile", res?.user?.profileImage);
+        sessionStorage.setItem("token", res?.data?.token);
+        sessionStorage.setItem("adminId", res?.data?.admin?._id);
+        sessionStorage.setItem("adminName", res?.data?.admin?.fullName);
+        sessionStorage.setItem("adminProfile", res?.data?.admin?.profileImage);
         sessionStorage.setItem("isAdminLoggedIn", res?.isAdminLoggedIn);
         sessionStorage.setItem("isSubAdminLoggedIn", res?.isSubAdminLoggedIn);
 
