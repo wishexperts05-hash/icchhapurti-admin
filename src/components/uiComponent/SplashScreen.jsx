@@ -6,7 +6,7 @@ const SplashScreen = () => {
 
   useEffect(() => {
     // Start fade-out 2 seconds before the splash disappears
-    const timer = setTimeout(() => setFadeOut(true), 1800);
+    const timer = setTimeout(() => setFadeOut(true), 2500);
     return () => clearTimeout(timer);
   }, []);
 
