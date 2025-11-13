@@ -134,7 +134,7 @@ const OrderManagement = () => {
               icon: <FaRegEdit className="w-5 h-5 text-[#34C759]" />,
               title: "Edit",
               onClick: (row) => {
-                // navigate(`/pg-hostel-owner/edit-hostel-owner/${row._id}`);
+                navigate(`/order-management/edit-order-details`);
               },
 
               className: "hover:bg-blue-100 hover:text-[#004AAD]",
