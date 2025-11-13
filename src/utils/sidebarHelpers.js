@@ -107,7 +107,7 @@ export const allNavigationItems = [
     badge: null,
     color: "blue",
   },
-  
+
   {
     id: 4,
     title: "Promoter Management",
@@ -143,7 +143,7 @@ export const allNavigationItems = [
   {
     id: 8,
     title: "Blog Management",
-    url: "/",
+    url: "/blog-management",
     icon: blogManagementIcon,
     badge: null,
     color: "blue",
@@ -306,8 +306,8 @@ export const allNavigationItems = [
   },
   {
     id: 15,
-     title: "Product Managment",
-      url: "/productMangment",
+    title: "Product Managment",
+    url: "/productMangment",
     icon: productManagementIcon,
     badge: null,
     color: "gray",
@@ -323,7 +323,7 @@ export const allNavigationItems = [
   {
     id: 17,
     title: "Manage Redeem Request",
-    url: "/analytics",
+    url: "/manage-redeem-request",
     icon: manageReddemRequestIcon,
     badge: null,
     color: "gray",
