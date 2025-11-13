@@ -22,6 +22,10 @@ const EditProfile = lazy(() =>
 );
 const Layout = lazy(() => import("../components/Layouts/Layout"));
 
+// ---------------------------- User Management ----------------------------
+const UserManagement = lazy(() => import("../pages/module/userManagement/UserManagementList"));
+const UserDetails = lazy(() => import("../pages/module/userManagement/UserManagementDetails"));
+
 // ---------------------------- Promoter Management ----------------------------
 const PromoterManagement = lazy(() =>
   import("../pages/module/promotermanagement/PromoterManagement")
@@ -72,10 +76,15 @@ import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
-import UserManagement from "../pages/module/userManagement/UserManagementList";
-import UserDetails from "../pages/module/userManagement/UserManagementDetails";
+
 import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
 import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
+// -------------------------offer management --------------
+
+ const OfferManagementAdd = lazy(() => import("../pages/module/offerManagement/OfferManagementAdd"));
+ const OfferManagementEdit = lazy(() => import("../pages/module/offerManagement/OfferManagementEdit"));
+ const OfferManagementList = lazy(() => import("../pages/module/offerManagement/OfferManagementList"));
+ const OfferManagementView = lazy(() => import("../pages/module/offerManagement/OfferManagementView"));
 
 
 
@@ -200,13 +209,19 @@ function PublicRoute() {
             setActiveItem={setActiveItem} />
 
           {/* -------------------------------------Product Managment ------------------------------------------- */}
-          <Route path="product-management" element={<ProductManagment />} />
-          <Route path="/product-management/add-product" element={<AddProduct />} />
-          <Route path="/product-management/product-edit:id" element={<EditProduct />} />
-          <Route path="/product-management/product-view:id" element={<ViewProduct />} />
-          <Route path="/product-management/shipping-cost:id" element={<ManageShippingCost />} />
-          <Route path="/product-management/shipping-cost/add-shipping-cost:id" element={<AddShippingCost />} />
-          <Route path="/product-management/shipping-cost/edit-shipping-cost:id" element={<EditShipingCost />} />
+           <Route path="product-management" element={<ProductManagment/>} />
+           <Route path="/product-management/add-product" element={<AddProduct />} />
+           <Route path="/product-management/product-edit" element={<EditProduct />} />
+           <Route path="/product-management/product-view" element={<ViewProduct />} />
+           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
+            <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
+            <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
+            {
+              /* -------------------------------------Offer Management ------------------------------------------- */}
+            <Route path="offer-management" element={<OfferManagementList />} />
+          <Route path="offer-management/add-offer" element={<OfferManagementAdd />} />
+         <Route path="offer-management/edit-offer" element={<OfferManagementEdit />} />
+          <Route path="offer-management/offer-details" element={<OfferManagementView />} />
 
           {/* Blog Management */}
           <Route path="blog-management" element={<BlogManagement />} />
@@ -219,6 +234,10 @@ function PublicRoute() {
           <Route path="/app-management/edittermandcondition" element={<EditTermsAndConditions />} />
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
+          
+
+
+
         </Route>
         {/* </Route> */}
       </Routes>
