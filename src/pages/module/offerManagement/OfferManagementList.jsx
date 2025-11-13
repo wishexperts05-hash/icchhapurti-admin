@@ -2,10 +2,12 @@ import React, { useState, useMemo } from "react";
 import { FaEye } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import {Trash2 } from "lucide-react";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import DataTable from "../../../components/uiComponent/DataTable";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import Pagination from "../../../components/uiComponent/Pagination";
+import { FaRegEdit } from "react-icons/fa";
 
 export default function OfferManagementList({ activeItem, setActiveItem }) {
   const navigate = useNavigate();
@@ -132,15 +134,24 @@ const handleAddStaff = () => {
       onClick: (row) => handleView(row),
     },
     {
-      icon: <MdEdit className="text-green-600" />,
-      title: "Edit",
-      onClick: (row) => handleEdit(row),
-    },
-    {
-      icon: <MdDelete className="text-red-600" />,
-      title: "Delete",
-      
-    },
+            icon: (row) => (
+                <FaRegEdit
+                    className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer"
+                    title="Edit"
+                />
+            ),
+            onClick: handleEdit,
+        },
+        {
+            icon: (row) => (
+                <Trash2
+                    className="w-5 h-5 text-yellow-600 hover:text-red-600 transition-colors duration-200 cursor-pointer"
+                    title="Delete"
+                />
+            ),
+           
+        },
+    
   ];
 
   return (

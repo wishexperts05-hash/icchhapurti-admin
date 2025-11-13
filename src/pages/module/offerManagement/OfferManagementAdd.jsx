@@ -86,6 +86,18 @@ const OfferManagementAdd = () => {
                             <FormField label="Target Audience" name="target audience" placeholder="Enter offer code" />
                             <FormField label="Start Date" name="startDate" type="date" placeholder="Select start date" />
                             <FormField label="End Date" name="endDate" type="date" placeholder="Select end date" />
+                            <FormField
+                                                                label="Offer Type"
+                                                                name="offerType"
+                                                                fieldType="select"  // Important: specify fieldType as "select"
+                                                                options={[
+                                                                    { value: "", label: "Choose Offer" },
+                                                                    { value: "discount", label: "Discount" },
+                                                                    { value: "buyget", label: "Buy & Get" },
+                                                                    { value: "freedelivery", label: "Free Delivery" },
+                                                                    { value: "productbundles", label: "Product Bundles" },
+                                                                ]}
+                                                            />
                             
                             <hr className="text-black col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4" />
                             <div className="col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4">

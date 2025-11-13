@@ -32,6 +32,7 @@ const validationSchema = Yup.object().shape({
 
 const OfferManagementEdit = () => {
     const navigate = useNavigate();
+    const handleSelectChange = (option) => setStatusFilter(option);
 
     // Simple initial values without any ID dependency
     const initialValues = {
@@ -112,7 +113,24 @@ const OfferManagementEdit = () => {
                                         { value: "expired", label: "Expired" },
                                     ]}
                                 />
+                                <FormField
+                                    label="Offer Type"
+                                    name="offerType"
+                                    fieldType="select"  // Important: specify fieldType as "select"
+                                    options={[
+                                    { value: "", label: "Choose Offer" },
+                                    { value: "discount", label: "Discount" },
+                                    { value: "buyget", label: "Buy & Get" },
+                                    { value: "freedelivery", label: "Free Delivery" },
+                                    { value: "productbundles", label: "Product Bundles" },
+                                    ]}
+                                />
+
                             </div>
+
+
+
+
                             <div className="col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4">
                                 <Button text="Cancel" variant={2} type="button" onClick={handleCancel} />
                                 <Button text="save" type="submit" variant={1} />
