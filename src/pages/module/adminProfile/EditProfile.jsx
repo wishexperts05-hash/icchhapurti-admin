@@ -35,6 +35,7 @@ const EditProfile = () => {
                 { text: "Admin Profile", href: "/adminProfile" },
                 { text: "Edit Profile" }
             ]} />
+
             <div className="min-h-screen flex flex-col w-full">
                 <PagePath2 title="Edit Admin Profile" />
 
@@ -53,7 +54,6 @@ const EditProfile = () => {
                         onSubmit={async (values) => {
                             console.log("Submitted values:", values);
 
-                            // Original values from adminProfile
                             const initialValues = {
                                 profileImage: adminProfile?.admin?.profileImage || "",
                                 fullName: adminProfile?.admin?.fullName || "",
@@ -69,21 +69,15 @@ const EditProfile = () => {
                                 }
                             });
 
-                            if (Object.keys(updatedFields).length === 0) {
-                                return;
-                            }
+                            if (Object.keys(updatedFields).length === 0) return;
 
                             try {
                                 const res = await updateAdminProfile(updatedFields);
-                                if (res?.success) {
-                                    navigate('/adminProfile');
-                                }
+                                if (res?.success) navigate('/adminProfile');
                             } catch (err) {
                                 console.log("Error while updating admin profile", err);
                             }
                         }}
-
-
                     >
                         {({ values, setFieldValue }) => (
                             <Form className="flex flex-col gap-6">
@@ -97,7 +91,7 @@ const EditProfile = () => {
 
                                     <label
                                         htmlFor="profileImage"
-                                        className="flex items-center gap-2 cursor-pointer bg-[#e65d00] text-white px-4 py-2 rounded-full shadow-md"
+                                        className="flex items-center gap-2 cursor-pointer bg-[#CCA547] text-white px-4 py-2 rounded-full shadow-md"
                                     >
                                         <LuPencil /> Change Photo
                                     </label>
@@ -121,22 +115,53 @@ const EditProfile = () => {
                                 {/* Divider */}
                                 <div className="my-6 border-t border-gray-200"></div>
 
-                                <div className='grid grid-cols-1 md:grid-cols-2 w-full gap-6'>
-                                    <FormField label="Full Name" name="fullName" placeholder="Enter Full Name" type="text" fieldType="input" />
-                                    <FormField label="Phone Number" name="phoneNumber" placeholder="Enter Phone Number" type="text" fieldType="input" />
-                                    <FormField label="Email" name="email" placeholder="Enter Email Address" type="email" fieldType="input" />
-                                    <FormField label="Password" name="password" placeholder="Enter Password" type="text" fieldType="input" />
+                                {/* Form Fields (Full Width) */}
+                                <div className="flex flex-col gap-6 w-full">
+                                    <FormField
+                                        label="Full Name"
+                                        name="fullName"
+                                        placeholder="Enter Full Name"
+                                        type="text"
+                                        fieldType="input"
+                                    />
+                                    <FormField
+                                        label="Phone Number"
+                                        name="phoneNumber"
+                                        placeholder="Enter Phone Number"
+                                        type="text"
+                                        fieldType="input"
+                                    />
+                                    <FormField
+                                        label="Email"
+                                        name="email"
+                                        placeholder="Enter Email Address"
+                                        type="email"
+                                        fieldType="input"
+                                    />
+                                    <FormField
+                                        label="Password"
+                                        name="password"
+                                        placeholder="Enter Password"
+                                        type="text"
+                                        fieldType="input"
+                                    />
                                 </div>
-
-                                <FormField label="Address" name="address" placeholder="Enter Address" type="textarea" fieldType="input" />
 
                                 {/* Divider */}
                                 <div className="my-6 border-t border-gray-200"></div>
 
-                                {/* Submit button */}
+                                {/* Submit Buttons */}
                                 <div className="flex w-full items-center justify-center gap-6">
-                                    <Button variant={2} text="Cancel" onClick={() => navigate('/adminProfile')} />
-                                    <Button variant={1} text={loading?"Submitting":"Save"} type='submit' />
+                                    <Button
+                                        variant={2}
+                                        text="Cancel"
+                                        onClick={() => navigate('/adminProfile')}
+                                    />
+                                    <Button
+                                        variant={1}
+                                        text={loading ? "Submitting..." : "Save"}
+                                        type="submit"
+                                    />
                                 </div>
                             </Form>
                         )}
@@ -147,4 +172,4 @@ const EditProfile = () => {
     )
 }
 
-export default EditProfile;
+export default EditProfile

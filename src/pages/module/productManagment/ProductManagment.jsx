@@ -7,6 +7,7 @@ import PagePath2 from '../../../components/uiComponent/PagePath2';
 import DataTable from "../../../components/uiComponent/DataTable";
 import Pagination from "../../../components/uiComponent/Pagination";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import TrashBin from '../../../assets/TrashBin.png';
 // import { motion } from "framer-motion";
 
 const ProductManagment = () => {
@@ -219,7 +220,9 @@ const ProductManagment = () => {
             className="bg-white p-6 rounded-xl shadow-md text-center w-80"
           > */}
           <div className="bg-white p-6 rounded-xl shadow-md text-center w-80">
-            <div className="text-green-500 text-6xl mb-2">🗑️</div>
+            <div className= "flex justify-center text-green-500 text-6xl mb-2">
+              <img src={TrashBin} alt="TrashBin" />
+            </div>
             <p className="font-semibold text-lg">Product Deleted Successfully</p>
           {/* </motion.div> */}
           </div>
