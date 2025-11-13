@@ -47,7 +47,6 @@ const EditProfile = () => {
                             name: adminProfile?.name || "",
                             phone: adminProfile?.phone || "",
                             email: adminProfile?.email || "",
-                            // address: adminProfile?.address || "",
                             password: adminProfile?.password || ""
                         }}
                         validationSchema={validationSchema}
@@ -59,7 +58,6 @@ const EditProfile = () => {
                                 name: adminProfile?.name || "",
                                 phone: adminProfile?.phone || "",
                                 email: adminProfile?.email || "",
-                                // address: adminProfile?.address || "",
                                 password: adminProfile?.password || ""
                             };
                             const updatedFields = {};
@@ -70,16 +68,20 @@ const EditProfile = () => {
                             });
 
                             if (Object.keys(updatedFields).length === 0) return;
+                            const formData = new FormData();
+                            Object.keys(updatedFields).forEach((key) => {
+                                formData.append(key, updatedFields[key]);
+                            });
 
                             try {
-                                const res = await updateAdminProfile(updatedFields);
+                                const res = await updateAdminProfile(formData);
                                 if (res?.success) navigate('/adminProfile');
                             } catch (err) {
                                 console.log("Error while updating admin profile", err);
                             }
                         }}
                     >
-                        {({ values, setFieldValue, isSubmitting}) => (
+                        {({ values, setFieldValue, isSubmitting }) => (
                             <Form className="flex flex-col gap-6">
                                 {/* Profile Image Upload */}
                                 <div className="relative flex flex-col items-center justify-center w-full gap-3">
