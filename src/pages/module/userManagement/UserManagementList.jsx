@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
-import { FiEye } from "react-icons/fi";
+import { FaEye } from "react-icons/fa";
+import { MdOutlineBlock } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import DataTable from "../../../components/uiComponent/DataTable";
@@ -98,6 +99,13 @@ export default function UserManagement({ activeItem, setActiveItem }) {
       )
     );
   };
+  const handleToggleStatus = (row) => {
+        setStaffData((prev) =>
+            prev.map((item) =>
+                item.id === row.id ? { ...item, status: !item.status } : item
+            )
+        );
+    };
 
   // Columns for DataTable
   const columns = [
@@ -111,21 +119,26 @@ export default function UserManagement({ activeItem, setActiveItem }) {
 
   // Actions for DataTable
   const actions = [
-    {
-      icon: <FiEye size={20} />,
-      title: "View Details",
-      onClick: handleView,
-    },
-    {
-      label: (row) => (row.isBlocked ? "Unblock" : "Block"),
-      title: "Block/Unblock User",
-      onClick: handleBlock,
-      getClassName: (row) =>
-        row.isBlocked
-          ? "border border-red-500 text-red-500 hover:bg-red-50"
-          : "border border-yellow-500 text-yellow-600 hover:bg-yellow-50",
-    },
-  ];
+      {
+        icon: <FaEye className="text-yellow-600" />,
+        title: "View",
+        onClick: () => navigate("/user-management/user-details"),
+      },
+      {
+                  icon: (row) => (
+                      <MdOutlineBlock
+                          className={`w-5 h-5 ${row.status
+                              ? "text-yellow-600 cursor-pointer"
+                              : "text-gray-400 cursor-pointer"
+                              }`}
+                          title={row.status ? "Unblock" : "Block"}
+                      />
+                  ),
+                  onClick: handleToggleStatus,
+                  title: "Toggle Status",
+              },
+      
+    ];
 
   return (
     
@@ -133,26 +146,23 @@ export default function UserManagement({ activeItem, setActiveItem }) {
         {/* Breadcrumb */}
         <BreadCrumb
           linkText={[
-            { text: "Dashboard", href: "/dashboard" },
+          
             { text: "User Management" },
           ]}
         />
 
         {/* Page Title */}
-        <h1 className="text-3xl font-semibold text-gray-800 mb-8">
-          User Management
-        </h1>
-
+        
         {/* Search and Entries Controls */}
         <PagePath2
-         
+           title="User Management"
           showSearch={true}
           searchTerm={searchTerm}
           handleSearchTerm={handleSearchTerm}
         />
 
         {/* Data Table */}
-        <div className="">
+       <div class="mt-6 bg-white p-4 rounded shadow">
           <DataTable
             columns={columns}
             data={currentItems.map((item, index) => ({
