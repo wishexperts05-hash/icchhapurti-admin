@@ -17,7 +17,7 @@ const AddProduct = () => {
 
 
    const addProduct = () => {
-    // setShowConfirmModal(false);
+   
     // simulate delete success
     setTimeout(() => {
       setShowSuccessModal(true);
@@ -26,7 +26,7 @@ const AddProduct = () => {
     }, 500);
   };
 
-  // ✅ Formik setup
+  //  Formik setup
   const formik = useFormik({
     initialValues: {
       category: "",
@@ -54,19 +54,19 @@ const AddProduct = () => {
         visible,
         productImages,
       };
-      console.log("✅ Submitted Product Data:", productData);
+      console.log(" Submitted Product Data:", productData);
       // You can call your API here
     },
   });
 
-  // ✅ Image upload logic
+  //  Image upload logic
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const imageUrls = files.map((file) => URL.createObjectURL(file));
     setProductImages((prev) => [...prev, ...imageUrls]);
   };
 
-  // ✅ Remove image logic
+  //  Remove image logic
   const handleRemoveImage = (index) => {
     setProductImages((prev) => prev.filter((_, i) => i !== index));
   };

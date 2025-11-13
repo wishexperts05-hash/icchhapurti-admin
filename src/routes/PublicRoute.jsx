@@ -43,6 +43,7 @@ import {
 // ---------------------------- Staff Management ----------------------------
 import StaffManagement from "../pages/module/staffManagement/staffList/StaffListing";
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
+import EditStaff from "../pages/module/staffManagement/addStaff/EditStaff";
 import AttendanceListing from "../pages/module/staffManagement/attendance/AttendanceListing";
 import StaffSales from "../pages/module/staffManagement/Sales/SalesListing";
 import StaffMapPage from "../pages/module/staffManagement/attendance/StaffMapPage";
@@ -79,7 +80,6 @@ function PublicRoute() {
         />
 
         {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
-        {/* Uncomment ProtectedRoute when ready */}
         {/* <Route element={<ProtectedRoute />}> */}
         <Route path="/" element={<Layout />}>
           {/* Dashboard */}
@@ -127,7 +127,7 @@ function PublicRoute() {
           {/* -------------------------- Staff Management -------------------------- */}
           <Route path="staff-Management" element={<StaffManagement />} />
           <Route path="/staff-Management/addStaff" element={<AddStaffForm />} />
-          <Route path="/staff-Management/editStaff" element={<AddStaffForm />} />
+          <Route path="/staff-Management/editStaff" element={<EditStaff />} />
           <Route path="/staff-Management/attendanceListing" element={<AttendanceListing />} />
           <Route path="/staff-Management/salesListing" element={<StaffSales />} />
           <Route path="/staff-Management/staff-map/:id" element={<StaffMapPage />} />

@@ -34,8 +34,7 @@ const StaffMapPage = () => {
       {/* Page Layout */}
       <div className="flex flex-col gap-6 py-2">
         {/* Travel Info Section */}
-        {/* Travel Info Section */}
-        <div className="w-full bg-gray-100 shadow rounded-xl p-6">
+        <div className="w-full bg-white shadow rounded-xl p-6">
           <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
             <MapPin className="text-yellow-600" size={20} />
             Travel Information
@@ -74,7 +73,6 @@ const StaffMapPage = () => {
                 Distance Covered
               </label>
               <div className="bg-white border border-gray-300 rounded-[8px] px-4 py-3 flex items-center gap-2">
-                
                 {staffTravel.distance}
               </div>
             </div>
