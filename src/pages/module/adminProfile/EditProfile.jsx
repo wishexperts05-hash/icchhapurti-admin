@@ -9,6 +9,16 @@ import { LuPencil } from "react-icons/lu";
 import { useNavigate } from 'react-router-dom';
 import useAdminProfile from "../../../hooks/auth/useAdminProfile"
 
+const validationSchema = Yup.object({
+    name: Yup.string().required("Full Name is required"),
+    phone: Yup.string()
+        .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits")
+        .required("Phone Number is required"),
+    email: Yup.string().email("Invalid email format").required("Email is required"),
+    // address: Yup.string().required("Address is required"),
+    // password: Yup.string().required("Password is required")
+});
+
 const EditProfile = () => {
     const navigate = useNavigate();
     const { loading, fetchAdminProfile, adminProfile, updateAdminProfile } = useAdminProfile();
@@ -18,16 +28,6 @@ const EditProfile = () => {
     useEffect(() => {
         if (adminId) fetchAdminProfile(adminId);
     }, []);
-
-    const validationSchema = Yup.object({
-        fullName: Yup.string().required("Full Name is required"),
-        phoneNumber: Yup.string()
-            .matches(/^[0-9]{10}$/, "Phone number must be exactly 10 digits")
-            .required("Phone Number is required"),
-        email: Yup.string().email("Invalid email format").required("Email is required"),
-        address: Yup.string().required("Address is required"),
-        password: Yup.string().required("Password is required")
-    });
 
     return (
         <div className="w-full">
@@ -43,24 +43,24 @@ const EditProfile = () => {
                     <Formik
                         enableReinitialize
                         initialValues={{
-                            profileImage: adminProfile?.admin?.profileImage || "",
-                            fullName: adminProfile?.admin?.fullName || "",
-                            phoneNumber: adminProfile?.admin?.phoneNumber || "",
-                            email: adminProfile?.admin?.email || "",
-                            address: adminProfile?.admin?.address || "",
-                            password: adminProfile?.admin?.password || ""
+                            profileImage: adminProfile?.profileImage || "",
+                            name: adminProfile?.name || "",
+                            phone: adminProfile?.phone || "",
+                            email: adminProfile?.email || "",
+                            // address: adminProfile?.address || "",
+                            password: adminProfile?.password || ""
                         }}
                         validationSchema={validationSchema}
                         onSubmit={async (values) => {
                             console.log("Submitted values:", values);
 
                             const initialValues = {
-                                profileImage: adminProfile?.admin?.profileImage || "",
-                                fullName: adminProfile?.admin?.fullName || "",
-                                phoneNumber: adminProfile?.admin?.phoneNumber || "",
-                                email: adminProfile?.admin?.email || "",
-                                address: adminProfile?.admin?.address || "",
-                                password: adminProfile?.admin?.password || ""
+                                profileImage: adminProfile?.profileImage || "",
+                                name: adminProfile?.name || "",
+                                phone: adminProfile?.phone || "",
+                                email: adminProfile?.email || "",
+                                // address: adminProfile?.address || "",
+                                password: adminProfile?.password || ""
                             };
                             const updatedFields = {};
                             Object.keys(values).forEach((key) => {
@@ -79,7 +79,7 @@ const EditProfile = () => {
                             }
                         }}
                     >
-                        {({ values, setFieldValue }) => (
+                        {({ values, setFieldValue, isSubmitting}) => (
                             <Form className="flex flex-col gap-6">
                                 {/* Profile Image Upload */}
                                 <div className="relative flex flex-col items-center justify-center w-full gap-3">
@@ -119,14 +119,14 @@ const EditProfile = () => {
                                 <div className="flex flex-col gap-6 w-full">
                                     <FormField
                                         label="Full Name"
-                                        name="fullName"
+                                        name="name"
                                         placeholder="Enter Full Name"
                                         type="text"
                                         fieldType="input"
                                     />
                                     <FormField
                                         label="Phone Number"
-                                        name="phoneNumber"
+                                        name="phone"
                                         placeholder="Enter Phone Number"
                                         type="text"
                                         fieldType="input"
@@ -159,8 +159,9 @@ const EditProfile = () => {
                                     />
                                     <Button
                                         variant={1}
-                                        text={loading ? "Submitting..." : "Save"}
+                                        text={isSubmitting ? "Submitting..." : "Save"}
                                         type="submit"
+                                        disabled={isSubmitting}
                                     />
                                 </div>
                             </Form>

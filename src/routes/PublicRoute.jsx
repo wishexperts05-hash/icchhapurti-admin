@@ -38,19 +38,39 @@ const PromoterManagementAdd = lazy(() =>
 );
 
 // ---------------------------- Order Management ----------------------------
-import {
-  OrderManagement,
-  OrderDetails,
-  EditOrderDetails,
-} from "../pages/module/OrderManagement/index";
+
+const OrderManagement = lazy(() =>
+  import("../pages/module/OrderManagement/OrderManagement")
+);
+
+const OrderDetails = lazy(() =>
+  import("../pages/module/OrderManagement/OrderDetails")
+);
+
+const EditOrderDetails = lazy(() =>
+  import("../pages/module/OrderManagement/EditOrderDetails")
+);
 
 // ---------------------------- Staff Management ----------------------------
-import StaffManagement from "../pages/module/staffManagement/staffList/StaffListing";
-import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
-import EditStaff from "../pages/module/staffManagement/addStaff/EditStaff";
-import AttendanceListing from "../pages/module/staffManagement/attendance/AttendanceListing";
-import StaffSales from "../pages/module/staffManagement/Sales/SalesListing";
-import StaffMapPage from "../pages/module/staffManagement/attendance/StaffMapPage";
+const StaffManagement = lazy(() =>
+  import("../pages/module/staffManagement/staffList/StaffListing")
+);
+const AddStaffForm = lazy(() =>
+  import("../pages/module/staffManagement/addStaff/AddStaff")
+);
+const EditStaff = lazy(() =>
+  import("../pages/module/staffManagement/addStaff/EditStaff")
+);
+const AttendanceListing = lazy(() =>
+  import("../pages/module/staffManagement/attendance/AttendanceListing")
+);
+const StaffSales = lazy(() =>
+  import("../pages/module/staffManagement/Sales/SalesListing")
+);
+const StaffMapPage = lazy(() =>
+  import("../pages/module/staffManagement/attendance/StaffMapPage")
+);
+
 // --------------------------------------------------------------------------------
 import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
@@ -65,6 +85,33 @@ import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
  const OfferManagementEdit = lazy(() => import("../pages/module/offerManagement/OfferManagementEdit"));
  const OfferManagementList = lazy(() => import("../pages/module/offerManagement/OfferManagementList"));
  const OfferManagementView = lazy(() => import("../pages/module/offerManagement/OfferManagementView"));
+
+
+
+// ---------------------------- Blog Management ----------------------------
+
+const BlogManagement = lazy(() =>
+  import("../pages/module/blogManagement/blogList/BlogListing")
+);
+const AddBlog = lazy(() =>
+  import("../pages/module/blogManagement/addBlog/AddBlog")
+);
+
+const EditBlog = lazy(() =>
+  import("../pages/module/blogManagement/addBlog/EditBlog")
+);
+
+const ViewBlog = lazy(() =>
+  import("../pages/module/blogManagement/addBlog/ViewBlog")
+);
+// --------------------------------------------------------------------------------
+
+//-------------------------Manage Redeem Request-----------------------------------------
+import {
+  ManageRedeemRequest,
+  ViewRedeemRequest,
+} from "../pages/module/ManageRedeemRequest/index";
+
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
   return (
@@ -170,6 +217,11 @@ function PublicRoute() {
          <Route path="offer-management/edit-offer" element={<OfferManagementEdit />} />
           <Route path="offer-management/offer-details" element={<OfferManagementView />} />
 
+          {/* Blog Management */}
+          <Route path="blog-management" element={<BlogManagement />} />
+          <Route path="/blog-management/add-blogs" element={<AddBlog />} />
+          <Route path="/blog-management/edit-blogs/:id" element={<EditBlog />} />
+          <Route path="/blog-management/view-blogs/:id" element={<ViewBlog />} />
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
           
