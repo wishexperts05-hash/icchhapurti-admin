@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 import { RiCoupon2Line, RiListSettingsFill, RiProductHuntFill, RiUserSettingsFill } from "react-icons/ri";
-import { adminRoleManagementIcon, appManagementIcon, blockedUserandStaffsIcon, blogManagementIcon, chatSupportSystemIcon, coinSettingIcon, commentandReviewIcon, commissionsettingsIcon, countryManagementIcon, dashboardIcon, helpAndSupportIcon, luckyDrawAnalysisIcon, luckyDrawManagementIcon, manageBannerIcon, manageReddemRequestIcon, offerManagementIcon, orderManagementIcon, otherSettingsIcon, privicyPolicyIcon, productManagementIcon, referandearnIcon, refferralTrackingIcon, reportandanalyticsIcon, reportsIcon, rewardManagementIcon, spinRewardManagementIcon, staffCommissionIcon, staffManagementIcon, staffPerformanceIcon, targetManagementIcon, termAndConditionsIcon, themecustomizationIcon, uploadVideoIcon, userCommissionIcon, userManagementIcon } from "../assets/sidebaricon/sidebaricon";
+import { adminRoleManagementIcon, appManagementIcon, blockedUserandStaffsIcon, blogManagementIcon, chatSupportSystemIcon, coinSettingIcon, commentandReviewIcon, commissionsettingsIcon, countryManagementIcon, dashboardIcon, helpAndSupportIcon, luckyDrawAnalysisIcon, luckydrawManagementIcon, luckyDrawManagementIcon, manageBannerIcon, manageReddemRequestIcon, offerManagementIcon, orderManagementIcon, otherSettingsIcon, privicyPolicyIcon, productManagementIcon, referandearnIcon, refferralTrackingIcon, reportandanalyticsIcon, reportsIcon, rewardManagementIcon, spinRewardManagementIcon, staffCommissionIcon, staffManagementIcon, staffPerformanceIcon, targetManagementIcon, termAndConditionsIcon, themecustomizationIcon, uploadVideoIcon, userCommissionIcon, userManagementIcon } from "../assets/sidebaricon/sidebaricon";
 
 export const hasSubAdminAccess = (subAdminAccess, moduleName) => {
   if (!subAdminAccess || !Array.isArray(subAdminAccess)) return false;
@@ -162,7 +162,7 @@ export const allNavigationItems = [
         id: 21,
         title: "Lucky Draw Management",
         url: "/customers",
-        icon: luckyDrawManagementIcon,
+        icon: luckydrawManagementIcon,
         badge: null,
         color: "blue",
       },
