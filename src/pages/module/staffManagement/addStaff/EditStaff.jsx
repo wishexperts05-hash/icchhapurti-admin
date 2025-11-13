@@ -3,7 +3,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormField from "../../../../components/uiComponent/FormField";
 import Button from "../../../../components/uiComponent/Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 
@@ -18,21 +18,23 @@ const validationSchema = Yup.object().shape({
   referralCode: Yup.string().required("Referral code is required"),
 });
 
-const AddStaff = () => {
+const EditStaff = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+  const staffData = location.state?.staffData || {};
 
   const initialValues = {
-    staffName: "",
-    phoneNumber: "",
-    dob: "",
-    email: "",
-    location: "",
-    referralCode: "",
+    staffName: staffData?.name || "",
+    phoneNumber: staffData?.phone || "",
+    dob: staffData?.dob || "",
+    email: staffData?.email || "",
+    location: staffData?.location || "",
+    referralCode: staffData?.referralCode || "",
   };
 
   const handleSubmit = (values, { resetForm }) => {
-    console.log("Staff Added:", values);
-    alert("Staff added successfully!");
+    console.log("Staff Updated:", values);
+    alert("Staff updated successfully!");
     resetForm();
     navigate("/staff-management");
   };
@@ -47,13 +49,13 @@ const AddStaff = () => {
         linkText={[
           { text: "Dashboard" },
           { text: "Staff Management", href: "/staff-management" },
-          { text: "Add New Staff" },
+          { text: "Edit Staff" },
         ]}
       />
 
       <PagePath2
-        title="Add New Staff"
-        description="Fill in the staff details below to add new staff information."
+        title="Edit Staff"
+        description="Update the staff details below."
       />
 
       <div className="bg-white shadow-md rounded-2xl p-6">
@@ -61,6 +63,7 @@ const AddStaff = () => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
+          enableReinitialize
         >
           {() => (
             <Form className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -73,7 +76,7 @@ const AddStaff = () => {
 
               <div className="col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4">
                 <Button text="Cancel" variant={2} type="button" onClick={handleCancel} />
-                <Button text="Add Staff" type="submit" variant={1} />
+                <Button text="Update Staff" type="submit" variant={1} />
               </div>
             </Form>
           )}
@@ -83,4 +86,4 @@ const AddStaff = () => {
   );
 };
 
-export default AddStaff;
+export default EditStaff;

@@ -18,7 +18,7 @@ const AddProduct = () => {
 
  
 
-  // ✅ Formik setup
+  //  Formik setup
   const formik = useFormik({
     initialValues: {
       category: "",
@@ -56,14 +56,14 @@ const AddProduct = () => {
     },
   });
 
-  // ✅ Image upload logic
+  //  Image upload logic
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const imageUrls = files.map((file) => URL.createObjectURL(file));
     setProductImages((prev) => [...prev, ...imageUrls]);
   };
 
-  // ✅ Remove image logic
+  //  Remove image logic
   const handleRemoveImage = (index) => {
     setProductImages((prev) => prev.filter((_, i) => i !== index));
   };

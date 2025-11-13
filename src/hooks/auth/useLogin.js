@@ -35,15 +35,15 @@ const useLogin = () => {
     try {
       const res = await fetchData({
         method: "POST",
-        url: `${conf.apiBaseUrl}admin/login`,
+        url: `${conf.apiBaseUrl}admin/auth/login`,
         data,
       });
-      console.log("OTP", res?.admin?.otp);
+      console.log("OTP", res?.data?.otp);
       if (res) {
         setLoading(false);
         toast.success(res?.message);
         setAdminResponse(res);
-        sessionStorage.setItem("email", res?.admin?.email);
+        sessionStorage.setItem("email", res?.data?.email);
         return true;
       }
     } catch (error) {
@@ -84,7 +84,7 @@ const useLogin = () => {
   const verifyOtp = async (data) => {
     setLoading(true);
     try {
-      const url = new URL(`${conf.apiBaseUrl}admin/verifyAdminOtp`);
+      const url = new URL(`${conf.apiBaseUrl}admin/auth/verify-otp`);
       const res = await fetchData({
         method: "POST",
         url: url.toString(),
@@ -94,10 +94,10 @@ const useLogin = () => {
         setOtpRes(res);
         setLoading(false);
         toast.success(res?.message);
-        sessionStorage.setItem("token", res?.token);
-        sessionStorage.setItem("adminId", res?.user?._id);
-        sessionStorage.setItem("adminName", res?.user?.fullName);
-        sessionStorage.setItem("adminProfile", res?.user?.profileImage);
+        sessionStorage.setItem("token", res?.data?.token);
+        sessionStorage.setItem("adminId", res?.data?.admin?._id);
+        sessionStorage.setItem("adminName", res?.data?.admin?.fullName);
+        sessionStorage.setItem("adminProfile", res?.data?.admin?.profileImage);
         sessionStorage.setItem("isAdminLoggedIn", res?.isAdminLoggedIn);
         sessionStorage.setItem("isSubAdminLoggedIn", res?.isSubAdminLoggedIn);
 
