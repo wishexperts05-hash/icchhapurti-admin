@@ -184,7 +184,7 @@ export const allNavigationItems = [
   {
     id: 8,
     title: "Blog Management",
-    url: "/",
+    url: "/blog-management",
     icon: blogManagementIcon,
     badge: null,
     color: "blue",

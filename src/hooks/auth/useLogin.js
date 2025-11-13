@@ -96,7 +96,7 @@ const useLogin = () => {
         toast.success(res?.message);
         sessionStorage.setItem("token", res?.data?.token);
         sessionStorage.setItem("adminId", res?.data?.admin?._id);
-        sessionStorage.setItem("adminName", res?.data?.admin?.fullName);
+        sessionStorage.setItem("adminName", res?.data?.admin?.name);
         sessionStorage.setItem("adminProfile", res?.data?.admin?.profileImage);
         sessionStorage.setItem("isAdminLoggedIn", res?.isAdminLoggedIn);
         sessionStorage.setItem("isSubAdminLoggedIn", res?.isSubAdminLoggedIn);
