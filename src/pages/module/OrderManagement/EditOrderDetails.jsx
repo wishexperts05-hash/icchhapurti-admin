@@ -17,8 +17,7 @@ import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import PenProduct from "../../../assets/PenProduct.png";
 import { href } from "react-router-dom";
-
-const OrderDetails = () => {
+const EditOrderDetails = () => {
   const steps = [
     {
       label: "Select campaign settings",
@@ -48,10 +47,10 @@ const OrderDetails = () => {
       <BreadCrumb
         linkText={[
           { text: "Order Management", href: "/order-management" },
-          { text: "View Order" },
+          { text: "Edit Order" },
         ]}
       />
-      <PagePath2 title="Order Details" />
+      <PagePath2 title="Edit Order Details" />
       <>
         <Box
           sx={{
@@ -267,4 +266,4 @@ const OrderDetails = () => {
   );
 };
 
-export default OrderDetails;
+export default EditOrderDetails;

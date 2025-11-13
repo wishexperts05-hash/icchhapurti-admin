@@ -37,8 +37,8 @@ const PromoterManagementAdd = lazy(() =>
 import {
   OrderManagement,
   OrderDetails,
+  EditOrderDetails,
 } from "../pages/module/OrderManagement/index";
-
 
 // ---------------------------- Staff Management ----------------------------
 import StaffManagement from "../pages/module/staffManagement/staffList/StaffListing";
@@ -121,8 +121,18 @@ function PublicRoute() {
             activeItem={activeItem}
             setActiveItem={setActiveItem}
           />
+          <Route
+            path="order-management/edit-order-details"
+            element={<EditOrderDetails />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+          {/* -------------------------- User Management -------------------------- */}
           <Route path="user-management" element={<UserManagement />} />
-          <Route path="user-management/user-details" element={<UserDetails />} />
+          <Route
+            path="user-management/user-details"
+            element={<UserDetails />}
+          />
 
           {/* -------------------------- Staff Management -------------------------- */}
           <Route path="staff-management" element={<StaffManagement />} activeItem={activeItem}
@@ -149,12 +159,8 @@ function PublicRoute() {
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
-
-
-
         </Route>
         {/* </Route> */}
-
       </Routes>
     </Suspense>
   );
