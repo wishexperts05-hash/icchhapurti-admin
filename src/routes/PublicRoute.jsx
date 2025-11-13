@@ -95,13 +95,19 @@ const EditBlog = lazy(() =>
 const ViewBlog = lazy(() =>
   import("../pages/module/blogManagement/addBlog/ViewBlog")
 );
-// --------------------------------------------------------------------------------
+// -------------------------------App Management-------------------------------------------------
+
+const TermsAndConditions = lazy(() =>
+  import("../pages/module/appManagement/term&condition/Term&Condition")
+);
 
 //-------------------------Manage Redeem Request-----------------------------------------
 import {
   ManageRedeemRequest,
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
+import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
+
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
@@ -207,6 +213,10 @@ function PublicRoute() {
           <Route path="/blog-management/add-blogs" element={<AddBlog />} />
           <Route path="/blog-management/edit-blogs/:id" element={<EditBlog />} />
           <Route path="/blog-management/view-blogs/:id" element={<ViewBlog />} />
+
+          {/* App Management */}
+          <Route path="/app-management/termandcondition" element={<TermsAndConditions />} />
+          <Route path="/app-management/edittermandcondition" element={<EditTermsAndConditions />} />
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Route>

@@ -48,14 +48,13 @@ const EditBlog = () => {
       {/* Breadcrumb Navigation */}
       <BreadCrumb
         linkText={[
-          { text: "Dashboard" },
           { text: "Blog Management", href: "/blog-management" },
           { text: "Edit Blog" },
         ]}
       />
 
       {/* Page Header */}
-      <PagePath2 title="Edit Post" showAddButton={false} showSearch={false} />
+      <PagePath2 title="Edit Blog" showAddButton={false} showSearch={false} />
 
       {/* Only show form after blog data is loaded */}
       {initialValues.title ? (

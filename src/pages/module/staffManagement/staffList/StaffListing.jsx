@@ -90,7 +90,7 @@ const StaffManagement = () => {
         {
             icon: (row) => (
                 <FaRegEdit
-                    className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer"
+                    className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
                     title="Edit"
                 />
             ),

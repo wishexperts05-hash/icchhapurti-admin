@@ -355,7 +355,7 @@ export const allNavigationItems = [
   {
     id: 21,
     title: "App Management",
-    url: "/cms/banner",
+    url: "/app-management",
     icon: appManagementIcon,
     badge: null,
     color: "gray",
@@ -364,7 +364,7 @@ export const allNavigationItems = [
       {
         id: 61,
         title: "Terms & Conditions",
-        url: "/cms/banner",
+        url: "app-management/termandcondition",
         icon: termAndConditionsIcon,
         badge: null,
         color: "blue",
