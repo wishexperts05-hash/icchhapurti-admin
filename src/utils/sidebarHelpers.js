@@ -102,7 +102,6 @@ export const allNavigationItems = [
   {
     id: 2,
     title: "Staff Management",
-    
     url: "/staff-management",
     icon: staffManagementIcon,
     badge: null,
