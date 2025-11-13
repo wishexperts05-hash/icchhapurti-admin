@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import { Box } from "@mui/material";
@@ -6,9 +6,13 @@ import DataTable from "../../../components/uiComponent/DataTable";
 import { FiEye, FiTrash2 } from "react-icons/fi";
 import { FaRegEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Pagination from "../../../components/uiComponent/Pagination";
 
 const OrderManagement = () => {
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
   const data = [
     {
       orderId: "OI6798",
@@ -147,6 +151,14 @@ const OrderManagement = () => {
           ]}
         />
       </Box>
+      <Pagination
+        currentPage={page}
+        totalPages={10}
+        totalItems={12}
+        itemsPerPage={10}
+        // onPageChange={setCurrentPage}
+        // onItemsPerPageChange={setItemsPerPage}
+      />
     </Box>
   );
 };
