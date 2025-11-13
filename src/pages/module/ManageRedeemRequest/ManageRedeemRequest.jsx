@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Modal } from "@mui/material";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import DataTable from "../../../components/uiComponent/DataTable";
@@ -74,7 +74,7 @@ const ManageRedeemRequest = () => {
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Manage Redeem Request" }]} />
-      <PagePath2 title="Manage Redeem Request" />
+      <PagePath2 title="Manage Redeem Request" showSearch />
       <Box>
         <DataTable
           columns={columns}
