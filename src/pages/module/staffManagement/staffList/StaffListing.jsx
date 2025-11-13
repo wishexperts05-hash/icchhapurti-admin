@@ -4,9 +4,9 @@ import { MdOutlineBlock } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
-import Button from "../../../../components/uiComponent/Button";
 import Pagination from "../../../../components/uiComponent/Pagination";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
+import { FaRegEdit } from "react-icons/fa";
 const StaffManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
@@ -14,7 +14,7 @@ const StaffManagement = () => {
     const navigate = useNavigate();
     const handleSearchTerm = (e) => {
         setSearchTerm(e.target.value);
-        setCurrentPage(1); // Reset to first page when searching
+        setCurrentPage(1); 
     };
 
     const [staffData, setStaffData] = useState([
@@ -58,27 +58,29 @@ const StaffManagement = () => {
     };
 
     const handleEdit = (row) => {
-        alert(`Edit ${row.name}`);
+        navigate("/staff-Management/editStaff", { state: { staffData: row } });
     };
 
+
     const handleAddStaff = () => {
-        navigate("/addStaff")
+        navigate("/staff-Management/addStaff")
     };
-    const handleAttendance = () => {
-        navigate("/attendanceListing")
+    const handleAttendence = () => {
+        navigate("/staff-Management/attendanceListing")
     }
-    const handleSales = () =>{
-         navigate("/attendanceListing")
+    const handleSales = () => {
+        navigate("/staff-Management/salesListing")
     }
     const columns = [
         {
             header: "Staff Name",
             field: "name",
             render: (row) => (
-                <div className="text-center">
-                    <div className="font-medium">{row.name}</div>
-                    <div className="text-gray-500 text-xs">{row.code}</div>
+                <div className="flex flex-col justify-center h-full text-center leading-tight">
+                    <span className="font-semibold text-gray-900">{row.name}</span>
+                    <span className="flex justify-center text-start text-gray-500 text-xs">{row.code}</span>
                 </div>
+
             ),
         },
         { header: "Phone No.", field: "phone" },
@@ -89,12 +91,12 @@ const StaffManagement = () => {
 
     const actions = [
         {
-            icon: <Pencil className="w-4 h-4 text-green-600" />,
+            icon: <FaRegEdit className="w-5 h-5 text-green-600" />,
             onClick: handleEdit,
             title: "Edit",
         },
         {
-            icon: <Trash2 className="w-4 h-4 text-red-600" />,
+            icon: <Trash2 className="w-5 h-5 text-red-600" />,
             onClick: handleDelete,
             title: "Delete",
         },
@@ -135,10 +137,10 @@ const StaffManagement = () => {
             <PagePath2
                 showAddButton
                 showExtraButton
-                extraButtonText="Attendance"
-                addButtonText="Sale"
-                onClick={handleSales}
-                onExtraClick={handleAttendance}
+                extraButtonText="Sale"
+                addButtonText="Attendence"
+                onClick={handleAttendence}
+                onExtraClick={handleSales}
             />
 
 
@@ -155,7 +157,7 @@ const StaffManagement = () => {
                                     onClick={() => a.onClick(row)}
                                     className="p-2 rounded-full hover:bg-gray-100 transition"
                                     title={a.title}
-                                    disabled={a.disableCondition?.(row)} // support conditional disabling
+                                    disabled={a.disableCondition?.(row)}
                                 >
                                     {typeof a.icon === "function" ? a.icon(row) : a.icon}
                                 </button>

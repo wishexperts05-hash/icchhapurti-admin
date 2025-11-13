@@ -172,7 +172,6 @@ export const allNavigationItems = [
         badge: null,
         color: "purple",
       },
-     
     ],
   },
   {
@@ -200,7 +199,7 @@ export const allNavigationItems = [
         badge: null,
         color: "purple",
       },
-      ],
+    ],
   },
   {
     id: 11,
@@ -286,7 +285,7 @@ export const allNavigationItems = [
         badge: null,
         color: "yellow",
       },
-      ],
+    ],
   },
   {
     id: 13,

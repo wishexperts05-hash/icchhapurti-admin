@@ -45,6 +45,7 @@ import StaffManagement from "../pages/module/staffManagement/staffList/StaffList
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
 import AttendanceListing from "../pages/module/staffManagement/attendance/AttendanceListing";
 import StaffSales from "../pages/module/staffManagement/Sales/SalesListing";
+import StaffMapPage from "../pages/module/staffManagement/attendance/StaffMapPage";
 // --------------------------------------------------------------------------------
 import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
@@ -100,33 +101,37 @@ function PublicRoute() {
           <Route path="promotermanagement" element={<PromoterManagement />} />
           <Route
             path="promotermanagementedit"
-            element={
-              <PromoterManagementEdit
-              />
-            }
+            element={<PromoterManagementEdit />}
           />
           <Route
             path="promotermanagementadd"
-            element={
-              <PromoterManagementAdd
-              />
-            }
+            element={<PromoterManagementAdd />}
           />
 
           {/* -------------------------- Order Management -------------------------- */}
-          <Route path="order-management" element={<OrderManagement />} />
+          <Route
+            path="order-management"
+            element={<OrderManagement />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
           <Route
             path="order-management/order-details"
             element={<OrderDetails />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
           />
           <Route path="user-management" element={<UserManagement />} />
           <Route path="user-management/user-details" element={<UserDetails />} />
 
           {/* -------------------------- Staff Management -------------------------- */}
           <Route path="staff-Management" element={<StaffManagement />} />
-          <Route path="addStaff" element={<AddStaffForm />} />
-          <Route path="attendanceListing" element={<AttendanceListing />} />
-          <Route path="salesListing" element={<StaffSales />} />
+          <Route path="/staff-Management/addStaff" element={<AddStaffForm />} />
+          <Route path="/staff-Management/editStaff" element={<AddStaffForm />} />
+          <Route path="/staff-Management/attendanceListing" element={<AttendanceListing />} />
+          <Route path="/staff-Management/salesListing" element={<StaffSales />} />
+          <Route path="/staff-Management/staff-map/:id" element={<StaffMapPage />} />
+
           {/* -------------------------------------Product Managment ------------------------------------------- */}
            <Route path="product-management" element={<ProductManagment/>} />
            <Route path="/product-management/add-product" element={<AddProduct />} />

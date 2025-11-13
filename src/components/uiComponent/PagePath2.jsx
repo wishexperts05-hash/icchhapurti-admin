@@ -77,8 +77,8 @@ const PagePath2 = ({
                 backgroundColor: state.isSelected
                   ? "#FF6B00"
                   : state.isFocused
-                  ? "#FFE5D1"
-                  : "white",
+                    ? "#FFE5D1"
+                    : "white",
                 color: state.isSelected ? "white" : "black",
                 "&:active": { backgroundColor: "#FF6B00", color: "white" },
               }),
@@ -86,43 +86,42 @@ const PagePath2 = ({
             }}
           />
         )}
-
-        {showAddButton && addButtonText && (
-          <button
-            className={`bg-[#CCA547] text-white px-6 py-[8.8px] rounded-xl 
+        <div className="flex items-center gap-3">
+          {showAddButton && addButtonText && (
+            <button
+              className={`bg-[#CCA547] text-white px-6 py-[8.8px] rounded-xl 
               flex justify-center items-center gap-2 cursor-pointer 
               font-medium shadow-md 
               transition duration-300
-              ${
-                disabled
+              ${disabled
                   ? "bg-gray-400 cursor-not-allowed opacity-60"
                   : "hover:bg-[#CCA547]/90 hover:shadow-lg"
-              }`}
-            onClick={disabled ? undefined : onClick}
-            disabled={disabled}
-            title={disabled ? "No permission to create" : "Create"}
-          >
-            {addButtonText}
-          </button>
-        )}
-                {showExtraButton && extraButtonText && (
-          <button
-            className={`bg-[#CCA547] text-white px-6 py-[8.8px] rounded-xl 
+                }`}
+              onClick={disabled ? undefined : onClick}
+              disabled={disabled}
+              title={disabled ? "No permission to create" : "Create"}
+            >
+              {addButtonText}
+            </button>
+          )}
+          {showExtraButton && extraButtonText && (
+            <button
+              className={`bg-[#CCA547] text-white px-6 py-[8.8px] rounded-xl 
               flex justify-center items-center gap-2 cursor-pointer 
               font-medium shadow-md 
               transition duration-300
-              ${
-                disabled
+              ${disabled
                   ? "bg-gray-400 cursor-not-allowed opacity-60"
                   : "hover:bg-[#CCA547]/90 hover:shadow-lg"
-              }`}
-            onClick={disabled ? undefined : onExtraClick}
-            disabled={disabled}
-            title={disabled ? "No permission to create" : "Create"}
-          >
-            {extraButtonText}
-          </button>
-        )}
+                }`}
+              onClick={disabled ? undefined : onExtraClick}
+              disabled={disabled}
+              title={disabled ? "No permission to create" : "Create"}
+            >
+              {extraButtonText}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
