@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import {Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { MdOutlineBlock } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
@@ -14,7 +14,7 @@ const StaffManagement = () => {
     const navigate = useNavigate();
     const handleSearchTerm = (e) => {
         setSearchTerm(e.target.value);
-        setCurrentPage(1); 
+        setCurrentPage(1);
     };
 
     const [staffData, setStaffData] = useState([
@@ -71,49 +71,52 @@ const StaffManagement = () => {
     const handleSales = () => {
         navigate("/staff-management/salesListing")
     }
+    // Columns Configuration
     const columns = [
         {
             header: "Staff Name",
             field: "name",
-            render: (row) => (
-                <div className="flex flex-col justify-center h-full text-center leading-tight">
-                    <span className="font-semibold text-gray-900">{row.name}</span>
-                    <span className="flex justify-center text-start text-gray-500 text-xs">{row.code}</span>
-                </div>
-
-            ),
+            render: (row) => (<div className="flex flex-col justify-center h-full text-center leading-tight">
+                <span className="font-semibold text-gray-900">{row.name}</span>
+                <span className="flex justify-center text-start text-gray-500 text-xs">{row.code}</span> </div>),
         },
         { header: "Phone No.", field: "phone" },
         { header: "Referral Code", field: "referralCode" },
         { header: "Total User Registered", field: "totalUsers" },
         { header: "Action", field: "action" },
     ];
-
+    // Actions Configuration
     const actions = [
         {
-            icon: <FaRegEdit className="w-5 h-5 text-green-600" />,
+            icon: (row) => (
+                <FaRegEdit
+                    className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer"
+                    title="Edit"
+                />
+            ),
             onClick: handleEdit,
-            title: "Edit",
         },
         {
-            icon: <Trash2 className="w-5 h-5 text-red-600" />,
+            icon: (row) => (
+                <Trash2
+                    className="w-5 h-5 text-yellow-600 hover:text-red-600 transition-colors duration-200 cursor-pointer"
+                    title="Delete"
+                />
+            ),
             onClick: handleDelete,
-            title: "Delete",
         },
         {
             icon: (row) => (
                 <MdOutlineBlock
-                    className={`w-5 h-5 ${row.status
-                        ? "text-yellow-700 cursor-pointer"
-                        : "text-red-500 cursor-pointer"
-                        }`}
+                    className={`w-5 h-5 text-yellow-600 hover:${row.status ? "text-yellow-600" : "text-red-600"
+                        } transition-colors duration-200 cursor-pointer`}
                     title={row.status ? "Unblock" : "Block"}
                 />
             ),
             onClick: handleToggleStatus,
-            title: "Toggle Status",
         },
     ];
+
     return (
         <div className=" bg-gray-50 min-h-screen shadow-2xl">
             {/* Breadcrumb Section */}
