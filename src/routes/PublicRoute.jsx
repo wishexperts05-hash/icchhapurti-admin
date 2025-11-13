@@ -101,24 +101,25 @@ function PublicRoute() {
           <Route path="promotermanagement" element={<PromoterManagement />} />
           <Route
             path="promotermanagementedit"
-            element={
-              <PromoterManagementEdit
-              />
-            }
+            element={<PromoterManagementEdit />}
           />
           <Route
             path="promotermanagementadd"
-            element={
-              <PromoterManagementAdd
-              />
-            }
+            element={<PromoterManagementAdd />}
           />
 
           {/* -------------------------- Order Management -------------------------- */}
-          <Route path="order-management" element={<OrderManagement />} />
+          <Route
+            path="order-management"
+            element={<OrderManagement />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
           <Route
             path="order-management/order-details"
             element={<OrderDetails />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
           />
           <Route path="user-management" element={<UserManagement />} />
           <Route path="user-management/user-details" element={<UserDetails />} />
