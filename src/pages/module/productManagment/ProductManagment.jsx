@@ -7,7 +7,7 @@ import PagePath2 from '../../../components/uiComponent/PagePath2';
 import DataTable from "../../../components/uiComponent/DataTable";
 import Pagination from "../../../components/uiComponent/Pagination";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
-import TrashBin from '../../../assets/TrashBin.png';
+import TrashBin from '../../../assets/trashBin.png';
 // import { motion } from "framer-motion";
 
 const ProductManagment = () => {
