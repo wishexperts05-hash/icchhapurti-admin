@@ -34,11 +34,18 @@ const PromoterManagementAdd = lazy(() =>
 );
 
 // ---------------------------- Order Management ----------------------------
-import {
-  OrderManagement,
-  OrderDetails,
-  EditOrderDetails,
-} from "../pages/module/OrderManagement/index";
+
+const OrderManagement = lazy(() =>
+  import("../pages/module/OrderManagement/OrderManagement")
+);
+
+const OrderDetails = lazy(() =>
+  import("../pages/module/OrderManagement/OrderDetails")
+);
+
+const EditOrderDetails = lazy(() =>
+  import("../pages/module/OrderManagement/EditOrderDetails")
+);
 
 // ---------------------------- Staff Management ----------------------------
 const StaffManagement = lazy(() =>
@@ -89,6 +96,12 @@ const ViewBlog = lazy(() =>
   import("../pages/module/blogManagement/addBlog/ViewBlog")
 );
 // --------------------------------------------------------------------------------
+
+//-------------------------Manage Redeem Request-----------------------------------------
+import {
+  ManageRedeemRequest,
+  ViewRedeemRequest,
+} from "../pages/module/ManageRedeemRequest/index";
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
