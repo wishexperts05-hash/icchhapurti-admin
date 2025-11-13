@@ -33,7 +33,8 @@ const ViewRedeemRequest = () => {
           flexDirection: "column",
           gap: 1,
           background: "#FFFFFF",
-          // boxShadow: "0px 0px 1px rgba(0,0,0,0.25)",
+          boxShadow:
+            "4px 4px 8px rgba(0,0,0,0.2), -4px 4px 8px rgba(0,0,0,0.2)",
         }}
       >
         <Box

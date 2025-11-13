@@ -19,8 +19,49 @@ import {
   HelpCircle,
 } from "lucide-react";
 
-import { RiCoupon2Line, RiListSettingsFill, RiProductHuntFill, RiUserSettingsFill } from "react-icons/ri";
-import { adminRoleManagementIcon, appManagementIcon, blockedUserandStaffsIcon, blogManagementIcon, chatSupportSystemIcon, coinSettingIcon, commentandReviewIcon, commissionsettingsIcon, countryManagementIcon, dashboardIcon, helpAndSupportIcon, luckyDrawAnalysisIcon, luckyDrawManagementIcon, manageBannerIcon, manageReddemRequestIcon, offerManagementIcon, orderManagementIcon, otherSettingsIcon, privicyPolicyIcon, productManagementIcon, referandearnIcon, refferralTrackingIcon, reportandanalyticsIcon, reportsIcon, rewardManagementIcon, spinRewardManagementIcon, staffCommissionIcon, staffManagementIcon, staffPerformanceIcon, targetManagementIcon, termAndConditionsIcon, themecustomizationIcon, uploadVideoIcon, userCommissionIcon, userManagementIcon } from "../assets/sidebaricon/sidebaricon";
+import {
+  RiCoupon2Line,
+  RiListSettingsFill,
+  RiProductHuntFill,
+  RiUserSettingsFill,
+} from "react-icons/ri";
+import {
+  adminRoleManagementIcon,
+  appManagementIcon,
+  blockedUserandStaffsIcon,
+  blogManagementIcon,
+  chatSupportSystemIcon,
+  coinSettingIcon,
+  commentandReviewIcon,
+  commissionsettingsIcon,
+  countryManagementIcon,
+  dashboardIcon,
+  helpAndSupportIcon,
+  luckyDrawAnalysisIcon,
+  luckyDrawManagementIcon,
+  manageBannerIcon,
+  manageReddemRequestIcon,
+  offerManagementIcon,
+  orderManagementIcon,
+  otherSettingsIcon,
+  privicyPolicyIcon,
+  productManagementIcon,
+  referandearnIcon,
+  refferralTrackingIcon,
+  reportandanalyticsIcon,
+  reportsIcon,
+  rewardManagementIcon,
+  spinRewardManagementIcon,
+  staffCommissionIcon,
+  staffManagementIcon,
+  staffPerformanceIcon,
+  targetManagementIcon,
+  termAndConditionsIcon,
+  themecustomizationIcon,
+  uploadVideoIcon,
+  userCommissionIcon,
+  userManagementIcon,
+} from "../assets/sidebaricon/sidebaricon";
 
 export const hasSubAdminAccess = (subAdminAccess, moduleName) => {
   if (!subAdminAccess || !Array.isArray(subAdminAccess)) return false;
@@ -231,7 +272,7 @@ export const allNavigationItems = [
         id: 43,
         title: "Lucky Draw Analysis",
         url: "/Continue-subscription",
-        icon:luckyDrawAnalysisIcon,
+        icon: luckyDrawAnalysisIcon,
         badge: null,
         color: "yellow",
       },
