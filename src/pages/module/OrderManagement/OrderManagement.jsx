@@ -112,10 +112,9 @@ const OrderManagement = () => {
   ];
 
   return (
-    <Box sx={{ background: "white", padding: 2 }}>
+    <Box>
       <BreadCrumb linkText={[{ text: "Order Management" }]} />
       <PagePath2 title="Order Management" />
-
       <Box>
         <DataTable
           columns={columns}
