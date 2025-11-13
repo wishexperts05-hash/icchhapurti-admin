@@ -1,32 +1,109 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import { FaTimes, FaPlus } from "react-icons/fa";
 import Button from "../../../components/uiComponent/Button";
-import returnIcon from '../../../assets/returnProduct.png';
+import returnIcon from "../../../assets/returnProduct.png";
 import { useNavigate } from "react-router-dom";
+import Added from "../../../assets/Added.png";
 
 const EditProduct = () => {
   const [productImages, setProductImages] = useState([]);
   const [easyReturn, setEasyReturn] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [visible, setVisible] = useState(true);
   const navigate = useNavigate();
 
-  
+  //    const editProduct = () => {
+  //   setShowSuccessModal(true);
+  //   setTimeout(() => {
+  //     navigate("/product-management");
+  //     setTimeout(() => setShowSuccessModal(false), 2000);
+  //   }, 2000);
+  // };
+  // 🧠 Formik setup
+  const formik = useFormik({
+    initialValues: {
+      category: "",
+      name: "",
+      price: "",
+      description: "",
+      returnDays: "",
+    },
+    validationSchema: Yup.object({
+      category: Yup.string().required("Category is required"),
+      name: Yup.string().required("Product name is required"),
+      price: Yup.number()
+        .typeError("Price must be a number")
+        .positive("Price must be positive")
+        .required("Price is required"),
+      description: Yup.string().required("Description is required"),
+      returnDays: Yup.number()
+        .min(0, "Must be 0 or greater")
+        .required("Return days are required"),
+    }),
+    onSubmit: (values) => {
+      const updatedProduct = {
+        ...values,
+        easyReturn,
+        visible,
+        productImages,
+      };
+      setShowSuccessModal(true);
+
+      // Simulate API call delay (optional)
+      setTimeout(() => {
+        navigate("/product-management");
+        setShowSuccessModal(false);
+      }, 2000);
+      console.log("📝 Updated Product:", updatedProduct);
+      // Call your API here to update the product
+      // e.g. axios.put(`/api/products/${id}`, updatedProduct)
+    },
+  });
+
+  // 🪄 (Optional) — Prefill data for edit
+  useEffect(() => {
+    // Simulated fetched product data
+    const fetchedProduct = {
+      category: "Stationery",
+      name: "Pelikan Pen",
+      price: "15",
+      description: "Smooth writing ballpoint pen.",
+      returnDays: "5",
+      easyReturn: true,
+      visible: true,
+      images: [],
+    };
+
+    formik.setValues({
+      category: fetchedProduct.category,
+      name: fetchedProduct.name,
+      price: fetchedProduct.price,
+      description: fetchedProduct.description,
+      returnDays: fetchedProduct.returnDays,
+    });
+    setEasyReturn(fetchedProduct.easyReturn);
+    setVisible(fetchedProduct.visible);
+    setProductImages(fetchedProduct.images);
+  }, []);
+
+  // 📸 Handle image uploads
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const imageUrls = files.map((file) => URL.createObjectURL(file));
     setProductImages((prev) => [...prev, ...imageUrls]);
   };
 
- 
+  // ❌ Remove image
   const handleRemoveImage = (index) => {
     setProductImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
     <div>
-     
       <BreadCrumb
         linkText={[
           { text: "Product Management", href: "/product-management" },
@@ -34,45 +111,83 @@ const EditProduct = () => {
         ]}
       />
 
-     
       <PagePath2 title="Edit Product" />
 
-
-      <div className="bg-white p-6 rounded-lg shadow-md mt-4">
-        
+      <form
+        onSubmit={formik.handleSubmit}
+        className="bg-white p-6 rounded-lg shadow-md mt-4"
+      >
+        {/* Product Category & Name */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Category */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">
               Product Category:
             </label>
             <input
+              name="category"
               type="text"
               placeholder="e.g. Pen"
-              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.category}
+              className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 ${
+                formik.touched.category && formik.errors.category
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-orange-500"
+              }`}
             />
+            {formik.touched.category && formik.errors.category && (
+              <p className="text-red-500 text-sm">{formik.errors.category}</p>
+            )}
           </div>
 
+          {/* Product Name */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">
               Product Name:
             </label>
             <input
+              name="name"
               type="text"
               placeholder="e.g. Pelikan"
-              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.name}
+              className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 ${
+                formik.touched.name && formik.errors.name
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-orange-500"
+              }`}
             />
+            {formik.touched.name && formik.errors.name && (
+              <p className="text-red-500 text-sm">{formik.errors.name}</p>
+            )}
           </div>
         </div>
 
         {/* Price */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div>
-            <label className="block text-gray-700 font-medium mb-2">Price:</label>
+            <label className="block text-gray-700 font-medium mb-2">
+              Price:
+            </label>
             <input
+              name="price"
               type="text"
               placeholder="₹ 10"
-              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.price}
+              className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 ${
+                formik.touched.price && formik.errors.price
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-orange-500"
+              }`}
             />
+            {formik.touched.price && formik.errors.price && (
+              <p className="text-red-500 text-sm">{formik.errors.price}</p>
+            )}
           </div>
         </div>
 
@@ -82,20 +197,34 @@ const EditProduct = () => {
             Description:
           </label>
           <textarea
+            name="description"
             rows="3"
             placeholder="Write a short product description..."
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.description}
+            className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 ${
+              formik.touched.description && formik.errors.description
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-orange-500"
+            }`}
           />
+          {formik.touched.description && formik.errors.description && (
+            <p className="text-red-500 text-sm">{formik.errors.description}</p>
+          )}
         </div>
 
         {/* Product Images */}
         <div className="mt-4">
           <label className="block text-gray-700 font-medium mb-2">
-            Product Image (Min 3):
+            Product Images (Min 3):
           </label>
           <div className="flex flex-wrap gap-4">
             {productImages.map((image, index) => (
-              <div key={index} className="relative w-24 h-24 border rounded-lg overflow-hidden">
+              <div
+                key={index}
+                className="relative w-24 h-24 border rounded-lg overflow-hidden"
+              >
                 <img
                   src={image}
                   alt={`product-${index}`}
@@ -130,11 +259,7 @@ const EditProduct = () => {
 
         {/* Easy Return */}
         <div className="flex items-center gap-2 mt-6">
-          <img
-            src={returnIcon}
-            alt=""
-            className="w-6 h-6 text-yellow-600"
-          />
+          <img src={returnIcon} alt="" className="w-6 h-6 text-yellow-600" />
           <span className="text-gray-700 font-medium">Easy Return</span>
           <label className="relative inline-flex items-center cursor-pointer ml-2">
             <input
@@ -153,20 +278,27 @@ const EditProduct = () => {
             Enter Return Days:
           </label>
           <input
+            name="returnDays"
             type="number"
             min="0"
             placeholder="2"
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.returnDays}
+            className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 ${
+              formik.touched.returnDays && formik.errors.returnDays
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-orange-500"
+            }`}
           />
+          {formik.touched.returnDays && formik.errors.returnDays && (
+            <p className="text-red-500 text-sm">{formik.errors.returnDays}</p>
+          )}
         </div>
 
         {/* Product Visibility */}
         <div className="flex items-center gap-2 mt-6">
-          <img
-            src={returnIcon}
-            alt=""
-            className="w-6 h-6 text-yellow-600"
-          />
+          <img src={returnIcon} alt="" className="w-6 h-6 text-yellow-600" />
           <span className="text-gray-700 font-medium">Product Visibility</span>
           <label className="relative inline-flex items-center cursor-pointer ml-2">
             <input
@@ -182,22 +314,30 @@ const EditProduct = () => {
         {/* Buttons */}
         <div className="flex justify-center gap-4 mt-8">
           <Button
-            type={Button}
-            variant={4}
+            variant={2}
             text="Cancel"
             onClick={() => navigate("/product-management")}
-            // className="px-6 py-2 border border-yellow-600 text-yellow-700 rounded-md hover:bg-yellow-50"
           />
-         
-        
-           <Button
-            type={Button}
-            variant={3}
-            text="Add"
-            // className="px-6 py-2 border border-yellow-600 text-yellow-700 rounded-md hover:bg-yellow-50"
-          />
+          <Button variant={1} text="Save Changes" type="submit" />
         </div>
-      </div>
+      </form>
+      {/* 🔸 Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-70 flex items-center justify-center z-50">
+          {/* <motion.div
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="bg-white p-6 rounded-xl shadow-md text-center w-80"
+                      > */}
+          <div className="bg-white p-6 rounded-xl shadow-md text-center w-80">
+            <div className="flex justify-center text-green-500 text-6xl mb-2">
+              <img src={Added} alt="TrashBin" />
+            </div>
+            <p className="font-semibold text-lg">Product Edited Successfully</p>
+            {/* </motion.div> */}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

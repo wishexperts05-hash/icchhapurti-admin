@@ -1,4 +1,3 @@
-import { listItemButtonClasses } from "@mui/material";
 import {
   BarChart3,
   Users,
@@ -102,6 +101,7 @@ export const allNavigationItems = [
   {
     id: 2,
     title: "Staff Management",
+    
     url: "/staff-management",
     icon: staffManagementIcon,
     badge: null,
@@ -173,7 +173,6 @@ export const allNavigationItems = [
         badge: null,
         color: "purple",
       },
-     
     ],
   },
   {
@@ -201,7 +200,7 @@ export const allNavigationItems = [
         badge: null,
         color: "purple",
       },
-      ],
+    ],
   },
   {
     id: 11,
@@ -287,7 +286,7 @@ export const allNavigationItems = [
         badge: null,
         color: "yellow",
       },
-      ],
+    ],
   },
   {
     id: 13,

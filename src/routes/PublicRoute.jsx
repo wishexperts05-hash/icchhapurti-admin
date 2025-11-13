@@ -13,7 +13,7 @@ const PasswordResetSuccessfully = lazy(() =>
   import("../pages/auth/PasswordResetSuccefully")
 );
 
-const Dashboard = lazy(() => import("../pages/module/Dashboard/Dashboard"));
+const Dashboard = lazy(() => import("../pages/module/dashboard/Dashboard"));
 const AdminProfile = lazy(() =>
   import("../pages/module/adminProfile/AdminProfile")
 );
@@ -45,13 +45,16 @@ import StaffManagement from "../pages/module/staffManagement/staffList/StaffList
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
 import AttendanceListing from "../pages/module/staffManagement/attendance/AttendanceListing";
 import StaffSales from "../pages/module/staffManagement/Sales/SalesListing";
+import StaffMapPage from "../pages/module/staffManagement/attendance/StaffMapPage";
 // --------------------------------------------------------------------------------
 import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
-import Usermanagement from "../pages/module/userManagement/usermanagement";
-import UserDetails from "../pages/module/userManagement/userdetails";
+import UserManagement from "../pages/module/userManagement/UserManagementList";
+import UserDetails from "../pages/module/userManagement/UserManagementDetails";
+import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
+import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -98,42 +101,45 @@ function PublicRoute() {
           <Route path="promotermanagement" element={<PromoterManagement />} />
           <Route
             path="promotermanagementedit"
-            element={
-              <PromoterManagementEdit
-              />
-            }
+            element={<PromoterManagementEdit />}
           />
           <Route
             path="promotermanagementadd"
-            element={
-              <PromoterManagementAdd
-              />
-            }
+            element={<PromoterManagementAdd />}
           />
 
           {/* -------------------------- Order Management -------------------------- */}
-          <Route path="order-management" element={<OrderManagement />} />
+          <Route
+            path="order-management"
+            element={<OrderManagement />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
           <Route
             path="order-management/order-details"
             element={<OrderDetails />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
           />
-          <Route path="user-management" element={<Usermanagement />} />
+          <Route path="user-management" element={<UserManagement />} />
           <Route path="user-management/user-details" element={<UserDetails />} />
 
           {/* -------------------------- Staff Management -------------------------- */}
           <Route path="staff-Management" element={<StaffManagement />} />
-          <Route path="addStaff" element={<AddStaffForm />} />
-          <Route path="attendanceListing" element={<AttendanceListing />} />
-          <Route path="salesListing" element={<StaffSales />} />
+          <Route path="/staff-Management/addStaff" element={<AddStaffForm />} />
+          <Route path="/staff-Management/editStaff" element={<AddStaffForm />} />
+          <Route path="/staff-Management/attendanceListing" element={<AttendanceListing />} />
+          <Route path="/staff-Management/salesListing" element={<StaffSales />} />
+          <Route path="/staff-Management/staff-map/:id" element={<StaffMapPage />} />
+
           {/* -------------------------------------Product Managment ------------------------------------------- */}
-          <Route path="product-management" element={<ProductManagment />} />
-          <Route path="/product-management/add-product" element={<AddProduct />} />
-          <Route path="/product-management/product-edit" element={<EditProduct />} />
-          <Route path="/product-management/product-view" element={<ViewProduct />} />
-          <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
-
-
-
+           <Route path="product-management" element={<ProductManagment/>} />
+           <Route path="/product-management/add-product" element={<AddProduct />} />
+           <Route path="/product-management/product-edit" element={<EditProduct />} />
+           <Route path="/product-management/product-view" element={<ViewProduct />} />
+           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
+            <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
+            <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}

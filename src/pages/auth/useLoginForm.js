@@ -17,7 +17,7 @@ export const loginValidationSchema = Yup.object({
 
 export const useLoginForm = () => {
 
-  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedRole, setSelectedRole] = useState("admin");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 

@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import { Box } from "@mui/material";
 import DataTable from "../../../components/uiComponent/DataTable";
+import { FiEye, FiTrash2 } from "react-icons/fi";
+import { FaRegEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Pagination from "../../../components/uiComponent/Pagination";
 
 const OrderManagement = () => {
+  const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
   const data = [
     {
       orderId: "OI6798",
@@ -114,8 +122,43 @@ const OrderManagement = () => {
           data={data}
           currentPage={1}
           usersPerPage={5}
+          actions={[
+            {
+              icon: <FiEye className="w-5 h-5 text-[#CCA547]" />,
+              title: "View",
+              onClick: (row) => {
+                navigate(`/order-management/order-details`);
+              },
+              className: "hover:bg-blue-100 hover:text-[#004AAD]",
+            },
+            {
+              icon: <FaRegEdit className="w-5 h-5 text-[#34C759]" />,
+              title: "Edit",
+              onClick: (row) => {
+                // navigate(`/pg-hostel-owner/edit-hostel-owner/${row._id}`);
+              },
+
+              className: "hover:bg-blue-100 hover:text-[#004AAD]",
+            },
+            // {
+            //   icon: <FiTrash2 className="w-5 h-5 text-[#FF6B00]" />,
+            //   title: "Delete",
+            //   onClick: (row) => {
+            //     // handleDelete(row?._id);
+            //   },
+            //   className: "hover:bg-blue-100 hover:text-[#004AAD]",
+            // },
+          ]}
         />
       </Box>
+      <Pagination
+        currentPage={page}
+        totalPages={10}
+        totalItems={12}
+        itemsPerPage={10}
+        // onPageChange={setCurrentPage}
+        // onItemsPerPageChange={setItemsPerPage}
+      />
     </Box>
   );
 };
