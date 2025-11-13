@@ -17,7 +17,7 @@ const ProductManagment = () => {
 
   const navigate = useNavigate();
 
-    const { fetchProductList, productList,loading } =
+    const { fetchProductList, productList,loading,deleteProductListID  } =
     useProductManagement();
 
       const [searchQuery, setSearchQuery] = useState("");
@@ -69,40 +69,46 @@ const ProductManagment = () => {
   ];
 
     // 🔹 Modal states
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const handleDeleteClick = (row) => {
-    setSelectedProduct(row);
-    setShowConfirmModal(true);
+
+
+    const handleDelete = async (id) => {
+    await deleteProductListID(id);
+    fetchProductList(page, limit,  status);
   };
 
-  const confirmDelete = () => {
-    setShowConfirmModal(false);
-    // simulate delete success
-    setTimeout(() => {
-      setShowSuccessModal(true);
-      setTimeout(() => setShowSuccessModal(false), 2000);
-    }, 500);
-  };
+// const confirmDelete = async (id) => {
+//   if (!selectedProduct) return;
+
+//   setShowConfirmModal(false);
+//   try {
+//     await deleteProductListID(id); // call API
+//     // Refresh the list after deletion
+//     fetchProductList(page, limit, searchQuery);
+//   } catch (err) {
+//     console.error("Delete failed:", err);
+//   } finally {
+//     setSelectedProduct(null);
+//   }
+// };
+
 
 
   const actions = [
     {
       icon: <FaEye className="text-yellow-600" />,
       title: "View",
-      onClick: () => navigate("/product-management/product-view"),
+      onClick: (row) => navigate(`/product-management/product-view${row._id}`),
     },
     {
       icon: <FaEdit className="text-green-600" />,
       title: "Edit",
-      onClick: () => navigate("/product-management/product-edit"),
+      onClick: (row) => navigate(`/product-management/product-edit${row._id}`),
     },
     {
       icon: <FaTrash className="text-red-600" />,
       title: "Delete",
-      onClick: handleDeleteClick,
+      onClick: (row) => handleDelete(row?._id),
 
     },
   ];
@@ -161,54 +167,8 @@ const ProductManagment = () => {
       />
       </div>
 )}
-      {/* 🔸 Confirm Delete Modal */}
-      {showConfirmModal && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-70 flex items-center justify-center z-50">
-          {/* <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-white p-6 rounded-xl shadow-md text-center w-80"
-          > */}
-          <div className="bg-white p-6 rounded-xl shadow-md text-center w-80" >
-            <h2 className="text-lg font-semibold mb-4">
-              Do you want to delete this product?
-            </h2>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => setShowConfirmModal(false)}
-                className="border border-yellow-600 text-yellow-600 px-4 py-1 rounded-md"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="bg-yellow-600 text-white px-4 py-1 rounded-md"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-          {/* </motion.div> */}
-        </div>
-      )}
-
-      {/* 🔸 Success Modal */}
-      {showSuccessModal && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-70 flex items-center justify-center z-50">
-          {/* <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-white p-6 rounded-xl shadow-md text-center w-80"
-          > */}
-          <div className="bg-white p-6 rounded-xl shadow-md text-center w-80">
-            <div className= "flex justify-center text-green-500 text-6xl mb-2">
-              <img src={TrashBin} alt="TrashBin" />
-            </div>
-            <p className="font-semibold text-lg">Product Deleted Successfully</p>
-          {/* </motion.div> */}
-          </div>
-        </div>
-      )}
+      
+  
     </div>
   )
   

@@ -151,11 +151,11 @@ function PublicRoute() {
           {/* -------------------------------------Product Managment ------------------------------------------- */}
           <Route path="product-management" element={<ProductManagment />} />
           <Route path="/product-management/add-product" element={<AddProduct />} />
-          <Route path="/product-management/product-edit" element={<EditProduct />} />
-          <Route path="/product-management/product-view" element={<ViewProduct />} />
-          <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
-          <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
-          <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
+          <Route path="/product-management/product-edit:id" element={<EditProduct />} />
+          <Route path="/product-management/product-view:id" element={<ViewProduct />} />
+          <Route path="/product-management/shipping-cost:id" element={<ManageShippingCost />} />
+          <Route path="/product-management/shipping-cost/add-shipping-cost:id" element={<AddShippingCost />} />
+          <Route path="/product-management/shipping-cost/edit-shipping-cost:id" element={<EditShipingCost />} />
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}

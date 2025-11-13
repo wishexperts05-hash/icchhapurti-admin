@@ -4,7 +4,8 @@ import { productManagmentListAtom } from "../../state/productManagment/productMa
 import useFetch from "../useFetch"; 
 import { toast } from "react-toastify";
 import conf from "../../config/index";
-
+import Swal from "sweetalert2";
+import { confirmAlert } from "../../utils/alertToast";
 
 const useProductManagement = () => {
   const [productList, setProductList] = useRecoilState(productManagmentListAtom);
@@ -39,11 +40,50 @@ const useProductManagement = () => {
     setProductList([]);
   };
 
+
+const deleteProductListID = async (id) => {
+   const result = await confirmAlert(
+      "Do you really want to delete this Product?"
+    );
+    if (result.isConfirmed) {
+   
+      try {
+        setLoading(true);
+        const res = await fetchData({
+          method: "DELETE",
+          url: `${conf.apiBaseUrl}product/delete/${id}`,
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        });
+
+        if (res) {
+          Swal.fire({
+            title: "Deleted!",
+            text: res?.message,
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          setLoading(false);
+          return res;
+        }
+      } catch (err) {
+        console.error("Error deleting  product:", err);
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+
+
   return {
     loading,
     productList,
     fetchProductList,
     resetProductList,
+    deleteProductListID
   };
 };
 
