@@ -18,8 +18,33 @@ import {
   SplitSquareHorizontalIcon,
 } from "lucide-react";
 
-import { RiCoupon2Line, RiListSettingsFill, RiProductHuntFill, RiUserSettingsFill } from "react-icons/ri";
-import { adminRoleManagementIcon, appManagementIcon, blogManagementIcon, chatSupportSystemIcon, commentandReviewIcon, commissionsettingsIcon, countryManagementIcon, dashboardIcon, manageReddemRequestIcon, offerManagementIcon, orderManagementIcon, productManagementIcon, referandearnIcon, reportandanalyticsIcon, rewardManagementIcon, staffManagementIcon, targetManagementIcon, themecustomizationIcon, userManagementIcon } from "../assets/sidebaricon/sidebaricon";
+import {
+  RiCoupon2Line,
+  RiListSettingsFill,
+  RiProductHuntFill,
+  RiUserSettingsFill,
+} from "react-icons/ri";
+import {
+  adminRoleManagementIcon,
+  appManagementIcon,
+  blogManagementIcon,
+  chatSupportSystemIcon,
+  commentandReviewIcon,
+  commissionsettingsIcon,
+  countryManagementIcon,
+  dashboardIcon,
+  manageReddemRequestIcon,
+  offerManagementIcon,
+  orderManagementIcon,
+  productManagementIcon,
+  referandearnIcon,
+  reportandanalyticsIcon,
+  rewardManagementIcon,
+  staffManagementIcon,
+  targetManagementIcon,
+  themecustomizationIcon,
+  userManagementIcon,
+} from "../assets/sidebaricon/sidebaricon";
 
 export const hasSubAdminAccess = (subAdminAccess, moduleName) => {
   if (!subAdminAccess || !Array.isArray(subAdminAccess)) return false;
@@ -101,13 +126,13 @@ export const allNavigationItems = [
   {
     id: 2,
     title: "Staff Management",
-    
+
     url: "/staff-management",
     icon: staffManagementIcon,
     badge: null,
     color: "blue",
   },
-  
+
   {
     id: 4,
     title: "Promoter Management",
@@ -306,8 +331,8 @@ export const allNavigationItems = [
   },
   {
     id: 15,
-     title: "Product Managment",
-      url: "/productMangment",
+    title: "Product Managment",
+    url: "/productMangment",
     icon: productManagementIcon,
     badge: null,
     color: "gray",
@@ -323,7 +348,7 @@ export const allNavigationItems = [
   {
     id: 17,
     title: "Manage Redeem Request",
-    url: "/analytics",
+    url: "/manage-redeem-request",
     icon: manageReddemRequestIcon,
     badge: null,
     color: "gray",

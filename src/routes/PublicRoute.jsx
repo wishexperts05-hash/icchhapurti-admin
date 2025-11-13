@@ -34,11 +34,18 @@ const PromoterManagementAdd = lazy(() =>
 );
 
 // ---------------------------- Order Management ----------------------------
-import {
-  OrderManagement,
-  OrderDetails,
-  EditOrderDetails,
-} from "../pages/module/OrderManagement/index";
+
+const OrderManagement = lazy(() =>
+  import("../pages/module/OrderManagement/OrderManagement")
+);
+
+const OrderDetails = lazy(() =>
+  import("../pages/module/OrderManagement/OrderDetails")
+);
+
+const EditOrderDetails = lazy(() =>
+  import("../pages/module/OrderManagement/EditOrderDetails")
+);
 
 // ---------------------------- Staff Management ----------------------------
 import StaffManagement from "../pages/module/staffManagement/staffList/StaffListing";
@@ -56,6 +63,12 @@ import UserDetails from "../pages/module/userManagement/UserManagementDetails";
 import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
 import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
 // --------------------------------------------------------------------------------
+
+//-------------------------Manage Redeem Request-----------------------------------------
+import {
+  ManageRedeemRequest,
+  ViewRedeemRequest,
+} from "../pages/module/ManageRedeemRequest/index";
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
@@ -181,6 +194,21 @@ function PublicRoute() {
             element={<EditShipingCost />}
           />
 
+          {/* -------------------------Manage Redeem Request----------------------------------------- */}
+          <Route
+            path="manage-redeem-request"
+            element={<ManageRedeemRequest />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+          <Route
+            path="manage-redeem-request/view-redeem-request"
+            element={<ViewRedeemRequest />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+
+          {/* ------------------------------------------------------------------------------------------- */}
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Route>
