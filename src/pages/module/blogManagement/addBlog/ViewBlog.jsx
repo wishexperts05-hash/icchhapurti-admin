@@ -40,7 +40,7 @@ const ViewBlog = () => {
                     { text: "View Post" },
                 ]}
             />
-            <PagePath2 title="View Post" showAddButton={false} showSearch={false} />
+            <PagePath2 title="View Blog" showAddButton={false} showSearch={false} />
 
             {/* Blog Content Card */}
             <div className="bg-white rounded-2xl shadow-xl mt-4 p-6 border border-gray-100">
