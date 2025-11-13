@@ -63,7 +63,7 @@ const DataTable = ({
                         <span
                           onClick={() => onToggleStatus?.(row)}
                           className={`px-2 py-1 rounded-full text-xs sm:text-sm font-medium cursor-pointer hover:scale-105 transition-transform ${
-                            displayValue === "Active" ||
+                            displayValue === "Present" ||
                             displayValue === "Approved" ||
                             displayValue === "Paid" ||
                             displayValue === "Paid" ||
@@ -71,7 +71,7 @@ const DataTable = ({
                             displayValue === "Ongoing" ||
                             displayValue === "Shown"
                               ? "bg-green-100 text-green-700"
-                              : displayValue === "Pending" ||
+                              : displayValue === "Absent" ||
                                 displayValue === "Upcoming" ||
                                 displayValue === "Blocked" ||
                                 displayValue === "Created"

@@ -45,6 +45,7 @@ import StaffManagement from "../pages/module/staffManagement/staffList/StaffList
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
 import AttendanceListing from "../pages/module/staffManagement/attendance/AttendanceListing";
 import StaffSales from "../pages/module/staffManagement/Sales/SalesListing";
+import StaffMapPage from "../pages/module/staffManagement/attendance/StaffMapPage";
 // --------------------------------------------------------------------------------
 import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
@@ -52,6 +53,8 @@ import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
 import UserManagement from "../pages/module/userManagement/UserManagementList";
 import UserDetails from "../pages/module/userManagement/UserManagementDetails";
+import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
+import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -123,18 +126,20 @@ function PublicRoute() {
 
           {/* -------------------------- Staff Management -------------------------- */}
           <Route path="staff-Management" element={<StaffManagement />} />
-          <Route path="addStaff" element={<AddStaffForm />} />
-          <Route path="attendanceListing" element={<AttendanceListing />} />
-          <Route path="salesListing" element={<StaffSales />} />
+          <Route path="/staff-Management/addStaff" element={<AddStaffForm />} />
+          <Route path="/staff-Management/editStaff" element={<AddStaffForm />} />
+          <Route path="/staff-Management/attendanceListing" element={<AttendanceListing />} />
+          <Route path="/staff-Management/salesListing" element={<StaffSales />} />
+          <Route path="/staff-Management/staff-map/:id" element={<StaffMapPage />} />
+
           {/* -------------------------------------Product Managment ------------------------------------------- */}
-          <Route path="product-management" element={<ProductManagment />} />
-          <Route path="/product-management/add-product" element={<AddProduct />} />
-          <Route path="/product-management/product-edit" element={<EditProduct />} />
-          <Route path="/product-management/product-view" element={<ViewProduct />} />
-          <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
-
-
-
+           <Route path="product-management" element={<ProductManagment/>} />
+           <Route path="/product-management/add-product" element={<AddProduct />} />
+           <Route path="/product-management/product-edit" element={<EditProduct />} />
+           <Route path="/product-management/product-view" element={<ViewProduct />} />
+           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
+            <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
+            <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
