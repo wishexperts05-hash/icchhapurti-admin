@@ -156,7 +156,6 @@ function PublicRoute() {
             setActiveItem={setActiveItem} />
 
           {/* -------------------------------------Product Managment ------------------------------------------- */}
-<<<<<<< HEAD
            <Route path="product-management" element={<ProductManagment/>} />
            <Route path="/product-management/add-product" element={<AddProduct />} />
            <Route path="/product-management/product-edit" element={<EditProduct />} />
@@ -177,18 +176,6 @@ function PublicRoute() {
 
 
 
-=======
-          <Route path="product-management" element={<ProductManagment />} />
-          <Route path="/product-management/add-product" element={<AddProduct />} />
-          <Route path="/product-management/product-edit" element={<EditProduct />} />
-          <Route path="/product-management/product-view" element={<ViewProduct />} />
-          <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
-          <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
-          <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
-
-          {/* 404 Not Found */}
-          {/* <Route path="*" element={<NotFound />} /> */}
->>>>>>> 7f34075ed8ac44cd8c60830f3538fca816e6fee0
         </Route>
         {/* </Route> */}
       </Routes>

@@ -135,13 +135,8 @@ export const allNavigationItems = [
   {
     id: 7,
     title: "Offer Management",
-<<<<<<< HEAD
     url: "/offer-management",
     icon: Home,
-=======
-    url: "/",
-    icon: offerManagementIcon,
->>>>>>> 7f34075ed8ac44cd8c60830f3538fca816e6fee0
     badge: null,
     color: "blue",
   },
