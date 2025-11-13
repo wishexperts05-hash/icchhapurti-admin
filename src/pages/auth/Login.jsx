@@ -64,7 +64,7 @@ const Login = () => {
       </div>
       {/* Left Section - Login Form */}
       <div className="w-full md:w-1/2 flex  justify-center items-center px-6 lg:px-20 ">
-        <div className="w-[589px] h-[601px] bg-[#FFFFFF] rounded-2xl p-5 flex flex-col items-center justify-center shadow-lg">
+        <div className="w-[589px] h-[661px] bg-[#FFFFFF] rounded-2xl p-5 flex flex-col items-center justify-center shadow-lg">
           <div className="flex flex-col gap-2 items-center mb-4">
             <h2 className="text-3xl font-bold  text-[#262626]">Welcome Back</h2>
             <p className="text-[#262626]  text-center">
