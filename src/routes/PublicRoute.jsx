@@ -41,12 +41,25 @@ import {
 } from "../pages/module/OrderManagement/index";
 
 // ---------------------------- Staff Management ----------------------------
-import StaffManagement from "../pages/module/staffManagement/staffList/StaffListing";
-import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
-import EditStaff from "../pages/module/staffManagement/addStaff/EditStaff";
-import AttendanceListing from "../pages/module/staffManagement/attendance/AttendanceListing";
-import StaffSales from "../pages/module/staffManagement/Sales/SalesListing";
-import StaffMapPage from "../pages/module/staffManagement/attendance/StaffMapPage";
+const StaffManagement = lazy(() =>
+  import("../pages/module/staffManagement/staffList/StaffListing")
+);
+const AddStaffForm = lazy(() =>
+  import("../pages/module/staffManagement/addStaff/AddStaff")
+);
+const EditStaff = lazy(() =>
+  import("../pages/module/staffManagement/addStaff/EditStaff")
+);
+const AttendanceListing = lazy(() =>
+  import("../pages/module/staffManagement/attendance/AttendanceListing")
+);
+const StaffSales = lazy(() =>
+  import("../pages/module/staffManagement/Sales/SalesListing")
+);
+const StaffMapPage = lazy(() =>
+  import("../pages/module/staffManagement/attendance/StaffMapPage")
+);
+
 // --------------------------------------------------------------------------------
 import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
@@ -56,6 +69,25 @@ import UserManagement from "../pages/module/userManagement/UserManagementList";
 import UserDetails from "../pages/module/userManagement/UserManagementDetails";
 import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
 import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
+
+
+
+// ---------------------------- Blog Management ----------------------------
+
+const BlogManagement = lazy(() =>
+  import("../pages/module/blogManagement/blogList/BlogListing")
+);
+const AddBlog = lazy(() =>
+  import("../pages/module/blogManagement/addBlog/AddBlog")
+);
+
+const EditBlog = lazy(() =>
+  import("../pages/module/blogManagement/addBlog/EditBlog")
+);
+
+const ViewBlog = lazy(() =>
+  import("../pages/module/blogManagement/addBlog/ViewBlog")
+);
 // --------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -157,6 +189,11 @@ function PublicRoute() {
           <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
           <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
 
+          {/* Blog Management */}
+          <Route path="blog-management" element={<BlogManagement />} />
+          <Route path="/blog-management/add-blogs" element={<AddBlog />} />
+          <Route path="/blog-management/edit-blogs/:id" element={<EditBlog />} />
+          <Route path="/blog-management/view-blogs/:id" element={<ViewBlog />} />
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Route>
