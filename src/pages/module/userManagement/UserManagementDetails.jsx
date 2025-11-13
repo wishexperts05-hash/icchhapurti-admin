@@ -130,7 +130,7 @@ export default function UserDetails() {
                     </div>
                 </div>
 
-                {/* Wallet Information Card */}
+               
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 mt-8">
                     <div className="bg-white px-6 py-4 border-b border-gray-300">
                         <div className="flex items-center gap-3">
