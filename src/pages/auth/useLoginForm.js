@@ -1,10 +1,9 @@
-// hooks/useLoginForm.js
 import { useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
-
 import * as Yup from "yup";
-
+import useLogin from "../../hooks/auth/useLogin";
+import validator from "validator";
 
 export const loginValidationSchema = Yup.object({
   email: Yup.string()
@@ -16,8 +15,8 @@ export const loginValidationSchema = Yup.object({
 });
 
 export const useLoginForm = () => {
-
-  const [selectedRole, setSelectedRole] = useState("");
+  const {adminLogin, loading, subAdminLogin} = useLogin();
+  const [selectedRole, setSelectedRole] = useState("admin");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -29,10 +28,33 @@ export const useLoginForm = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleLoginSubmit = async () => {
-   
-    navigate("/dashboard");
-    
+  const handleLoginSubmit = async (values) => {
+    if (!selectedRole) {
+      alert("Please select a role");
+      return;
+    }
+     try {
+      const sanitizedEmail = validator.trim(values.email);
+      const sanitizedPassword = validator.trim(values.password);
+      let isSuccess = false;
+
+      if (selectedRole === "admin") {
+        isSuccess = await adminLogin(sanitizedEmail, sanitizedPassword);
+      } else if (selectedRole === "subadmin") {
+        isSuccess = await subAdminLogin(sanitizedEmail, sanitizedPassword);
+      }
+
+      if (isSuccess) {
+        navigate("/verify-otp", {
+          state: {
+            isLogin: true,
+            role: selectedRole
+          }
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } 
   };
 
   const formik = useFormik({
@@ -47,7 +69,7 @@ export const useLoginForm = () => {
     formik,
     selectedRole,
     showPassword,
-
+    loading,
     handleRoleSelect,
     togglePasswordVisibility,
   };

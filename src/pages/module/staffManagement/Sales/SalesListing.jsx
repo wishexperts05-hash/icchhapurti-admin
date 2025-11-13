@@ -93,7 +93,7 @@ const StaffSales = () => {
       <BreadCrumb
         linkText={[
           { text: "Dashboard" },
-          { text: "Staff Management", href: "/staff-Management" },
+          { text: "Staff Management", href: "/staff-management" },
           { text: "Sales List" },
         ]}
       />
