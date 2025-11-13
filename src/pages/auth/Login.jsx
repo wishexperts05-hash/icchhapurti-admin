@@ -11,26 +11,6 @@ import subAdminImage from "../../assets/admin.png";
 import { useLoginForm } from "./useLoginForm";
 import SplashScreen from "../../components/uiComponent/SplashScreen";
 
-const Login = () => {
-  const [isSplashVisible, setIsSplashVisible] = useState(true);
-  const {
-    formik,
-    showPassword,
-    togglePasswordVisibility,
-    handleRoleSelect,
-    selectedRole,
-  } = useLoginForm();
-  // const navigate = useNavigate()
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsSplashVisible(false), 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isSplashVisible) {
-    return <SplashScreen />;
-  }
-
   const roles = [
     {
       id: "admin",
@@ -49,6 +29,27 @@ const Login = () => {
         "border-[4px] border-blue-100 text-grey-500 hover:border-blue-100 hover:scale-105",
     },
   ];
+
+const Login = () => {
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
+  const {
+    formik,
+    selectedRole,
+    showPassword,
+    loading,
+    togglePasswordVisibility,
+    handleRoleSelect,
+  } = useLoginForm();
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsSplashVisible(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isSplashVisible) {
+    return <SplashScreen />;
+  }
 
   return (
     <div className="flex min-h-screen bg-[#CCA547] flex items-center">
@@ -86,11 +87,10 @@ const Login = () => {
                 onClick={() => handleRoleSelect(role.id)}
                 className={`p-4 w-full max-w-[140px] h-[140px] rounded-[6px] transition transform duration-200 flex flex-col items-center justify-center gap-2
     shadow-[0_0_10px_rgba(0,0,0,0.3)]
-    ${
-      selectedRole === role.id
-        ? `${role.color} text-black border-[4px] border-white scale-105`
-        : `${role.className}`
-    }`}
+    ${selectedRole === role.id
+                    ? `${role.color} text-black border-[4px] border-white scale-105`
+                    : `${role.className}`
+                  }`}
               >
                 <img
                   src={role.image}
@@ -133,7 +133,7 @@ const Login = () => {
             </div>
 
             {/* Submit Button */}
-            <SubmitButton />
+            <SubmitButton loading={loading} selectedRole={selectedRole}  />
           </form>
         </div>
       </div>
@@ -193,13 +193,18 @@ const PasswordField = ({ formik, showPassword, onTogglePassword }) => (
   </>
 );
 
-const SubmitButton = () => (
+const SubmitButton = ({ loading, selectedRole }) => (
   <button
     type="submit"
     className="w-full flex justify-center items-center text-white font-bold 
     bg-[#CCA547] py-3 rounded-lg hover:bg-[#CCA547] transition duration-200 disabled:bg-gray-400"
+    disabled={loading || !selectedRole}
   >
-    Login
+    {loading ? (
+      <AiOutlineLoading3Quarters className="animate-spin text-lg" />
+    ) : (
+      `Log In as ${selectedRole ? roles.find(role => role.id === selectedRole)?.label : '...'}`
+    )}
   </button>
 );
 
