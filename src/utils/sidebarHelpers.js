@@ -135,7 +135,7 @@ export const allNavigationItems = [
   {
     id: 7,
     title: "Offer Management",
-    url: "/",
+    url: "/offer-management",
     icon: Home,
     badge: null,
     color: "blue",
