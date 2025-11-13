@@ -57,7 +57,7 @@ const BlogManagement = () => {
             icon: (row) => (
                 <Eye
                     size={22}
-                    className="text-[#CCA547] hover:text-yellow-600 transition-colors duration-200 cursor-pointer"
+                    className="text-[#CCA547] hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
                     title="View Blog"
                 />
             ),
@@ -67,7 +67,7 @@ const BlogManagement = () => {
             icon: (row) => (
                 <FaRegEdit
                     size={22}
-                    className="text-[#CCA547] hover:text-green-600 transition-colors duration-200 cursor-pointer"
+                    className="text-[#CCA547] hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
                     title="Edit Blog"
                 />
             ),
