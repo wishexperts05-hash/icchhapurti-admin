@@ -37,12 +37,13 @@ const PromoterManagementAdd = lazy(() =>
 import {
   OrderManagement,
   OrderDetails,
+  EditOrderDetails,
 } from "../pages/module/OrderManagement/index";
-
 
 // ---------------------------- Staff Management ----------------------------
 import StaffManagement from "../pages/module/staffManagement/staffList/StaffListing";
 import AddStaffForm from "../pages/module/staffManagement/addStaff/AddStaff";
+import EditStaff from "../pages/module/staffManagement/addStaff/EditStaff";
 import AttendanceListing from "../pages/module/staffManagement/attendance/AttendanceListing";
 import StaffSales from "../pages/module/staffManagement/Sales/SalesListing";
 import StaffMapPage from "../pages/module/staffManagement/attendance/StaffMapPage";
@@ -79,7 +80,6 @@ function PublicRoute() {
         />
 
         {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
-        {/* Uncomment ProtectedRoute when ready */}
         {/* <Route element={<ProtectedRoute />}> */}
         <Route path="/" element={<Layout />}>
           {/* Dashboard */}
@@ -121,34 +121,46 @@ function PublicRoute() {
             activeItem={activeItem}
             setActiveItem={setActiveItem}
           />
+          <Route
+            path="order-management/edit-order-details"
+            element={<EditOrderDetails />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+          {/* -------------------------- User Management -------------------------- */}
           <Route path="user-management" element={<UserManagement />} />
-          <Route path="user-management/user-details" element={<UserDetails />} />
+          <Route
+            path="user-management/user-details"
+            element={<UserDetails />}
+          />
 
           {/* -------------------------- Staff Management -------------------------- */}
-          <Route path="staff-Management" element={<StaffManagement />} />
-          <Route path="/staff-Management/addStaff" element={<AddStaffForm />} />
-          <Route path="/staff-Management/editStaff" element={<AddStaffForm />} />
-          <Route path="/staff-Management/attendanceListing" element={<AttendanceListing />} />
-          <Route path="/staff-Management/salesListing" element={<StaffSales />} />
-          <Route path="/staff-Management/staff-map/:id" element={<StaffMapPage />} />
+          <Route path="staff-management" element={<StaffManagement />} activeItem={activeItem}
+            setActiveItem={setActiveItem} />
+          <Route path="/staff-management/addStaff" element={<AddStaffForm />} activeItem={activeItem}
+            setActiveItem={setActiveItem} />
+          <Route path="/staff-management/editStaff" element={<EditStaff />} activeItem={activeItem}
+            setActiveItem={setActiveItem} />
+          <Route path="/staff-management/attendanceListing" element={<AttendanceListing />} activeItem={activeItem}
+            setActiveItem={setActiveItem} />
+          <Route path="/staff-management/salesListing" element={<StaffSales />} activeItem={activeItem}
+            setActiveItem={setActiveItem} />
+          <Route path="/staff-management/staff-map/:id" element={<StaffMapPage />} activeItem={activeItem}
+            setActiveItem={setActiveItem} />
 
           {/* -------------------------------------Product Managment ------------------------------------------- */}
-           <Route path="product-management" element={<ProductManagment/>} />
-           <Route path="/product-management/add-product" element={<AddProduct />} />
-           <Route path="/product-management/product-edit" element={<EditProduct />} />
-           <Route path="/product-management/product-view" element={<ViewProduct />} />
-           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
-            <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
-            <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
+          <Route path="product-management" element={<ProductManagment />} />
+          <Route path="/product-management/add-product" element={<AddProduct />} />
+          <Route path="/product-management/product-edit" element={<EditProduct />} />
+          <Route path="/product-management/product-view" element={<ViewProduct />} />
+          <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
+          <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
+          <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
-
-
-
         </Route>
         {/* </Route> */}
-
       </Routes>
     </Suspense>
   );

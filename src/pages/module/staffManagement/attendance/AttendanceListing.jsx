@@ -40,7 +40,7 @@ const AttendanceListing = () => {
     const handlePageChange = (page) => setCurrentPage(page);
 
     const handleViewMap = (id) => {
-        navigate(`/staff-Management/staff-map/${id}`);
+        navigate(`/staff-management/staff-map/${id}`);
     };
 
     const actions = [
@@ -95,7 +95,7 @@ const AttendanceListing = () => {
             <BreadCrumb
                 linkText={[
                     { text: "Dashboard" },
-                    { text: "Staff Management", href: "/staff-Management" },
+                    { text: "Staff Management", href: "/staff-management" },
                     { text: "Attendance List" },
                 ]}
             />

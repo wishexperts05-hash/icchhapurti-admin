@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import {Trash2 } from "lucide-react";
 import { MdOutlineBlock } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
@@ -58,18 +58,18 @@ const StaffManagement = () => {
     };
 
     const handleEdit = (row) => {
-        navigate("/staff-Management/editStaff", { state: { staffData: row } });
+        navigate("/staff-management/editStaff", { state: { staffData: row } });
     };
 
 
     const handleAddStaff = () => {
-        navigate("/staff-Management/addStaff")
+        navigate("/staff-management/addStaff")
     };
     const handleAttendence = () => {
-        navigate("/staff-Management/attendanceListing")
+        navigate("/staff-management/attendanceListing")
     }
     const handleSales = () => {
-        navigate("/staff-Management/salesListing")
+        navigate("/staff-management/salesListing")
     }
     const columns = [
         {
@@ -104,8 +104,8 @@ const StaffManagement = () => {
             icon: (row) => (
                 <MdOutlineBlock
                     className={`w-5 h-5 ${row.status
-                        ? "text-yellow-600 cursor-pointer"
-                        : "text-gray-400 cursor-pointer"
+                        ? "text-yellow-700 cursor-pointer"
+                        : "text-red-500 cursor-pointer"
                         }`}
                     title={row.status ? "Unblock" : "Block"}
                 />

@@ -35,15 +35,15 @@ const useLogin = () => {
     try {
       const res = await fetchData({
         method: "POST",
-        url: `${conf.apiBaseUrl}admin/login`,
+        url: `${conf.apiBaseUrl}admin/auth/login`,
         data,
       });
-      console.log("OTP", res?.admin?.otp);
+      console.log("OTP", res?.data?.otp);
       if (res) {
         setLoading(false);
         toast.success(res?.message);
         setAdminResponse(res);
-        sessionStorage.setItem("email", res?.admin?.email);
+        sessionStorage.setItem("email", res?.data?.email);
         return true;
       }
     } catch (error) {
@@ -84,7 +84,7 @@ const useLogin = () => {
   const verifyOtp = async (data) => {
     setLoading(true);
     try {
-      const url = new URL(`${conf.apiBaseUrl}admin/verifyAdminOtp`);
+      const url = new URL(`${conf.apiBaseUrl}admin/auth/verify-otp`);
       const res = await fetchData({
         method: "POST",
         url: url.toString(),
