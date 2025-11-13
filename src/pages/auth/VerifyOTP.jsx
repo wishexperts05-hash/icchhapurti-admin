@@ -1,8 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import {  useNavigate } from "react-router-dom";
-
-
-
+import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import useLogin from "../../hooks/auth/useLogin";
 import verify from "../../assets/verify.png";
@@ -13,10 +10,9 @@ const VerifyOtp = () => {
   const inputRef = useRef([]);
   const [timer, setTimer] = useState(59);
   const navigate = useNavigate();
-  // const { verifyOtp, resendOtp, loading, subAdminAccess } = useLogin();
-    const { resendOtp   } = useLogin();
-  // const location = useLocation();
-  // const [verified, setVerified] = useState(false);
+  const { verifyOtp, resendOtp, loading, subAdminAccess } = useLogin();
+  const location = useLocation();
+  const [verified, setVerified] = useState(false);
 
   const email = sessionStorage.getItem("email");
 
@@ -82,32 +78,32 @@ const VerifyOtp = () => {
   //   }
 
   //   const accessibleRoutes = [];
-    // allNavigationItems.forEach(item => {
-    //   if (item.hasSubmenu && item.subItems) {
-    //     const accessibleSubItems = item.subItems.filter(subItem =>
-    //       hasSubAdminAccess(accessData, subItem.title)
-    //     );
+  // allNavigationItems.forEach(item => {
+  //   if (item.hasSubmenu && item.subItems) {
+  //     const accessibleSubItems = item.subItems.filter(subItem =>
+  //       hasSubAdminAccess(accessData, subItem.title)
+  //     );
 
-    //     if (accessibleSubItems.length > 0) {
-    //       const firstSubItem = accessibleSubItems[0];
-    //       accessibleRoutes.push({
-    //         url: firstSubItem.url,
-    //         title: firstSubItem.title,
-    //         priority: getRoutePriority(firstSubItem.url)
-    //       });
-    //     }
-    //   }
-    //   else if (!item.hasSubmenu) {
-    //     const hasAccess = hasSubAdminAccess(accessData, item.title);
-    //     if (hasAccess && item.url && item.url !== "") {
-    //       accessibleRoutes.push({
-    //         url: item.url,
-    //         title: item.title,
-    //         priority: getRoutePriority(item.url)
-    //       });
-    //     }
-    //   }
-    // });
+  //     if (accessibleSubItems.length > 0) {
+  //       const firstSubItem = accessibleSubItems[0];
+  //       accessibleRoutes.push({
+  //         url: firstSubItem.url,
+  //         title: firstSubItem.title,
+  //         priority: getRoutePriority(firstSubItem.url)
+  //       });
+  //     }
+  //   }
+  //   else if (!item.hasSubmenu) {
+  //     const hasAccess = hasSubAdminAccess(accessData, item.title);
+  //     if (hasAccess && item.url && item.url !== "") {
+  //       accessibleRoutes.push({
+  //         url: item.url,
+  //         title: item.title,
+  //         priority: getRoutePriority(item.url)
+  //       });
+  //     }
+  //   }
+  // });
 
   //   if (accessibleRoutes.length === 0) {
   //     return "/dashboard";
@@ -152,14 +148,35 @@ const VerifyOtp = () => {
   // };
 
   const handleSubmit = async (e) => {
-     e.preventDefault();
-  const otpString = otp.join("").trim();
-  if (otpString.length < 4) {
-    alert("OTP is required");
-    return;
-  }
-  navigate("/reset-password");
-    
+    e.preventDefault();
+    const otpString = otp.join("").trim();
+    const isLogin = location.state?.isLogin;
+    const data = {
+      otp: otpString,
+      email: email,
+      ...(isLogin && { isLogin })
+    };
+    const isValid = await verifyOtp(data);
+    if (otpString.length < 4) {
+      alert("OTP is required");
+      return;
+    }
+    if (isValid) {
+      const isAdminLoggedIn = sessionStorage.getItem("isAdminLoggedIn") === "true";
+      const isSubAdminLoggedIn = sessionStorage.getItem("isSubAdminLoggedIn") === "true";
+
+      if (isLogin) {
+        if (isAdminLoggedIn) {
+          navigate("/dashboard");
+        } else if (isSubAdminLoggedIn) {
+          setVerified(true);
+        } else {
+          navigate("/dashboard");
+        }
+      } else {
+        navigate("/reset-password");
+      }
+    }
   };
 
   const handleResend = async () => {
@@ -172,79 +189,86 @@ const VerifyOtp = () => {
   return (
     <div className="flex min-h-screen bg-[#CCA547]">
       {/* Right Section - Hero Image */}
-     <div className="hidden md:flex w-1/2 justify-center items-center ">
-         <div className="w-[641px] h-[636px]">
-           <img
-             src={verify}
-             alt="Reset Password Illustration"
-             className=" object-cover "
-           />
-         </div>
-       </div>
+      <div className="hidden md:flex w-1/2 justify-center items-center ">
+        <div className="w-[641px] h-[636px]">
+          <img
+            src={verify}
+            alt="Reset Password Illustration"
+            className=" object-cover "
+          />
+        </div>
+      </div>
 
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 lg:px-20 ">
-      <div className="w-[589px] h-[601px] bg-[#FFFFFF] rounded-2xl p-5 flex flex-col items-center justify-center shadow-lg">
-    
-    <div className="flex flex-col gap-4 items-center mb-4">
+        <div className="w-[589px] h-[601px] bg-[#FFFFFF] rounded-2xl p-5 flex flex-col items-center justify-center shadow-lg">
+
+          <div className="flex flex-col gap-4 items-center mb-4">
             <h2 className="text-3xl font-bold mb-2 text-[#262626]">
-           Verify Code
-          </h2>
-          <p className="text-[#262626] mb-4 text-center">
-            Please enter OTP received on your email id
-          </p>
-          </div>
-
-
-        <form onSubmit={handleSubmit} className="space-y-5 w-full max-w-md">
-          <div className="flex justify-center py-2 gap-4 ">
-            {otp.map((digit, index) => (
-              <input
-                key={index}
-                className="w-12 h-12 border border-gray-300 text-xl text-center bg-[#F8F5FF] rounded-lg md:font-semibold"
-                value={digit}
-                ref={(element) => (inputRef.current[index] = element)}
-                maxLength={1}
-                onChange={(e) => handleInputChange(e, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-              />
-            ))}
-          </div>
-
-          <div className="flex flex-col justify-center">
-            <p className="text-sm text-gray-600 flex justify-center ">
-              Didn't Receive Code ?
+              Verify Code
+            </h2>
+            <p className="text-[#262626] mb-4 text-center">
+              Please enter OTP received on your email id {email}
             </p>
-            {timer > 0 ? (
-              <p className="text-sm text-gray-600 flex justify-center gap-2">
-                Resend Code in
-                <span className="font-bold text-blue-600">
-                  00:{timer.toString().padStart(2, "0")}
-                </span>
-              </p>
-            ) : (
-              <button
-                type="button"
-                onClick={handleResend}
-                className="text-sm text-blue-600 font-semibold"
-              >
-                Resend Code
-              </button>
-            )}
           </div>
 
-          <div className="flex justify-center w-full">
-            <button
-              type="submit"
-              // disabled={loading || (verified && subAdminAccess?.length === 0)}
-              className="w-full flex justify-center items-center text-white font-bold 
+
+          <form onSubmit={handleSubmit} className="space-y-5 w-full max-w-md">
+            <div className="flex justify-center py-2 gap-4 ">
+              {otp.map((digit, index) => (
+                <input
+                  key={index}
+                  className="w-12 h-12 border border-gray-300 text-xl text-center bg-[#F8F5FF] rounded-lg md:font-semibold"
+                  value={digit}
+                  ref={(element) => (inputRef.current[index] = element)}
+                  maxLength={1}
+                  onChange={(e) => handleInputChange(e, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                />
+              ))}
+            </div>
+
+            <div className="flex flex-col justify-center">
+              <p className="text-sm text-gray-600 flex justify-center ">
+                Didn't Receive Code ?
+              </p>
+              {timer > 0 ? (
+                <p className="text-sm text-gray-600 flex justify-center gap-2">
+                  Resend Code in
+                  <span className="font-bold text-blue-600">
+                    00:{timer.toString().padStart(2, "0")}
+                  </span>
+                </p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleResend}
+                  className="text-sm text-blue-600 font-semibold"
+                >
+                  Resend Code
+                </button>
+              )}
+            </div>
+
+            <div className="flex justify-center w-full">
+              <button
+                type="submit"
+                disabled={loading || (verified && subAdminAccess?.length === 0)}
+                className="w-full flex justify-center items-center text-white font-bold 
           bg-[#CCA547] py-3 rounded-lg hover:bg-[#CCA547] transition duration-200 disabled:bg-gray-400"
-            >
-             Verify
-            </button>
-          </div>
-        </form>
+              >
+                {loading || (verified && subAdminAccess?.length === 0) ? (
+                  <>
+                    <AiOutlineLoading3Quarters className="animate-spin text-lg mr-2" />
+                    {verified && subAdminAccess?.length === 0 ? "Loading Access..." : "Verifying..."}
+                  </>
+                ) : (
+                  "Verify"
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
     </div>
   );
 };
