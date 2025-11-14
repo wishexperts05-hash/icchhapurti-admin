@@ -248,7 +248,7 @@ export const allNavigationItems = [
   {
     id: 12,
     title: "Commission Settings",
-    url: "/payments-overview",
+    url: "/staff-commission",
     icon: commissionsettingsIcon,
     badge: null,
     color: "red",
@@ -257,7 +257,7 @@ export const allNavigationItems = [
       {
         id: 51,
         title: "Staff Commission",
-        url: "/payments-overview",
+        url: "/staff-commission",
         icon: staffCommissionIcon,
         badge: null,
         color: "blue",
@@ -265,7 +265,7 @@ export const allNavigationItems = [
       {
         id: 52,
         title: "User Commission",
-        url: "/wallet-transactions",
+        url: "/user-commission",
         icon: userCommissionIcon,
         badge: null,
         color: "purple",
@@ -273,7 +273,7 @@ export const allNavigationItems = [
       {
         id: 53,
         title: "Promoter Commission",
-        url: "/deposit-transactions",
+        url: "/promoter-commission",
         icon: productManagementIcon,
         badge: null,
         color: "yellow",
@@ -281,7 +281,7 @@ export const allNavigationItems = [
       {
         id: 54,
         title: "Coin Setting",
-        url: "/deposit-refund-requests",
+        url: "/coin-settings",
         icon: coinSettingIcon,
         badge: null,
         color: "yellow",
