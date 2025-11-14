@@ -135,7 +135,7 @@ export const allNavigationItems = [
   {
     id: 3,
     title: "User Management",
-    url: "/",
+    url: "/user-management",
     icon: userManagementIcon,
     badge: null,
     color: "blue",
@@ -176,8 +176,8 @@ export const allNavigationItems = [
   {
     id: 7,
     title: "Offer Management",
-    url: "/",
-    icon: offerManagementIcon,
+    url: "/offer-management",
+    icon: Home,
     badge: null,
     color: "blue",
   },
@@ -340,7 +340,7 @@ export const allNavigationItems = [
   {
     id: 14,
     title: "Country Management",
-    url: "/reviews",
+    url: "/country-management",
     icon: countryManagementIcon,
     badge: null,
     color: "yellow",
@@ -396,7 +396,7 @@ export const allNavigationItems = [
   {
     id: 21,
     title: "App Management",
-    url: "/cms/banner",
+    url: "/app-management",
     icon: appManagementIcon,
     badge: null,
     color: "gray",
@@ -405,7 +405,7 @@ export const allNavigationItems = [
       {
         id: 61,
         title: "Terms & Conditions",
-        url: "/cms/banner",
+        url: "app-management/termandcondition",
         icon: termAndConditionsIcon,
         badge: null,
         color: "blue",

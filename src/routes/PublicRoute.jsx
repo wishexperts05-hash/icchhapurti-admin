@@ -9,9 +9,6 @@ const Login = lazy(() => import("../pages/auth/Login"));
 const VerifyOTP = lazy(() => import("../pages/auth/VerifyOTP"));
 const ForgotPassword = lazy(() => import("../pages/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/auth/ResetPassword"));
-const PasswordResetSuccessfully = lazy(() =>
-  import("../pages/auth/PasswordResetSuccefully")
-);
 
 const Dashboard = lazy(() => import("../pages/module/dashboard/Dashboard"));
 const AdminProfile = lazy(() =>
@@ -21,6 +18,10 @@ const EditProfile = lazy(() =>
   import("../pages/module/adminProfile/EditProfile")
 );
 const Layout = lazy(() => import("../components/Layouts/Layout"));
+
+// ---------------------------- User Management ----------------------------
+const UserManagement = lazy(() => import("../pages/module/userManagement/UserManagementList"));
+const UserDetails = lazy(() => import("../pages/module/userManagement/UserManagementDetails"));
 
 // ---------------------------- Promoter Management ----------------------------
 const PromoterManagement = lazy(() =>
@@ -72,10 +73,15 @@ import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
-import UserManagement from "../pages/module/userManagement/UserManagementList";
-import UserDetails from "../pages/module/userManagement/UserManagementDetails";
+
 import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
 import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
+// -------------------------offer management --------------
+
+ const OfferManagementAdd = lazy(() => import("../pages/module/offerManagement/OfferManagementAdd"));
+ const OfferManagementEdit = lazy(() => import("../pages/module/offerManagement/OfferManagementEdit"));
+ const OfferManagementList = lazy(() => import("../pages/module/offerManagement/OfferManagementList"));
+ const OfferManagementView = lazy(() => import("../pages/module/offerManagement/OfferManagementView"));
 
 
 
@@ -95,13 +101,26 @@ const EditBlog = lazy(() =>
 const ViewBlog = lazy(() =>
   import("../pages/module/blogManagement/addBlog/ViewBlog")
 );
-// --------------------------------------------------------------------------------
+// -------------------------------App Management-------------------------------------------------
+
+const TermsAndConditions = lazy(() =>
+  import("../pages/module/appManagement/term&condition/Term&Condition")
+);
 
 //-------------------------Manage Redeem Request-----------------------------------------
 import {
   ManageRedeemRequest,
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
+import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
+import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
+
+
+//------------------------------- Country Management ---------------------------------------------
+const CountryManagementList = lazy(() => import("../pages/module/countryManagement/CountryManagementList"));
+const CountryManagementAdd = lazy(() => import("../pages/module/countryManagement/CountryManagementAdd"));
+const CountryManagementEdit = lazy(() => import("../pages/module/countryManagement/CountryManagementEdit"));
+
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
@@ -119,10 +138,6 @@ function PublicRoute() {
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route
-          path="/password-reset-successfully"
-          element={<PasswordResetSuccessfully />}
-        />
 
         {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
         {/* <Route element={<ProtectedRoute />}> */}
@@ -194,6 +209,7 @@ function PublicRoute() {
             setActiveItem={setActiveItem} />
 
           {/* -------------------------------------Product Managment ------------------------------------------- */}
+<<<<<<< HEAD
           <Route path="product-management" element={<ProductManagment />} />
           <Route path="/product-management/add-product" element={<AddProduct />} />
           <Route path="/product-management/product-edit/:id" element={<EditProduct />} />
@@ -202,14 +218,42 @@ function PublicRoute() {
           <Route path="/product-management/shipping-cost/add-shipping-cost/:id" element={<AddShippingCost />} />
           <Route path="/product-management/shipping-cost/edit-shipping-cost/:id" element={<EditShipingCost />} />
           
+=======
+           <Route path="product-management" element={<ProductManagment/>} />
+           <Route path="/product-management/add-product" element={<AddProduct />} />
+           <Route path="/product-management/product-edit" element={<EditProduct />} />
+           <Route path="/product-management/product-view" element={<ViewProduct />} />
+           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
+            <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
+            <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
+            {
+              /* -------------------------------------Offer Management ------------------------------------------- */}
+            <Route path="offer-management" element={<OfferManagementList />} />
+          <Route path="offer-management/add-offer" element={<OfferManagementAdd />} />
+         <Route path="offer-management/edit-offer" element={<OfferManagementEdit />} />
+          <Route path="offer-management/offer-details" element={<OfferManagementView />} />
+>>>>>>> 5b98a4bcf3e7480a5f4c00b375db803160e7c8bc
 
           {/* Blog Management */}
           <Route path="blog-management" element={<BlogManagement />} />
           <Route path="/blog-management/add-blogs" element={<AddBlog />} />
           <Route path="/blog-management/edit-blogs/:id" element={<EditBlog />} />
           <Route path="/blog-management/view-blogs/:id" element={<ViewBlog />} />
+
+          {/* App Management */}
+          <Route path="/app-management/termandcondition" element={<TermsAndConditions />} />
+          <Route path="/app-management/edittermandcondition" element={<EditTermsAndConditions />} />
+          {/* countryManagement */}
+          <Route path="country-management" element={<CountryManagementList />} />
+          <Route path="country-management/add-country" element={<CountryManagementAdd />} />
+          <Route path="country-management/edit-country" element={<CountryManagementEdit />} />
+         
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
+          
+
+
+
         </Route>
         {/* </Route> */}
       </Routes>

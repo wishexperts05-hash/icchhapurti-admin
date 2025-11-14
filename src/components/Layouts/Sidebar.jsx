@@ -4,8 +4,14 @@ import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import AnimationCSS from "./AnimationCSS";
 import { allNavigationItems } from "../../utils/sidebarHelpers";
 import logo from "../../assets/logo.png"
+import { useSetRecoilState } from "recoil";
+import { adminAuthState, subAdminAuthState } from "../../state/auth/authenticatedState";
+import useLogin from "../../hooks/auth/useLogin";
 
 const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
+    const setAdminInfo = useSetRecoilState(adminAuthState);
+    const setSubAdminInfo = useSetRecoilState(subAdminAuthState);
+    const { resetAdminLogin, resetSubAdminAccess } = useLogin();
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
@@ -132,35 +138,31 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
                     ? handleToggle(subItem.id, subItem.subItems, parentId ? [parentId] : [])
                     : handleSubItemClick(subItem.url, parentId)
                 }
-                className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 group mb-1 ${
-                  isSubActive
+                className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 group mb-1 ${isSubActive
                     ? "bg-yellow-400 text-gray-900"
                     : "hover:bg-gray-100 text-gray-700"
-                }`}
+                  }`}
               >
                 <div
-                  className={`flex items-center justify-center w-6 h-6 rounded-md transition-all duration-200 ${
-                    isSubActive
+                  className={`flex items-center justify-center w-6 h-6 rounded-md transition-all duration-200 ${isSubActive
                       ? "bg-white text-gray-700"
                       : "bg-white text-gray-700"
-                  }`}
+                    }`}
                 >
                   <subItem.icon className="h-4 w-4" />
                 </div>
                 {isOpen && (
                   <div className="flex items-center justify-between w-full ml-3">
                     <span
-                      className={`text-sm font-medium transition-colors duration-200 ${
-                        isSubActive ? "text-gray-900" : "text-gray-700"
-                      }`}
+                      className={`text-sm font-medium transition-colors duration-200 ${isSubActive ? "text-gray-900" : "text-gray-700"
+                        }`}
                     >
                       {subItem.title}
                     </span>
                     {hasSubSubmenu && (
                       <ChevronDown
-                        className={`h-4 w-4 text-gray-600 transition-transform duration-200 ${
-                          isSubExpanded ? "rotate-180" : ""
-                        }`}
+                        className={`h-4 w-4 text-gray-600 transition-transform duration-200 ${isSubExpanded ? "rotate-180" : ""
+                          }`}
                       />
                     )}
                   </div>
@@ -186,6 +188,10 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
   const handleLogout = () => {
     sessionStorage.clear();
     localStorage.clear();
+    resetAdminLogin();
+    resetSubAdminAccess();
+    setAdminInfo({ isAuthenticated: false });
+    setSubAdminInfo({ isAuthenticated: false });
     navigate("/");
   };
 
@@ -216,9 +222,9 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
             {isOpen && (
               <div className="flex items-center space-x-3 animate-slide-in-left w-full">
                 <div className="h-16 w-full flex items-center justify-center">
-                  <img 
-                    src={logo} 
-                    alt="Logo" className="object-cover w-full h-full" 
+                  <img
+                    src={logo}
+                    alt="Logo" className="object-cover w-full h-full"
                   />
                 </div>
               </div>
@@ -274,17 +280,15 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
                         {isOpen && (
                           <div className="flex items-center justify-between w-full ml-3">
                             <span
-                              className={`font-medium text-sm truncate transition-colors duration-200 ${
-                                isActive ? "text-gray-900" : "text-gray-700"
-                              }`}
+                              className={`font-medium text-sm truncate transition-colors duration-200 ${isActive ? "text-gray-900" : "text-gray-700"
+                                }`}
                             >
                               {item.title}
                             </span>
                             {hasSubmenu && (
                               <ChevronDown
-                                className={`h-4 w-4 text-gray-600 transition-transform duration-200 ${
-                                  isExpanded ? "rotate-180" : ""
-                                }`}
+                                className={`h-4 w-4 text-gray-600 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""
+                                  }`}
                               />
                             )}
                           </div>
@@ -304,7 +308,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
           </div>
 
           {/* Logout */}
-         {/* Logout Button */}
+          {/* Logout Button */}
           <div className="px-3 pb-3 border-t-2 border-[#e65d00]/40">
             <button
               onClick={handleLogout}

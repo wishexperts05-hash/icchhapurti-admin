@@ -6,13 +6,13 @@ import * as Yup from "yup";
 import FormField from "../../../../components/uiComponent/FormField";
 import Button from "../../../../components/uiComponent/Button";
 import { useNavigate } from "react-router-dom";
-import JoditEditor from "jodit-pro-react"; // ✅ Using pro version
+import JoditEditor from "jodit-pro-react"; 
 
 const AddBlog = () => {
   const navigate = useNavigate();
   const editor = useRef(null);
 
-  // ✅ Validation schema
+  // Validation schema
   const validationSchema = Yup.object().shape({
     title: Yup.string().trim().required("Blog title is required"),
     body: Yup.string().trim().required("Blog content cannot be empty"),
@@ -23,14 +23,13 @@ const AddBlog = () => {
       {/* Breadcrumb Navigation */}
       <BreadCrumb
         linkText={[
-          { text: "Dashboard" },
           { text: "Blog Management", href: "/blog-management" },
           { text: "Add Blog" },
         ]}
       />
 
       {/* Page Header */}
-      <PagePath2 title="Add Post" showAddButton={false} showSearch={false} />
+      <PagePath2 title="Add Blog" showAddButton={false} showSearch={false} />
 
       {/* Formik Form */}
       <Formik
@@ -40,7 +39,7 @@ const AddBlog = () => {
         }}
         validationSchema={validationSchema}
         onSubmit={(values, { resetForm }) => {
-          console.log("📝 Blog Data Submitted:", values);
+          console.log("Blog Data Submitted:", values);
           resetForm();
         }}
       >
@@ -58,7 +57,7 @@ const AddBlog = () => {
               Body
             </label>
 
-            {/* ✅ Jodit Pro Editor */}
+            {/* Jodit Pro Editor */}
             <JoditEditor
               ref={editor}
               value={values.body}
