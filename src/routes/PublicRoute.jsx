@@ -196,11 +196,12 @@ function PublicRoute() {
           {/* -------------------------------------Product Managment ------------------------------------------- */}
           <Route path="product-management" element={<ProductManagment />} />
           <Route path="/product-management/add-product" element={<AddProduct />} />
-          <Route path="/product-management/product-edit:id" element={<EditProduct />} />
-          <Route path="/product-management/product-view:id" element={<ViewProduct />} />
-          <Route path="/product-management/shipping-cost:id" element={<ManageShippingCost />} />
-          <Route path="/product-management/shipping-cost/add-shipping-cost:id" element={<AddShippingCost />} />
-          <Route path="/product-management/shipping-cost/edit-shipping-cost:id" element={<EditShipingCost />} />
+          <Route path="/product-management/product-edit/:id" element={<EditProduct />} />
+          <Route path="/product-management/product-view/:id" element={<ViewProduct />} />
+          <Route path="/product-management/shipping-cost/:id" element={<ManageShippingCost />} />
+          <Route path="/product-management/shipping-cost/add-shipping-cost/:id" element={<AddShippingCost />} />
+          <Route path="/product-management/shipping-cost/edit-shipping-cost/:id" element={<EditShipingCost />} />
+          
 
           {/* Blog Management */}
           <Route path="blog-management" element={<BlogManagement />} />

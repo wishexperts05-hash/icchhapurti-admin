@@ -6,32 +6,39 @@ import PagePath2 from "../../../components/uiComponent/PagePath2";
 import { FaTimes, FaPlus } from "react-icons/fa";
 import Button from "../../../components/uiComponent/Button";
 import returnIcon from "../../../assets/returnProduct.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Added from "../../../assets/Added.png";
+import useProductManagement from "../../../hooks/productList/useProductManagment";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 
 const EditProduct = () => {
   const [productImages, setProductImages] = useState([]);
   const [easyReturn, setEasyReturn] = useState(true);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [visible, setVisible] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  //    const editProduct = () => {
-  //   setShowSuccessModal(true);
-  //   setTimeout(() => {
-  //     navigate("/product-management");
-  //     setTimeout(() => setShowSuccessModal(false), 2000);
-  //   }, 2000);
-  // };
-  // 🧠 Formik setup
+  const { updateProduct, fetchProductDetailById, productDetail ,loading} =
+    useProductManagement();
+
+  // Fetch product on mount
+  useEffect(() => {
+    fetchProductDetailById(id);
+  }, [id]);
+
+  // Initialize Formik
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      category: "",
-      name: "",
-      price: "",
-      description: "",
-      returnDays: "",
+      category: productDetail?.product?.category || "",
+      name: productDetail?.product?.name || "",
+      price: productDetail?.product?.price || "",
+      description: productDetail?.product?.description || "",
+      returnable: productDetail?.product?.returnable || "",
     },
+
     validationSchema: Yup.object({
       category: Yup.string().required("Category is required"),
       name: Yup.string().required("Product name is required"),
@@ -40,64 +47,55 @@ const EditProduct = () => {
         .positive("Price must be positive")
         .required("Price is required"),
       description: Yup.string().required("Description is required"),
-      returnDays: Yup.number()
-        .min(0, "Must be 0 or greater")
+      returnable: Yup.string()
+        // .min(0, "Must be 0 or greater")
         .required("Return days are required"),
     }),
-    onSubmit: (values) => {
-      const updatedProduct = {
-        ...values,
-        easyReturn,
-        visible,
-        productImages,
-      };
-      setShowSuccessModal(true);
 
-      // Simulate API call delay (optional)
-      setTimeout(() => {
-        navigate("/product-management");
-        setShowSuccessModal(false);
-      }, 2000);
-      console.log("📝 Updated Product:", updatedProduct);
-      // Call your API here to update the product
-      // e.g. axios.put(`/api/products/${id}`, updatedProduct)
+    onSubmit: async (values) => {
+      const formData = new FormData();
+
+      Object.keys(values).forEach((key) => {
+        formData.append(key, values[key]);
+      });
+
+      formData.append("easyReturn", easyReturn);
+      formData.append("visible", visible);
+
+      // Append uploaded images (File objects)
+      productImages.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      await updateProduct(id, formData);
+      // setShowSuccessModal(true);
+
+      // setTimeout(() => {
+      //   setShowSuccessModal(false);
+      //   navigate("/product-management");
+      // }, 2000);
     },
   });
 
-  // 🪄 (Optional) — Prefill data for edit
-  useEffect(() => {
-    // Simulated fetched product data
-    const fetchedProduct = {
-      category: "Stationery",
-      name: "Pelikan Pen",
-      price: "15",
-      description: "Smooth writing ballpoint pen.",
-      returnDays: "5",
-      easyReturn: true,
-      visible: true,
-      images: [],
-    };
+  // Convert backend URLs into preview + store existing images
+ useEffect(() => {
+  if (productDetail?.product) {
+    const backendImages = productDetail.product.images?.map(img => img.url) || [];
+    setProductImages(backendImages);
 
-    formik.setValues({
-      category: fetchedProduct.category,
-      name: fetchedProduct.name,
-      price: fetchedProduct.price,
-      description: fetchedProduct.description,
-      returnDays: fetchedProduct.returnDays,
-    });
-    setEasyReturn(fetchedProduct.easyReturn);
-    setVisible(fetchedProduct.visible);
-    setProductImages(fetchedProduct.images);
-  }, []);
+    setEasyReturn(productDetail.product.returnable);
+    setVisible(productDetail.product.isActive);
+  }
+}, [productDetail]);
 
-  // 📸 Handle image uploads
+
+  // Image Upload Handler
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setProductImages((prev) => [...prev, ...imageUrls]);
+    setProductImages((prev) => [...prev, ...files]);
   };
 
-  // ❌ Remove image
+  // Remove Image
   const handleRemoveImage = (index) => {
     setProductImages((prev) => prev.filter((_, i) => i !== index));
   };
@@ -113,11 +111,17 @@ const EditProduct = () => {
 
       <PagePath2 title="Edit Product" />
 
+            {loading ? (
+        <div className="w-full flex items-center justify-center">
+          <LoaderSpinner />
+        </div>
+      ) : (
+
       <form
         onSubmit={formik.handleSubmit}
         className="bg-white p-6 rounded-lg shadow-md mt-4"
       >
-        {/* Product Category & Name */}
+        {/* PRODUCT CATEGORY & NAME */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Category */}
           <div>
@@ -127,22 +131,17 @@ const EditProduct = () => {
             <input
               name="category"
               type="text"
-              placeholder="e.g. Pen"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.category}
-              className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 ${
-                formik.touched.category && formik.errors.category
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-300 focus:ring-orange-500"
-              }`}
+              className="w-full border p-2 rounded-md"
             />
             {formik.touched.category && formik.errors.category && (
               <p className="text-red-500 text-sm">{formik.errors.category}</p>
             )}
           </div>
 
-          {/* Product Name */}
+          {/* Name */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">
               Product Name:
@@ -150,15 +149,10 @@ const EditProduct = () => {
             <input
               name="name"
               type="text"
-              placeholder="e.g. Pelikan"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.name}
-              className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 ${
-                formik.touched.name && formik.errors.name
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-300 focus:ring-orange-500"
-              }`}
+              className="w-full border p-2 rounded-md"
             />
             {formik.touched.name && formik.errors.name && (
               <p className="text-red-500 text-sm">{formik.errors.name}</p>
@@ -166,32 +160,23 @@ const EditProduct = () => {
           </div>
         </div>
 
-        {/* Price */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
-              Price:
-            </label>
-            <input
-              name="price"
-              type="text"
-              placeholder="₹ 10"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.price}
-              className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 ${
-                formik.touched.price && formik.errors.price
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-300 focus:ring-orange-500"
-              }`}
-            />
-            {formik.touched.price && formik.errors.price && (
-              <p className="text-red-500 text-sm">{formik.errors.price}</p>
-            )}
-          </div>
+        {/* PRICE */}
+        <div className="mt-4">
+          <label className="block text-gray-700 font-medium mb-2">Price:</label>
+          <input
+            name="price"
+            type="text"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.price}
+            className="w-full border p-2 rounded-md"
+          />
+          {formik.touched.price && formik.errors.price && (
+            <p className="text-red-500 text-sm">{formik.errors.price}</p>
+          )}
         </div>
 
-        {/* Description */}
+        {/* DESCRIPTION */}
         <div className="mt-4">
           <label className="block text-gray-700 font-medium mb-2">
             Description:
@@ -199,142 +184,106 @@ const EditProduct = () => {
           <textarea
             name="description"
             rows="3"
-            placeholder="Write a short product description..."
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.description}
-            className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 ${
-              formik.touched.description && formik.errors.description
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-300 focus:ring-orange-500"
-            }`}
+            className="w-full border p-2 rounded-md"
           />
           {formik.touched.description && formik.errors.description && (
             <p className="text-red-500 text-sm">{formik.errors.description}</p>
           )}
         </div>
 
-        {/* Product Images */}
+        {/* IMAGES */}
         <div className="mt-4">
           <label className="block text-gray-700 font-medium mb-2">
-            Product Images (Min 3):
+            Product Images:
           </label>
+
           <div className="flex flex-wrap gap-4">
-            {productImages.map((image, index) => (
-              <div
-                key={index}
-                className="relative w-24 h-24 border rounded-lg overflow-hidden"
-              >
-                <img
-                  src={image}
-                  alt={`product-${index}`}
-                  className="object-cover w-full h-full"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveImage(index)}
-                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 text-xs"
-                >
-                  <FaTimes />
-                </button>
-              </div>
-            ))}
+  {productImages.map((img, index) => (
+    <div key={index} className="relative w-24 h-24 border rounded-lg overflow-hidden">
+      <img
+        src={img instanceof File ? URL.createObjectURL(img) : img}
+        alt="product"
+        className="w-full h-full object-cover"
+      />
 
-            <label
-              htmlFor="upload"
-              className="w-24 h-24 flex items-center justify-center border border-dashed border-gray-400 rounded-lg cursor-pointer hover:bg-gray-100"
-            >
-              <FaPlus className="text-gray-500" />
-              <input
-                id="upload"
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={handleImageUpload}
-              />
-            </label>
-          </div>
+      <button
+        type="button"
+        onClick={() => handleRemoveImage(index)}
+        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+      >
+        <FaTimes />
+      </button>
+    </div>
+  ))}
+
+  <label
+    htmlFor="upload"
+    className="w-24 h-24 flex items-center justify-center border border-dashed cursor-pointer"
+  >
+    <FaPlus className="text-gray-500" />
+    <input
+      id="upload"
+      type="file"
+      multiple
+      className="hidden"
+      onChange={handleImageUpload}
+    />
+  </label>
+</div>
+
         </div>
 
-        {/* Easy Return */}
-        <div className="flex items-center gap-2 mt-6">
-          <img src={returnIcon} alt="" className="w-6 h-6 text-yellow-600" />
-          <span className="text-gray-700 font-medium">Easy Return</span>
-          <label className="relative inline-flex items-center cursor-pointer ml-2">
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              checked={easyReturn}
-              onChange={() => setEasyReturn(!easyReturn)}
-            />
-            <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
-          </label>
-        </div>
-
-        {/* Return Days */}
-        <div className="mt-4">
-          <label className="block text-gray-700 font-medium mb-2">
-            Enter Return Days:
-          </label>
+        {/* EASY RETURN */}
+        <div className="mt-6 flex items-center gap-2">
+          <img src={returnIcon} alt="" className="w-6" />
+          <span className="font-medium">Easy Return</span>
           <input
-            name="returnDays"
-            type="number"
-            min="0"
-            placeholder="2"
+            type="checkbox"
+            checked={easyReturn}
+            onChange={() => setEasyReturn(!easyReturn)}
+          />
+        </div>
+
+        {/* RETURN DAYS */}
+        <div className="mt-4">
+          <label className="font-medium mb-2 block">Return Days:</label>
+          <input
+            name="returnable"
+            type="text"
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.returnDays}
-            className={`w-full border rounded-md p-2 focus:outline-none focus:ring-1 ${
-              formik.touched.returnDays && formik.errors.returnDays
-                ? "border-red-500 focus:ring-red-500"
-                : "border-gray-300 focus:ring-orange-500"
-            }`}
+            value={formik.values.returnable}
+            className="w-full border p-2 rounded-md"
           />
-          {formik.touched.returnDays && formik.errors.returnDays && (
-            <p className="text-red-500 text-sm">{formik.errors.returnDays}</p>
-          )}
         </div>
 
-        {/* Product Visibility */}
-        <div className="flex items-center gap-2 mt-6">
-          <img src={returnIcon} alt="" className="w-6 h-6 text-yellow-600" />
-          <span className="text-gray-700 font-medium">Product Visibility</span>
-          <label className="relative inline-flex items-center cursor-pointer ml-2">
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              checked={visible}
-              onChange={() => setVisible(!visible)}
-            />
-            <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
-          </label>
+        {/* VISIBILITY */}
+        <div className="mt-6 flex items-center gap-2">
+          <span className="font-medium">Visible</span>
+          <input
+            type="checkbox"
+            checked={visible}
+            onChange={() => setVisible(!visible)}
+          />
         </div>
 
-        {/* Buttons */}
+        {/* BUTTONS */}
         <div className="flex justify-center gap-4 mt-8">
-          <Button
-            variant={2}
-            text="Cancel"
-            onClick={() => navigate("/product-management")}
-          />
+          <Button variant={2} text="Cancel" onClick={() => navigate(-1)} />
           <Button variant={1} text="Save Changes" type="submit" />
         </div>
       </form>
-      {/* 🔸 Success Modal */}
+      )}
+      {/* SUCCESS MODAL */}
       {showSuccessModal && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-70 flex items-center justify-center z-50">
-          {/* <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="bg-white p-6 rounded-xl shadow-md text-center w-80"
-                      > */}
-          <div className="bg-white p-6 rounded-xl shadow-md text-center w-80">
-            <div className="flex justify-center text-green-500 text-6xl mb-2">
-              <img src={Added} alt="TrashBin" />
-            </div>
-            <p className="font-semibold text-lg">Product Edited Successfully</p>
-            {/* </motion.div> */}
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-xl text-center">
+            <img src={Added} alt="" className="mx-auto w-16" />
+            <p className="font-semibold text-lg mt-2">
+              Product Updated Successfully
+            </p>
           </div>
         </div>
       )}

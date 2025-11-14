@@ -98,12 +98,12 @@ const ProductManagment = () => {
     {
       icon: <FaEye className="text-yellow-600" />,
       title: "View",
-      onClick: (row) => navigate(`/product-management/product-view${row._id}`),
+      onClick: (row) => navigate(`/product-management/product-view/${row._id}`),
     },
     {
       icon: <FaEdit className="text-green-600" />,
       title: "Edit",
-      onClick: (row) => navigate(`/product-management/product-edit${row._id}`),
+      onClick: (row) => navigate(`/product-management/product-edit/${row._id}`),
     },
     {
       icon: <FaTrash className="text-red-600" />,
