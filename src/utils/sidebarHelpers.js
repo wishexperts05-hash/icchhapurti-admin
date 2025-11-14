@@ -340,7 +340,7 @@ export const allNavigationItems = [
   {
     id: 14,
     title: "Country Management",
-    url: "/reviews",
+    url: "/country-management",
     icon: countryManagementIcon,
     badge: null,
     color: "yellow",

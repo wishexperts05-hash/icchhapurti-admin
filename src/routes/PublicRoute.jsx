@@ -116,6 +116,13 @@ import {
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
 import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
+import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
+
+
+//------------------------------- Country Management ---------------------------------------------
+const CountryManagementList = lazy(() => import("../pages/module/countryManagement/CountryManagementList"));
+const CountryManagementAdd = lazy(() => import("../pages/module/countryManagement/CountryManagementAdd"));
+const CountryManagementEdit = lazy(() => import("../pages/module/countryManagement/CountryManagementEdit"));
 
 
 function PublicRoute() {
@@ -232,6 +239,11 @@ function PublicRoute() {
           {/* App Management */}
           <Route path="/app-management/termandcondition" element={<TermsAndConditions />} />
           <Route path="/app-management/edittermandcondition" element={<EditTermsAndConditions />} />
+          {/* countryManagement */}
+          <Route path="country-management" element={<CountryManagementList />} />
+          <Route path="country-management/add-country" element={<CountryManagementAdd />} />
+          <Route path="country-management/edit-country" element={<CountryManagementEdit />} />
+         
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
           
