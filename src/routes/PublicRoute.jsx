@@ -9,9 +9,6 @@ const Login = lazy(() => import("../pages/auth/Login"));
 const VerifyOTP = lazy(() => import("../pages/auth/VerifyOTP"));
 const ForgotPassword = lazy(() => import("../pages/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/auth/ResetPassword"));
-const PasswordResetSuccessfully = lazy(() =>
-  import("../pages/auth/PasswordResetSuccefully")
-);
 
 const Dashboard = lazy(() => import("../pages/module/dashboard/Dashboard"));
 const AdminProfile = lazy(() =>
@@ -134,10 +131,6 @@ function PublicRoute() {
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route
-          path="/password-reset-successfully"
-          element={<PasswordResetSuccessfully />}
-        />
 
         {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
         {/* <Route element={<ProtectedRoute />}> */}

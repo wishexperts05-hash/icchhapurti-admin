@@ -149,19 +149,19 @@ const useLogin = () => {
   const forgotPassword = async (data) => {
     setLoading(true);
     try {
-      const url = new URL(`${conf.apiBaseUrl}admin/forgotPassword`);
+      const url = new URL(`${conf.apiBaseUrl}admin/auth/forgot-password`);
       const res = await fetchData({
-        method: "POST",
+        method: "PUT",
         url: url.toString(),
         data: data,
       });
 
-      console.log("res", res);
+      console.log("OTP", res?.data?.otp);
       if (res) {
         setLoading(false);
         toast.success(res?.message);
-        setPassword(res);
-        sessionStorage.setItem("email", res?.email);
+        setPassword(res?.data);
+        sessionStorage.setItem("email", res?.data?.email);
         return true;
       }
     } catch (error) {
@@ -184,9 +184,9 @@ const useLogin = () => {
   const confirmPassword = async (data) => {
     setLoading(true);
     try {
-      const url = new URL(`${conf.apiBaseUrl}admin/resetPassword`);
+      const url = new URL(`${conf.apiBaseUrl}admin/auth/reset-password`);
       const res = await fetchData({
-        method: "POST",
+        method: "PUT",
         url: url.toString(),
         data: data,
       });
