@@ -23,8 +23,12 @@ const EditProfile = lazy(() =>
 const Layout = lazy(() => import("../components/Layouts/Layout"));
 
 // ---------------------------- User Management ----------------------------
-const UserManagement = lazy(() => import("../pages/module/userManagement/UserManagementList"));
-const UserDetails = lazy(() => import("../pages/module/userManagement/UserManagementDetails"));
+const UserManagement = lazy(() =>
+  import("../pages/module/userManagement/UserManagementList")
+);
+const UserDetails = lazy(() =>
+  import("../pages/module/userManagement/UserManagementDetails")
+);
 
 // ---------------------------- Promoter Management ----------------------------
 const PromoterManagement = lazy(() =>
@@ -81,12 +85,18 @@ import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
 import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
 // -------------------------offer management --------------
 
- const OfferManagementAdd = lazy(() => import("../pages/module/offerManagement/OfferManagementAdd"));
- const OfferManagementEdit = lazy(() => import("../pages/module/offerManagement/OfferManagementEdit"));
- const OfferManagementList = lazy(() => import("../pages/module/offerManagement/OfferManagementList"));
- const OfferManagementView = lazy(() => import("../pages/module/offerManagement/OfferManagementView"));
-
-
+const OfferManagementAdd = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementAdd")
+);
+const OfferManagementEdit = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementEdit")
+);
+const OfferManagementList = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementList")
+);
+const OfferManagementView = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementView")
+);
 
 // ---------------------------- Blog Management ----------------------------
 
@@ -116,7 +126,6 @@ import {
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
 import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
-
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
@@ -195,49 +204,117 @@ function PublicRoute() {
           />
 
           {/* -------------------------- Staff Management -------------------------- */}
-          <Route path="staff-management" element={<StaffManagement />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
-          <Route path="/staff-management/addStaff" element={<AddStaffForm />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
-          <Route path="/staff-management/editStaff" element={<EditStaff />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
-          <Route path="/staff-management/attendanceListing" element={<AttendanceListing />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
-          <Route path="/staff-management/salesListing" element={<StaffSales />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
-          <Route path="/staff-management/staff-map/:id" element={<StaffMapPage />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
+          <Route
+            path="staff-management"
+            element={<StaffManagement />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+          <Route
+            path="/staff-management/addStaff"
+            element={<AddStaffForm />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+          <Route
+            path="/staff-management/editStaff"
+            element={<EditStaff />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+          <Route
+            path="/staff-management/attendanceListing"
+            element={<AttendanceListing />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+          <Route
+            path="/staff-management/salesListing"
+            element={<StaffSales />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+          <Route
+            path="/staff-management/staff-map/:id"
+            element={<StaffMapPage />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
 
           {/* -------------------------------------Product Managment ------------------------------------------- */}
-           <Route path="product-management" element={<ProductManagment/>} />
-           <Route path="/product-management/add-product" element={<AddProduct />} />
-           <Route path="/product-management/product-edit" element={<EditProduct />} />
-           <Route path="/product-management/product-view" element={<ViewProduct />} />
-           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
-            <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
-            <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
-            {
-              /* -------------------------------------Offer Management ------------------------------------------- */}
-            <Route path="offer-management" element={<OfferManagementList />} />
-          <Route path="offer-management/add-offer" element={<OfferManagementAdd />} />
-         <Route path="offer-management/edit-offer" element={<OfferManagementEdit />} />
-          <Route path="offer-management/offer-details" element={<OfferManagementView />} />
+          <Route path="product-management" element={<ProductManagment />} />
+          <Route
+            path="/product-management/add-product"
+            element={<AddProduct />}
+          />
+          <Route
+            path="/product-management/product-edit"
+            element={<EditProduct />}
+          />
+          <Route
+            path="/product-management/product-view"
+            element={<ViewProduct />}
+          />
+          <Route
+            path="/product-management/shipping-cost"
+            element={<ManageShippingCost />}
+          />
+          <Route
+            path="/product-management/shipping-cost/add-shipping-cost"
+            element={<AddShippingCost />}
+          />
+          <Route
+            path="/product-management/shipping-cost/edit-shipping-cost"
+            element={<EditShipingCost />}
+          />
+          {/* -------------------------------------Offer Management ------------------------------------------- */}
+          <Route path="offer-management" element={<OfferManagementList />} />
+          <Route
+            path="offer-management/add-offer"
+            element={<OfferManagementAdd />}
+          />
+          <Route
+            path="offer-management/edit-offer"
+            element={<OfferManagementEdit />}
+          />
+          <Route
+            path="offer-management/offer-details"
+            element={<OfferManagementView />}
+          />
 
           {/* Blog Management */}
           <Route path="blog-management" element={<BlogManagement />} />
           <Route path="/blog-management/add-blogs" element={<AddBlog />} />
-          <Route path="/blog-management/edit-blogs/:id" element={<EditBlog />} />
-          <Route path="/blog-management/view-blogs/:id" element={<ViewBlog />} />
+          <Route
+            path="/blog-management/edit-blogs/:id"
+            element={<EditBlog />}
+          />
+          <Route
+            path="/blog-management/view-blogs/:id"
+            element={<ViewBlog />}
+          />
 
           {/* App Management */}
-          <Route path="/app-management/termandcondition" element={<TermsAndConditions />} />
-          <Route path="/app-management/edittermandcondition" element={<EditTermsAndConditions />} />
+          <Route
+            path="/app-management/termandcondition"
+            element={<TermsAndConditions />}
+          />
+          <Route
+            path="/app-management/edittermandcondition"
+            element={<EditTermsAndConditions />}
+          />
+          <Route
+            path="manage-redeem-request"
+            element={<ManageRedeemRequest />}
+          />
+
+          <Route
+            path="manage-redeem-request/view-redeem-request/:id"
+            element={<ViewRedeemRequest />}
+          />
+
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
-          
-
-
-
         </Route>
         {/* </Route> */}
       </Routes>
