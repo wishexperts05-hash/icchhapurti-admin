@@ -209,30 +209,19 @@ function PublicRoute() {
             setActiveItem={setActiveItem} />
 
           {/* -------------------------------------Product Managment ------------------------------------------- */}
-<<<<<<< HEAD
-          <Route path="product-management" element={<ProductManagment />} />
-          <Route path="/product-management/add-product" element={<AddProduct />} />
-          <Route path="/product-management/product-edit/:id" element={<EditProduct />} />
-          <Route path="/product-management/product-view/:id" element={<ViewProduct />} />
-          <Route path="/product-management/shipping-cost/:id" element={<ManageShippingCost />} />
-          <Route path="/product-management/shipping-cost/add-shipping-cost/:id" element={<AddShippingCost />} />
-          <Route path="/product-management/shipping-cost/edit-shipping-cost/:id" element={<EditShipingCost />} />
-          
-=======
            <Route path="product-management" element={<ProductManagment/>} />
            <Route path="/product-management/add-product" element={<AddProduct />} />
-           <Route path="/product-management/product-edit" element={<EditProduct />} />
-           <Route path="/product-management/product-view" element={<ViewProduct />} />
-           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
+           <Route path="/product-management/product-edit/:id" element={<EditProduct />} />
+           <Route path="/product-management/product-view/:id" element={<ViewProduct />} />
+           <Route path="/product-management/shipping-cost/:id" element={<ManageShippingCost />} />
             <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
-            <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
+            <Route path="/product-management/shipping-cost/edit-shipping-cost/:id" element={<EditShipingCost />} />
             {
               /* -------------------------------------Offer Management ------------------------------------------- */}
             <Route path="offer-management" element={<OfferManagementList />} />
           <Route path="offer-management/add-offer" element={<OfferManagementAdd />} />
          <Route path="offer-management/edit-offer" element={<OfferManagementEdit />} />
           <Route path="offer-management/offer-details" element={<OfferManagementView />} />
->>>>>>> 5b98a4bcf3e7480a5f4c00b375db803160e7c8bc
 
           {/* Blog Management */}
           <Route path="blog-management" element={<BlogManagement />} />
@@ -250,10 +239,6 @@ function PublicRoute() {
          
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
-          
-
-
-
         </Route>
         {/* </Route> */}
       </Routes>

@@ -36,7 +36,7 @@ const EditProduct = () => {
       name: productDetail?.product?.name || "",
       price: productDetail?.product?.price || "",
       description: productDetail?.product?.description || "",
-      returnable: productDetail?.product?.returnable || "",
+      returnable: productDetail?.product?.returnable || "N/A",
     },
 
     validationSchema: Yup.object({
@@ -48,7 +48,6 @@ const EditProduct = () => {
         .required("Price is required"),
       description: Yup.string().required("Description is required"),
       returnable: Yup.string()
-        // .min(0, "Must be 0 or greater")
         .required("Return days are required"),
     }),
 
