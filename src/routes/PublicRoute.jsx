@@ -261,7 +261,7 @@ function PublicRoute() {
             element={<ViewProduct />}
           />
           <Route
-            path="/product-management/shipping-cost/:id"
+            path="/product-management/shipping-cost/"
             element={<ManageShippingCost />}
           />
           <Route
