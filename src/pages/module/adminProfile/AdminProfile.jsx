@@ -16,7 +16,8 @@ const AdminProfile = () => {
         if (adminId)
             fetchAdminProfile(adminId);
     }, [])
-
+ 
+    console.log("adminProfile", adminProfile)
     return (
         <div className="w-full">
             <BreadCrumb linkText={[{ text: "My Profile" }]} />
@@ -36,7 +37,7 @@ const AdminProfile = () => {
                                 {/* Header Section */}
                                 <div className="flex flex-col items-center gap-4">
                                     <img
-                                        src={adminProfile?.admin?.profileImage || profile}
+                                        src={adminProfile?.profileImage || profile}
                                         alt="Admin Profile"
                                         className="w-64 h-64 rounded-full shadow-md border-4 border-gray-100"
                                     />
@@ -50,27 +51,27 @@ const AdminProfile = () => {
                                     <div className="flex flex-col gap-2 w-full">
                                         <span className="font-medium text-[#004AAD]">Full Name</span>
                                         <div className="px-3 py-3 border border-[#CCA547]/80 rounded-lg shadow-sm w-full">
-                                            {adminProfile?.admin?.fullName || "-"}
+                                            {adminProfile?.name || "-"}
                                         </div>
                                     </div>
 
                                     <div className="flex flex-col gap-2 w-full">
                                         <span className="font-medium text-[#004AAD]">Phone Number</span>
                                         <div className="px-3 py-3 border border-[#CCA547]/80 rounded-lg shadow-sm w-full">
-                                            {adminProfile?.admin?.phoneNumber || "-"}
+                                            {adminProfile?.phone || "-"}
                                         </div>
                                     </div>
 
                                     <div className="flex flex-col gap-2 w-full">
                                         <span className="font-medium text-[#004AAD]">Email Address</span>
                                         <div className="px-3 py-3 border border-[#CCA547]/80 rounded-lg shadow-sm w-full">
-                                            {adminProfile?.admin?.email || "-"}
+                                            {adminProfile?.email || "-"}
                                         </div>
                                     </div>
-                                     <div className="flex flex-col gap-2 w-full">
+                                    <div className="flex flex-col gap-2 w-full">
                                         <span className="font-medium text-[#004AAD]">Password</span>
                                         <div className="px-3 py-3 border border-[#CCA547]/80 rounded-lg shadow-sm w-full">
-                                            {adminProfile?.admin?.password || "-"}
+                                            {adminProfile?.password || "-"}
                                         </div>
                                     </div>
                                 </div>

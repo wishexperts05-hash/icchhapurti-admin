@@ -91,7 +91,12 @@ const StaffManagement = () => {
 
     const actions = [
         {
-            icon: <FaRegEdit className="w-5 h-5 text-green-600" />,
+            icon: (row) => (
+                <FaRegEdit
+                    className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
+                    title="Edit"
+                />
+            ),
             onClick: handleEdit,
             title: "Edit",
         },
