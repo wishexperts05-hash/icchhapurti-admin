@@ -9,9 +9,6 @@ const Login = lazy(() => import("../pages/auth/Login"));
 const VerifyOTP = lazy(() => import("../pages/auth/VerifyOTP"));
 const ForgotPassword = lazy(() => import("../pages/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/auth/ResetPassword"));
-const PasswordResetSuccessfully = lazy(() =>
-  import("../pages/auth/PasswordResetSuccefully")
-);
 
 const Dashboard = lazy(() => import("../pages/module/dashboard/Dashboard"));
 const AdminProfile = lazy(() =>
@@ -126,6 +123,18 @@ import {
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
 import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
+import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
+
+//------------------------------- Country Management ---------------------------------------------
+const CountryManagementList = lazy(() =>
+  import("../pages/module/countryManagement/CountryManagementList")
+);
+const CountryManagementAdd = lazy(() =>
+  import("../pages/module/countryManagement/CountryManagementAdd")
+);
+const CountryManagementEdit = lazy(() =>
+  import("../pages/module/countryManagement/CountryManagementEdit")
+);
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
@@ -143,10 +152,6 @@ function PublicRoute() {
         <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route
-          path="/password-reset-successfully"
-          element={<PasswordResetSuccessfully />}
-        />
 
         {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
         {/* <Route element={<ProtectedRoute />}> */}
@@ -248,15 +253,15 @@ function PublicRoute() {
             element={<AddProduct />}
           />
           <Route
-            path="/product-management/product-edit"
+            path="/product-management/product-edit/:id"
             element={<EditProduct />}
           />
           <Route
-            path="/product-management/product-view"
+            path="/product-management/product-view/:id"
             element={<ViewProduct />}
           />
           <Route
-            path="/product-management/shipping-cost"
+            path="/product-management/shipping-cost/:id"
             element={<ManageShippingCost />}
           />
           <Route
@@ -264,7 +269,7 @@ function PublicRoute() {
             element={<AddShippingCost />}
           />
           <Route
-            path="/product-management/shipping-cost/edit-shipping-cost"
+            path="/product-management/shipping-cost/edit-shipping-cost/:id"
             element={<EditShipingCost />}
           />
           {/* -------------------------------------Offer Management ------------------------------------------- */}
@@ -303,6 +308,20 @@ function PublicRoute() {
             path="/app-management/edittermandcondition"
             element={<EditTermsAndConditions />}
           />
+          {/* countryManagement */}
+          <Route
+            path="country-management"
+            element={<CountryManagementList />}
+          />
+          <Route
+            path="country-management/add-country"
+            element={<CountryManagementAdd />}
+          />
+          <Route
+            path="country-management/edit-country"
+            element={<CountryManagementEdit />}
+          />
+
           <Route
             path="manage-redeem-request"
             element={<ManageRedeemRequest />}

@@ -23,7 +23,7 @@ const useManageRedeemRequest = () => {
     getDropdownOfStatusAtom
   );
 
-  const fetchRedeemRequests = async (page, limit, status, status) => {
+  const fetchRedeemRequests = async (page, limit, status, search) => {
     setLoading(true);
     try {
       const params = {
