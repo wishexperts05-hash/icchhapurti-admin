@@ -114,7 +114,8 @@ const OrderManagement = () => {
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Order Management" }]} />
-      <PagePath2 title="Order Management" />
+      <PagePath2 title="Order Management" showSelect />
+
       <Box>
         <DataTable
           columns={columns}
