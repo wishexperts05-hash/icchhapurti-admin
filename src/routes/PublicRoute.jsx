@@ -136,6 +136,11 @@ const CountryManagementEdit = lazy(() =>
   import("../pages/module/countryManagement/CountryManagementEdit")
 );
 
+const ChatSupportSystem = lazy(() =>
+  import("../pages/module/chatSupportSystem/ChatSupportSystem")
+);
+
+const ChatBox = lazy(() => import("../pages/module/chatSupportSystem/ChatBox"));
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
   return (
@@ -331,6 +336,9 @@ function PublicRoute() {
             path="manage-redeem-request/view-redeem-request/:id"
             element={<ViewRedeemRequest />}
           />
+
+          <Route path="chat-support-system" element={<ChatSupportSystem />} />
+          <Route path="chat-support-system/chatbox" element={<ChatBox />} />
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
