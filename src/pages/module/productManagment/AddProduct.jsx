@@ -8,16 +8,14 @@ import Button from "../../../components/uiComponent/Button";
 import returnIcon from "../../../assets/returnProduct.png";
 import { useNavigate } from "react-router-dom";
 import Added from '../../../assets/Added.png';
+import useProductManagement from "../../../hooks/productList/useProductManagment";
 const AddProduct = () => {
   const [productImages, setProductImages] = useState([]);
   const [easyReturn, setEasyReturn] = useState(true);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [visible, setVisible] = useState(true);
+  const { addProduct } = useProductManagement();
   const navigate = useNavigate();
-
-
- 
-
   //  Formik setup
   const formik = useFormik({
     initialValues: {
@@ -25,7 +23,7 @@ const AddProduct = () => {
       name: "",
       price: "",
       description: "",
-      returnDays: "",
+      returnable: "",
     },
     validationSchema: Yup.object({
       category: Yup.string().required("Category is required"),
@@ -35,33 +33,38 @@ const AddProduct = () => {
         .positive("Price must be positive")
         .required("Price is required"),
       description: Yup.string().required("Description is required"),
-      returnDays: Yup.number()
-        .min(0, "Must be 0 or greater")
+      returnable: Yup.string()
+        // .min(0, "Must be 0 or greater")
         .required("Return days are required"),
     }),
-    onSubmit: (values) => {
-      const productData = {
-        ...values,
-        easyReturn,
-        visible,
-        productImages,
-      };
-         setShowSuccessModal(true);
-    setTimeout(() => {   
-      navigate("/product-management");
-      setTimeout(() => setShowSuccessModal(false), 2000);
-    }, 2000);
-      console.log("✅ Submitted Product Data:", productData);
-      // You can call your API here
-    },
+  onSubmit: async (values) => {
+  const formData = new FormData();
+
+  Object.keys(values).forEach(key => {
+    formData.append(key, values[key]);
+  });
+
+  formData.append("easyReturn", easyReturn);
+  formData.append("visible", visible);
+
+  productImages.forEach(img => {
+    formData.append("images", img);
+  });
+
+  await addProduct(formData);
+  // setShowSuccessModal(true);
+
+  console.log("FormData sent:", formData);
+}
+
   });
 
   //  Image upload logic
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setProductImages((prev) => [...prev, ...imageUrls]);
-  };
+const handleImageUpload = (e) => {
+  const files = Array.from(e.target.files);
+  setProductImages((prev) => [...prev, ...files]);
+};
+
 
   //  Remove image logic
   const handleRemoveImage = (index) => {
@@ -168,7 +171,7 @@ const AddProduct = () => {
             {productImages.map((image, index) => (
               <div key={index} className="relative w-24 h-24 border rounded-lg overflow-hidden">
                 <img
-                  src={image}
+                    src={URL.createObjectURL(image)}
                   alt={`product-${index}`}
                   className="object-cover w-full h-full"
                 />
@@ -220,17 +223,17 @@ const AddProduct = () => {
             Enter Return Days:
           </label>
           <input
-            name="returnDays"
-            type="number"
+            name="returnable"
+            type="text"
             min="0"
             placeholder="2"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.returnDays}
+            value={formik.values.returnable}
             className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-orange-500"
           />
-          {formik.touched.returnDays && formik.errors.returnDays && (
-            <p className="text-red-500 text-sm">{formik.errors.returnDays}</p>
+          {formik.touched.returnable && formik.errors.returnable && (
+            <p className="text-red-500 text-sm">{formik.errors.returnable}</p>
           )}
         </div>
 

@@ -19,8 +19,49 @@ import {
   HelpCircle,
 } from "lucide-react";
 
-import { RiCoupon2Line, RiListSettingsFill, RiProductHuntFill, RiUserSettingsFill } from "react-icons/ri";
-import { adminRoleManagementIcon, appManagementIcon, blockedUserandStaffsIcon, blogManagementIcon, chatSupportSystemIcon, coinSettingIcon, commentandReviewIcon, commissionsettingsIcon, countryManagementIcon, dashboardIcon, helpAndSupportIcon, luckyDrawAnalysisIcon, luckyDrawManagementIcon, manageBannerIcon, manageReddemRequestIcon, offerManagementIcon, orderManagementIcon, otherSettingsIcon, privicyPolicyIcon, productManagementIcon, referandearnIcon, refferralTrackingIcon, reportandanalyticsIcon, reportsIcon, rewardManagementIcon, spinRewardManagementIcon, staffCommissionIcon, staffManagementIcon, staffPerformanceIcon, targetManagementIcon, termAndConditionsIcon, themecustomizationIcon, uploadVideoIcon, userCommissionIcon, userManagementIcon } from "../assets/sidebaricon/sidebaricon";
+import {
+  RiCoupon2Line,
+  RiListSettingsFill,
+  RiProductHuntFill,
+  RiUserSettingsFill,
+} from "react-icons/ri";
+import {
+  adminRoleManagementIcon,
+  appManagementIcon,
+  blockedUserandStaffsIcon,
+  blogManagementIcon,
+  chatSupportSystemIcon,
+  coinSettingIcon,
+  commentandReviewIcon,
+  commissionsettingsIcon,
+  countryManagementIcon,
+  dashboardIcon,
+  helpAndSupportIcon,
+  luckyDrawAnalysisIcon,
+  luckyDrawManagementIcon,
+  manageBannerIcon,
+  manageReddemRequestIcon,
+  offerManagementIcon,
+  orderManagementIcon,
+  otherSettingsIcon,
+  privicyPolicyIcon,
+  productManagementIcon,
+  referandearnIcon,
+  refferralTrackingIcon,
+  reportandanalyticsIcon,
+  reportsIcon,
+  rewardManagementIcon,
+  spinRewardManagementIcon,
+  staffCommissionIcon,
+  staffManagementIcon,
+  staffPerformanceIcon,
+  targetManagementIcon,
+  termAndConditionsIcon,
+  themecustomizationIcon,
+  uploadVideoIcon,
+  userCommissionIcon,
+  userManagementIcon,
+} from "../assets/sidebaricon/sidebaricon";
 
 export const hasSubAdminAccess = (subAdminAccess, moduleName) => {
   if (!subAdminAccess || !Array.isArray(subAdminAccess)) return false;
@@ -94,7 +135,7 @@ export const allNavigationItems = [
   {
     id: 3,
     title: "User Management",
-    url: "/",
+    url: "/user-management",
     icon: userManagementIcon,
     badge: null,
     color: "blue",
@@ -107,7 +148,7 @@ export const allNavigationItems = [
     badge: null,
     color: "blue",
   },
-  
+
   {
     id: 4,
     title: "Promoter Management",
@@ -135,7 +176,7 @@ export const allNavigationItems = [
   {
     id: 7,
     title: "Offer Management",
-    url: "/",
+    url: "/offer-management",
     icon: offerManagementIcon,
     badge: null,
     color: "blue",
@@ -143,7 +184,7 @@ export const allNavigationItems = [
   {
     id: 8,
     title: "Blog Management",
-    url: "/",
+    url: "/blog-management",
     icon: blogManagementIcon,
     badge: null,
     color: "blue",
@@ -231,7 +272,7 @@ export const allNavigationItems = [
         id: 43,
         title: "Lucky Draw Analysis",
         url: "/Continue-subscription",
-        icon:luckyDrawAnalysisIcon,
+        icon: luckyDrawAnalysisIcon,
         badge: null,
         color: "yellow",
       },
@@ -299,15 +340,15 @@ export const allNavigationItems = [
   {
     id: 14,
     title: "Country Management",
-    url: "/reviews",
+    url: "/country-management",
     icon: countryManagementIcon,
     badge: null,
     color: "yellow",
   },
   {
     id: 15,
-     title: "Product Managment",
-      url: "/productMangment",
+    title: "Product Managment",
+    url: "/productMangment",
     icon: productManagementIcon,
     badge: null,
     color: "gray",
@@ -323,7 +364,7 @@ export const allNavigationItems = [
   {
     id: 17,
     title: "Manage Redeem Request",
-    url: "/analytics",
+    url: "/manage-redeem-request",
     icon: manageReddemRequestIcon,
     badge: null,
     color: "gray",
@@ -331,7 +372,7 @@ export const allNavigationItems = [
   {
     id: 18,
     title: "Chat Support System",
-    url: "/analytics",
+    url: "/chat-support-system",
     icon: chatSupportSystemIcon,
     badge: null,
     color: "gray",
@@ -355,7 +396,7 @@ export const allNavigationItems = [
   {
     id: 21,
     title: "App Management",
-    url: "/cms/banner",
+    url: "/app-management",
     icon: appManagementIcon,
     badge: null,
     color: "gray",
@@ -364,7 +405,7 @@ export const allNavigationItems = [
       {
         id: 61,
         title: "Terms & Conditions",
-        url: "/cms/banner",
+        url: "app-management/termandcondition",
         icon: termAndConditionsIcon,
         badge: null,
         color: "blue",
