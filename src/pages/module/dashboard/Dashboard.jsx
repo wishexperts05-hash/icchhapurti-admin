@@ -1,206 +1,340 @@
-import { Building2, Utensils, Users, BarChart3, Download, UserCircle } from "lucide-react";
-import { useState } from "react";
-import { dashboard1Icon,dashboard2Icon,dashboard3Icon } from "../../../assets/Dashboardicon/dashboardicon";
+import React, { useRef, useState } from 'react';
+import { LayoutDashboard, ChevronRight, TrendingUp } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import BreadCrumb from '../../../components/uiComponent/BreadCrumb';
+import PagePath2 from '../../../components/uiComponent/PagePath2'
+import { dashboard1Icon,dashboard2Icon,dashboard3Icon,dashboard4Icon } from '../../../assets/Dashboardicon/dashboardicon';
 
-const Dashboard = () => {
-  const [selectedYear, setSelectedYear] = useState("This Year");
-
-  // Mock data
-  const statsData = [
-    {
-      title: "Total User",
-      value: "3,000",
-      growth: "+5% This Month",
-      bgColor: "from-green-100 to-green-50",
-      icon: dashboard1Icon,
-    },
-    {
-      title: "Total App Downloaded",
-      value: "15,000",
-      growth: "",
-      bgColor: "from-blue-100 to-blue-50",
-      icon: dashboard2Icon,
-    },
-    {
-      title: "Total Staff",
-      value: "5,000",
-      growth: "",
-      bgColor: "from-purple-100 to-purple-50",
-      icon: dashboard3Icon,
-    }
-  ];
-
-  const monthlyData = [
-    { month: "Jan", value: 600 },
-    { month: "Feb", value: 550 },
-    { month: "Mar", value: 450 },
-    { month: "Apr", value: 600 },
-    { month: "May", value: 650 },
-    { month: "Jun", value: 520 },
-    { month: "Jul", value: 530 },
-    { month: "Aug", value: 720 },
-    { month: "Sept", value: 520 },
-    { month: "Oct", value: 700 },
-    { month: "Nov", value: 550 },
-    { month: "Dec", value: 800 }
-  ];
-
-  const luckyDrawData = [
-    { month: "Jan", entries: 650, winners: 120 },
-    { month: "Feb", entries: 520, winners: 95 },
-    { month: "Mar", entries: 480, winners: 88 },
-    { month: "Apr", entries: 720, winners: 135 },
-    { month: "May", entries: 610, winners: 112 },
-    { month: "Jun", entries: 550, winners: 98 },
-    { month: "Jul", entries: 690, winners: 128 },
-    { month: "Aug", entries: 800, winners: 148 },
-    { month: "Sept", entries: 620, winners: 115 },
-    { month: "Oct", entries: 680, winners: 125 },
-    { month: "Nov", entries: 590, winners: 108 },
-    { month: "Dec", entries: 720, winners: 132 }
-  ];
-
-  const maxValue = Math.max(...monthlyData.map(d => d.value));
-  const maxDrawValue = Math.max(...luckyDrawData.flatMap(d => [d.entries, d.winners]));
+// StatCard Component
+const StatCard = ({ title, value, change, icon, variant }) => {
+  const bgColors = {
+    success: "bg-gradient-to-br from-emerald-50 to-white border-emerald-200",
+    info: "bg-gradient-to-br from-cyan-50 to-white border-cyan-200",
+    purple: "bg-gradient-to-br from-purple-50 to-white border-purple-200",
+    warning: "bg-gradient-to-br from-amber-50 to-white border-amber-200",
+    orange: "bg-gradient-to-br from-orange-50 to-white border-orange-200",
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* Header */}
-      <div className="bg-white p-6 mb-6 rounded-xl shadow-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-blue-100">
-              <BarChart3 className="h-8 w-8 text-blue-600" />
+    <div className={`min-w-[320px] flex-shrink-0 border-2 shadow-md rounded-2xl ${bgColors[variant]} cursor-grab active:cursor-grabbing select-none`}>
+      <div className="p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-3 flex-1">
+            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider">{title}</p>
+            <p className="text-4xl font-bold tracking-tight text-gray-900">{value}</p>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700">
+              <TrendingUp size={12} strokeWidth={2.5} />
+              <span className="text-xs font-semibold">{change}</span>
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Dashboard
-            </h1>
+          </div>
+          <div className="w-20 h-20 flex items-center justify-center text-5xl">
+            {icon}
           </div>
         </div>
       </div>
+    </div>
+  );
+};
 
-      {/* Main Content */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {statsData.map((stat, idx) => (
-            <div
-              key={idx}
-              className={`bg-gradient-to-br ${stat.bgColor} p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow`}
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-gray-700 font-medium mb-2">{stat.title}</p>
-                  <h3 className="text-4xl font-bold text-gray-900 mb-1">
-                    {stat.value}
-                  </h3>
-                  {stat.growth && (
-                    <p className="text-green-600 text-sm font-medium">{stat.growth}</p>
-                  )}
-                </div>
-                <div className="text-5xl">{stat.icon}</div>
-              </div>
-            </div>
-          ))}
+// UserChart Component
+const UserChart = () => {
+  const [selectedYear, setSelectedYear] = useState("thisyear");
+  
+  const userData = [
+    { month: "Jan", users: 620 },
+    { month: "Feb", users: 580 },
+    { month: "Mar", users: 450 },
+    { month: "Apr", users: 630 },
+    { month: "May", users: 680 },
+    { month: "Jun", users: 520 },
+    { month: "Jul", users: 540 },
+    { month: "Aug", users: 720 },
+    { month: "Sept", users: 560 },
+    { month: "Oct", users: 710 },
+    { month: "Nov", users: 520 },
+    { month: "Dec", users: 800 },
+  ];
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div className="p-6">
+        <div className="flex flex-row items-center justify-between mb-4">
+          <h3 className="text-xl font-semibold">Total Users</h3>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm"
+          >
+            <option value="thisyear">This Year</option>
+            <option value="lastyear">Last Year</option>
+            <option value="alltime">All Time</option>
+          </select>
         </div>
+        <div className="pointer-events-none">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={userData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis 
+                dataKey="month" 
+                stroke="#9ca3af"
+                fontSize={12}
+              />
+              <YAxis 
+                stroke="#9ca3af"
+                fontSize={12}
+              />
+              <Bar 
+                dataKey="users" 
+                fill="#3b82f6" 
+                radius={[8, 8, 0, 0]}
+                maxBarSize={35}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-        {/* Charts Section */}
-        <div className="space-y-8">
-          {/* Total Users Chart */}
-          <div className="border border-gray-200 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Total Users</h2>
-              <select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option>This Year</option>
-                <option>Last Year</option>
-                <option>2 Years Ago</option>
-              </select>
+// StaffChart Component
+const StaffChart = () => {
+  const [selectedYear, setSelectedYear] = useState("thisyear");
+  
+  const staffData = [
+    { month: "Jan", staff: 680 },
+    { month: "Feb", staff: 550 },
+    { month: "Mar", staff: 430 },
+    { month: "Apr", staff: 620 },
+    { month: "May", staff: 660 },
+    { month: "Jun", staff: 510 },
+    { month: "Jul", staff: 530 },
+    { month: "Aug", staff: 700 },
+    { month: "Sept", staff: 540 },
+    { month: "Oct", staff: 690 },
+    { month: "Nov", staff: 510 },
+    { month: "Dec", staff: 850 },
+  ];
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div className="p-6">
+        <div className="flex flex-row items-center justify-between mb-4">
+          <h3 className="text-xl font-semibold">Total Staff</h3>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm"
+          >
+            <option value="thisyear">This Year</option>
+            <option value="lastyear">Last Year</option>
+            <option value="alltime">All Time</option>
+          </select>
+        </div>
+        <div className="pointer-events-none">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={staffData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis 
+                dataKey="month" 
+                stroke="#9ca3af"
+                fontSize={12}
+              />
+              <YAxis 
+                stroke="#9ca3af"
+                fontSize={12}
+              />
+              <Bar 
+                dataKey="staff" 
+                fill="#3b82f6" 
+                radius={[8, 8, 0, 0]}
+                maxBarSize={35}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// LuckyDrawChart Component
+const LuckyDrawChart = () => {
+  const luckyDrawData = [
+    { name: "New Year", entries: 60000, paid: 15000 },
+    { name: "Diwali Dhamak", entries: 50000, paid: 12000 },
+    { name: "Diwali Dhamak", entries: 52000, paid: 13000 },
+    { name: "Diwali Dhamak", entries: 53000, paid: 13500 },
+    { name: "Diwali Dhamak", entries: 54000, paid: 14000 },
+    { name: "Diwali Dhamak", entries: 55000, paid: 14500 },
+  ];
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div className="p-6">
+        <div className="flex flex-row items-center justify-between mb-4">
+          <h3 className="text-xl font-semibold">Lucky Draw Stats</h3>
+          <div className="flex gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              <span>Total Entries</span>
             </div>
-
-            <div className="flex items-end justify-between h-80 gap-3">
-              {monthlyData.map((data, idx) => (
-                <div key={idx} className="flex flex-col items-center flex-1 gap-2">
-                  <div className="relative w-full flex items-end justify-center" style={{ height: '280px' }}>
-                    <div
-                      className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg hover:from-blue-600 hover:to-blue-500 transition-all cursor-pointer"
-                      style={{ height: `${(data.value / maxValue) * 100}%` }}
-                      title={`${data.value} users`}
-                    />
-                  </div>
-                  <span className="text-sm text-gray-600 font-medium">{data.month}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Y-axis labels */}
-            <div className="flex justify-between text-sm text-gray-500 mt-2 px-2">
-              <span>0</span>
-              <span>{Math.round(maxValue / 4)}</span>
-              <span>{Math.round(maxValue / 2)}</span>
-              <span>{Math.round((maxValue * 3) / 4)}</span>
-              <span>{maxValue}+</span>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+              <span>Total Amount Paid</span>
             </div>
           </div>
+        </div>
+        <div className="pointer-events-none">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={luckyDrawData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis 
+                dataKey="name" 
+                stroke="#9ca3af"
+                fontSize={12}
+              />
+              <YAxis 
+                stroke="#9ca3af"
+                fontSize={12}
+                tickFormatter={(value) => `₹ ${value / 1000}K`}
+              />
+              <Bar 
+                dataKey="entries" 
+                fill="#22c55e" 
+                radius={[8, 8, 0, 0]}
+                maxBarSize={30}
+              />
+              <Bar 
+                dataKey="paid" 
+                fill="#facc15" 
+                radius={[8, 8, 0, 0]}
+                maxBarSize={30}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-          {/* Lucky Draw Stats Chart */}
-          <div className="border border-gray-200 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Lucky Draw Stats</h2>
-              <select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option>This Year</option>
-                <option>Last Year</option>
-                <option>2 Years Ago</option>
-              </select>
-            </div>
+// Main Dashboard Component
+const Dashboard = () => {
+  const scrollContainerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
-            {/* Legend */}
-            <div className="flex items-center gap-6 mb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-green-500 rounded"></div>
-                <span className="text-sm text-gray-600">Total Entries</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-yellow-400 rounded"></div>
-                <span className="text-sm text-gray-600">Total Winners</span>
-              </div>
-            </div>
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
+    setScrollLeft(scrollContainerRef.current.scrollLeft);
+  };
 
-            <div className="flex items-end justify-between h-80 gap-3">
-              {luckyDrawData.map((data, idx) => (
-                <div key={idx} className="flex flex-col items-center flex-1 gap-2">
-                  <div className="relative w-full flex items-end justify-center gap-1" style={{ height: '280px' }}>
-                    <div
-                      className="flex-1 bg-gradient-to-t from-green-500 to-green-400 rounded-t-lg hover:from-green-600 hover:to-green-500 transition-all cursor-pointer"
-                      style={{ height: `${(data.entries / maxDrawValue) * 100}%` }}
-                      title={`${data.entries} entries`}
-                    />
-                    <div
-                      className="flex-1 bg-gradient-to-t from-yellow-400 to-yellow-300 rounded-t-lg hover:from-yellow-500 hover:to-yellow-400 transition-all cursor-pointer"
-                      style={{ height: `${(data.winners / maxDrawValue) * 100}%` }}
-                      title={`${data.winners} winners`}
-                    />
-                  </div>
-                  <span className="text-sm text-gray-600 font-medium">{data.month}</span>
-                </div>
-              ))}
-            </div>
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
+    const walk = (x - startX) * 2; // Scroll speed multiplier
+    scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+  };
 
-            {/* Y-axis labels */}
-            <div className="flex justify-between text-sm text-gray-500 mt-2 px-2">
-              <span>0</span>
-              <span>{Math.round(maxDrawValue / 4)}</span>
-              <span>{Math.round(maxDrawValue / 2)}</span>
-              <span>{Math.round((maxDrawValue * 3) / 4)}</span>
-              <span>{maxDrawValue}+</span>
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto">
+            
+            <BreadCrumb
+                linkText={[
+                    
+                    { text: "Dashboard" },
+                ]}
+            />
+      
+            {/* Header Bar */}
+            <PagePath2
+                title="Dashboard"/>
+
+      <div className="max-w-[1600px] mx-auto px-6 py-8 space-y-8">
+        {/* Scrollable Stat Cards */}
+        <div className="relative">
+          <div 
+            ref={scrollContainerRef} 
+            className="w-full overflow-x-scroll scroll-smooth pb-4 px-1"
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+            style={{
+              scrollbarWidth: 'none',
+              cursor: isDragging ? 'grabbing' : 'grab'
+            }}
+          >
+            <style>
+              {`
+                .w-full.overflow-x-scroll::-webkit-scrollbar {
+                  height: 0px;
+                  display: none;
+                }
+              `}
+            </style>
+            <div className="flex gap-6">
+              <StatCard
+                title="Total User"
+                value="300K"
+                change="+5% This Month"
+                icon="👥"
+                variant="success"
+              />
+              <StatCard
+                title="Total Staff"
+                value="50K"
+                change="+5% This Month"
+                icon="👨‍💼"
+                variant="purple"
+              />
+              <StatCard
+                title="Total Orders"
+                value="2.5K"
+                change="+5% This Month"
+                icon="🛒"
+                variant="info"
+              />
+              <StatCard
+                title="Total Sales"
+                value="1.8K"
+                change="+8% This Month"
+                icon="📦"
+                variant="warning"
+              />
+              <StatCard
+                title="Total App Installed"
+                value="₹45L"
+                change="+12% This Month"
+                icon="💰"
+                variant="orange"
+              />
             </div>
+          </div>
+        </div>
+
+        {/* Charts Grid */}
+        <div className="grid gap-6 lg:gap-8">
+          <div>
+            <UserChart />
+          </div>
+          <div>
+            <StaffChart />
+          </div>
+          <div>
+            <LuckyDrawChart />
           </div>
         </div>
       </div>

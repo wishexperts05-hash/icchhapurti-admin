@@ -21,6 +21,31 @@ function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
   const profilePlaceholder =
     "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%234F46E5'/%3E%3Ctext x='20' y='25' text-anchor='middle' fill='white' font-size='14' font-family='Arial'%3EJD%3C/text%3E%3C/svg%3E";
 
+  // Ensure a usable image is shown when session storage holds invalid values like "null" or empty string,
+  // and fall back to the placeholder on load/error.
+  React.useEffect(() => {
+    const img = document.querySelector('img[alt="Profile"]');
+    if (!img) return;
+
+    const isInvalid =
+      !adminProfileImg ||
+      adminProfileImg === "null" ||
+      adminProfileImg === "undefined" ||
+      adminProfileImg === "";
+
+    img.src = isInvalid ? profilePlaceholder : adminProfileImg;
+
+    // fallback if the provided src fails to load
+    const onError = () => {
+      img.src = profilePlaceholder;
+    };
+    img.addEventListener("error", onError);
+
+    return () => {
+      img.removeEventListener("error", onError);
+    };
+  }, [adminProfileImg]);
+
   const navigate = useNavigate();
   const handleLogout = () => {
     sessionStorage.clear();

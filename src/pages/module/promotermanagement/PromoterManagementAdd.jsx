@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { MdDashboard } from "react-icons/md";
+import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
+import PagePath2 from "../../../components/uiComponent/PagePath2";
 
 const HomeIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
@@ -69,20 +71,17 @@ function PromoterManagementAdd({ onCancel, onAdd }) {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#FFFFFF] p-8 font-['Inter',_sans-serif]">
+    <>
       {/* Breadcrumb */}
-      <nav className="flex items-center text-sm text-[#262626] mb-8">
-        <MdDashboard className="h-4 w-4 mr-2 text-[#262626]" />
-        <span className="hover:text-[#262626] cursor-pointer text-[#262626] font-[16px]" onClick={onCancel}>
-          Promoter Management
-        </span>
-        <ChevronRightIcon className="h-5 w-5 mx-1.5 text-gray-400" />
-        <span className=" text-[#007AFF] font-[16px]">Add New Promoter</span>
-      </nav>
+      <BreadCrumb
+        linkText={[
+          { text: "Promotor Management", href: "/promotermanagement" },
+          { text: "Add Promotor" },
+        ]}
+      />
+      <PagePath2 title={"Add Promotor"} />
 
-      {/* Title */}
-      <h1 className="text-[20px] font-semibold text-[#262626] mb-10">Add New Promoter</h1>
-
+ <div className="min-h-screen w-full bg-[#FFFFFF] p-8 font-['Inter',_sans-serif]">
       {/* Form */}
       <form onSubmit={handleSubmit} className="w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 max-w-[1200px]">
@@ -120,6 +119,7 @@ function PromoterManagementAdd({ onCancel, onAdd }) {
         </div>
       </form>
     </div>
+    </>
   );
 }
 
