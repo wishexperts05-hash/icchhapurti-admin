@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Modal } from "@mui/material";
+import { Box } from "@mui/material";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import DataTable from "../../../components/uiComponent/DataTable";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { FiEye } from "react-icons/fi";
 import Pagination from "../../../components/uiComponent/Pagination";
 import useManageRedeemRequest from "../../../hooks/ManageRedeemRequest/useManageRedeemRequest";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 
 const ManageRedeemRequest = () => {
   const navigate = useNavigate();
@@ -74,34 +75,48 @@ const ManageRedeemRequest = () => {
         optionsLoading={loading}
         onChangeSelectFunc={onChangeSelectFunc}
       />
-      <Box>
-        <DataTable
-          columns={columns}
-          data={redeemRequests?.data}
-          currentPage={1}
-          usersPerPage={5}
-          actions={[
-            {
-              icon: <FiEye className="w-5 h-5 text-[#CCA547]" />,
-              title: "View",
-              onClick: (row) => {
-                navigate(
-                  `/manage-redeem-request/view-redeem-request/${row._id}`
-                );
-              },
-              className: "hover:bg-blue-100 hover:text-[#004AAD]",
-            },
-          ]}
-        />
-      </Box>
-      <Pagination
-        currentPage={redeemRequests?.pagination?.currentPage}
-        totalPages={redeemRequests?.pagination?.totalPages}
-        totalItems={redeemRequests?.pagination?.totalItems}
-        itemsPerPage={redeemRequests?.pagination?.limit}
-        onPageChange={onPageChange}
-        onItemsPerPageChange={onItemsPerPageChange}
-      />
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <LoaderSpinner />
+        </Box>
+      ) : (
+        <>
+          <Box>
+            <DataTable
+              columns={columns}
+              data={redeemRequests?.data}
+              currentPage={page}
+              usersPerPage={limit}
+              actions={[
+                {
+                  icon: <FiEye className="w-5 h-5 text-[#CCA547]" />,
+                  title: "View",
+                  onClick: (row) => {
+                    navigate(
+                      `/manage-redeem-request/view-redeem-request/${row._id}`
+                    );
+                  },
+                  className: "hover:bg-blue-100 hover:text-[#004AAD]",
+                },
+              ]}
+            />
+          </Box>
+          <Pagination
+            currentPage={redeemRequests?.pagination?.currentPage}
+            totalPages={redeemRequests?.pagination?.totalPages}
+            totalItems={redeemRequests?.pagination?.totalItems}
+            itemsPerPage={redeemRequests?.pagination?.limit}
+            onPageChange={onPageChange}
+            onItemsPerPageChange={onItemsPerPageChange}
+          />
+        </>
+      )}
     </Box>
   );
 };

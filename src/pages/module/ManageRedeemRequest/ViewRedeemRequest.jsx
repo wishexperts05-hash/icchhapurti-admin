@@ -13,6 +13,8 @@ import PagePath2 from "../../../components/uiComponent/PagePath2";
 import Button from "../../../components/uiComponent/Button";
 import { useParams } from "react-router-dom";
 import useManageRedeemRequest from "../../../hooks/ManageRedeemRequest/useManageRedeemRequest";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
+import { toast } from "react-toastify";
 
 const RejectRequestModal = ({ open, onClose, onSave }) => {
   const [reason, setReason] = React.useState("");
@@ -60,7 +62,17 @@ const RejectRequestModal = ({ open, onClose, onSave }) => {
           gap={2}
         >
           <Button variant={2} onClick={onClose} text="Cancel" />
-          <Button variant={1} onClick={() => onSave(reason)} text="Reject" />
+          <Button
+            variant={1}
+            onClick={() => {
+              if (reason) {
+                onSave(reason);
+              } else {
+                toast.warning("Enter Reason For Rejecting Request ");
+              }
+            }}
+            text="Reject"
+          />
         </Box>
       </DialogContent>
     </Dialog>
@@ -95,7 +107,15 @@ const ViewRedeemRequest = () => {
       <PagePath2 title="View Redeem Request" />
 
       {loading ? (
-        "loading"
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <LoaderSpinner />
+        </Box>
       ) : (
         <>
           {" "}
@@ -141,23 +161,29 @@ const ViewRedeemRequest = () => {
               }}
             >
               <Typography fontWeight="bold">Name :</Typography>
-              <Typography>{redeemRequestsDetails.name}</Typography>
+              <Typography>{redeemRequestsDetails.name || "-"}</Typography>
               <Typography fontWeight="bold">Role :</Typography>
-              <Typography>{redeemRequestsDetails.role}</Typography>
+              <Typography>{redeemRequestsDetails.role || "-"}</Typography>
               <Typography fontWeight="bold">Wallet Balance :</Typography>
-              <Typography>{redeemRequestsDetails.walletBalance}</Typography>
+              <Typography>
+                {redeemRequestsDetails.walletBalance || "-"}
+              </Typography>
               <Typography fontWeight="bold">Redeem Request Amount :</Typography>
               <Typography>
-                {redeemRequestsDetails.redeemRequestAmount}
+                {redeemRequestsDetails.redeemRequestAmount || "-"}
               </Typography>
               <Typography fontWeight="bold">Bank Name :</Typography>
-              <Typography>{redeemRequestsDetails.bankName}</Typography>
+              <Typography>{redeemRequestsDetails.bankName || "-"}</Typography>
               <Typography fontWeight="bold">Bank Account Number :</Typography>
-              <Typography>{redeemRequestsDetails.bankAccountNumber}</Typography>
+              <Typography>
+                {redeemRequestsDetails.bankAccountNumber || "-"}
+              </Typography>
               <Typography fontWeight="bold"> IFSC Code :</Typography>
-              <Typography>{redeemRequestsDetails.ifscCode}</Typography>
+              <Typography>{redeemRequestsDetails.ifscCode || "-"}</Typography>
               <Typography fontWeight="bold">Account Holder Name :</Typography>
-              <Typography>{redeemRequestsDetails.accountHolderName}</Typography>
+              <Typography>
+                {redeemRequestsDetails.accountHolderName || "-"}
+              </Typography>
               <Typography fontWeight="bold">Status By SubAdmin</Typography>
               <Typography
                 sx={{
@@ -167,7 +193,7 @@ const ViewRedeemRequest = () => {
                       : "red",
                 }}
               >
-                {redeemRequestsDetails.statusBySubAdmin}
+                {redeemRequestsDetails.statusBySubAdmin || "-"}
               </Typography>
             </Box>
           </Box>
@@ -182,7 +208,7 @@ const ViewRedeemRequest = () => {
             }}
           >
             <Button
-              variant={2}
+              variant={4}
               text="Reject"
               onClick={() => setOpenReject((prev) => !prev)}
             />
