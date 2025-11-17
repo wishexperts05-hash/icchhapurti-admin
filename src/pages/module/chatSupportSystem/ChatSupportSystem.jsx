@@ -63,7 +63,7 @@ const ChatSupportSystem = () => {
     <Box>
       <BreadCrumb linkText={[{ text: "Chat Support System" }]} />
       <PagePath2
-        title="Chat "
+        title="Chat Support System"
         showSearch
         // searchTerm={search}
         // handleSearchTerm={onSearchChange}
