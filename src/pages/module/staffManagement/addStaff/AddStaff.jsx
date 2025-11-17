@@ -59,7 +59,7 @@ const AddStaff = () => {
     <div className="bg-gray-50 min-h-screen">
       <BreadCrumb
         linkText={[
-          { text: "Dashboard" },
+          
           { text: "Staff Management", href: "/staff-management" },
           { text: "Add New Staff" },
         ]}

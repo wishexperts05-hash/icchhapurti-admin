@@ -53,6 +53,7 @@ const StaffSales = () => {
   );
 
   const directColumns = [
+    { header: "Sr No.", field: "id" },
     {
       header: "Staff Name",
       field: "name",
@@ -71,6 +72,7 @@ const StaffSales = () => {
   ];
 
   const indirectColumns = [
+    { header: "Sr No.", field: "id" },
     {
       header: "Staff Name",
       field: "name",
@@ -92,7 +94,7 @@ const StaffSales = () => {
       {/* Breadcrumb */}
       <BreadCrumb
         linkText={[
-          { text: "Dashboard" },
+          
           { text: "Staff Management", href: "/staff-management" },
           { text: "Sales List" },
         ]}

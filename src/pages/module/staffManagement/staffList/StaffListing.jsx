@@ -72,6 +72,7 @@ const StaffManagement = () => {
         navigate("/staff-management/salesListing")
     }
     const columns = [
+        { header: "Sr No.", field: "id" },
         {
             header: "Staff Name",
             field: "name",
@@ -124,7 +125,7 @@ const StaffManagement = () => {
             {/* Breadcrumb Section */}
             <BreadCrumb
                 linkText={[
-                    { text: "Dashboard", href: "/dashboard" },
+                    
                     { text: "Staff Management" },
                 ]}
             />
