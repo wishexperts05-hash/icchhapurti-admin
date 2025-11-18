@@ -87,18 +87,9 @@ export default function UserManagement({ activeItem, setActiveItem }) {
   const currentItems = filteredData.slice(startIndex, endIndex);
 
   // Handlers
-  const handleView = (user) => {
-    console.log("Navigating to user details with:", user);
-    navigate(`/user-management/user-details`);
-  };
+  
 
-  const handleBlock = (user) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((u) =>
-        u.id === user.id ? { ...u, isBlocked: !u.isBlocked } : u
-      )
-    );
-  };
+  
   const handleToggleStatus = (row) => {
         setStaffData((prev) =>
             prev.map((item) =>

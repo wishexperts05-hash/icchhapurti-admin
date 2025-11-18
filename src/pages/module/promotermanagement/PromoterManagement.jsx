@@ -3,10 +3,17 @@ import { FiEdit } from "react-icons/fi";
 import {RiDeleteBin6Fill } from "react-icons/ri";
 import DataTable from "../../../components/uiComponent/DataTable";
 import { useNavigate } from "react-router-dom"; // 1. Import useNavigate
-
+import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
+import PagePath2 from "../../../components/uiComponent/PagePath2";
+import Pagination from "../../../components/uiComponent/Pagination";
 export default function PromoterManagement() {
   const navigate = useNavigate(); // 2. Initialize the navigate function
-  const [promoters, setPromoters] = useState([
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleSearchTerm = (e) => setSearchTerm(e.target.value);
+   const handleAddStaff = () => {
+        navigate("/promotermanagementadd")
+    };
+  const [promoters, _setPromoters] = useState([
     // ... your existing data ...
     { id: 1, name: "Arlene McCoy", code: "C001", phone: "9876543210", referral: "HVSGU45789", total: 50, status: "Block" },
     { id: 2, name: "Jacob Jones", code: "G001", phone: "9876543210", referral: "HVSGU43255", total: 30, status: "UnBlock" },
@@ -22,11 +29,29 @@ export default function PromoterManagement() {
     { id: 12, name: "Kathryn Murphy", code: "L001", phone: "9876543210", referral: "HVSGU469874", total: 32, status: "UnBlock" },
   ]);
 
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedPromoter, setSelectedPromoter] = useState(null);
-  const [formData, setFormData] = useState({
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    
+  const filteredData = promoters.filter((promoter) =>
+    promoter.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    promoter.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    promoter.phone.includes(searchTerm) ||
+    promoter.referral.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
+  const totalItems = filteredData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = filteredData.slice(startIndex, endIndex);
+
+
+  const [_showAddModal, _setShowAddModal] = useState(false);
+  const [_showEditModal, _setShowEditModal] = useState(false);
+  const [_showDeleteModal, _setShowDeleteModal] = useState(false);
+  const [_selectedPromoter, _setSelectedPromoter] = useState(null);
+  const [_formData, _setFormData] = useState({
+    id: "",
     name: "",
     code: "",
     phone: "",
@@ -34,6 +59,10 @@ export default function PromoterManagement() {
   });
 
   const columns = [
+      {
+      header: "Sr No.",
+      field: "id",
+    },
     {
       header: "Promoter Name",
       field: "name",
@@ -44,7 +73,8 @@ export default function PromoterManagement() {
         </div>
       ),
     },
-    {
+    
+  {
       header: "Phone No.",
       field: "phone",
     },
@@ -108,27 +138,49 @@ export default function PromoterManagement() {
   };
 
   return (
-    <div className="p-8 bg-[#FFFFFF] min-h-screen font-[Inter] tracking-wide">
-      {/* Breadcrumb */}
-      <div className="text-sm text-blue-600 font-medium mb-3 flex items-center gap-1">
-        <span className="text-gray-500">›</span> Promoter Management
-      </div>
-
-      {/* Title */}
-      <h2 className="text-2xl font-semibold text-gray-900 mb-8">Promoter Management</h2>
-
+    <div className="max-w-7xl mx-auto">
+            
+            <BreadCrumb
+                linkText={[
+                    
+                    { text: "Promotor Management" },
+                ]}
+            />
+      
+            {/* Header Bar */}
+            <PagePath2
+                title="Promotor Management"
+                showSearch={true}
+                searchTerm={searchTerm}
+                handleSearchTerm={handleSearchTerm}
+                showAddButton={true}
+                addButtonText="Add New Promoter"
+                onClick={handleAddStaff}
+            />
+            <div className="mt-6 bg-white p-4 rounded shadow">
       {/* DataTable Component */}
       <DataTable
         columns={columns}
-        data={promoters}
+        data={currentItems}
         searchPlaceholder="Search promoters..."
         showAddButton={true}
         addButtonText="Add New Promoter"
-        onAddClick={handleAddPromoter} // This now navigates
+        onAddClick={handleAddPromoter}
         showEntries={true}
         showSearch={true}
         showPagination={true}
       />
+            </div>
+            
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={setItemsPerPage}
+        />
     </div>
   );
 }

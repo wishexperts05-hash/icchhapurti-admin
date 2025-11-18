@@ -35,7 +35,7 @@ const SetSpinPrice = () => {
   };
 
   const handleSubmit = (values, { resetForm }) => {
-    console.log("Spin Price Updated:", values);
+    
     alert("Spin price updated successfully!");
     navigate("/spin-reward-management");
   };

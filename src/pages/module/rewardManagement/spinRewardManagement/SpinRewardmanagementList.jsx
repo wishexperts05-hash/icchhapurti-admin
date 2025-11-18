@@ -103,7 +103,7 @@ export default function SpinRewardManagementList({ activeItem, setActiveItem }) 
   };
 
   const handleDelete = (reward) => {
-    console.log("Deleting reward:", reward);
+    
     // Add delete logic here
     if (window.confirm(`Are you sure you want to delete "${reward.rewardTitle}"?`)) {
       setRewards((prev) => prev.filter((item) => item.srNo !== reward.srNo));

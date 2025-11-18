@@ -23,7 +23,7 @@ const AddSpinReward = () => {
   };
 
   const handleSubmit = (values, { resetForm }) => {
-    console.log("Spin Reward Added:", values);
+    
     alert("Spin reward added successfully!");
     resetForm();
     navigate("/spin-reward-management");

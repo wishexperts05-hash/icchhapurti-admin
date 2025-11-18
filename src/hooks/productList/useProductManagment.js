@@ -6,11 +6,14 @@ import { toast } from "react-toastify";
 import conf from "../../config/index";
 import Swal from "sweetalert2";
 import { confirmAlert } from "../../utils/alertToast";
+import { useNavigate } from "react-router-dom";
 
 const useProductManagement = () => {
   const [productList, setProductList] = useRecoilState(productManagmentListAtom);
+  const [productDetail, setProductDetail] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fetchData] = useFetch(); 
+  const navigate = useNavigate();
 
   const fetchProductList = async (page , limit , search ) => {
     setLoading(true);
@@ -39,6 +42,84 @@ const useProductManagement = () => {
   const resetProductList = () => {
     setProductList([]);
   };
+
+   const updateProduct = async (id, formdata) => {
+        setLoading(true);
+        try {
+            const res = await fetchData({
+                method: "PUT",
+                url: `${conf.apiBaseUrl}product/edit/${id}`,
+                data: formdata
+            });
+            if (res) {
+                toast.success(res?.message);
+                // navigate(`/product-management/product-view/${id}`);
+                navigate('/product-management')
+                console.log(res)
+            }
+        } catch (error) {
+            console.error("Error updating tiffin restraurant provider details:", error);
+            toast.error(error?.response?.data?.message || "An unexpected error occured");
+
+        }
+        finally {
+            setLoading(false)
+        }
+    };
+    
+
+  const addProduct = async (formdata) => {
+        setLoading(true);
+        try {
+            const res = await fetchData({
+                method: "POST",
+                url: `${conf.apiBaseUrl}product/add`,
+                 headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+                data: formdata
+            });
+            if (res) {
+                toast.success(res?.message);
+                navigate('/product-management')
+                setLoading(false)
+                console.log(res)
+            }
+        }
+        catch (error) {
+            console.error("Error creating tiffin restraurant provider:", error);
+            toast.error(error?.response?.data?.message || "An unexpected error occured");
+            setLoading(false)
+        }
+        finally {
+            setLoading(false)
+        }
+
+      };
+
+
+      const fetchProductDetailById = async (id) => {
+        setProductDetail(null);
+        setLoading(true);
+        try {
+            const res = await fetchData({
+                method: "GET",
+                url: `${conf.apiBaseUrl}product/${id}`,
+            });
+            if (res) {
+                setProductDetail(res);
+                console.log(res)
+            }
+        } catch (error) {
+            console.error("Error fetching tiffin restraunt provider details:", error);
+        }
+        finally {
+            setLoading(false)
+        }
+    };
+    const resetProductDetails = () => {
+        setProductDetail(null)
+    }
 
 
 const deleteProductListID = async (id) => {
@@ -76,13 +157,16 @@ const deleteProductListID = async (id) => {
     }
   };
 
-
-
   return {
     loading,
     productList,
     fetchProductList,
     resetProductList,
+    productDetail,
+    addProduct,
+    updateProduct,
+    fetchProductDetailById,
+    resetProductDetails,
     deleteProductListID
   };
 };

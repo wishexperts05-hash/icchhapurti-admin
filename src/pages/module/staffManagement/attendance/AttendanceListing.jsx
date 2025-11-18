@@ -54,6 +54,7 @@ const AttendanceListing = () => {
     ];
 
     const columns = [
+        { header: "Sr No.", field: "id" },
         {
             header: "Staff Name",
             field: "name",
@@ -94,7 +95,7 @@ const AttendanceListing = () => {
         <div>
             <BreadCrumb
                 linkText={[
-                    { text: "Dashboard" },
+                    
                     { text: "Staff Management", href: "/staff-management" },
                     { text: "Attendance List" },
                 ]}

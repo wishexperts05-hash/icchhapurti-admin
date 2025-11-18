@@ -119,9 +119,7 @@ export default function LuckyDrawManagementSelectWinner({ activeItem, setActiveI
       return;
     }
 
-    console.log("Publishing winners:", winners);
-    alert(`Winners published successfully for ${eventName}!`);
-    navigate("/lucky-draw-management/result");
+    
   };
 
   const generateRankingOptions = () => {
@@ -187,10 +185,10 @@ export default function LuckyDrawManagementSelectWinner({ activeItem, setActiveI
 
   // Form submit handler
   const handleSubmit = (values) => {
-    console.log("Form values:", values);
+    
     // Filter out empty winner tickets
     const selectedWinners = values.winners.filter(ticket => ticket !== "");
-    console.log("Selected winners:", selectedWinners);
+   
   };
 
   return (
@@ -248,7 +246,7 @@ export default function LuckyDrawManagementSelectWinner({ activeItem, setActiveI
 
               {/* Winner Tickets Section with Dynamic Fields */}
               <h3 className="text-lg font-semibold text-gray-700 mb-4">Select Winners</h3>
-              
+
               <FieldArray name="winners">
                 {({ push, remove }) => (
                   <div className="space-y-4">
@@ -263,7 +261,7 @@ export default function LuckyDrawManagementSelectWinner({ activeItem, setActiveI
                               options={ticketOptions}
                             />
                           </div>
-                          
+
                           {/* Remove button (show only if more than 1 winner) */}
                           {values.winners.length > 1 && (
                             <button
@@ -279,7 +277,7 @@ export default function LuckyDrawManagementSelectWinner({ activeItem, setActiveI
                     ) : (
                       <p className="text-gray-500">No winners added yet</p>
                     )}
-                    
+
                     {/* Add More Winner Button */}
                     <button
                       type="button"

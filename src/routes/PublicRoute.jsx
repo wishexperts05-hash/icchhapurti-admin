@@ -20,8 +20,12 @@ const EditProfile = lazy(() =>
 const Layout = lazy(() => import("../components/Layouts/Layout"));
 
 // ---------------------------- User Management ----------------------------
-const UserManagement = lazy(() => import("../pages/module/userManagement/UserManagementList"));
-const UserDetails = lazy(() => import("../pages/module/userManagement/UserManagementDetails"));
+const UserManagement = lazy(() =>
+  import("../pages/module/userManagement/UserManagementList")
+);
+const UserDetails = lazy(() =>
+  import("../pages/module/userManagement/UserManagementDetails")
+);
 
 // ---------------------------- Promoter Management ----------------------------
 const PromoterManagement = lazy(() =>
@@ -35,15 +39,12 @@ const PromoterManagementAdd = lazy(() =>
 );
 
 // ---------------------------- Order Management ----------------------------
-
 const OrderManagement = lazy(() =>
   import("../pages/module/OrderManagement/OrderManagement")
 );
-
 const OrderDetails = lazy(() =>
   import("../pages/module/OrderManagement/OrderDetails")
 );
-
 const EditOrderDetails = lazy(() =>
   import("../pages/module/OrderManagement/EditOrderDetails")
 );
@@ -68,72 +69,84 @@ const StaffMapPage = lazy(() =>
   import("../pages/module/staffManagement/attendance/StaffMapPage")
 );
 
-// --------------------------------------------------------------------------------
+// ---------------------------- Product Management (Non-lazy) ----------------------------
 import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
-
 import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
 import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
-// -------------------------offer management --------------
 
- const OfferManagementAdd = lazy(() => import("../pages/module/offerManagement/OfferManagementAdd"));
- const OfferManagementEdit = lazy(() => import("../pages/module/offerManagement/OfferManagementEdit"));
- const OfferManagementList = lazy(() => import("../pages/module/offerManagement/OfferManagementList"));
- const OfferManagementView = lazy(() => import("../pages/module/offerManagement/OfferManagementView"));
-
-
+// ---------------------------- Offer Management ----------------------------
+const OfferManagementAdd = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementAdd")
+);
+const OfferManagementEdit = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementEdit")
+);
+const OfferManagementList = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementList")
+);
+const OfferManagementView = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementView")
+);
 
 // ---------------------------- Blog Management ----------------------------
-
 const BlogManagement = lazy(() =>
   import("../pages/module/blogManagement/blogList/BlogListing")
 );
 const AddBlog = lazy(() =>
   import("../pages/module/blogManagement/addBlog/AddBlog")
 );
-
 const EditBlog = lazy(() =>
   import("../pages/module/blogManagement/addBlog/EditBlog")
 );
-
 const ViewBlog = lazy(() =>
   import("../pages/module/blogManagement/addBlog/ViewBlog")
 );
-// -------------------------------App Management-------------------------------------------------
 
+// ---------------------------- App Management ----------------------------
 const TermsAndConditions = lazy(() =>
   import("../pages/module/appManagement/term&condition/Term&Condition")
 );
+import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
 
-//-------------------------Manage Redeem Request-----------------------------------------
+// ---------------------------- Manage Redeem Request ----------------------------
 import {
   ManageRedeemRequest,
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
-import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
-import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
 
+// ---------------------------- Country Management ----------------------------
+const CountryManagementList = lazy(() =>
+  import("../pages/module/countryManagement/CountryManagementList")
+);
+const CountryManagementAdd = lazy(() =>
+  import("../pages/module/countryManagement/CountryManagementAdd")
+);
+const CountryManagementEdit = lazy(() =>
+  import("../pages/module/countryManagement/CountryManagementEdit")
+);
 
-//------------------------------- Country Management ---------------------------------------------
-const CountryManagementList = lazy(() => import("../pages/module/countryManagement/CountryManagementList"));
-const CountryManagementAdd = lazy(() => import("../pages/module/countryManagement/CountryManagementAdd"));
-const CountryManagementEdit = lazy(() => import("../pages/module/countryManagement/CountryManagementEdit"));
-// ------------------------------Reward Management ---------------------------------------------
+// ---------------------------- Reward Management ----------------------------
 const LuckyDrawManagementList = lazy(() =>
   import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementList")
 );
 const LuckyDrawManagementAdd = lazy(() =>
   import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementAdd")
 );
+const LuckyDrawManagementView = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementView")
+);
 const LuckyDrawManagementEdit = lazy(() =>
   import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementEdit")
 );
-const LuckyDrawManagementResult = lazy(() => import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementResult")
-);
+
 const LuckyDrawManagementSelectWinner = lazy(() =>
   import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementSelectWinner")
+);
+const AddWinner = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/AddWinner")
 );
 const SpinRewardManagementList = lazy(() =>
   import("../pages/module/rewardManagement/spinRewardManagement/SpinRewardManagementList")
@@ -148,8 +161,17 @@ const SetSpinPrice = lazy(() =>
   import("../pages/module/rewardManagement/spinRewardManagement/SetSpinPrice")
 );
 
+// ---------------------------- Chat Support System ----------------------------
+const ChatSupportSystem = lazy(() =>
+  import("../pages/module/chatSupportSystem/ChatSupportSystem")
+);
+const ChatBox = lazy(() =>
+  import("../pages/module/chatSupportSystem/ChatBox")
+);
+
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
+  
   return (
     <Suspense
       fallback={
@@ -197,22 +219,32 @@ function PublicRoute() {
           {/* -------------------------- Order Management -------------------------- */}
           <Route
             path="order-management"
-            element={<OrderManagement />}
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
+            element={
+              <OrderManagement
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            }
           />
           <Route
             path="order-management/order-details"
-            element={<OrderDetails />}
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
+            element={
+              <OrderDetails
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            }
           />
           <Route
             path="order-management/edit-order-details"
-            element={<EditOrderDetails />}
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
+            element={
+              <EditOrderDetails
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            }
           />
+
           {/* -------------------------- User Management -------------------------- */}
           <Route path="user-management" element={<UserManagement />} />
           <Route
@@ -221,68 +253,199 @@ function PublicRoute() {
           />
 
           {/* -------------------------- Staff Management -------------------------- */}
-          <Route path="staff-management" element={<StaffManagement />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
-          <Route path="/staff-management/addStaff" element={<AddStaffForm />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
-          <Route path="/staff-management/editStaff" element={<EditStaff />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
-          <Route path="/staff-management/attendanceListing" element={<AttendanceListing />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
-          <Route path="/staff-management/salesListing" element={<StaffSales />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
-          <Route path="/staff-management/staff-map/:id" element={<StaffMapPage />} activeItem={activeItem}
-            setActiveItem={setActiveItem} />
+          <Route
+            path="staff-management"
+            element={
+              <StaffManagement
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            }
+          />
+          <Route
+            path="/staff-management/addStaff"
+            element={
+              <AddStaffForm
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            }
+          />
+          <Route
+            path="/staff-management/editStaff"
+            element={
+              <EditStaff
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            }
+          />
+          <Route
+            path="/staff-management/attendanceListing"
+            element={
+              <AttendanceListing
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            }
+          />
+          <Route
+            path="/staff-management/salesListing"
+            element={
+              <StaffSales
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            }
+          />
+          <Route
+            path="/staff-management/staff-map/:id"
+            element={
+              <StaffMapPage
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+              />
+            }
+          />
 
-          {/* -------------------------------------Product Managment ------------------------------------------- */}
-           <Route path="product-management" element={<ProductManagment/>} />
-           <Route path="/product-management/add-product" element={<AddProduct />} />
-           <Route path="/product-management/product-edit" element={<EditProduct />} />
-           <Route path="/product-management/product-view" element={<ViewProduct />} />
-           <Route path="/product-management/shipping-cost" element={<ManageShippingCost />} />
-            <Route path="/product-management/shipping-cost/add-shipping-cost" element={<AddShippingCost />} />
-            <Route path="/product-management/shipping-cost/edit-shipping-cost" element={<EditShipingCost />} />
-            {
-              /* -------------------------------------Offer Management ------------------------------------------- */}
-            <Route path="offer-management" element={<OfferManagementList />} />
-          <Route path="offer-management/add-offer" element={<OfferManagementAdd />} />
-         <Route path="offer-management/edit-offer" element={<OfferManagementEdit />} />
-          <Route path="offer-management/offer-details" element={<OfferManagementView />} />
+          {/* -------------------------- Product Management -------------------------- */}
+          <Route path="product-management" element={<ProductManagment />} />
+          <Route
+            path="/product-management/add-product"
+            element={<AddProduct />}
+          />
+          <Route
+            path="/product-management/product-edit/:id"
+            element={<EditProduct />}
+          />
+          <Route
+            path="/product-management/product-view/:id"
+            element={<ViewProduct />}
+          />
+          <Route
+            path="/product-management/shipping-cost/"
+            element={<ManageShippingCost />}
+          />
+          <Route
+            path="/product-management/shipping-cost/add-shipping-cost"
+            element={<AddShippingCost />}
+          />
+          <Route
+            path="/product-management/shipping-cost/edit-shipping-cost/:id"
+            element={<EditShipingCost />}
+          />
 
-          {/* Blog Management */}
+          {/* -------------------------- Offer Management -------------------------- */}
+          <Route path="offer-management" element={<OfferManagementList />} />
+          <Route
+            path="offer-management/add-offer"
+            element={<OfferManagementAdd />}
+          />
+          <Route
+            path="offer-management/edit-offer"
+            element={<OfferManagementEdit />}
+          />
+          <Route
+            path="offer-management/offer-details"
+            element={<OfferManagementView />}
+          />
+
+          {/* -------------------------- Blog Management -------------------------- */}
           <Route path="blog-management" element={<BlogManagement />} />
           <Route path="/blog-management/add-blogs" element={<AddBlog />} />
-          <Route path="/blog-management/edit-blogs/:id" element={<EditBlog />} />
-          <Route path="/blog-management/view-blogs/:id" element={<ViewBlog />} />
+          <Route
+            path="/blog-management/edit-blogs/:id"
+            element={<EditBlog />}
+          />
+          <Route
+            path="/blog-management/view-blogs/:id"
+            element={<ViewBlog />}
+          />
 
-          {/* App Management */}
-          <Route path="/app-management/termandcondition" element={<TermsAndConditions />} />
-          <Route path="/app-management/edittermandcondition" element={<EditTermsAndConditions />} />
-          {/* countryManagement */}
-          <Route path="country-management" element={<CountryManagementList />} />
-          <Route path="country-management/add-country" element={<CountryManagementAdd />} />
-          <Route path="country-management/edit-country" element={<CountryManagementEdit />} />
-          {/* Reward Management */}
-          <Route path="lucky-draw-management" element={<LuckyDrawManagementList />} />
-          <Route path="lucky-draw-management/add-lucky-draw" element={<LuckyDrawManagementAdd />} />
-          <Route path="lucky-draw-management/edit-lucky-draw" element={<LuckyDrawManagementEdit />} />
-          <Route path="lucky-draw-management/lucky-draw-result" element={<LuckyDrawManagementResult />} />
-          <Route path="lucky-draw-management/select-winner" element={<LuckyDrawManagementSelectWinner />} />
-          <Route path="spin-reward-management" element={<SpinRewardManagementList />} />  
-          <Route path="spin-reward-management/add-spin-reward" element={<AddSpinReward />} />
-          <Route path="spin-reward-management/edit-spin-reward" element={<EditSpinReward />} />
-          <Route path="spin-reward-management/set-spin-price" element={<SetSpinPrice />} />
+          {/* -------------------------- App Management -------------------------- */}
+          <Route
+            path="/app-management/termandcondition"
+            element={<TermsAndConditions />}
+          />
+          <Route
+            path="/app-management/edittermandcondition"
+            element={<EditTermsAndConditions />}
+          />
+
+          {/* -------------------------- Country Management -------------------------- */}
+          <Route
+            path="country-management"
+            element={<CountryManagementList />}
+          />
+          <Route
+            path="country-management/add-country"
+            element={<CountryManagementAdd />}
+          />
+          <Route
+            path="country-management/edit-country"
+            element={<CountryManagementEdit />}
+          />
+
+          {/* -------------------------- Reward Management -------------------------- */}
+          <Route
+            path="lucky-draw-management"
+            element={<LuckyDrawManagementList />}
+          />
+          <Route
+            path="lucky-draw-management/view-lucky-draw"
+            element={<LuckyDrawManagementView />}
+          />
+          <Route
+            path="lucky-draw-management/add-lucky-draw"
+            element={<LuckyDrawManagementAdd />}
+          />
+          <Route
+            path="lucky-draw-management/edit-lucky-draw"
+            element={<LuckyDrawManagementEdit />}
+          />
           
-          </Route>
-         
+          <Route
+            path="lucky-draw-management/select-winner"
+            element={<LuckyDrawManagementSelectWinner />}
+          />
+          <Route
+            path="lucky-draw-management/add-winner"
+            element={<AddWinner />}
+          />
+          <Route
+            path="spin-reward-management"
+            element={<SpinRewardManagementList />}
+          />
+          <Route
+            path="spin-reward-management/add-spin-reward"
+            element={<AddSpinReward />}
+          />
+          <Route
+            path="spin-reward-management/edit-spin-reward"
+            element={<EditSpinReward />}
+          />
+          <Route
+            path="spin-reward-management/set-spin-price"
+            element={<SetSpinPrice />}
+          />
+
+          {/* -------------------------- Manage Redeem Request -------------------------- */}
+          <Route
+            path="manage-redeem-request"
+            element={<ManageRedeemRequest />}
+          />
+          <Route
+            path="manage-redeem-request/view-redeem-request/:id"
+            element={<ViewRedeemRequest />}
+          />
+
+          {/* -------------------------- Chat Support System -------------------------- */}
+          <Route path="chat-support-system" element={<ChatSupportSystem />} />
+          <Route path="chat-support-system/chatbox" element={<ChatBox />} />
+
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
-
-          
-
-
-
-        
+        </Route>
         {/* </Route> */}
       </Routes>
     </Suspense>

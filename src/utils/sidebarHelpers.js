@@ -177,7 +177,7 @@ export const allNavigationItems = [
     id: 7,
     title: "Offer Management",
     url: "/offer-management",
-    icon: Home,
+    icon: offerManagementIcon,
     badge: null,
     color: "blue",
   },
@@ -192,7 +192,7 @@ export const allNavigationItems = [
   {
     id: 9,
     title: "Reward Management",
-    url: "",
+    url: "/lucky-draw-management",
     icon: rewardManagementIcon,
     badge: null,
     color: "purple",
@@ -201,7 +201,7 @@ export const allNavigationItems = [
       {
         id: 21,
         title: "Lucky Draw Management",
-        url: "lucky-draw-management",
+        url: "/lucky-draw-management",
         icon: luckyDrawManagementIcon,
         badge: null,
         color: "blue",
@@ -372,7 +372,7 @@ export const allNavigationItems = [
   {
     id: 18,
     title: "Chat Support System",
-    url: "/analytics",
+    url: "/chat-support-system",
     icon: chatSupportSystemIcon,
     badge: null,
     color: "gray",

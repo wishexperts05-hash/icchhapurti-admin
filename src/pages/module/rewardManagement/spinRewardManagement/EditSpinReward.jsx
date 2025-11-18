@@ -25,7 +25,7 @@ const EditSpinReward = () => {
   };
 
   const handleSubmit = (values, { resetForm }) => {
-    console.log("Spin Reward Updated:", values);
+   
     alert("Spin reward updated successfully!");
     navigate("/spin-reward-management");
   };
