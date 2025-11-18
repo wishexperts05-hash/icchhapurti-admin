@@ -120,7 +120,33 @@ import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
 const CountryManagementList = lazy(() => import("../pages/module/countryManagement/CountryManagementList"));
 const CountryManagementAdd = lazy(() => import("../pages/module/countryManagement/CountryManagementAdd"));
 const CountryManagementEdit = lazy(() => import("../pages/module/countryManagement/CountryManagementEdit"));
-
+// ------------------------------Reward Management ---------------------------------------------
+const LuckyDrawManagementList = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementList")
+);
+const LuckyDrawManagementAdd = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementAdd")
+);
+const LuckyDrawManagementEdit = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementEdit")
+);
+const LuckyDrawManagementResult = lazy(() => import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementResult")
+);
+const LuckyDrawManagementSelectWinner = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementSelectWinner")
+);
+const SpinRewardManagementList = lazy(() =>
+  import("../pages/module/rewardManagement/spinRewardManagement/SpinRewardManagementList")
+);
+const AddSpinReward = lazy(() =>
+  import("../pages/module/rewardManagement/spinRewardManagement/AddSpinReward")
+);
+const EditSpinReward = lazy(() =>
+  import("../pages/module/rewardManagement/spinRewardManagement/EditSpinReward")
+);
+const SetSpinPrice = lazy(() =>
+  import("../pages/module/rewardManagement/spinRewardManagement/SetSpinPrice")
+);
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
@@ -236,14 +262,27 @@ function PublicRoute() {
           <Route path="country-management" element={<CountryManagementList />} />
           <Route path="country-management/add-country" element={<CountryManagementAdd />} />
           <Route path="country-management/edit-country" element={<CountryManagementEdit />} />
+          {/* Reward Management */}
+          <Route path="lucky-draw-management" element={<LuckyDrawManagementList />} />
+          <Route path="lucky-draw-management/add-lucky-draw" element={<LuckyDrawManagementAdd />} />
+          <Route path="lucky-draw-management/edit-lucky-draw" element={<LuckyDrawManagementEdit />} />
+          <Route path="lucky-draw-management/lucky-draw-result" element={<LuckyDrawManagementResult />} />
+          <Route path="lucky-draw-management/select-winner" element={<LuckyDrawManagementSelectWinner />} />
+          <Route path="spin-reward-management" element={<SpinRewardManagementList />} />  
+          <Route path="spin-reward-management/add-spin-reward" element={<AddSpinReward />} />
+          <Route path="spin-reward-management/edit-spin-reward" element={<EditSpinReward />} />
+          <Route path="spin-reward-management/set-spin-price" element={<SetSpinPrice />} />
+          
+          </Route>
          
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
+
           
 
 
 
-        </Route>
+        
         {/* </Route> */}
       </Routes>
     </Suspense>
