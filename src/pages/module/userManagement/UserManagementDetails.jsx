@@ -16,7 +16,7 @@ export default function UserDetails() {
     
 
     const handleBack = () => {
-       navigate(-1); // Goes back to previous page in history
+       navigate(-1); 
    };
     return (
         <div className="">

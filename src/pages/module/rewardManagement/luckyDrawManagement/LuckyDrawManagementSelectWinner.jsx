@@ -165,7 +165,7 @@ export default function LuckyDrawManagementSelectWinner({ activeItem, setActiveI
 
   const actions = [];
 
-  // Ticket options for dropdown
+
   const ticketOptions = [
     { value: "", label: "Select winner ticket" },
     { value: "TC12232434", label: "TC12232434" },
@@ -175,18 +175,18 @@ export default function LuckyDrawManagementSelectWinner({ activeItem, setActiveI
     { value: "TC12232438", label: "TC12232438" },
   ];
 
-  // Initial form values - MOVED OUTSIDE to ensure it's always available
+  
   const initialValues = {
     eventName: "",
     startDate: "",
     endDate: "",
-    winners: [""], // Start with one empty winner ticket
+    winners: [""], 
   };
 
-  // Form submit handler
+ 
   const handleSubmit = (values) => {
     
-    // Filter out empty winner tickets
+    
     const selectedWinners = values.winners.filter(ticket => ticket !== "");
    
   };

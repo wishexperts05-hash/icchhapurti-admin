@@ -16,7 +16,7 @@ export default function UserManagement({ activeItem, setActiveItem }) {
 
   const handleSearchTerm = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // reset page when searching
+    setCurrentPage(1); 
   };
 
   const [users, setUsers] = useState([
@@ -70,7 +70,7 @@ export default function UserManagement({ activeItem, setActiveItem }) {
     })),
   ]);
 
-  // ✅ Corrected filter logic
+  
   const filteredData = useMemo(
     () =>
       users.filter((item) =>
@@ -79,14 +79,14 @@ export default function UserManagement({ activeItem, setActiveItem }) {
     [users, searchTerm]
   );
 
-  // Pagination logic
+ 
   const totalItems = filteredData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filteredData.slice(startIndex, endIndex);
 
-  // Handlers
+ 
   
 
   
@@ -98,7 +98,7 @@ export default function UserManagement({ activeItem, setActiveItem }) {
         );
     };
 
-  // Columns for DataTable
+
   const columns = [
     { header: "Sr.No.", field: "srNo" },
     { header: "User Name", field: "userName" },
@@ -108,7 +108,7 @@ export default function UserManagement({ activeItem, setActiveItem }) {
     { header: "Action", field: "action" },
   ];
 
-  // Actions for DataTable
+ 
   const actions = [
       {
         icon: <FaEye className="text-yellow-600" />,

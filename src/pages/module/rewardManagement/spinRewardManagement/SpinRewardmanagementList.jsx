@@ -17,7 +17,7 @@ export default function SpinRewardManagementList({ activeItem, setActiveItem }) 
 
   const handleSearchTerm = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // reset page when searching
+    setCurrentPage(1); 
   };
 
   const handleAddReward = () => {
@@ -76,7 +76,7 @@ export default function SpinRewardManagementList({ activeItem, setActiveItem }) 
     })),
   ]);
 
-  // Filter logic
+
   const filteredData = useMemo(
     () =>
       rewards.filter(
@@ -87,31 +87,31 @@ export default function SpinRewardManagementList({ activeItem, setActiveItem }) 
     [rewards, searchTerm]
   );
 
-  // Pagination logic
+ 
   const totalItems = filteredData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filteredData.slice(startIndex, endIndex);
 
-  // Handlers
+ 
   const handleEdit = (reward) => {
-    // FIXED: Added leading slash to make it an absolute path
+    
     navigate(`/spin-reward-management/edit-spin-reward`, {
-      state: { reward } // Optional: pass reward data to edit page
+      state: { reward } 
     });
   };
 
   const handleDelete = (reward) => {
     
-    // Add delete logic here
+ 
     if (window.confirm(`Are you sure you want to delete "${reward.rewardTitle}"?`)) {
       setRewards((prev) => prev.filter((item) => item.srNo !== reward.srNo));
       alert("Reward deleted successfully!");
     }
   };
 
-  // Columns for DataTable
+
   const columns = [
     { header: "Sr. No.", field: "srNo" },
     { header: "Reward Title", field: "rewardTitle" },
@@ -119,7 +119,7 @@ export default function SpinRewardManagementList({ activeItem, setActiveItem }) 
     { header: "Action", field: "action" },
   ];
 
-  // Actions for DataTable
+
   const actions = [
     {
       icon: (row) => (

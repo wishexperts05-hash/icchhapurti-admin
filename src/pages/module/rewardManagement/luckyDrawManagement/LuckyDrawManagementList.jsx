@@ -27,7 +27,7 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
   const handleViewLuckyDraw = () => {
     navigate("/lucky-draw-management/view-lucky-draw");
   };
-  // lucky-draw-result
+ 
 
   const [luckyDraws, setLuckyDraws] = useState([
     {
@@ -92,7 +92,6 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
     })),
   ]);
 
-  // Filter logic
   const filteredData = useMemo(
     () =>
       luckyDraws.filter(
@@ -103,7 +102,7 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
     [luckyDraws, searchTerm]
   );
 
-  // Pagination logic
+  
   const totalItems = filteredData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -119,7 +118,7 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
    
   };
 
-  // Columns for DataTable
+  
   const columns = [
     { header: "Sr. No.", field: "srNo" },
     { header: "Lucky Draw ID", field: "luckyDrawId" },
@@ -129,7 +128,7 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
     { header: "Action", field: "action" },
   ];
 
-  // Actions for DataTable
+
   const actions = [
     {
       icon: (row) => (

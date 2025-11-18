@@ -10,7 +10,7 @@ export default function LuckyDrawManagementView() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Mock data - replace with actual data from location.state or API
+    
     const luckyDrawData = {
         eventName: "Event 1",
         luckyDrawId: "G458",

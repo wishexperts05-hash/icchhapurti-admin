@@ -77,7 +77,7 @@ const AddSpinReward = () => {
                 <FormField
                   label=" Choose Reward"
                   name="offerType"
-                  fieldType="select"  // Important: specify fieldType as "select"
+                  fieldType="select"  
                   options={[
                     { value: "", label: "Nothing" },
                     { value: "discount", label: "Flat Off" },

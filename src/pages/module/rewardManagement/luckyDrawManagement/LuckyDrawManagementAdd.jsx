@@ -80,7 +80,7 @@ const LuckyDrawManagementAdd = () => {
     };
 
     const handleSubmit = (values, { resetForm }) => {
-        // Validate that each image set has at least 3 images
+       
         const hasInvalidSets = productImageSets.some(set => set.length < 3);
         if (hasInvalidSets) {
             alert("Each product image set must have at least 3 images");

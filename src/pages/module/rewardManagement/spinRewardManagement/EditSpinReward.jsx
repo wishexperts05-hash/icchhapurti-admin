@@ -80,7 +80,7 @@ const EditSpinReward = () => {
                   name="offerType"
                   fieldType="select"
                   options={[
-                    { value: "", label: "Select Reward Type" },  // Changed from "Nothing"
+                    { value: "", label: "Select Reward Type" },  
                     { value: "discount", label: "Flat Off" },
                     { value: "buyget", label: "Buy & Get" },
                     { value: "freedelivery", label: "Grab Ticket" },
