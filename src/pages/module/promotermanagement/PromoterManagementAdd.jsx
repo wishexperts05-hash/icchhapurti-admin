@@ -168,7 +168,7 @@ function PromoterManagementAdd({ onCancel, onAdd }) {
       {/* Breadcrumb */}
       <BreadCrumb
         linkText={[
-          { text: "Promotor Management", href: "/promotermanagement" },
+          { text: "Promotor Management", href: "/promoter-management" },
           { text: "Add Promotor" },
         ]}
       />

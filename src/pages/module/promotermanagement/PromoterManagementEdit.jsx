@@ -145,7 +145,7 @@ function PromoterManagementEdit({ onCancel, onSave }) {
     if (onSave) {
       onSave();
     } else {
-      navigate("/promotermanagement");
+      navigate("/promoter-management");
     }
   };
 
@@ -153,7 +153,7 @@ function PromoterManagementEdit({ onCancel, onSave }) {
     if (onCancel) {
       onCancel();
     } else {
-      navigate("/promotermanagement");
+      navigate("/promoter-management");
     }
   };
 
@@ -185,7 +185,7 @@ function PromoterManagementEdit({ onCancel, onSave }) {
       {/* Breadcrumb */}
       <BreadCrumb
         linkText={[
-          { text: "Promotor Management", href: "/promotermanagement" },
+          { text: "Promotor Management", href: "/promoter-management" },
           { text: "Edit Promotor" },
         ]}
       />

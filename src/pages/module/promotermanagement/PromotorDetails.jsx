@@ -1,155 +1,263 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Camera } from "lucide-react";
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
+import DetailsField from "../../../components/uiComponent/DetailsField";
+import { LuWallet } from "react-icons/lu";
+import { FaRegUser } from "react-icons/fa6";
+import { MdAccountBalance } from "react-icons/md";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
+import Button from '../../../components/uiComponent/Button';
+import { Camera } from "lucide-react";
 
-const DetailRow = ({ label, value }) => (
-  <div className="flex flex-col space-y-1">
-    <span className="text-sm font-medium text-gray-600">{label}</span>
-    <span className="text-base font-semibold text-gray-900">{value || "N/A"}</span>
-  </div>
-);
+export default function PromoterDetails() {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const promoterData = location.state?.promoterData;
 
-const DetailSection = ({ title, children }) => (
-  <div className="mb-8">
-    <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">
-      {title}
-    </h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-      {children}
-    </div>
-  </div>
-);
+    // Default data 
+    const promoter = promoterData || {
+        name: "Jane Cooper",
+        code: "C001",
+        phone: "9876543210",
+        email: "janecooper01@gmail.com",
+        referral: "HVSGU45789",
+        total: 50,
+        status: true,
+        countryCode: "+91",
+        dob: "01/01/1990",
+        country: "India",
+        state: "Maharashtra",
+        city: "Nagpur",
+        bankName: "State Bank Of India",
+        accountNumber: "654971879431",
+        ifsc: "SBIN0001234",
+        accountType: "Savings",
+        accountHolderName: "Jane Cooper",
+        walletBalance: "677",
+        coins: "465768",
+        profileImage: null,
+    };
 
-function PromoterDetails() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const promoterData = location.state?.promoterData;
+    const handleBack = () => {
+        navigate("/promoter-management");
+    };
 
-  // Default data 
-  const promoter = promoterData || {
-    name: "Jane Cooper",
-    code: "C001",
-    phone: "9876543210",
-    email: "janecooper01@gmail.com",
-    referral: "HVSGU45789",
-    total: 50,
-    status: true,
-    countryCode: "+91",
-    dob: "01/01/1990",
-    country: "India",
-    state: "Maharashtra",
-    city: "Nagpur",
-    bankName: "State Bank Of India",
-    accountNumber: "654971879431",
-    ifsc: "SBIN0001234",
-    accountType: "Savings",
-    accountHolderName: "Jane Cooper",
-    profileImage: null,
-  };
+    const handleEdit = () => {
+        navigate("/promoter-management/promoter-managementedit", { state: { promoterData: promoter } });
+    };
 
-  const handleBack = () => {
-    navigate("/promotermanagement");
-  };
-
-  const handleEdit = () => {
-    navigate("/promotermanagementedit", { state: { promoterData: promoter } });
-  };
-
-  return (
-    <>
-      {/* Breadcrumb */}
-      <BreadCrumb
-        linkText={[
-          { text: "Promotor Management", href: "/promotermanagement" },
-          { text: "Promotor Details" },
-        ]}
-      />
-      
-      <PagePath2 title={"Promotor Details"} />
-
-      <div className="min-h-screen w-full bg-white p-8">
-        <div className="w-full max-w-[1200px] mx-auto">
-          {/* Profile Section */}
-          <div className="mb-8 flex flex-col items-center">
-            <div className="w-32 h-32 rounded-full border-2 border-gray-300 overflow-hidden bg-gray-100 flex items-center justify-center mb-4">
-              {promoter.profileImage ? (
-                <img 
-                  src={promoter.profileImage} 
-                  alt="Profile" 
-                  className="w-full h-full object-cover" 
+    return (
+        <div className="">
+            <div className="max-w-6xl mx-auto">
+                {/* Breadcrumb */}
+                <BreadCrumb
+                    linkText={[
+                        { text: "Promotor management", href: "/promoter-management" },
+                        { text: "Promotor Details" },
+                    ]}
                 />
-              ) : (
-                <div className="text-gray-400">
-                  <Camera className="w-12 h-12" />
+
+                {/* Page Title */}
+                <PagePath2
+                    title="Promotor Details"
+                />
+
+                {/* Promoter Profile Card */}
+                <div className="bg-white rounded-lg p-8 mb-8">
+                    <div className="flex items-center gap-6">
+                        <div className="w-32 h-32 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100 flex items-center justify-center">
+                            {promoter.profileImage ? (
+                                <img 
+                                    src={promoter.profileImage} 
+                                    alt="Profile" 
+                                    className="w-full h-full object-cover" 
+                                />
+                            ) : (
+                                <div className="text-gray-400">
+                                    <Camera className="w-12 h-12" />
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-1">{promoter.name}</h2>
+                            <p className="text-gray-600 text-base">{promoter.state}, {promoter.country}</p>
+                            <div className="mt-2">
+                                <span className={`px-4 py-1.5 rounded-full text-sm font-medium ${
+                                    promoter.status 
+                                        ? "bg-green-100 text-green-700" 
+                                        : "bg-red-100 text-red-700"
+                                }`}>
+                                    {promoter.status ? "Active" : "Blocked"}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              )}
+
+                {/* Personal Information Card */}
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                    <div className="bg-white px-6 py-4 border-b border-gray-300">
+                        <div className="flex items-center gap-3">
+                            <FaRegUser className="w-5 h-5 text-gray-800" />
+                            <h3 className="text-lg font-bold text-gray-900">Personal Information</h3>
+                        </div>
+                    </div>
+
+                    <div className="p-8 bg-white">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <DetailsField
+                                label="Full Name"
+                                value={promoter.name}
+                            />
+
+                            <DetailsField
+                                label="E-Mail Id"
+                                value={promoter.email}
+                                type="email"
+                            />
+
+                            <DetailsField
+                                label="Phone Number"
+                                value={`${promoter.countryCode || "+91"} ${promoter.phone}`}
+                                type="tel"
+                            />
+
+                            <DetailsField
+                                label="Date of Birth"
+                                value={promoter.dob}
+                            />
+
+                            <DetailsField
+                                label="Country"
+                                value={promoter.country}
+                            />
+
+                            <DetailsField
+                                label="State"
+                                value={promoter.state}
+                            />
+
+                            <DetailsField
+                                label="City"
+                                value={promoter.city}
+                            />
+
+                            <DetailsField
+                                label="Referral Code"
+                                value={promoter.referral}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Statistics Card */}
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-300 mt-8">
+                    <div className="bg-white px-6 py-4 border-b border-gray-300">
+                        <div className="flex items-center gap-3">
+                            <FaRegUser className="w-5 h-5 text-gray-800" />
+                            <h3 className="text-lg font-bold text-gray-900">Statistics</h3>
+                        </div>
+                    </div>
+
+                    <div className="p-8 bg-white">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <DetailsField
+                                label="Total Users Registered"
+                                value={promoter.total?.toString()}
+                            />
+
+                            <DetailsField
+                                label="Promoter Code"
+                                value={promoter.code}
+                            />
+
+                            <DetailsField
+                                label="Status"
+                                value={promoter.status ? "Active" : "Blocked"}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Bank Details Card */}
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-300 mt-8">
+                    <div className="bg-white px-6 py-4 border-b border-gray-300">
+                        <div className="flex items-center gap-3">
+                            <MdAccountBalance className="w-5 h-5 text-gray-800" />
+                            <h3 className="text-lg font-bold text-gray-900">Bank Details</h3>
+                        </div>
+                    </div>
+
+                    <div className="p-8 bg-white">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <DetailsField
+                                label="Bank Name"
+                                value={promoter.bankName}
+                            />
+
+                            <DetailsField
+                                label="Account Number"
+                                value={promoter.accountNumber}
+                            />
+
+                            <DetailsField
+                                label="IFSC Code"
+                                value={promoter.ifsc}
+                            />
+
+                            <DetailsField
+                                label="Account Type"
+                                value={promoter.accountType}
+                            />
+
+                            <DetailsField
+                                label="Account Holder Name"
+                                value={promoter.accountHolderName}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Wallet Card */}
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 mt-8">
+                    <div className="bg-white px-6 py-4 border-b border-gray-300">
+                        <div className="flex items-center gap-3">
+                            <LuWallet className="w-5 h-5 text-gray-800" />
+                            <h3 className="text-lg font-bold text-gray-900">Wallet</h3>
+                        </div>
+                    </div>
+
+                    <div className="p-8 bg-white">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <DetailsField
+                                label="Current Wallet Balance"
+                                value={promoter.walletBalance || "0"}
+                                type="number"
+                            />
+
+                            <DetailsField
+                                label="Coins"
+                                value={promoter.coins || "0"}
+                                type="number"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-center gap-8 mt-8 mb-8">
+                    <Button
+                        text="Back"
+                        variant={1}
+                        onClick={handleBack}
+                    />
+                    <Button
+                        text="Edit"
+                        variant={2}
+                        onClick={handleEdit}
+                    />
+                </div>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">{promoter.name}</h2>
-            <p className="text-sm text-gray-500">{promoter.code}</p>
-            <div className="mt-2">
-              <span className={`px-4 py-1.5 rounded-full text-sm font-medium ${
-                promoter.status 
-                  ? "bg-green-100 text-green-700" 
-                  : "bg-red-100 text-red-700"
-              }`}>
-                {promoter.status ? "Active" : "Blocked"}
-              </span>
-            </div>
-          </div>
-
-          {/* Personal Information Section */}
-          <DetailSection title="Personal Information">
-            <DetailRow label="Full Name" value={promoter.name} />
-            <DetailRow label="Phone Number" value={`${promoter.countryCode || "+91"} ${promoter.phone}`} />
-            <DetailRow label="Email" value={promoter.email} />
-            <DetailRow label="Date of Birth" value={promoter.dob} />
-            <DetailRow label="Country" value={promoter.country} />
-            <DetailRow label="State" value={promoter.state} />
-            <DetailRow label="City" value={promoter.city} />
-            <DetailRow label="Referral Code" value={promoter.referral} />
-          </DetailSection>
-
-          {/* Statistics Section */}
-          <DetailSection title="Statistics">
-            <DetailRow label="Total Users Registered" value={promoter.total?.toString()} />
-            <DetailRow label="Promoter Code" value={promoter.code} />
-            <DetailRow label="Status" value={promoter.status ? "Active" : "Blocked"} />
-          </DetailSection>
-
-          {/* Bank Details Section */}
-          <DetailSection title="Bank Details">
-            <DetailRow label="Bank Name" value={promoter.bankName} />
-            <DetailRow label="Account Number" value={promoter.accountNumber} />
-            <DetailRow label="IFSC Code" value={promoter.ifsc} />
-            <DetailRow label="Account Type" value={promoter.accountType} />
-            <DetailRow label="Account Holder Name" value={promoter.accountHolderName} />
-          </DetailSection>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
-            <button
-              type="button"
-              onClick={handleBack}
-              className="w-full sm:w-64 px-12 py-3 border border-[#CCA547] text-[#CCA547] text-base font-medium rounded-lg
-                         hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-[#CCA547] transition-all"
-            >
-              Back
-            </button>
-            <button
-              type="button"
-              onClick={handleEdit}
-              className="w-full sm:w-64 px-12 py-3 bg-[#CCA547] text-white text-base font-medium rounded-lg
-                         hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-[#CCA547] transition-all"
-            >
-              Edit
-            </button>
-          </div>
         </div>
-      </div>
-    </>
-  );
+    );
 }
-
-export default PromoterDetails;
