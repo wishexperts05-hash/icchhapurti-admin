@@ -216,7 +216,7 @@ function PublicRoute() {
           {/* -------------------------- User Management -------------------------- */}
           <Route path="user-management" element={<UserManagement />} />
           <Route
-            path="user-management/user-details"
+            path="user-management/user-details/:id"
             element={<UserDetails />}
           />
 

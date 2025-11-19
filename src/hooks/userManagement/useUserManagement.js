@@ -6,6 +6,7 @@ import useFetch from "../useFetch";
 import conf from "../../config/index";
 import Swal from "sweetalert2";
 import { confirmBlock, confirmUnblock } from "../../utils/alertToast";
+import { da } from 'date-fns/locale';
 
 const useUserManagement = () => {
     const [fetchData] = useFetch();
@@ -63,11 +64,12 @@ const useUserManagement = () => {
     };
 
     const updateStatus = async (id, data) => {
+        console.log("data in updateStatus:", data.isActive);
         setLoading(true);
         const result =
-            status === "isActive"
-                ? await confirmBlock("Do you really want to block?")
-                : await confirmUnblock("Do you really want to unblock?");
+            data.isActive === true
+            ? await confirmUnblock("Do you really want to unblock?")
+            : await confirmBlock("Do you really want to block?");
         if (result.isConfirmed) {
             try {
                 const res = await fetchData({
@@ -77,7 +79,7 @@ const useUserManagement = () => {
                 });
                 if (res) {
                     Swal.fire({
-                        title: "Blocked!",
+                        title: data.isActive === true ? "Unblocked!!" : "Blocked!",
                         text: res?.message,
                         icon: "success",
                         confirmButtonText: "OK",

@@ -47,20 +47,20 @@ export default function UserManagement() {
     { header: "Action", field: "action" },
   ];
 
+  const handleView = (row) => {
+    console.log("Navigating to user details with:", row);
+    navigate(`/user-management/user-details/${row._id}`);
+  };
+
   const actions = [
     {
       icon: <FaEye className="text-yellow-600" />,
       title: "View",
-      onClick: () => navigate("/user-management/user-details"),
+      onClick: handleView,
     },
     {
       icon: (row) => (
         <MdOutlineBlock
-          // className={`w-5 h-5 ${row.status
-          //   ? "text-yellow-600 cursor-pointer"
-          //   : "text-gray-400 cursor-pointer"
-          //   }`}
-          // title={row.status ? "Unblock" : "Block"}
           className="w-5 h-5 text-yellow-600 cursor-pointer"
           title="Block User"
         />
@@ -69,11 +69,6 @@ export default function UserManagement() {
       title: "Toggle Status",
     },
   ];
-
-  const handleView = (user) => {
-    console.log("Navigating to user details with:", user);
-    navigate(`/user-management/user-details`);
-  };
 
   return (
     <div className="max-w-7xl mx-auto">
