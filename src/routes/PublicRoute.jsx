@@ -180,17 +180,17 @@ function PublicRoute() {
           <Route path="adminProfile/editProfile" element={<EditProfile />} />
 
           {/* ---------------------------- Promoter Management ---------------------------- */}
-          <Route path="promotermanagement" element={<PromoterManagement />} />
+          <Route path="promoter-management" element={<PromoterManagement />} />
           <Route
-            path="promotermanagementedit"
+            path="/promoter-management/promoter-managementedit"
             element={<PromoterManagementEdit />}
           />
           <Route
-            path="promotermanagementadd"
+            path="/promoter-management/promoter-managementadd"
             element={<PromoterManagementAdd />}
           />
           <Route
-            path="promotor-management/promotor-details"
+            path="/promoter-management/promoter-details"
             element={<PromoterDetails />}
           />
 

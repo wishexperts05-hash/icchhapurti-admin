@@ -14,7 +14,7 @@ export default function PromoterManagement() {
   const handleSearchTerm = (e) => setSearchTerm(e.target.value);
   
   const handleAddStaff = () => {
-    navigate("/promotermanagementadd");
+    navigate("/promoter-management/promoter-managementadd");
   };
 
   const [promoters, setPromoters] = useState([
@@ -51,12 +51,12 @@ export default function PromoterManagement() {
   // Handler functions
   const handleView = (row) => {
     console.log("Navigating to promoter details with:", row);
-    navigate("/promotor-management/promotor-details", { state: { promoterData: row } });
+    navigate("/promoter-management/promoter-details", { state: { promoterData: row } });
   };
 
   const handleEdit = (row) => {
     console.log("Edit promoter:", row);
-    navigate("/promotermanagementedit", { state: { promoterData: row } });
+    navigate("/promoter-management/promoter-managementedit", { state: { promoterData: row } });
   };
 
   const handleDelete = (row) => {
