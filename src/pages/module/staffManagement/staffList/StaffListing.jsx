@@ -1,17 +1,19 @@
 import React, { useState, useMemo } from "react";
-import {Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { MdOutlineBlock } from "react-icons/md";
+import { FaEye, FaRegEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import Pagination from "../../../../components/uiComponent/Pagination";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
-import { FaRegEdit } from "react-icons/fa";
+
 const StaffManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const navigate = useNavigate();
+    
     const handleSearchTerm = (e) => {
         setSearchTerm(e.target.value);
         setCurrentPage(1); 
@@ -45,6 +47,11 @@ const StaffManagement = () => {
     const endIndex = startIndex + itemsPerPage;
     const currentItems = filteredData.slice(startIndex, endIndex);
 
+    const handleView = (row) => {
+        console.log("Navigating to staff details with:", row);
+        navigate("/staff-management/staff-details", { state: { staffData: row } });
+    };
+
     const handleToggleStatus = (row) => {
         setStaffData((prev) =>
             prev.map((item) =>
@@ -61,16 +68,18 @@ const StaffManagement = () => {
         navigate("/staff-management/editStaff", { state: { staffData: row } });
     };
 
-
     const handleAddStaff = () => {
-        navigate("/staff-management/addStaff")
+        navigate("/staff-management/addStaff");
     };
+    
     const handleAttendence = () => {
-        navigate("/staff-management/attendanceListing")
-    }
+        navigate("/staff-management/attendanceListing");
+    };
+    
     const handleSales = () => {
-        navigate("/staff-management/salesListing")
-    }
+        navigate("/staff-management/salesListing");
+    };
+
     const columns = [
         { header: "Sr No.", field: "id" },
         {
@@ -81,7 +90,6 @@ const StaffManagement = () => {
                     <span className="font-semibold text-gray-900">{row.name}</span>
                     <span className="flex justify-center text-start text-gray-500 text-xs">{row.code}</span>
                 </div>
-
             ),
         },
         { header: "Phone No.", field: "phone" },
@@ -91,6 +99,11 @@ const StaffManagement = () => {
     ];
 
     const actions = [
+        {
+            icon: <FaEye className="text-yellow-600" />,
+            onClick: handleView,
+            title: "View",
+        },
         {
             icon: (row) => (
                 <FaRegEdit
@@ -120,12 +133,12 @@ const StaffManagement = () => {
             title: "Toggle Status",
         },
     ];
+
     return (
-        <div className=" bg-gray-50 min-h-screen shadow-2xl">
+        <div className="bg-gray-50 min-h-screen shadow-2xl">
             {/* Breadcrumb Section */}
             <BreadCrumb
                 linkText={[
-                    
                     { text: "Staff Management" },
                 ]}
             />
@@ -148,7 +161,6 @@ const StaffManagement = () => {
                 onClick={handleAttendence}
                 onExtraClick={handleSales}
             />
-
 
             {/* Data Table */}
             <DataTable

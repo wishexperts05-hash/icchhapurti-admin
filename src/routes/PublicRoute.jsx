@@ -37,6 +37,9 @@ const PromoterManagementEdit = lazy(() =>
 const PromoterManagementAdd = lazy(() =>
   import("../pages/module/promotermanagement/PromoterManagementAdd")
 );
+const PromoterDetails = lazy(() =>
+  import("../pages/module/promotermanagement/PromotorDetails")
+);
 
 // ---------------------------- Order Management ----------------------------
 
@@ -185,6 +188,10 @@ function PublicRoute() {
           <Route
             path="promotermanagementadd"
             element={<PromoterManagementAdd />}
+          />
+          <Route
+            path="promotor-management/promotor-details"
+            element={<PromoterDetails />}
           />
 
           {/* -------------------------- Order Management -------------------------- */}
