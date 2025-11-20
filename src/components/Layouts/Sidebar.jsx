@@ -3,175 +3,133 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import AnimationCSS from "./AnimationCSS";
 import { allNavigationItems } from "../../utils/sidebarHelpers";
-import logo from "../../assets/logo.png"
+import logo from "../../assets/logo.png";
 import { useSetRecoilState } from "recoil";
 import { adminAuthState, subAdminAuthState } from "../../state/auth/authenticatedState";
 import useLogin from "../../hooks/auth/useLogin";
 
 const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
-    const setAdminInfo = useSetRecoilState(adminAuthState);
-    const setSubAdminInfo = useSetRecoilState(subAdminAuthState);
-    const { resetAdminLogin, resetSubAdminAccess } = useLogin();
+  const setAdminInfo = useSetRecoilState(adminAuthState);
+  const setSubAdminInfo = useSetRecoilState(subAdminAuthState);
+  const { resetAdminLogin, resetSubAdminAccess } = useLogin();
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
-  const [expandedItems, setExpandedItems] = useState([]);
 
-  // ✅ Use all navigation items directly
   const navigationItems = allNavigationItems;
 
-  // Check if a menu/submenu is active
+  // 🔥 Only one menu can be expanded at a time
+  const [expandedItems, setExpandedItems] = useState([]);
+
+  // Check active parent
   const isItemActive = (itemUrl, subItems = []) => {
     if (currentPath === itemUrl) return true;
     if (currentPath.startsWith(itemUrl + "/") && itemUrl !== "/") return true;
 
-    if (
-      subItems.some((subItem) => {
-        if (subItem.subItems && subItem.subItems.length > 0) {
-          return isItemActive(subItem.url, subItem.subItems);
-        }
-        return (
-          currentPath === subItem.url ||
-          currentPath.startsWith(subItem.url + "/")
-        );
-      })
-    )
-      return true;
-    return false;
+    return subItems.some((sub) => isSubItemActive(sub.url, sub.subItems));
   };
 
-  const isSubItemActive = (subItemUrl, subSubItems = []) => {
-    if (currentPath === subItemUrl) return true;
-    if (currentPath.startsWith(subItemUrl + "/") && subItemUrl !== "/")
-      return true;
+  // Check active submenus
+  const isSubItemActive = (url, subSubItems = []) => {
+    if (currentPath === url) return true;
+    if (currentPath.startsWith(url + "/") && url !== "/") return true;
 
-    if (
-      subSubItems.some(
-        (subSubItem) =>
-          currentPath === subSubItem.url ||
-          currentPath.startsWith(subSubItem.url + "/")
-      )
-    )
-      return true;
-
-    return false;
+    return subSubItems?.some(
+      (s) => currentPath === s.url || currentPath.startsWith(s.url + "/")
+    );
   };
 
-  // Handle expand/collapse
-  const handleToggle = (id, subItems = [], parentPath = []) => {
-    setExpandedItems((prev) => {
-      const isAlreadyOpen = prev.includes(id);
-      const newPath = [...parentPath, id];
-
-      if (isAlreadyOpen) {
-        const index = prev.indexOf(id);
-        return prev.slice(0, index);
-      } else {
-        return newPath;
-      }
-    });
+  // 🔥 Toggle menu — only 1 open at a time
+  const handleToggle = (id, subItems = []) => {
+    setExpandedItems((prev) =>
+      prev.includes(id) ? [] : [id] // collapse all others
+    );
   };
 
+  // 🔥 Clicking on parent
   const handleItemClick = (item) => {
     if (item.hasSubmenu) {
-      handleToggle(item.id, item.subItems, []);
-    } else {
-      navigate(item.url);
-      if (isMobile) setIsOpen(false);
-    }
-  };
+      handleToggle(item.id, item.subItems);
 
-  const handleSubItemClick = (url, parentId) => {
-    navigate(url);
-    if (!expandedItems.includes(parentId)) {
-      setExpandedItems((prev) => [...prev, parentId]);
+      // Auto-open first submenu item
+      const firstSub = item.subItems?.[0];
+      if (firstSub && !firstSub.hasSubmenu) {
+        navigate(firstSub.url);
+      }
+    } else {
+      // Normal menu item
+      navigate(item.url);
+      setExpandedItems([]); // collapse all
     }
+
     if (isMobile) setIsOpen(false);
   };
 
-  // Auto-expand active menus
-  useEffect(() => {
-    const autoExpandMenus = () => {
-      const newExpandedItems = [];
-
-      navigationItems.forEach((item) => {
-        if (item.hasSubmenu && isItemActive(item.url, item.subItems)) {
-          newExpandedItems.push(item.id);
-
-          item.subItems?.forEach((subItem) => {
-            if (
-              subItem.hasSubmenu &&
-              isSubItemActive(subItem.url, subItem.subItems)
-            ) {
-              newExpandedItems.push(subItem.id);
-            }
-          });
-        }
-      });
-
-      setExpandedItems(newExpandedItems);
-    };
-
-    autoExpandMenus();
-  }, [currentPath, navigationItems]);
-
-  const getIconBgClass = (color, isActive) => {
-    if (isActive) {
-      return "bg-white text-gray-700";
-    }
-    return "bg-white text-gray-700";
+  // 🔥 Clicking subitem
+  const handleSubItemClick = (url, parentId) => {
+    navigate(url);
+    setExpandedItems([parentId]); // keep only parent open
+    if (isMobile) setIsOpen(false);
   };
 
-  const renderSubItems = (subItems, level = 1, parentId = null) => {
+  // Auto-expand active menu
+  useEffect(() => {
+    const parentToOpen = navigationItems.find((i) =>
+      isItemActive(i.url, i.subItems)
+    );
+    if (parentToOpen?.hasSubmenu) {
+      setExpandedItems([parentToOpen.id]);
+    }
+  }, [currentPath]);
+
+
+   const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const renderSubItems = (subItems, parentId) => {
     return (
-      <div className={`transition-all duration-300 ease-in-out ${level > 1 ? "ml-4" : ""}`}>
+      <div className="ml-3 mt-1">
         {subItems.map((subItem) => {
-          const isSubExpanded = expandedItems.includes(subItem.id);
-          const isSubActive = isSubItemActive(subItem.url, subItem.subItems);
-          const hasSubSubmenu = subItem.hasSubmenu && subItem.subItems && subItem.subItems.length > 0;
+          const isActive = isSubItemActive(subItem.url, subItem.subItems);
+          const hasNested = subItem.hasSubmenu;
+          const isExpanded = expandedItems.includes(subItem.id);
 
           return (
             <div key={subItem.id}>
               <button
                 onClick={() =>
-                  hasSubSubmenu
-                    ? handleToggle(subItem.id, subItem.subItems, parentId ? [parentId] : [])
+                  hasNested
+                    ? handleToggle(subItem.id)
                     : handleSubItemClick(subItem.url, parentId)
                 }
-                className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 group mb-1 ${isSubActive
-                    ? "bg-yellow-400 text-gray-900"
-                    : "hover:bg-gray-100 text-gray-700"
-                  }`}
+                className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 mb-1
+                  ${
+                    isActive
+                      ? "bg-yellow-400 text-gray-900"
+                      : "hover:bg-gray-100 text-gray-700"
+                  }
+                `}
               >
-                <div
-                  className={`flex items-center justify-center w-6 h-6 rounded-md transition-all duration-200 ${isSubActive
-                      ? "bg-white text-gray-700"
-                      : "bg-white text-gray-700"
-                    }`}
-                >
-                  <subItem.icon className="h-4 w-4" />
-                </div>
+                <subItem.icon className="h-4 w-4" />
+
                 {isOpen && (
                   <div className="flex items-center justify-between w-full ml-3">
-                    <span
-                      className={`text-sm font-medium transition-colors duration-200 ${isSubActive ? "text-gray-900" : "text-gray-700"
-                        }`}
-                    >
-                      {subItem.title}
-                    </span>
-                    {hasSubSubmenu && (
+                    <span className="font-medium text-sm">{subItem.title}</span>
+                    {hasNested && (
                       <ChevronDown
-                        className={`h-4 w-4 text-gray-600 transition-transform duration-200 ${isSubExpanded ? "rotate-180" : ""
-                          }`}
+                        className={`h-4 w-4 transition-transform ${
+                          isExpanded ? "rotate-180" : ""
+                        }`}
                       />
                     )}
                   </div>
                 )}
               </button>
 
-              {hasSubSubmenu && isSubExpanded && isOpen && (
-                <div className="mt-1">
-                  {renderSubItems(subItem.subItems, level + 1, subItem.id)}
+              {hasNested && isExpanded && isOpen && (
+                <div className="ml-4">
+                  {renderSubItems(subItem.subItems, subItem.id)}
                 </div>
               )}
             </div>
@@ -179,10 +137,6 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
         })}
       </div>
     );
-  };
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
   };
 
   const handleLogout = () => {
@@ -199,117 +153,102 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
     <>
       <AnimationCSS />
 
-      {/* Mobile Overlay */}
+      {/* Mobile Black Overlay */}
       {isMobile && isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-
-      <div
-        className={`
-        ${isMobile ? "fixed" : "relative"} ${isMobile ? "z-50" : "z-10"}
-        ${isOpen ? "w-72" : isMobile ? "w-0" : "w-20"} 
-        ${isMobile && !isOpen ? "-translate-x-full" : "translate-x-0"}
-        transition-all duration-300 ease-in-out
-        bg-white border-r border-gray-200
-        h-screen flex flex-col
-      `}
-      >
-        {isMobile && !isOpen ? null : (
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            {isOpen && (
-              <div className="flex items-center space-x-3 animate-slide-in-left w-full">
-                <div className="h-16 w-full flex items-center justify-center">
-                  <img
-                    src={logo}
-                    alt="Logo" className="object-cover w-full h-full"
-                  />
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+                onClick={() => setIsOpen(false)}
+              />
+            )}
+      
+            <div
+              className={`
+              ${isMobile ? "fixed" : "relative"} ${isMobile ? "z-50" : "z-10"}
+              ${isOpen ? "w-72" : isMobile ? "w-0" : "w-20"} 
+              ${isMobile && !isOpen ? "-translate-x-full" : "translate-x-0"}
+              transition-all duration-300 ease-in-out
+              bg-white border-r border-gray-200
+              h-screen flex flex-col
+            `}
+            >
+              {isMobile && !isOpen ? null : (
+                <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                  {isOpen && (
+                    <div className="flex items-center space-x-3 animate-slide-in-left w-full">
+                      <div className="h-16 w-full flex items-center justify-center">
+                        <img
+                          src={logo}
+                          alt="Logo" className="object-cover w-full h-full"
+                        />
+                      </div>
+                    </div>
+                  )}
+      
+                  {!isMobile && (
+                    <button
+                      onClick={toggleSidebar}
+                      className="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
+                    >
+                      {isOpen ? (
+                        <ChevronLeft className="h-5 w-5 text-gray-600" />
+                      ) : (
+                        <ChevronRight className="h-5 w-5 text-gray-600" />
+                      )}
+                    </button>
+                  )}
                 </div>
-              </div>
-            )}
+              )}
 
-            {!isMobile && (
-              <button
-                onClick={toggleSidebar}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
-              >
-                {isOpen ? (
-                  <ChevronLeft className="h-5 w-5 text-gray-600" />
-                ) : (
-                  <ChevronRight className="h-5 w-5 text-gray-600" />
-                )}
-              </button>
-            )}
-          </div>
-        )}
-
-        <div className="flex-1 flex flex-col overflow-y-auto scrollbar-hide">
+        {/* Menus */}
+          <div className="flex-1 flex flex-col overflow-y-auto scrollbar-hide">
           <div className="flex-1 p-3 overflow-y-auto scrollbar-hide">
             <div className="space-y-1">
-              {navigationItems.map((item, index) => {
-                const isActive = isItemActive(item.url, item.subItems);
-                const isExpanded = expandedItems.includes(item.id);
-                const hasSubmenu = item.hasSubmenu;
+          {navigationItems.map((item) => {
+            const isActive = isItemActive(item.url, item.subItems);
+            const isExpanded = expandedItems.includes(item.id);
 
-                const buttonClasses = [
-                  "relative group rounded-lg transition-all duration-200 w-full",
-                  isActive
-                    ? "bg-yellow-400 text-gray-900"
-                    : "hover:bg-gray-100 text-gray-700",
-                  !isOpen && !isMobile ? "justify-center" : "",
-                ].join(" ");
+            return (
+              <div key={item.id}>
+                <button
+                  onClick={() => handleItemClick(item)}
+                  className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200
+                    ${
+                      isActive
+                        ? "bg-yellow-400 text-gray-900"
+                        : "bg-white hover:bg-gray-100 text-gray-700"
+                    }
+                    ${!isOpen ? "justify-center" : ""}
+                  `}
+                >
+                  <item.icon className="h-5 w-5" />
 
-                return (
-                  <div key={item.id}>
-                    <button
-                      onClick={() => handleItemClick(item)}
-                      className={buttonClasses}
-                    >
-                      <div className="flex items-center w-full px-4 py-3">
-                        <div
-                          className={`flex items-center justify-center w-6 h-6 rounded-md transition-all duration-200 ${getIconBgClass(
-                            item.color,
-                            isActive
-                          )}`}
-                        >
-                          <item.icon className="h-4 w-4" />
-                        </div>
+                  {isOpen && (
+                    <div className="flex items-center justify-between w-full ml-3">
+                      <span className="font-medium text-sm">{item.title}</span>
 
-                        {isOpen && (
-                          <div className="flex items-center justify-between w-full ml-3">
-                            <span
-                              className={`font-medium text-sm truncate transition-colors duration-200 ${isActive ? "text-gray-900" : "text-gray-700"
-                                }`}
-                            >
-                              {item.title}
-                            </span>
-                            {hasSubmenu && (
-                              <ChevronDown
-                                className={`h-4 w-4 text-gray-600 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""
-                                  }`}
-                              />
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </button>
+                      {item.hasSubmenu && (
+                        <ChevronDown
+                          className={`h-4 w-4 transition-transform ${
+                            isExpanded ? "rotate-180" : ""
+                          }`}
+                        />
+                      )}
+                    </div>
+                  )}
+                </button>
 
-                    {hasSubmenu && isExpanded && isOpen && (
-                      <div className="mt-1 ml-2">
-                        {renderSubItems(item.subItems, 1, item.id)}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                {item.hasSubmenu && isExpanded && isOpen && (
+                  <div>{renderSubItems(item.subItems, item.id)}</div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        </div>
+     
 
-          {/* Logout */}
-          {/* Logout Button */}
-          <div className="px-3 pb-3 border-t-2 border-[#e65d00]/40">
+        {/* Logout Button */}
+        <div className="px-3 pb-3 border-t-2 border-[#e65d00]/40">
             <button
               onClick={handleLogout}
               className={`mt-2 relative group py-1 rounded-xl transition-all duration-300 hover:shadow-lg w-full card-hover-effect flex items-center px-3 bg-[#e65d00]/20 border border-[#e65d00]/20 hover:bg-[#e65d00]`}

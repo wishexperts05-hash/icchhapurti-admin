@@ -83,6 +83,10 @@ import ViewProduct from "../pages/module/productManagment/ViewProduct";
 
 import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
 import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
+import StaffCommission from "../pages/module/commissionSettings/staffCommission/StaffCommission";
+import UserCommission from "../pages/module/commissionSettings/userCommission/UserCommission";
+import PromoterCommission from "../pages/module/commissionSettings/promoterCommission/PromoterCommission";
+import CoinSettings from "../pages/module/commissionSettings/coinSettings/CoinSettings";
 // -------------------------offer management --------------
 
 const OfferManagementAdd = lazy(() =>
@@ -330,8 +334,8 @@ function PublicRoute() {
             element={<CountryManagementAdd />}
           />
           <Route
-            path="country-management/edit-country"
-            element={<CountryManagementEdit />}
+            path="country-management/edit-country/:id"
+            element={<CountryManagementAdd />}
           />
 
           <Route
@@ -346,6 +350,13 @@ function PublicRoute() {
 
           <Route path="chat-support-system" element={<ChatSupportSystem />} />
           <Route path="chat-support-system/chatbox" element={<ChatBox />} />
+
+
+          {/* -------------------------------------Commission Setting ------------------------------------------- */}
+          <Route path="/staff-commission" element={<StaffCommission />} />
+          <Route path="/user-commission" element={<UserCommission />} />
+          <Route path="/promoter-commission" element={<PromoterCommission />} />
+          <Route path="/coin-settings" element={<CoinSettings />} />
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}

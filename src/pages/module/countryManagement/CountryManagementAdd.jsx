@@ -1,118 +1,186 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormField from "../../../components/uiComponent/FormField";
 import Button from "../../../components/uiComponent/Button";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
-
-const validationSchema = Yup.object().shape({
-    countryName: Yup.string().required("Country name is required"),
-    countryCode: Yup.string()
-        .required("Country code is required")
-        .matches(/^[A-Z]{2,3}$/, "Country code must be 2-3 uppercase letters"),
-    currency: Yup.string().required("Currency is required"),
-    currencySymbol: Yup.string().required("Currency symbol is required"),
-    phoneCode: Yup.string()
-        .required("Phone code is required")
-        .matches(/^\+\d+$/, "Phone code must start with + followed by numbers"),
-    region: Yup.string().required("Region is required"),
-    timezone: Yup.string().required("Timezone is required"),
-    capital: Yup.string().required("Capital is required"),
-    status: Yup.string().required("Status is required"),
-});
+import useCountryManagement from "../../../hooks/countryManagement/useCountryManagement";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
+import { BeatLoader } from "react-spinners";
 
 const CountryManagementAdd = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const isEditMode = location.pathname.includes("editCountry");
-    const countryData = location.state?.countryData || null;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [pageLoading, setPageLoading] = useState(true);
+    const [localLoading, setLocalLoading] = useState(false);
 
-    const initialValues = {
-        countryName: countryData?.countryName || "",
-        countryCode: countryData?.countryCode || "",
-        currency: countryData?.currency || "",
-        currencySymbol: countryData?.currencySymbol || "",
-        phoneCode: countryData?.phoneCode || "",
-        region: countryData?.region || "",
-        timezone: countryData?.timezone || "",
-        capital: countryData?.capital || "",
-        status: countryData?.status || "",
-    };
 
-    const handleSubmit = (values, { resetForm }) => {
-        console.log(isEditMode ? "Country Updated:" : "Country Added:", values);
-        alert(isEditMode ? "Country updated successfully!" : "Country added successfully!");
-        resetForm();
-        navigate("/country-management");
-    };
+  const path = location.pathname.toLowerCase().replace(/\/+$/, ""); // trim trailing slashes
+  const isEditMode = path.split("/").includes("edit-country");
 
-    const handleCancel = () => {
-        navigate("/country-management");
-    };
+  console.log(isEditMode);
 
-    return (
-        <div className="bg-gray-50 min-h-screen">
-            <BreadCrumb
-                linkText={[
-                    { text: "Dashboard" },
-                    { text: "Country Management", href: "/country-management" },
-                    { text: isEditMode ? "Edit Country" : "Add New Country" },
-                ]}
-            />
+  const {
+    updateCountry,
+    fetchCountryDetailById,
+    addCountry,
+    countryDetail,
+    loading,
+    countryDropdown,
+    dropdown,
+    getCountryByName
+    
+  } = useCountryManagement();
 
-            <PagePath2
-                title={isEditMode ? "Edit Country" : "Add New Country"}
-                description="Fill in the country details below to add or update country information."
-            />
-            <div className="bg-white shadow-md rounded-b-xl p-6">
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={handleSubmit}
-                >
-                    {() => (
-                        <Form className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <FormField
-                                label="Country"
-                                name="region"
-                                fieldType="select"
-                                options={[
-                                    { value: "", label: "Choose Country" },
-                                    { value: "india", label: "India" },
-                                    { value: "usa", label: "United States" },
-                                    { value: "uk", label: "United Kingdom" },
-                                    { value: "canada", label: "Canada" },
-                                    { value: "australia", label: "Australia" },
-                                    { value: "germany", label: "Germany" },
-                                    { value: "france", label: "France" },
-                                ]}
-                            />
-                            <FormField
-                                label="Default language "
-                                name="countryCode"
-                                placeholder="Enter Default language (e.g., EN, HI)"
-                            />
-                            <FormField
-                                label=" Default Currency"
-                                name="currency"
-                                placeholder="Enter currency (e.g., USD, INR)"
-                            />
+  const [easyReturn] = useState(true);
+  const [visible] = useState(true);
+
+  useEffect(() => {
+  const loadData = async () => {
+    setPageLoading(true);
+
+    await countryDropdown();      // DROPDOWN MUST LOAD FIRST
+
+    if (isEditMode && id) {
+      await fetchCountryDetailById(id);
+    }
+
+    setPageLoading(false);
+  };
+
+  loadData();
+}, [id, isEditMode]);
 
 
 
-                            <hr className="text-black col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4" />
-                            <div className="col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4">
-                                <Button text="Cancel" variant={2} type="button" onClick={handleCancel} />
-                                <Button text={isEditMode ? "Update Country" : "Add "} type="submit" variant={1} />
-                            </div>
-                        </Form>
-                    )}
-                </Formik>
-            </div>
+  const dropdownOptions =
+    dropdown?.map((item) => ({
+      value: item.name,
+      label: item.name,
+    })) || [];
+
+  const handleCancel = () => navigate("/country-management");
+
+  return (
+    <div className="bg-gray-50 min-h-screen">
+      <BreadCrumb
+        linkText={[
+          { text: "Dashboard" },
+          { text: "Country Management", href: "/country-management" },
+          { text: isEditMode ? "Edit Country" : "Add Country" },
+        ]}
+      />
+
+      <PagePath2
+        title={isEditMode ? "Edit Country" : "Add Country"}
+        description="Manage country information below."
+      />
+
+      {pageLoading  ? (
+        <div className="w-full flex items-center justify-center">
+          <LoaderSpinner />
         </div>
-    );
+      ) : (
+        <div className="bg-white rounded-lg shadow-md p-6 mt-4">
+          <Formik
+            enableReinitialize
+            initialValues={{
+              name: countryDetail?.country?.name || "",
+              defaultLanguage: countryDetail?.country?.defaultLanguage || "",
+              defaultCurrency: countryDetail?.country?.defaultCurrency || "",
+            }}
+            validationSchema={Yup.object({
+              name: Yup.string().required("Country is required"),
+              defaultLanguage: Yup.string().required(
+                "Default language is required"
+              ),
+              defaultCurrency: Yup.string().required(
+                "Default Currency is required"
+              ),
+            })}
+            onSubmit={async (values) => {
+              const payload = {
+                ...values,
+                easyReturn,
+                visible,
+              };
+
+              if (isEditMode) {
+                await updateCountry(id, payload);
+              } else {
+                await addCountry(payload);
+              }
+            }}
+          >
+            {({ values,setFieldValue  }) => {
+
+               useEffect(() => {
+      const autoFill = async () => {
+        if (values.name) {
+          setLocalLoading(true);
+          const data = await getCountryByName(values.name);
+          if (data) {
+            setFieldValue("defaultLanguage", data.defaultLanguage || "");
+            setFieldValue("defaultCurrency", data.defaultCurrency || "");
+          
+          }
+          setLocalLoading(false);
+        }
+      };
+
+      autoFill();
+    }, [values.name]);
+           return(
+              <Form className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <FormField
+                  label="Country"
+                  name="name"
+                  fieldType="select"
+                  options={[
+                    { value: "", label: "Choose Country" },
+                    ...dropdownOptions,
+                  ]}
+                />
+
+                 
+                <FormField
+                  label="Default Language"
+                  name="defaultLanguage"
+                  placeholder="Enter default language (e.g., EN)"
+                  rightElement={localLoading ? <BeatLoader size={6} /> : null}
+                />
+                  
+
+                <FormField
+                  label="Default Currency"
+                  name="defaultCurrency"
+                  placeholder="Enter currency (e.g., USD, INR)"
+                  rightElement={localLoading ? <BeatLoader size={6} /> : null}
+                />
+
+                <div className="col-span-2 flex justify-center gap-4 mt-4">
+                  <Button
+                    text="Cancel"
+                    variant={2}
+                    type="button"
+                    onClick={handleCancel}
+                  />
+                  <Button
+                    text={isEditMode ? "Update Country" : "Add Country"}
+                    type="submit"
+                    variant={1}
+                  />
+                </div>
+              </Form>
+            )}}
+          </Formik>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default CountryManagementAdd;
