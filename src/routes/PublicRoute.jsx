@@ -327,8 +327,8 @@ function PublicRoute() {
             element={<CountryManagementAdd />}
           />
           <Route
-            path="country-management/edit-country"
-            element={<CountryManagementEdit />}
+            path="country-management/edit-country/:id"
+            element={<CountryManagementAdd />}
           />
 
           <Route
