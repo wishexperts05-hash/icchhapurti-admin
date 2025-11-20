@@ -1,53 +1,160 @@
 import React, { useState } from "react";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import FormField from "../../../../components/uiComponent/FormField";
-import Button from "../../../../components/uiComponent/Button";
+import { Camera } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 
-const validationSchema = Yup.object().shape({
-  staffName: Yup.string().required("Staff name is required"),
-  phoneNumber: Yup.string()
-    .matches(/^[0-9]+$/, "Invalid phone number")
-    .required("Phone number is required"),
-  dob: Yup.date().required("Date of birth is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  location: Yup.string().required("Location is required"),
-  referralCode: Yup.string().required("Referral code is required"),
+const CalendarIcon = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
+    strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" className={className}>
+    <path d="M8 2v4"></path>
+    <path d="M16 2v4"></path>
+    <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+    <path d="M3 10h18"></path>
+  </svg>
+);
 
-  // Bank validation
-  accountNumber: Yup.string().required("Account Number is required"),
-  ifscCode: Yup.string().required("IFSC code is required"),
-  accountType: Yup.string().required("Account Type is required"),
-  accountHolderName: Yup.string().required("Account Holder Name is required"),
-});
+const FormInput = ({ label, id, icon: Icon, ...props }) => (
+  <div className="w-full">
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+      {label}
+    </label>
+    <div className="relative">
+      <input
+        id={id}
+        className="block w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg
+                   focus:outline-none focus:ring-2 focus:ring-[#CCA547] focus:border-transparent transition duration-200"
+        {...props}
+      />
+      {Icon && (
+        <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+          <Icon className="h-5 w-5 text-gray-400" />
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+const FormSelect = ({ label, id, options, value, onChange }) => (
+  <div className="w-full">
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+      {label}
+    </label>
+    <select
+      id={id}
+      value={value}
+      onChange={onChange}
+      className="block w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg
+                 focus:outline-none focus:ring-2 focus:ring-[#CCA547] focus:border-transparent transition duration-200
+                 bg-white appearance-none cursor-pointer"
+      style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`,
+        backgroundPosition: 'right 0.5rem center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: '1.5em 1.5em',
+        paddingRight: '2.5rem'
+      }}
+    >
+      <option value="">Select {label}</option>
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  </div>
+);
+
+const PhoneInput = ({ label, id, countryCode, phoneNumber, onCountryCodeChange, onPhoneChange }) => (
+  <div className="w-full">
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+      {label}
+    </label>
+    <div className="flex gap-2">
+      <select
+        value={countryCode}
+        onChange={onCountryCodeChange}
+        className="w-24 px-3 py-2.5 text-sm border border-gray-300 rounded-lg
+                   focus:outline-none focus:ring-2 focus:ring-[#CCA547] focus:border-transparent
+                   bg-white appearance-none cursor-pointer"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`,
+          backgroundPosition: 'right 0.3rem center',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '1.2em 1.2em',
+          paddingRight: '1.8rem'
+        }}
+      >
+        <option value="+91">+91</option>
+        <option value="+1">+1</option>
+        <option value="+44">+44</option>
+      </select>
+      <input
+        id={id}
+        type="tel"
+        value={phoneNumber}
+        onChange={onPhoneChange}
+        placeholder="9876543210"
+        className="flex-1 px-4 py-2.5 text-sm border border-gray-300 rounded-lg
+                   focus:outline-none focus:ring-2 focus:ring-[#CCA547] focus:border-transparent transition duration-200"
+      />
+    </div>
+  </div>
+);
 
 const AddStaff = () => {
   const navigate = useNavigate();
-  const [preview, setPreview] = useState(null);
-
-  const initialValues = {
+  const [profileImage, setProfileImage] = useState(null);
+  const [bankProofImage, setBankProofImage] = useState(null);
+  
+  const [formData, setFormData] = useState({
     staffName: "",
+    countryCode: "+91",
     phoneNumber: "",
-    dob: "",
     email: "",
-    location: "",
+    dob: "",
+    country: "",
+    state: "",
+    city: "",
     referralCode: "",
-    profileImage: null,
+    bankName: "",
     accountNumber: "",
-    ifscCode: "",
+    ifsc: "",
     accountType: "",
     accountHolderName: "",
-    passbookOrChequeImage: null,
-    passbookOrChequePreview: null,
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleSubmit = (values, { resetForm }) => {
-    console.log("Staff Added:", values);
+  const handleProfileImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleBankProofUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setBankProofImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Adding new staff:", formData);
     alert("Staff added successfully!");
-    resetForm();
     navigate("/staff-management");
   };
 
@@ -55,272 +162,261 @@ const AddStaff = () => {
     navigate("/staff-management");
   };
 
+  const countryOptions = [
+    { value: "India", label: "India" },
+    { value: "USA", label: "USA" },
+    { value: "UK", label: "UK" },
+  ];
+
+  const stateOptions = [
+    { value: "Maharashtra", label: "Maharashtra" },
+    { value: "Delhi", label: "Delhi" },
+    { value: "Karnataka", label: "Karnataka" },
+  ];
+
+  const bankOptions = [
+    { value: "State Bank Of India", label: "State Bank Of India" },
+    { value: "HDFC Bank", label: "HDFC Bank" },
+    { value: "ICICI Bank", label: "ICICI Bank" },
+  ];
+
+  const accountTypeOptions = [
+    { value: "Savings", label: "Savings" },
+    { value: "Current", label: "Current" },
+  ];
+
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <>
       <BreadCrumb
         linkText={[
-          { text: "Dashboard" },
           { text: "Staff Management", href: "/staff-management" },
           { text: "Add New Staff" },
         ]}
       />
 
-      <PagePath2
-        title="Add New Staff"
-        description="Fill in the staff details below to add new staff information."
-      />
+      <PagePath2 title={"Add New Staff"} />
 
-      <div className="bg-white shadow-md rounded-2xl p-6">
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ setFieldValue, values }) => (
-            <Form className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* ------------------ Profile Image Upload ------------------ */}
-              <div className="col-span-1 sm:col-span-2 flex flex-col items-center">
-                <div className="relative group">
-                  {/* Remove Image Button */}
-                  {preview && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setPreview(null);
-                        setFieldValue("profileImage", null);
-                      }}
-                      className="absolute -top-0 -right-0 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md hover:bg-red-600"
-                      title="Remove image"
-                    >
-                      ×
-                    </button>
-                  )}
-                  {/* Image Display */}
-                  {preview ? (
-                    <img
-                      src={preview}
-                      alt="Profile Preview"
-                      className="w-32 h-32 rounded-full object-cover border-4 border-primary-200 shadow-md transition-transform group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-32 h-32 rounded-full border-4 border-primary-200 flex items-center justify-center text-gray-500 bg-gray-100">
-                      No Image
-                    </div>
-                  )}
-                  {/* Upload Button */}
-                  <label
-                    htmlFor="profileImage"
-                    className="absolute bottom-1 right-3 bg-primary-600 text-black text-sm rounded-full p-2 cursor-pointer shadow-lg hover:bg-primary-700 transition-colors"
-                    title="Upload or change photo"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className="w-4 h-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 5c.621 0 1.227.158 1.757.46l.598-.598A1 1 0 0115 4h2a1 1 0 01.928.629l.447 1.118A2 2 0 0020 7v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 011.625-1.96l.447-1.118A1 1 0 016 4h2a1 1 0 01.646.238l.598.598A3.985 3.985 0 0112 5z"
-                      />
-                      <circle cx="12" cy="13" r="3" />
-                    </svg>
-                  </label>
-
-                  {/* File Input */}
-                  <input
-                    id="profileImage"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        setFieldValue("profileImage", file);
-
-                        const reader = new FileReader();
-                        reader.onloadend = () => setPreview(reader.result);
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* ------------------ Form Fields ------------------ */}
-              <FormField
-                label="Staff Name"
-                name="staffName"
-                placeholder="Enter staff name"
-              />
-
-              <FormField
-                label="Staff Phone Number"
-                name="phoneNumber"
-                placeholder="Enter phone number"
-              />
-
-              <FormField
-                label="Date of Birth"
-                name="dob"
-                type="date"
-                placeholder="Select date of birth"
-              />
-
-              <FormField
-                label="Email ID"
-                name="email"
-                type="email"
-                placeholder="Enter email address"
-              />
-
-              <FormField
-                label="Staff Location"
-                name="location"
-                placeholder="Enter staff location"
-              />
-
-              <FormField
-                label="Assign Referral Code"
-                name="referralCode"
-                placeholder="Enter referral code"
-              />
-
-              {/* ------------------ BANK DETAILS SECTION ------------------ */}
-              <div className="mt-6 col-span-1 sm:col-span-2">
-                {/* Title */}
-                <div className="text-gray-800 text-2xl flex items-center gap-3 font-semibold mb-4">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 17 17"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M1 16H16M1 6.83333H16M2.66667 3.5L8.5 1L14.3333 3.5M1.83333 6.83333V16M15.1667 6.83333V16M5.16667 10.1667V12.6667M8.5 10.1667V12.6667M11.8333 10.1667V12.6667"
-                      stroke="#0A051F"
-                      strokeWidth="1.67"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span>Bank Details</span>
-                </div>
-
-                {/* Basic Bank Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    label="Account Number"
-                    name="accountNumber"
-                    type="text"
-                    placeholder="Enter Account Number"
-                  />
-                  <FormField
-                    label="IFSC Code"
-                    name="ifscCode"
-                    type="text"
-                    placeholder="Enter IFSC Code"
-                  />
-                  <FormField
-                    fieldType="select"
-                    options={["Current", "Savings"]}
-                    label="Account Type"
-                    name="accountType"
-                  />
-                  <FormField
-                    label="Account Holder Name"
-                    name="accountHolderName"
-                    type="text"
-                    placeholder="Enter Account Holder Name"
-                  />
-                </div>
-
-                {/* Bank Proof Upload */}
-                <div className="mt-8">
-                  <div className="text-gray-800 text-xl font-semibold mb-4">
-                    Upload Bank Proof
+      <div className="min-h-screen w-full bg-white p-8">
+        <form onSubmit={handleSubmit} className="w-full max-w-[1200px]">
+          {/* Profile Image Upload */}
+          <div className="mb-8 flex justify-center">
+            <div className="relative">
+              <div className="w-32 h-32 rounded-full border-2 border-gray-300 overflow-hidden bg-gray-100 flex items-center justify-center">
+                {profileImage ? (
+                  <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="text-gray-400">
+                    <Camera className="w-12 h-12" />
                   </div>
-                  <p className="text-gray-500 text-sm mb-4">
-                    Upload either your <b>Bank Passbook</b> or a{" "}
-                    <b>Cancelled Cheque</b> image.
-                  </p>
-
-                  <div className="flex flex-col items-center">
-                    <div className="relative group">
-                      <img
-                        src={values.passbookOrChequePreview || " "}
-                        alt="Bank Proof"
-                        className="w-60 h-40 rounded-lg object-cover border border-gray-300 shadow-sm group-hover:shadow-md transition-all"
-                      />
-
-                      {/* Upload Button */}
-                      <label
-                        htmlFor="passbookOrChequeImage"
-                        className="absolute bottom-2 right-2 bg-primary-600 text-black text-xs rounded-full p-2 cursor-pointer shadow-md hover:bg-primary-700 transition"
-                      >
-                        +
-                      </label>
-
-                      {/* File Input */}
-                      <input
-                        id="passbookOrChequeImage"
-                        type="file"
-                        accept="image/*,application/pdf"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files[0];
-                          if (file) {
-                            setFieldValue("passbookOrChequeImage", file);
-
-                            const reader = new FileReader();
-                            reader.onloadend = () =>
-                              setFieldValue(
-                                "passbookOrChequePreview",
-                                reader.result
-                              );
-
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                      />
-
-                      {/* Remove */}
-                      {values.passbookOrChequePreview && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setFieldValue("passbookOrChequeImage", null);
-                            setFieldValue("passbookOrChequePreview", null);
-                          }}
-                          className="absolute top-2 right-2 bg-red-600 text-white text-xs rounded-full p-1 shadow-md hover:bg-red-700"
-                        >
-                          ✕
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
-
-              {/* ------------------ Buttons ------------------ */}
-              <div className="col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4">
-                <Button
-                  text="Cancel"
-                  variant={2}
-                  type="button"
-                  onClick={handleCancel}
+              <label
+                htmlFor="profileImage"
+                className="absolute bottom-0 right-0 bg-[#CCA547] text-white p-2 rounded-full cursor-pointer hover:bg-yellow-700 transition"
+              >
+                <Camera className="w-5 h-5" />
+                <input
+                  type="file"
+                  id="profileImage"
+                  accept="image/*"
+                  onChange={handleProfileImageUpload}
+                  className="hidden"
                 />
-                <Button text="Add Staff" type="submit" variant={1} />
+              </label>
+            </div>
+          </div>
+
+          {/* Form Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <FormInput
+              label="Staff Name :"
+              id="staffName"
+              type="text"
+              value={formData.staffName}
+              onChange={handleChange}
+              placeholder="Enter staff name"
+              required
+            />
+            
+            <PhoneInput
+              label="Phone Number :"
+              id="phoneNumber"
+              countryCode={formData.countryCode}
+              phoneNumber={formData.phoneNumber}
+              onCountryCodeChange={(e) => setFormData(prev => ({ ...prev, countryCode: e.target.value }))}
+              onPhoneChange={handleChange}
+            />
+
+            <FormInput
+              label="Email :"
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter email address"
+              required
+            />
+
+            <FormInput
+              label="Date of Birth :"
+              id="dob"
+              type="date"
+              value={formData.dob}
+              onChange={handleChange}
+              icon={CalendarIcon}
+              required
+            />
+
+            <FormSelect
+              label="Country :"
+              id="country"
+              options={countryOptions}
+              value={formData.country}
+              onChange={handleChange}
+            />
+
+            <FormSelect
+              label="State :"
+              id="state"
+              options={stateOptions}
+              value={formData.state}
+              onChange={handleChange}
+            />
+
+            <FormInput
+              label="City :"
+              id="city"
+              type="text"
+              value={formData.city}
+              onChange={handleChange}
+              placeholder="Enter city"
+            />
+
+            <FormInput
+              label="Assign Referral Code :"
+              id="referralCode"
+              type="text"
+              value={formData.referralCode}
+              onChange={handleChange}
+              placeholder="Enter referral code"
+            />
+          </div>
+
+          {/* Bank Details Section */}
+          <div className="mt-8 mb-6">
+            <h3 className="text-base font-semibold text-gray-900">Bank Details :</h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <FormSelect
+              label="Bank Name :"
+              id="bankName"
+              options={bankOptions}
+              value={formData.bankName}
+              onChange={handleChange}
+            />
+
+            <FormInput
+              label="Account Number :"
+              id="accountNumber"
+              type="text"
+              value={formData.accountNumber}
+              onChange={handleChange}
+              placeholder="Enter account number"
+            />
+
+            <FormInput
+              label="IFSC :"
+              id="ifsc"
+              type="text"
+              value={formData.ifsc}
+              onChange={handleChange}
+              placeholder="Enter IFSC code"
+            />
+
+            <FormSelect
+              label="Account Type :"
+              id="accountType"
+              options={accountTypeOptions}
+              value={formData.accountType}
+              onChange={handleChange}
+            />
+
+            <FormInput
+              label="Account Holder Name :"
+              id="accountHolderName"
+              type="text"
+              value={formData.accountHolderName}
+              onChange={handleChange}
+              placeholder="Enter account holder name"
+            />
+          </div>
+
+          {/* Bank Proof Upload Section */}
+          <div className="mt-8 mb-6">
+            <h3 className="text-base font-semibold text-gray-900 mb-2">Upload Bank Proof :</h3>
+            <p className="text-sm text-gray-600">Upload either your Bank Passbook or a Cancelled Cheque image.</p>
+          </div>
+
+          <div className="flex justify-center mb-8">
+            <div className="relative">
+              <div className="w-64 h-40 border-2 border-gray-300 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                {bankProofImage ? (
+                  <img src={bankProofImage} alt="Bank Proof" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="text-gray-400 text-center">
+                    <Camera className="w-12 h-12 mx-auto mb-2" />
+                    <p className="text-sm">No Image</p>
+                  </div>
+                )}
               </div>
-            </Form>
-          )}
-        </Formik>
+              <label
+                htmlFor="bankProofImage"
+                className="absolute bottom-2 right-2 bg-[#CCA547] text-white p-2 rounded-full cursor-pointer hover:bg-yellow-700 transition"
+              >
+                <Camera className="w-5 h-5" />
+                <input
+                  type="file"
+                  id="bankProofImage"
+                  accept="image/*"
+                  onChange={handleBankProofUpload}
+                  className="hidden"
+                />
+              </label>
+              {bankProofImage && (
+                <button
+                  type="button"
+                  onClick={() => setBankProofImage(null)}
+                  className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md hover:bg-red-600"
+                  title="Remove image"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="w-full sm:w-64 px-12 py-3 border border-[#CCA547] text-[#CCA547] text-base font-medium rounded-lg
+                         hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-[#CCA547] transition-all"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="w-full sm:w-64 px-12 py-3 bg-[#CCA547] text-white text-base font-medium rounded-lg
+                         hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-[#CCA547] transition-all"
+            >
+              Add Staff
+            </button>
+          </div>
+        </form>
       </div>
-    </div>
+    </>
   );
 };
 

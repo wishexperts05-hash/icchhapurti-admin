@@ -152,7 +152,7 @@ export const allNavigationItems = [
   {
     id: 4,
     title: "Promoter Management",
-    url: "/promotermanagement",
+    url: "/promoter-management",
     icon: productManagementIcon,
     badge: null,
     color: "blue",
@@ -372,7 +372,7 @@ export const allNavigationItems = [
   {
     id: 18,
     title: "Chat Support System",
-    url: "/analytics",
+    url: "/chat-support-system",
     icon: chatSupportSystemIcon,
     badge: null,
     color: "gray",

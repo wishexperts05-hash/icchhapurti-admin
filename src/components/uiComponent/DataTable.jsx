@@ -12,7 +12,7 @@ const DataTable = ({
   return (
     <div className="w-full overflow-x-auto overflow-y-auto m-w-[500px] rounded-t-2xl shadow-black">
       <table className="min-w-full text-center table-auto bg-[#FFFFFF] rounded-t-2xl overflow-hidden shadow-black">
-        <thead >
+        <thead>
           <tr className="border-b border-border/50 bg-[#F7F7F7] h-[60px] ">
             {columns.map((col, index) => (
               <th
@@ -69,12 +69,15 @@ const DataTable = ({
                             displayValue === "Paid" ||
                             displayValue === "Confirmed" ||
                             displayValue === "Ongoing" ||
-                            displayValue === "Shown"
+                            displayValue === "Shown" ||
+                            displayValue === "Resolved" ||
+                            displayValue === "Active"
                               ? "bg-green-100 text-green-700"
                               : displayValue === "Absent" ||
                                 displayValue === "Upcoming" ||
-                                displayValue === "Blocked" ||
-                                displayValue === "Created"
+                                // displayValue === "Blocked" ||
+                                displayValue === "Created" ||
+                                displayValue === "Pending"
                               ? "bg-yellow-100 text-yellow-700"
                               : "bg-red-100 text-red-700"
                           }`}

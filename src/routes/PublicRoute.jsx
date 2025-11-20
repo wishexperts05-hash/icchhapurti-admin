@@ -37,6 +37,9 @@ const PromoterManagementEdit = lazy(() =>
 const PromoterManagementAdd = lazy(() =>
   import("../pages/module/promotermanagement/PromoterManagementAdd")
 );
+const PromoterDetails = lazy(() =>
+  import("../pages/module/promotermanagement/PromotorDetails")
+);
 
 // ---------------------------- Order Management ----------------------------
 
@@ -136,6 +139,11 @@ const CountryManagementEdit = lazy(() =>
   import("../pages/module/countryManagement/CountryManagementEdit")
 );
 
+const ChatSupportSystem = lazy(() =>
+  import("../pages/module/chatSupportSystem/ChatSupportSystem")
+);
+
+const ChatBox = lazy(() => import("../pages/module/chatSupportSystem/ChatBox"));
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
   return (
@@ -172,14 +180,18 @@ function PublicRoute() {
           <Route path="adminProfile/editProfile" element={<EditProfile />} />
 
           {/* ---------------------------- Promoter Management ---------------------------- */}
-          <Route path="promotermanagement" element={<PromoterManagement />} />
+          <Route path="promoter-management" element={<PromoterManagement />} />
           <Route
-            path="promotermanagementedit"
+            path="/promoter-management/promoter-managementedit"
             element={<PromoterManagementEdit />}
           />
           <Route
-            path="promotermanagementadd"
+            path="/promoter-management/promoter-managementadd"
             element={<PromoterManagementAdd />}
+          />
+          <Route
+            path="/promoter-management/promoter-details"
+            element={<PromoterDetails />}
           />
 
           {/* -------------------------- Order Management -------------------------- */}
@@ -204,7 +216,7 @@ function PublicRoute() {
           {/* -------------------------- User Management -------------------------- */}
           <Route path="user-management" element={<UserManagement />} />
           <Route
-            path="user-management/user-details"
+            path="user-management/user-details/:id"
             element={<UserDetails />}
           />
 
@@ -331,6 +343,9 @@ function PublicRoute() {
             path="manage-redeem-request/view-redeem-request/:id"
             element={<ViewRedeemRequest />}
           />
+
+          <Route path="chat-support-system" element={<ChatSupportSystem />} />
+          <Route path="chat-support-system/chatbox" element={<ChatBox />} />
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
