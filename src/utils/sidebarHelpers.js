@@ -413,7 +413,7 @@ export const allNavigationItems = [
       {
         id: 62,
         title: "Privicy Policy",
-        url: "/cms/static-page",
+        url: "/app-management/privicyandpolicy",
         icon: privicyPolicyIcon,
         badge: null,
         color: "purple",

@@ -5,7 +5,7 @@ import JoditEditor from "jodit-pro-react";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
-import Button from "../../../../components/uiComponent/Button"; // ✅ Your custom Button
+import Button from "../../../../components/uiComponent/Button"; 
 
 const EditTermsAndConditions = () => {
   const navigate = useNavigate();
@@ -26,11 +26,11 @@ const EditTermsAndConditions = () => {
   });
 
   return (
-    <div className="bg-[#F9F9F9] min-h-screen ">
+    <div className="bg-[#F9F9F9] min-h-screen">
       {/* Breadcrumb Section */}
       <BreadCrumb
         linkText={[
-          { text: "Terms and Conditions", href: "/app-management/termandcondition" },
+          { text: "Terms and Conditions", href: "/app-management/terms-and-conditions" },
           { text: "Edit Terms and Conditions" },
         ]}
       />
@@ -39,7 +39,7 @@ const EditTermsAndConditions = () => {
       <PagePath2 title="Edit Terms and Conditions" />
 
       {/* Main Card */}
-      <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4 ">
+      <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
         <Formik
           initialValues={{
             description: initialContent,
@@ -47,14 +47,13 @@ const EditTermsAndConditions = () => {
           validationSchema={validationSchema}
           onSubmit={(values) => {
             console.log("Updated Terms & Conditions:", values);
-            navigate("/app-management/termandcondition"); 
+            navigate("/app-management/terms-and-conditions"); 
           }}
         >
           {({ values, setFieldValue, handleSubmit }) => (
             <Form onSubmit={handleSubmit} className="space-y-6">
               {/* Editor */}
               <div>
-                
                 <JoditEditor
                   ref={editor}
                   value={values.description}
@@ -67,7 +66,7 @@ const EditTermsAndConditions = () => {
                 <Button
                   text="Cancel"
                   variant={2}
-                  onClick={() => navigate("/app-management/termandcondition")}
+                  onClick={() => navigate("/app-management/terms-and-conditions")}
                 />
                 <Button text="Update" type="submit" variant={1} />
               </div>

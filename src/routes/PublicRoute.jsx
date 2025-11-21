@@ -11,68 +11,68 @@ const ForgotPassword = lazy(() => import("../pages/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/auth/ResetPassword"));
 
 const Dashboard = lazy(() => import("../pages/module/dashboard/Dashboard"));
-const AdminProfile = lazy(() =>
-  import("../pages/module/adminProfile/AdminProfile")
+const AdminProfile = lazy(
+  () => import("../pages/module/adminProfile/AdminProfile")
 );
-const EditProfile = lazy(() =>
-  import("../pages/module/adminProfile/EditProfile")
+const EditProfile = lazy(
+  () => import("../pages/module/adminProfile/EditProfile")
 );
 const Layout = lazy(() => import("../components/Layouts/Layout"));
 
 // ---------------------------- User Management ----------------------------
-const UserManagement = lazy(() =>
-  import("../pages/module/userManagement/UserManagementList")
+const UserManagement = lazy(
+  () => import("../pages/module/userManagement/UserManagementList")
 );
-const UserDetails = lazy(() =>
-  import("../pages/module/userManagement/UserManagementDetails")
+const UserDetails = lazy(
+  () => import("../pages/module/userManagement/UserManagementDetails")
 );
 
 // ---------------------------- Promoter Management ----------------------------
-const PromoterManagement = lazy(() =>
-  import("../pages/module/promotermanagement/PromoterManagement")
+const PromoterManagement = lazy(
+  () => import("../pages/module/promotermanagement/PromoterManagement")
 );
-const PromoterManagementEdit = lazy(() =>
-  import("../pages/module/promotermanagement/PromoterManagementEdit")
+const PromoterManagementEdit = lazy(
+  () => import("../pages/module/promotermanagement/PromoterManagementEdit")
 );
-const PromoterManagementAdd = lazy(() =>
-  import("../pages/module/promotermanagement/PromoterManagementAdd")
+const PromoterManagementAdd = lazy(
+  () => import("../pages/module/promotermanagement/PromoterManagementAdd")
 );
-const PromoterDetails = lazy(() =>
-  import("../pages/module/promotermanagement/PromotorDetails")
+const PromoterDetails = lazy(
+  () => import("../pages/module/promotermanagement/PromotorDetails")
 );
 
 // ---------------------------- Order Management ----------------------------
 
-const OrderManagement = lazy(() =>
-  import("../pages/module/OrderManagement/OrderManagement")
+const OrderManagement = lazy(
+  () => import("../pages/module/OrderManagement/OrderManagement")
 );
 
-const OrderDetails = lazy(() =>
-  import("../pages/module/OrderManagement/OrderDetails")
+const OrderDetails = lazy(
+  () => import("../pages/module/OrderManagement/OrderDetails")
 );
 
-const EditOrderDetails = lazy(() =>
-  import("../pages/module/OrderManagement/EditOrderDetails")
+const EditOrderDetails = lazy(
+  () => import("../pages/module/OrderManagement/EditOrderDetails")
 );
 
 // ---------------------------- Staff Management ----------------------------
-const StaffManagement = lazy(() =>
-  import("../pages/module/staffManagement/staffList/StaffListing")
+const StaffManagement = lazy(
+  () => import("../pages/module/staffManagement/staffList/StaffListing")
 );
-const AddStaffForm = lazy(() =>
-  import("../pages/module/staffManagement/addStaff/AddStaff")
+const AddStaffForm = lazy(
+  () => import("../pages/module/staffManagement/addStaff/AddStaff")
 );
-const EditStaff = lazy(() =>
-  import("../pages/module/staffManagement/addStaff/EditStaff")
+const EditStaff = lazy(
+  () => import("../pages/module/staffManagement/addStaff/EditStaff")
 );
-const AttendanceListing = lazy(() =>
-  import("../pages/module/staffManagement/attendance/AttendanceListing")
+const AttendanceListing = lazy(
+  () => import("../pages/module/staffManagement/attendance/AttendanceListing")
 );
-const StaffSales = lazy(() =>
-  import("../pages/module/staffManagement/Sales/SalesListing")
+const StaffSales = lazy(
+  () => import("../pages/module/staffManagement/Sales/SalesListing")
 );
-const StaffMapPage = lazy(() =>
-  import("../pages/module/staffManagement/attendance/StaffMapPage")
+const StaffMapPage = lazy(
+  () => import("../pages/module/staffManagement/attendance/StaffMapPage")
 );
 
 // --------------------------------------------------------------------------------
@@ -89,62 +89,70 @@ import PromoterCommission from "../pages/module/commissionSettings/promoterCommi
 import CoinSettings from "../pages/module/commissionSettings/coinSettings/CoinSettings";
 // -------------------------offer management --------------
 
-const OfferManagementAdd = lazy(() =>
-  import("../pages/module/offerManagement/OfferManagementAdd")
+const OfferManagementAdd = lazy(
+  () => import("../pages/module/offerManagement/OfferManagementAdd")
 );
-const OfferManagementEdit = lazy(() =>
-  import("../pages/module/offerManagement/OfferManagementEdit")
+const OfferManagementEdit = lazy(
+  () => import("../pages/module/offerManagement/OfferManagementEdit")
 );
-const OfferManagementList = lazy(() =>
-  import("../pages/module/offerManagement/OfferManagementList")
+const OfferManagementList = lazy(
+  () => import("../pages/module/offerManagement/OfferManagementList")
 );
-const OfferManagementView = lazy(() =>
-  import("../pages/module/offerManagement/OfferManagementView")
+const OfferManagementView = lazy(
+  () => import("../pages/module/offerManagement/OfferManagementView")
 );
 
 // ---------------------------- Blog Management ----------------------------
 
-const BlogManagement = lazy(() =>
-  import("../pages/module/blogManagement/blogList/BlogListing")
+const BlogManagement = lazy(
+  () => import("../pages/module/blogManagement/blogList/BlogListing")
 );
-const AddBlog = lazy(() =>
-  import("../pages/module/blogManagement/addBlog/AddBlog")
-);
-
-const EditBlog = lazy(() =>
-  import("../pages/module/blogManagement/addBlog/EditBlog")
+const AddBlog = lazy(
+  () => import("../pages/module/blogManagement/addBlog/AddBlog")
 );
 
-const ViewBlog = lazy(() =>
-  import("../pages/module/blogManagement/addBlog/ViewBlog")
+const EditBlog = lazy(
+  () => import("../pages/module/blogManagement/addBlog/EditBlog")
+);
+
+const ViewBlog = lazy(
+  () => import("../pages/module/blogManagement/addBlog/ViewBlog")
 );
 // -------------------------------App Management-------------------------------------------------
-
-const TermsAndConditions = lazy(() =>
-  import("../pages/module/appManagement/term&condition/Term&Condition")
+const TermsAndConditions = lazy(
+  () => import("../pages/module/appManagement/term&Condition/Terms&Condition")
 );
-
+const EditTermsAndConditions = lazy(
+  () =>
+    import(
+      "../pages/module/appManagement/termsAndConditions/EditTermsAndConditions"
+    )
+);
+const PrivacyPolicy = lazy(
+  () => import("../pages/module/appManagement/privacyPolicy/PrivacyPolicy")
+);
+const EditPrivacyPolicy = lazy(
+  () => import("../pages/module/appManagement/privacyPolicy/EditPrivacyPolicy")
+);
 //-------------------------Manage Redeem Request-----------------------------------------
 import {
   ManageRedeemRequest,
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
-import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
-import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
 
 //------------------------------- Country Management ---------------------------------------------
-const CountryManagementList = lazy(() =>
-  import("../pages/module/countryManagement/CountryManagementList")
+const CountryManagementList = lazy(
+  () => import("../pages/module/countryManagement/CountryManagementList")
 );
-const CountryManagementAdd = lazy(() =>
-  import("../pages/module/countryManagement/CountryManagementAdd")
+const CountryManagementAdd = lazy(
+  () => import("../pages/module/countryManagement/CountryManagementAdd")
 );
-const CountryManagementEdit = lazy(() =>
-  import("../pages/module/countryManagement/CountryManagementEdit")
+const CountryManagementEdit = lazy(
+  () => import("../pages/module/countryManagement/CountryManagementEdit")
 );
 
-const ChatSupportSystem = lazy(() =>
-  import("../pages/module/chatSupportSystem/ChatSupportSystem")
+const ChatSupportSystem = lazy(
+  () => import("../pages/module/chatSupportSystem/ChatSupportSystem")
 );
 
 const ChatBox = lazy(() => import("../pages/module/chatSupportSystem/ChatBox"));
@@ -317,12 +325,20 @@ function PublicRoute() {
 
           {/* App Management */}
           <Route
-            path="/app-management/termandcondition"
+            path="/app-management/terms-and-conditions"
             element={<TermsAndConditions />}
           />
           <Route
-            path="/app-management/edittermandcondition"
+            path="/app-management/edit-terms-and-conditions"
             element={<EditTermsAndConditions />}
+          />
+          <Route
+            path="/app-management/privacy-policy"
+            element={<PrivacyPolicy />}
+          />
+          <Route
+            path="/app-management/edit-privacy-policy"
+            element={<EditPrivacyPolicy />}
           />
           {/* countryManagement */}
           <Route
@@ -350,7 +366,6 @@ function PublicRoute() {
 
           <Route path="chat-support-system" element={<ChatSupportSystem />} />
           <Route path="chat-support-system/chatbox" element={<ChatBox />} />
-
 
           {/* -------------------------------------Commission Setting ------------------------------------------- */}
           <Route path="/staff-commission" element={<StaffCommission />} />
