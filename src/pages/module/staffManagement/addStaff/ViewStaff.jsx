@@ -16,6 +16,9 @@ const ViewStaff = () => {
     const navigate = useNavigate();
     const [status, setStatus] = useState("");
     const { id } = useParams();
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+    const [searchTerm, setSearchTerm] = useState("");
 
     console.log("staffDetail:", staffDetail);
 
@@ -41,6 +44,14 @@ const ViewStaff = () => {
 
     const onChangeSelectFunc = (option) => {
         setStatus(option ? option.value : "");
+        setPage(1);
+    };
+    const onPageChange = (newPage) => {
+        setPage(newPage);
+    };
+
+    const onItemsPerPageChange = (newLimit) => {
+        setLimit(newLimit);
         setPage(1);
     };
     return (
@@ -185,6 +196,75 @@ const ViewStaff = () => {
                     </div>
                 </div>
 
+                <PagePath2
+                    title="Direct Sales"
+                // showSelect
+                // searchTerm={searchTerm}
+                // options={"guestsStatusTypes"}
+                // optionsLoading={dropdownLoading}
+                // onChangeSelectFunc={onChangeSelectFunc}
+                />
+                <div class="mt-6 bg-white p-4 rounded shadow">
+                    <DataTable
+                        columns={columns}
+                        data={staffDetail?.directSales.results || []}
+                        currentPage={[]}
+                        usersPerPage={limit}
+                    // actions={actions.map((action) => ({
+                    //     ...action,
+                    //     label:
+                    //         typeof action.label === "function"
+                    //             ? undefined
+                    //             : action.label,
+                    //     onClick: action.onClick,
+                    // }))}
+                    />
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                // currentPage={userList?.currentPage}
+                // totalPages={userList?.totalPages}
+                // totalItems={userList?.totalUser}
+                // itemsPerPage={limit}
+                // onPageChange={onPageChange}
+                // onItemsPerPageChange={onItemsPerPageChange}
+                />
+                <PagePath2
+                    title="Indirect Sales"
+                // showSelect
+                // searchTerm={searchTerm}
+                // options={"guestsStatusTypes"}
+                // optionsLoading={dropdownLoading}
+                // onChangeSelectFunc={onChangeSelectFunc}
+                />
+
+                <div class="mt-6 bg-white p-4 rounded shadow">
+                    <DataTable
+                        columns={columns}
+                        data={staffDetail?.indirectSales.results || []}
+                        currentPage={[]}
+                        usersPerPage={limit}
+                    // actions={actions.map((action) => ({
+                    //     ...action,
+                    //     label:
+                    //         typeof action.label === "function"
+                    //             ? undefined
+                    //             : action.label,
+                    //     onClick: action.onClick,
+                    // }))}
+                    />
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                // currentPage={userList?.currentPage}
+                // totalPages={userList?.totalPages}
+                // totalItems={userList?.totalUser}
+                // itemsPerPage={limit}
+                // onPageChange={onPageChange}
+                // onItemsPerPageChange={onItemsPerPageChange}
+                />
                 {/* Action Buttons */}
                 <div className="flex justify-center gap-8 mt-8 mb-8 ">
                     <Button
@@ -194,77 +274,6 @@ const ViewStaff = () => {
                     />
 
                 </div>
-
-                <PagePath2
-                    title="Direct Sales"
-                    showSelect
-                    searchTerm={searchTerm}
-                    options={"guestsStatusTypes"}
-                    // optionsLoading={dropdownLoading}
-                    onChangeSelectFunc={onChangeSelectFunc}
-                />
-                <div class="mt-6 bg-white p-4 rounded shadow">
-                    <DataTable
-                        columns={columns}
-                        data={[]}
-                        currentPage={userList?.currentPage}
-                        usersPerPage={limit}
-                        actions={actions.map((action) => ({
-                            ...action,
-                            label:
-                                typeof action.label === "function"
-                                    ? undefined
-                                    : action.label,
-                            onClick: action.onClick,
-                        }))}
-                    />
-                </div>
-
-                {/* Pagination */}
-                <Pagination
-                    currentPage={userList?.currentPage}
-                    totalPages={userList?.totalPages}
-                    totalItems={userList?.totalUser}
-                    itemsPerPage={limit}
-                    onPageChange={onPageChange}
-                    onItemsPerPageChange={onItemsPerPageChange}
-                />
-                <PagePath2
-                    title="Indirect Sales"
-                    showSelect
-                    searchTerm={searchTerm}
-                    options={"guestsStatusTypes"}
-                    // optionsLoading={dropdownLoading}
-                    onChangeSelectFunc={onChangeSelectFunc}
-                />
-
-                <div class="mt-6 bg-white p-4 rounded shadow">
-                    <DataTable
-                        columns={columns}
-                        data={userList?.userList || []}
-                        currentPage={userList?.currentPage}
-                        usersPerPage={limit}
-                        actions={actions.map((action) => ({
-                            ...action,
-                            label:
-                                typeof action.label === "function"
-                                    ? undefined
-                                    : action.label,
-                            onClick: action.onClick,
-                        }))}
-                    />
-                </div>
-
-                {/* Pagination */}
-                <Pagination
-                    currentPage={userList?.currentPage}
-                    totalPages={userList?.totalPages}
-                    totalItems={userList?.totalUser}
-                    itemsPerPage={limit}
-                    onPageChange={onPageChange}
-                    onItemsPerPageChange={onItemsPerPageChange}
-                />
-
             </div>
         </div>
     )
