@@ -131,6 +131,8 @@ import {
 } from "../pages/module/ManageRedeemRequest/index";
 import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
 import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
+import Reports from "../pages/module/report&Analytics/reports/Reports";
+import StaffPerformance from "../pages/module/report&Analytics/staffPerformance/StaffPerformance";
 
 //------------------------------- Country Management ---------------------------------------------
 const CountryManagementList = lazy(() =>
@@ -357,6 +359,16 @@ function PublicRoute() {
           <Route path="/user-commission" element={<UserCommission />} />
           <Route path="/promoter-commission" element={<PromoterCommission />} />
           <Route path="/coin-settings" element={<CoinSettings />} />
+
+
+           {/* -------------------------------------Reports & Analytics------------------------------------------- */} 
+
+           <Route path="/reports" element={<Reports />} />
+           <Route path="/staff-performance" element={<StaffPerformance />} />
+
+
+
+
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}

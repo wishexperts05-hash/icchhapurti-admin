@@ -246,7 +246,7 @@ export const allNavigationItems = [
   {
     id: 11,
     title: "Report & Analytics",
-    url: "/pg-hostel-bookings",
+    url: "/reports",
     icon: reportandanalyticsIcon,
     badge: null,
     color: "orange",
@@ -255,7 +255,7 @@ export const allNavigationItems = [
       {
         id: 41,
         title: "Reports",
-        url: "/pg-hostel-bookings",
+        url: "/reports",
         icon: reportsIcon,
         badge: null,
         color: "purple",
@@ -263,7 +263,7 @@ export const allNavigationItems = [
       {
         id: 42,
         title: "Staff Performance",
-        url: "/restaurant-orders",
+        url: "/staff-performance",
         icon: staffPerformanceIcon,
         badge: null,
         color: "yellow",
