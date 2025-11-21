@@ -133,6 +133,7 @@ import EditTermsAndConditions from "../pages/module/appManagement/term&condition
 import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
 import Reports from "../pages/module/report&Analytics/reports/Reports";
 import StaffPerformance from "../pages/module/report&Analytics/staffPerformance/StaffPerformance";
+import ViewStaff from "../pages/module/staffManagement/addStaff/ViewStaff";
 
 //------------------------------- Country Management ---------------------------------------------
 const CountryManagementList = lazy(() =>
@@ -240,7 +241,13 @@ function PublicRoute() {
             setActiveItem={setActiveItem}
           />
           <Route
-            path="/staff-management/editStaff"
+            path="/staff-management/staff-details/:id"
+            element={<ViewStaff />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+          <Route
+            path="/staff-management/editStaff/:id"
             element={<EditStaff />}
             activeItem={activeItem}
             setActiveItem={setActiveItem}

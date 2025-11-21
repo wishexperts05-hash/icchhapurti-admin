@@ -52,7 +52,7 @@ export default function UserDetails() {
                         />
                         <div>
                             <h2 className="text-2xl font-bold text-gray-900 mb-1">{userDetail?.user?.name}</h2>
-                            <p className="text-gray-600 text-base">{userDetail?.user?.address}</p>
+                            <p className="text-gray-600 text-base">{userDetail?.user?.address || "-"}</p>
                         </div>
                     </div>
                 </div>
@@ -92,7 +92,7 @@ export default function UserDetails() {
 
                             <DetailsField
                                 label="Address"
-                                value={userDetail?.user?.address}
+                                value={userDetail?.user?.address || "-"}
                                 className="md:col-span-2"
                             />
 
@@ -117,27 +117,26 @@ export default function UserDetails() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <DetailsField
                                 label="Bank Name"
-                                value="State Bank of India"
+                                value={userDetail?.user?.bankDetails?.bankName || "-"}
                             />
 
                             <DetailsField
                                 label="Bank Account Number"
-                                value="1234567890123456"
+                                value={userDetail?.user?.bankDetails?.accountNumber || "-"}
                             />
 
                             <DetailsField
                                 label="IFSC Code"
-                                value="SBIN0001234"
+                                value={userDetail?.user?.bankDetails?.ifscCode || "-"}
                             />
 
                             <DetailsField
                                 label="Account Holder Name"
-                                value="Dheejraj Jhadhav"
+                                value={userDetail?.user?.bankDetails?.accountHolderName || "-"}
                             />
                         </div>
                     </div>
                 </div>
-
 
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 mt-8">
                     <div className="bg-white px-6 py-4 border-b border-gray-300">
@@ -151,14 +150,14 @@ export default function UserDetails() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <DetailsField
                                 label="Current Wallet Balance"
-                                value="677"
+                                value={userDetail?.wallet?.balance}
                                 type="number"
                             />
 
                             <DetailsField
                                 label="Coins"
-                                value={userDetail?.wallet?.coins || 0}
-                                type="number"
+                                value={userDetail?.wallet?.coins}
+                            // type="number"
                             />
                         </div>
                     </div>
