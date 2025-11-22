@@ -268,7 +268,13 @@ function PublicRoute() {
             setActiveItem={setActiveItem}
           />
           <Route
-            path="/staff-management/editStaff"
+            path="/staff-management/staff-details/:id"
+            element={<ViewStaff />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+          <Route
+            path="/staff-management/editStaff/:id"
             element={<EditStaff />}
             activeItem={activeItem}
             setActiveItem={setActiveItem}
@@ -429,6 +435,16 @@ function PublicRoute() {
           <Route path="/user-commission" element={<UserCommission />} />
           <Route path="/promoter-commission" element={<PromoterCommission />} />
           <Route path="/coin-settings" element={<CoinSettings />} />
+
+
+           {/* -------------------------------------Reports & Analytics------------------------------------------- */} 
+
+           <Route path="/reports" element={<Reports />} />
+           <Route path="/staff-performance" element={<StaffPerformance />} />
+
+
+
+
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
