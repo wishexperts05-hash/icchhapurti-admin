@@ -405,7 +405,7 @@ export const allNavigationItems = [
       {
         id: 61,
         title: "Terms & Conditions",
-        url: "app-management/termandcondition",
+        url: "/app-management/terms-and-conditions",
         icon: termAndConditionsIcon,
         badge: null,
         color: "blue",
@@ -413,7 +413,7 @@ export const allNavigationItems = [
       {
         id: 62,
         title: "Privicy Policy",
-        url: "/app-management/privicyandpolicy",
+        url: "/app-management/privacy-policy",
         icon: privicyPolicyIcon,
         badge: null,
         color: "purple",
@@ -421,7 +421,7 @@ export const allNavigationItems = [
       {
         id: 63,
         title: "Manage Banner",
-        url: "/cms/notification-management",
+        url: "/app-management/manage-banner",
         icon: manageBannerIcon,
         badge: null,
         color: "yellow",
@@ -429,7 +429,7 @@ export const allNavigationItems = [
       {
         id: 64,
         title: "Help & Support",
-        url: "/cms/notification-management",
+        url: "/app-management/help-and-support",
         icon: helpAndSupportIcon,
         badge: null,
         color: "yellow",
@@ -437,7 +437,7 @@ export const allNavigationItems = [
       {
         id: 65,
         title: "Other Settings",
-        url: "/cms/notification-management",
+        url: "/app-management/other-settings",
         icon: otherSettingsIcon,
         badge: null,
         color: "yellow",

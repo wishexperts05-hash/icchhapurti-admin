@@ -120,20 +120,42 @@ const ViewBlog = lazy(
 );
 // -------------------------------App Management-------------------------------------------------
 const TermsAndConditions = lazy(
-  () => import("../pages/module/appManagement/term&Condition/Terms&Condition")
+  () => import("../pages/module/appManagement/term&Condition/Terms&Conditions")
 );
-const EditTermsAndConditions = lazy(
+const CreateTermsAndConditions = lazy(
   () =>
-    import(
-      "../pages/module/appManagement/termsAndConditions/EditTermsAndConditions"
-    )
+    import("../pages/module/appManagement/term&Condition/CreateTerms&Conditions")
 );
+const ViewTermsAndConditions = lazy(
+  () => import("../pages/module/appManagement/term&Condition/ViewTerms&Conditions")
+);
+
 const PrivacyPolicy = lazy(
-  () => import("../pages/module/appManagement/privacyPolicy/PrivacyPolicy")
+  () => import("../pages/module/appManagement/privicy&Policy/Privacy&Policy")
 );
-const EditPrivacyPolicy = lazy(
-  () => import("../pages/module/appManagement/privacyPolicy/EditPrivacyPolicy")
+const CreatePrivacyPolicy = lazy(
+  () => import("../pages/module/appManagement/privicy&Policy/CreatePrivacy&Policy")
 );
+const ViewPrivacyPolicy = lazy(
+  () => import("../pages/module/appManagement/privicy&Policy/ViewPrivacy&Policy")
+);
+const OtherSettings = lazy(
+  () => import("../pages/module/appManagement/otherSettings/OtherSettings")
+);
+// ---------------------------- Banner Management ----------------------------
+const Banner = lazy(
+  () => import("../pages/module/appManagement/manageBanner/Banner")
+);
+const BannerDetails = lazy(
+  () => import("../pages/module/appManagement/manageBanner/BannerDetails")
+);
+const CreateBanner = lazy(
+  () => import("../pages/module/appManagement/manageBanner/CreateBanner")
+);
+const HelpSupport = lazy(
+  () => import("../pages/module/appManagement/help&Support/Help&Support")
+);
+// ----------------------------
 //-------------------------Manage Redeem Request-----------------------------------------
 import {
   ManageRedeemRequest,
@@ -324,21 +346,56 @@ function PublicRoute() {
           />
 
           {/* App Management */}
+          <Route path="/app-management" element={<TermsAndConditions />} />  
           <Route
             path="/app-management/terms-and-conditions"
-            element={<TermsAndConditions />}
+            element={<TermsAndConditions />}  
           />
+           <Route
+            path="/app-management/create-terms-and-conditions"
+            element={<CreateTermsAndConditions />}  
+          />  
           <Route
-            path="/app-management/edit-terms-and-conditions"
-            element={<EditTermsAndConditions />}
+          path="/app-management/edit-terms-and-conditions/:id"
+            element={<CreateTermsAndConditions />}
+          /> 
+          <Route
+            path="/app-management/terms-and-conditions/view"
+            element={<ViewTermsAndConditions />}
           />
           <Route
             path="/app-management/privacy-policy"
-            element={<PrivacyPolicy />}
+            element={<PrivacyPolicy />} 
           />
           <Route
-            path="/app-management/edit-privacy-policy"
-            element={<EditPrivacyPolicy />}
+            path="/app-management/create-privacy-policy"
+            element={<CreatePrivacyPolicy />}
+          />
+          <Route
+            path="/app-management/edit-privacy-policy/:id"  
+            element={<CreatePrivacyPolicy />}
+          />
+          <Route
+            path="/app-management/privacy-policy/view/"
+            element={<ViewPrivacyPolicy />}
+          />
+         
+          <Route path="/app-management/manage-banner" element={<Banner />} />
+          <Route
+            path="/app-management/manage-banner/banner-details/:id"   
+            element={<BannerDetails />}
+          />
+          <Route
+            path="/app-management/manage-banner/create-banner"
+            element={<CreateBanner />}
+          />
+          <Route
+           path="/app-management/help-and-support"
+            element={<HelpSupport />} 
+            />
+            <Route
+            path="/app-management/other-settings"
+            element={<OtherSettings />} 
           />
           {/* countryManagement */}
           <Route
