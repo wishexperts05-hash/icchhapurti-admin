@@ -43,6 +43,7 @@ const PromoterDetails = lazy(
 
 // ---------------------------- Order Management ----------------------------
 
+
 const OrderManagement = lazy(
   () => import("../pages/module/OrderManagement/OrderManagement")
 );
@@ -54,6 +55,9 @@ const OrderDetails = lazy(
 const EditOrderDetails = lazy(
   () => import("../pages/module/OrderManagement/EditOrderDetails")
 );
+// ---------------------------- Report and Analytics ----------------------------
+const Reports = lazy(() => import("../pages/module/reports&Analytics/Reports"));
+const StaffPerformance = lazy(() => import("../pages/module/reports&Analytics/StaffPerformance"));
 
 // ---------------------------- Staff Management ----------------------------
 const StaffManagement = lazy(
