@@ -74,6 +74,9 @@ const StaffSales = lazy(
 const StaffMapPage = lazy(
   () => import("../pages/module/staffManagement/attendance/StaffMapPage")
 );
+const ViewStaff = lazy(
+  () => import("../pages/module/staffManagement/addStaff/ViewStaff")
+);
 
 // --------------------------------------------------------------------------------
 import AddProduct from "../pages/module/productManagment/AddProduct";
