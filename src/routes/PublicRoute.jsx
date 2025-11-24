@@ -56,8 +56,8 @@ const EditOrderDetails = lazy(
   () => import("../pages/module/OrderManagement/EditOrderDetails")
 );
 // ---------------------------- Report and Analytics ----------------------------
-const Reports = lazy(() => import("../pages/module/reports&Analytics/Reports"));
-const StaffPerformance = lazy(() => import("../pages/module/reports&Analytics/StaffPerformance"));
+const Reports = lazy(() => import("../pages/module/report&Analytics/reports/Reports"));
+const StaffPerformance = lazy(() => import("../pages/module/report&Analytics/staffPerformance/StaffPerformance"));
 
 // ---------------------------- Staff Management ----------------------------
 const StaffManagement = lazy(
