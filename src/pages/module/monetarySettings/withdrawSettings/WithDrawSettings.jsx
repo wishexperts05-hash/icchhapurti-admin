@@ -1,105 +1,112 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import FormField from "../../../../components/uiComponent/FormField";
 import Button from "../../../../components/uiComponent/Button";
 
-export default function UserCommission() {
-  // const { updateChargesAndBenefits, fetchChargesAndBenefits, loading, chargesAndBenefits } = useChargesAndBenefits();
-  const [currentPage, setCurrentPage] = useState("commission-settings");
-  const [userCommission, setUserCommission] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [canUpdate] = useState(true);
 
-  // TEMPORARY DUMMY Data
-  const dummyApiData = {
-    directSaleQuantity: 10,
-    directSaleCoins: 50,
-    luckDraw: {
-      luckyDrawTicketQuantity: 2,
-      luckyDrawTicket: 3,
-    },
-    withdrawAmount: {
-      totalWalletBalance: 2,
-      dayForWithdraw: 3,
-    },
-  };
-
-  const fetchUserCommission = async () => {
-    setLoading(true);
-    setTimeout(() => {
-      setUserCommission(dummyApiData);
-      setLoading(false);
-    }, 500);
-  };
-
-  const updateUserCommission = async (values) => {
-    setLoading(true);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log("UPDATED DATA:", values);
-        setUserCommission(values); // update UI
-        setLoading(false);
-        resolve(true);
-      }, 800);
-    });
-  };
-
-  useEffect(() => {
-    fetchUserCommission();
-  }, []);
-
-  //   const { subAdminAccess } = useLogin();
-  // const { canCreate, canRead, canUpdate, canDelete } = usePermissions(subAdminAccess, "Chargers & Benefit");
-  // console.log("Chargers & Benefit Permissions:", { canCreate, canRead, canUpdate, canDelete });
-
-  const handleEdit = () => {
-    if (canUpdate) {
-      setCurrentPage("edit");
-    }
-  };
-
-  const handleUpdate = async (values) => {
-    const isSuccess = await updateUserCommission(values);
-    if (isSuccess) {
-      handleBack();
-    }
-  };
-
-  const handleBack = () => setCurrentPage("commission-settings");
-
-  const formatCommissionData = (data) => {
-    if (!data) return {};
-
-    return {
-      directSaleQuantity: data.directSaleQuantity || 0,
-      directSaleCoins: data.directSaleCoins || 0,
-      luckDraw: {
-        luckyDrawTicketQuantity: data.luckDraw?.luckyDrawTicketQuantity || 0,
-        luckyDrawTicket: data.luckDraw?.luckyDrawTicket || 0,
-      },
-      withdrawAmount: {
-        totalWalletBalance: data.withdrawAmount?.totalWalletBalance || 0,
-        dayForWithdraw: data.withdrawAmount?.dayForWithdraw || 0,
-      },
-    };
-  };
-
-  return (
+const WithDrawSettings = () => {
+      const [currentPage, setCurrentPage] = useState("commission-settings");
+      const [promoterCommission, setPromoterCommission] = useState(null);
+      const [loading, setLoading] = useState(false);
+      const [canUpdate] = useState(true);
+    
+      // TEMPORARY DUMMY Data
+      const dummyApiData = {
+        directSaleQuantity: 10,
+        directSaleCommissionAmount: 50,
+        inDirectSale: {
+          inDirectSaleQuantity: 5,
+          inDirectSaleCommissionAmount: 12,
+        },
+        luckDraw: {
+          luckyDrawTicketQuantity: 2,
+          luckyDrawTicket: 3,
+        },
+        withdrawAmount: {
+          totalWalletBalance: 2,
+          dayForWithdraw: 3,
+        },
+      };
+    
+      const fetchPromoterCommission = async () => {
+        setLoading(true);
+        setTimeout(() => {
+          setPromoterCommission(dummyApiData);
+          setLoading(false);
+        }, 500);
+      };
+    
+      const updatePromoterCommission = async (values) => {
+        setLoading(true);
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            console.log("UPDATED DATA:", values);
+            setPromoterCommission(values); // update UI
+            setLoading(false);
+            resolve(true);
+          }, 800);
+        });
+      };
+    
+      useEffect(() => {
+        fetchPromoterCommission();
+      }, []);
+    
+      //   const { subAdminAccess } = useLogin();
+      // const { canCreate, canRead, canUpdate, canDelete } = usePermissions(subAdminAccess, "Chargers & Benefit");
+      // console.log("Chargers & Benefit Permissions:", { canCreate, canRead, canUpdate, canDelete });
+    
+      const handleEdit = () => {
+        if (canUpdate) {
+          setCurrentPage("edit");
+        }
+      };
+    
+      const handleUpdate = async (values) => {
+        const isSuccess = await updatePromoterCommission(values);
+        if (isSuccess) {
+          handleBack();
+        }
+      };
+    
+      const handleBack = () => setCurrentPage("commission-settings");
+    
+      const formatCommissionData = (data) => {
+        if (!data) return {};
+    
+        return {
+          directSaleQuantity: data.directSaleQuantity || 0,
+          directSaleCommissionAmount: data.directSaleCommissionAmount || 0,
+          inDirectSale: {
+            inDirectSaleQuantity: data.inDirectSale?.inDirectSaleQuantity || 0,
+            inDirectSaleCommissionAmount:
+              data.inDirectSale?.inDirectSaleCommissionAmount || 0,
+          },
+          luckDraw: {
+            luckyDrawTicketQuantity: data.luckDraw?.luckyDrawTicketQuantity || 0,
+            luckyDrawTicket: data.luckDraw?.luckyDrawTicket || 0,
+          },
+          withdrawAmount: {
+            totalWalletBalance: data.withdrawAmount?.totalWalletBalance || 0,
+            dayForWithdraw: data.withdrawAmount?.dayForWithdraw || 0,
+          },
+        };
+      };
+      return (
     <div className="min-h-screen">
       {currentPage === "commission-settings" && (
         <CommissionSetting
           onEdit={handleEdit}
-          commissionData={formatCommissionData(userCommission)}
+          commissionData={formatCommissionData(promoterCommission)}
           canUpdate={canUpdate}
         />
       )}
       {currentPage === "edit" && (
         <EditCommissionSetting
-          initialData={formatCommissionData(userCommission)}
+          initialData={formatCommissionData(promoterCommission)}
           onBack={handleBack}
           onUpdate={handleUpdate}
           loading={loading}
@@ -109,32 +116,45 @@ export default function UserCommission() {
   );
 }
 
+
 function CommissionSetting({ onEdit, commissionData, canUpdate }) {
   return (
     <div>
       <BreadCrumb
         linkText={[
           { text: "Commission Settings" },
-          { text: "User Commission" },
+          { text: "Promoter Commission" },
         ]}
       />
-      <PagePath2 title="User Commission" />
+      <PagePath2 title="Promoter Commission" />
 
       <div className="space-y-6 bg-white pt-6 pb-8 rounded-xl">
         {/* Direct sale Section */}
-        <Section title="Set User Commission for Direct Sale">
+        <Section title="Set Promoter Commission for Direct Sale">
           <FieldView
             label="Quantity"
             value={commissionData.directSaleQuantity}
           />
           <FieldView
-            label="Coins"
-            value={commissionData.directSaleCoins}
+            label="Commission Amount (₹)"
+            value={commissionData.directSaleCommissionAmount}
+          />
+        </Section>
+
+        {/* Indirect sale Section  */}
+        <Section title="Set Promoter Commission for Indirect Sale">
+          <FieldView
+            label="Quantity"
+            value={commissionData.inDirectSale?.inDirectSaleQuantity}
+          />
+          <FieldView
+            label="Commission Amount (₹)"
+            value={commissionData.inDirectSale?.inDirectSaleCommissionAmount}
           />
         </Section>
 
         {/* Lucky Draw Ticket */}
-        <Section title="Set Lucky Draw Ticket on Purchase for User">
+        <Section title="Set Lucky Draw Ticket on Purchase for Promoter">
           <FieldView
             label="Quantity"
             value={commissionData.luckDraw?.luckyDrawTicketQuantity}
@@ -147,7 +167,7 @@ function CommissionSetting({ onEdit, commissionData, canUpdate }) {
 
         {/* Total Wallet Balance For Staff */}
 
-        <Section title="Set Withdraw Amount % Of Total Wallet Balance For User">
+        <Section title="Set Withdraw Amount % Of Total Wallet Balance For Promoter">
           <FieldView
             label="Amount % Of Total Wallet Balance"
             value={commissionData.withdrawAmount?.totalWalletBalance}
@@ -177,9 +197,19 @@ function EditCommissionSetting({ initialData, onBack, onUpdate, loading }) {
     directSaleQuantity: Yup.number()
       .required("Required")
       .min(0, "Must be positive"),
-    directSaleCoins: Yup.number()
+    directSaleCommissionAmount: Yup.number()
       .required("Required")
       .min(0, "Must be positive"),
+    inDirectSale: Yup.object({
+      inDirectSaleQuantity: Yup.number()
+        .required("Required")
+        .min(0, "Must be positive")
+        .max(100, "Cannot exceed 100%"),
+      inDirectSaleCommissionAmount: Yup.number()
+        .required("Required")
+        .min(0, "Must be positive")
+        .max(100, "Cannot exceed 100%"),
+    }),
     luckDraw: Yup.object({
       luckyDrawTicketQuantity: Yup.number()
         .required("Required")
@@ -188,6 +218,7 @@ function EditCommissionSetting({ initialData, onBack, onUpdate, loading }) {
       luckyDrawTicket: Yup.number()
         .required("Required")
         .min(0, "Must be positive")
+        
     }),
     withdrawAmount: Yup.object({
       totalWalletBalance: Yup.number()
@@ -202,10 +233,10 @@ function EditCommissionSetting({ initialData, onBack, onUpdate, loading }) {
 
   return (
     <div>
-       <BreadCrumb
-        linkText={[{ text: "Commission Setting" }, { text: "Edit User Commission" }]}
+      <BreadCrumb
+        linkText={[{ text: "Commission Setting" }, { text: "Edit Promoter Commission" }]}
       />
-      <PagePath2 title="Edit User Commission" />
+      <PagePath2 title="Edit Promoter Commission" />
 
       <Formik
         initialValues={initialData}
@@ -215,20 +246,33 @@ function EditCommissionSetting({ initialData, onBack, onUpdate, loading }) {
       >
         {({ handleSubmit }) => (
           <Form className="space-y-6 bg-white pt-6 pb-8 rounded-lg">
-            <Section title="Set User Commission for Direct Sale">
+            <Section title="Set Promoter Commission for Direct Sale">
               <FormField
                 label="Quantity"
                 name="directSaleQuantity"
                 type="number"
               />
               <FormField
-                label="Coins"
-                name="directSaleCoins"
+                label="Commission Amount (₹)"
+                name="directSaleCommissionAmount"
                 type="number"
               />
             </Section>
 
-            <Section title="Set Lucky Draw Ticket on Purchase for User">
+            <Section title="Set Promoter Commission for Indirect Sale">
+              <FormField
+                label="Quantity"
+                name="inDirectSale.inDirectSaleQuantity"
+                type="number"
+              />
+              <FormField
+                label="Commission Amount (₹)"
+                name="inDirectSale.inDirectSaleCommissionAmount"
+                type="number"
+              />
+            </Section>
+
+            <Section title="Set Lucky Draw Ticket on Purchase for Promoter">
               <FormField
                 label="Quantity"
                 name="luckDraw.luckyDrawTicketQuantity"
@@ -241,7 +285,7 @@ function EditCommissionSetting({ initialData, onBack, onUpdate, loading }) {
               />
             </Section>
 
-            <Section title="Set Withdraw Amount % Of Total Wallet Balance For User">
+            <Section title="Set Withdraw Amount % Of Total Wallet Balance For Promoter">
               <FormField
                 label="Amount % Of Total Wallet Balance"
                 name="withdrawAmount.totalWalletBalance"
@@ -298,3 +342,4 @@ function FieldView({ label, value }) {
     </div>
   );
 }
+export default WithDrawSettings
