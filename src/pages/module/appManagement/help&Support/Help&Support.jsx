@@ -38,7 +38,7 @@ function HelpSupport() {
     <div className="bg-[#F9F9F9] min-h-screen">
       <BreadCrumb
         linkText={[
-          { text: "App Management", href: "/app-management" },
+          { text: "App Management" },
           { text: "Help & Support Number" },
         ]}
       />
@@ -57,11 +57,12 @@ function HelpSupport() {
         >
           {({ resetForm }) => (
             <Form className="flex flex-col gap-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-6">
+              <div className="w-full max-w-md">
                 <FormField
                   label="Contact Number"
                   name="contactNumber"
-                  fieldType="text"
+                  fieldType="input"
+                  type="text"
                   placeholder="Enter contact number"
                   disabled={!isEditing}
                 />

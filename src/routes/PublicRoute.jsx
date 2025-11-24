@@ -155,6 +155,15 @@ const BannerDetails = lazy(
 const CreateBanner = lazy(
   () => import("../pages/module/appManagement/manageBanner/CreateBanner")
 );
+const UpdateBanner = lazy(
+  () => import("../pages/module/appManagement/manageBanner/CreateBanner")
+);
+const EditBanner = lazy(
+  () => import("../pages/module/appManagement/manageBanner/CreateBanner")
+);
+
+// ---------------------------- Help & Support Number ----------------------------
+
 const HelpSupport = lazy(
   () => import("../pages/module/appManagement/help&Support/Help&Support")
 );
@@ -408,6 +417,14 @@ function PublicRoute() {
           <Route
             path="/app-management/manage-banner/create-banner"
             element={<CreateBanner />}
+          />
+       <Route
+            path="/app-management/manage-banner/edit-banner/:id"
+            element={<EditBanner />}
+          />
+          <Route
+            path="/app-management/manage-banner/update-banner/:id"
+            element={<UpdateBanner />}
           />
           <Route
            path="/app-management/help-and-support"
