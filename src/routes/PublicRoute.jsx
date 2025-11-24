@@ -83,10 +83,9 @@ import ViewProduct from "../pages/module/productManagment/ViewProduct";
 
 import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
 import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
-import StaffCommission from "../pages/module/commissionSettings/staffCommission/StaffCommission";
-import UserCommission from "../pages/module/commissionSettings/userCommission/UserCommission";
-import PromoterCommission from "../pages/module/commissionSettings/promoterCommission/PromoterCommission";
-import CoinSettings from "../pages/module/commissionSettings/coinSettings/CoinSettings";
+import CommissionSetting from "../pages/module/monetarySettings/commissionSettings/CommissionSetting";
+import CoinSettings from "../pages/module/monetarySettings/coinSettings/CoinSettings";
+
 // -------------------------offer management --------------
 
 const OfferManagementAdd = lazy(() =>
@@ -134,7 +133,7 @@ import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
 import Reports from "../pages/module/report&Analytics/reports/Reports";
 import StaffPerformance from "../pages/module/report&Analytics/staffPerformance/StaffPerformance";
 import ViewStaff from "../pages/module/staffManagement/addStaff/ViewStaff";
-
+import WithDrawSettings from "../pages/module/monetarySettings/withdrawSettings/WithDrawSettings";
 //------------------------------- Country Management ---------------------------------------------
 const CountryManagementList = lazy(() =>
   import("../pages/module/countryManagement/CountryManagementList")
@@ -361,21 +360,15 @@ function PublicRoute() {
           <Route path="chat-support-system/chatbox" element={<ChatBox />} />
 
 
-          {/* -------------------------------------Commission Setting ------------------------------------------- */}
-          <Route path="/staff-commission" element={<StaffCommission />} />
-          <Route path="/user-commission" element={<UserCommission />} />
-          <Route path="/promoter-commission" element={<PromoterCommission />} />
+          {/* -------------------------------------Monetary Setting ------------------------------------------- */}
+          <Route path="/commission-settings" element={<CommissionSetting />} />
           <Route path="/coin-settings" element={<CoinSettings />} />
-
+          <Route path="/withdraw-settings" element={<WithDrawSettings />} />
 
            {/* -------------------------------------Reports & Analytics------------------------------------------- */} 
 
            <Route path="/reports" element={<Reports />} />
            <Route path="/staff-performance" element={<StaffPerformance />} />
-
-
-
-
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
