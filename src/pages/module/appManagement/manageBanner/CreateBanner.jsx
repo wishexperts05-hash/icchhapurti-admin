@@ -30,20 +30,28 @@ function CreateBanner() {
     ? {
         bannerType: "Refer",
         serviceType: "Staff",
-        bannerImages: ["https://via.placeholder.com/150x150"],
+        bannerMedia: [
+          { type: "image", url: "https://via.placeholder.com/150x150" },
+        ],
       }
     : null;
 
   const validationSchema = Yup.object({
     bannerType: Yup.string().required("Banner type is required"),
     serviceType: Yup.string().required("Service type is required"),
-    bannerImages: Yup.array().min(1, "At least one image is required"),
+    bannerMedia: Yup.array().min(1, "At least one image or video is required"),
   });
 
   const handleSubmit = (values) => {
     console.log("Form submitted:", values);
-    // Add submit logic here
     navigate("/app-management/manage-banner");
+  };
+
+  const getMediaType = (file) => {
+    if (file instanceof File) {
+      return file.type.startsWith("video/") ? "video" : "image";
+    }
+    return file.type || "image";
   };
 
   return (
@@ -52,14 +60,13 @@ function CreateBanner() {
         <BreadCrumb
           linkText={[
             { text: "Banner", href: "/app-management/manage-banner" },
-            { text: "Banner Details", href: `/app-management/manage-banner/banner-details/` },
+            { text: "Banner Details", href: `/app-management/manage-banner/banner-details/${id}` },
             { text: "Update Banner" },
           ]}
         />
       ) : (
         <BreadCrumb
           linkText={[
-            
             { text: "Banner", href: "/app-management/manage-banner" },
             { text: "Create Banner" },
           ]}
@@ -74,7 +81,7 @@ function CreateBanner() {
           initialValues={{
             bannerType: bannerDetails?.bannerType || "",
             serviceType: bannerDetails?.serviceType || "",
-            bannerImages: bannerDetails?.bannerImages || [],
+            bannerMedia: bannerDetails?.bannerMedia || [],
           }}
           validationSchema={validationSchema}
           enableReinitialize
@@ -99,10 +106,10 @@ function CreateBanner() {
                 />
               </div>
 
-              {/* Image Upload */}
+              {/* Media Upload */}
               <div className="flex flex-col gap-3">
                 <label className="text-sm font-medium">
-                  Upload Banner Image(s)
+                  Upload Banner Media (Images/Videos)
                 </label>
 
                 {/* Upload Button */}
@@ -113,45 +120,64 @@ function CreateBanner() {
                     font-medium shadow hover:bg-[#d45400] hover:shadow-md 
                     transition duration-200 w-fit"
                 >
-                  Add Images
+                  Add Images/Videos
                 </label>
 
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center gap-3">
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/*,video/*"
                     multiple
                     className="hidden"
                     id="banner-upload"
                     onChange={(e) => {
-                      setFieldValue("bannerImages", [
-                        ...values.bannerImages,
-                        ...Array.from(e.target.files),
+                      const files = Array.from(e.target.files);
+                      const newMedia = files.map((file) => ({
+                        file,
+                        type: file.type.startsWith("video/") ? "video" : "image",
+                      }));
+                      setFieldValue("bannerMedia", [
+                        ...values.bannerMedia,
+                        ...newMedia,
                       ]);
                     }}
                   />
 
-                  {values.bannerImages.length > 0 ? (
+                  {values.bannerMedia.length > 0 ? (
                     <div className="flex flex-wrap gap-4 justify-center">
-                      {values.bannerImages.map((file, idx) => {
-                        const src =
-                          file instanceof File
-                            ? URL.createObjectURL(file)
-                            : file;
+                      {values.bannerMedia.map((media, idx) => {
+                        const mediaType = media.file
+                          ? media.type
+                          : media.type || "image";
+                        const src = media.file
+                          ? URL.createObjectURL(media.file)
+                          : media.url;
+
                         return (
                           <div key={idx} className="relative group">
-                            <img
-                              src={src}
-                              alt="Preview"
-                              className="h-24 w-24 rounded-lg object-cover border shadow-sm"
-                            />
+                            {mediaType === "video" ? (
+                              <video
+                                src={src}
+                                className="h-24 w-24 rounded-lg object-cover border shadow-sm"
+                                controls={false}
+                              />
+                            ) : (
+                              <img
+                                src={src}
+                                alt="Preview"
+                                className="h-24 w-24 rounded-lg object-cover border shadow-sm"
+                              />
+                            )}
+                            <div className="absolute top-1 left-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
+                              {mediaType}
+                            </div>
                             <button
                               type="button"
                               onClick={() => {
-                                const updatedFiles = values.bannerImages.filter(
+                                const updatedMedia = values.bannerMedia.filter(
                                   (_, i) => i !== idx
                                 );
-                                setFieldValue("bannerImages", updatedFiles);
+                                setFieldValue("bannerMedia", updatedMedia);
                               }}
                               className="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 
                                 rounded-full text-white p-1 shadow-md opacity-90 
@@ -165,13 +191,13 @@ function CreateBanner() {
                     </div>
                   ) : (
                     <div className="text-gray-400 text-sm">
-                      No Images Selected
+                      No Images or Videos Selected
                     </div>
                   )}
                 </div>
 
                 <ErrorMessage
-                  name="bannerImages"
+                  name="bannerMedia"
                   component="div"
                   className="text-red-500 text-sm"
                 />

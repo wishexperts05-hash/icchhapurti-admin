@@ -89,7 +89,7 @@ const BannerDetails = () => {
           <Button
             variant={1}
             text="Edit Banner"
-            onClick={() => navigate(`manage-banner/banner/update/${id}`)}
+            onClick={() => navigate(`/app-management/manage-banner/edit-banner/:id`)}
           />
         </div>
       </div>
