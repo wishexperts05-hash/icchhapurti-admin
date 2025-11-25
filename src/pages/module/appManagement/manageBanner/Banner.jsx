@@ -21,6 +21,7 @@ function Banner() {
       bannerName: "Refer",
       userType: "Staff",
       bannerImage: "https://via.placeholder.com/150x80",
+      mediaType: "image", // Add this field to identify media type
     },
     {
       _id: "2",
@@ -28,6 +29,7 @@ function Banner() {
       bannerName: "Offer",
       userType: "User",
       bannerImage: "https://via.placeholder.com/150x80",
+      mediaType: "image",
     },
     {
       _id: "3",
@@ -35,6 +37,7 @@ function Banner() {
       bannerName: "Information Banner",
       userType: "User",
       bannerImage: "https://via.placeholder.com/150x80",
+      mediaType: "image",
     },
     {
       _id: "4",
@@ -42,6 +45,7 @@ function Banner() {
       bannerName: "Refer Banner",
       userType: "Staff",
       bannerImage: "https://via.placeholder.com/150x80",
+      mediaType: "image",
     },
   ];
 
@@ -52,11 +56,46 @@ function Banner() {
     console.log("Delete banner with id:", id);
   };
 
+  // Custom render function for banner preview
+  const renderBannerPreview = (row) => {
+    if (row.mediaType === "video") {
+      return (
+        <div className="flex justify-center">
+          <video 
+            src={row.bannerImage} 
+            className="w-32 h-20 object-cover rounded border border-gray-200"
+            controls
+            preload="metadata"
+          >
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      );
+    }
+    
+    return (
+      <div className="flex justify-center">
+        <img 
+          src={row.bannerImage} 
+          alt={row.bannerName}
+          className="w-32 h-20 object-cover rounded border border-gray-200"
+          onError={(e) => {
+            e.target.src = "https://via.placeholder.com/150x80?text=No+Image";
+          }}
+        />
+      </div>
+    );
+  };
+
   const columns = [
     { header: "Sr.No.", field: "srNo" },
     { header: "Banner Name", field: "bannerName" },
     { header: "User Type", field: "userType" },
-    { header: "Banner", field: "bannerImage" },
+    { 
+      header: "Banner", 
+      field: "bannerImage",
+      render: renderBannerPreview // Add custom render function
+    },
     { header: "Action", field: "action" },
   ];
 
@@ -69,7 +108,7 @@ function Banner() {
     {
       icon: <FaRegEdit className="w-5 h-5 text-[#FF6B00]" />,
       title: "Edit",
-      onClick: (row) => navigate(`/app-management/manage-banner/update-banner/${row._id}`),
+      onClick: (row) => navigate(`/app-management/manage-banner/edit-banner/${row._id}`),
     },
     {
       icon: <FiTrash2 className="w-5 h-5 text-red-500" />,
