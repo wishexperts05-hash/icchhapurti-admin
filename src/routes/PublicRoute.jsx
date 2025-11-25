@@ -58,6 +58,7 @@ const EditOrderDetails = lazy(
 // ---------------------------- Report and Analytics ----------------------------
 const Reports = lazy(() => import("../pages/module/report&Analytics/reports/Reports"));
 const StaffPerformance = lazy(() => import("../pages/module/report&Analytics/staffPerformance/StaffPerformance"));
+const LuckyDrawAnalysis = lazy(()=>import("../pages/module/report&Analytics/luckyDrawAnalysis/LuckyDrawAnalysis"))
 
 // ---------------------------- Staff Management ----------------------------
 const StaffManagement = lazy(
@@ -172,12 +173,12 @@ import {
   ManageRedeemRequest,
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
-import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
-import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
-import Reports from "../pages/module/report&Analytics/reports/Reports";
-import StaffPerformance from "../pages/module/report&Analytics/staffPerformance/StaffPerformance";
-import ViewStaff from "../pages/module/staffManagement/addStaff/ViewStaff";
-import LuckyDrawAnalysis from "../pages/module/report&Analytics/luckyDrawAnalysis/LuckyDrawAnalysis";
+// import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
+// import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
+
+
+
+
 
 //------------------------------- Country Management ---------------------------------------------
 const CountryManagementList = lazy(
