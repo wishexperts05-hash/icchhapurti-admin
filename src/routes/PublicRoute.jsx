@@ -459,7 +459,7 @@ function PublicRoute() {
           />
 
           <Route path="chat-support-system" element={<ChatSupportSystem />} />
-          <Route path="chat-support-system/chatbox" element={<ChatBox />} />
+          <Route path="chat-support-system/chatbox/:conversationId" element={<ChatBox />} />
 
 
           {/* -------------------------------------Monetary Setting ------------------------------------------- */}
