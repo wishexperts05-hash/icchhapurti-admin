@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
-import * as Yup from "Yup";
+import * as Yup from "yup";
 
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
