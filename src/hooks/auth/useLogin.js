@@ -42,6 +42,7 @@ const useLogin = () => {
       if (res) {
         setLoading(false);
         toast.success(res?.message);
+        toast.success(res?.data?.otp);
         setAdminResponse(res);
         sessionStorage.setItem("email", res?.data?.email);
         return true;
