@@ -172,6 +172,12 @@ import {
   ManageRedeemRequest,
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
+import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
+import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
+import Reports from "../pages/module/report&Analytics/reports/Reports";
+import StaffPerformance from "../pages/module/report&Analytics/staffPerformance/StaffPerformance";
+import ViewStaff from "../pages/module/staffManagement/addStaff/ViewStaff";
+import LuckyDrawAnalysis from "../pages/module/report&Analytics/luckyDrawAnalysis/LuckyDrawAnalysis";
 
 //------------------------------- Country Management ---------------------------------------------
 const CountryManagementList = lazy(
@@ -471,6 +477,12 @@ function PublicRoute() {
 
            <Route path="/reports" element={<Reports />} />
            <Route path="/staff-performance" element={<StaffPerformance />} />
+
+           <Route path="/lucky-draw-analysis" element={<LuckyDrawAnalysis />} />
+
+
+
+
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}

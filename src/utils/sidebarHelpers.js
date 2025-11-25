@@ -271,7 +271,7 @@ export const allNavigationItems = [
       {
         id: 43,
         title: "Lucky Draw Analysis",
-        url: "/Continue-subscription",
+        url: "/lucky-draw-analysis",
         icon: luckyDrawAnalysisIcon,
         badge: null,
         color: "yellow",
