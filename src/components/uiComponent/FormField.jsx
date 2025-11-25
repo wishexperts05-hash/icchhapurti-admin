@@ -1,6 +1,7 @@
 import React from "react";
 import { useFormikContext } from "formik";
 import ReactSelect from "react-select";
+import { Bold } from "lucide-react";
 
 export default function FormField({
   label,
@@ -13,7 +14,8 @@ export default function FormField({
   isMulti = false,
   readOnly,
   autoComplete="on",
-  disabled=false
+  disabled=false,
+  rightElement
 }) {
   const formik = useFormikContext();
 
@@ -42,10 +44,10 @@ export default function FormField({
       : value ?? "";
 
   return (
-    <div className="flex flex-col   mb-4">
+    <div className="flex flex-col    mb-4">
       {/* Show label above input or next to checkbox */}
       {fieldType === "input" && type === "checkbox" ? (
-        <label className="flex items-center gap-2 cursor-pointer select-none">
+        <label className="flex items-center gap-2 cursor-pointer select-none ">
           <input
             id={name}
             type="checkbox"
@@ -56,8 +58,8 @@ export default function FormField({
             className="hidden" // hide native checkbox
           />
           <span
-            className={`flex items-center justify-center rounded-md border-2 border-orange-500
-        w-5 h-5 sm:w-6 sm:h-6 transition-colors duration-200
+            className={`w-full flex items-center justify-center rounded-md border-2 border-orange-500
+        w-5 h-5 sm:w-6 sm:h-6 transition-colors duration-200 
         ${value ? "bg-orange-500" : "bg-white"}`}
           >
             {value && (
@@ -85,10 +87,11 @@ export default function FormField({
         <>
           <label
             htmlFor={name}
-            className="text-sm font-medium text-[#004AAD] mb-1"
+            className="text-sm font-medium text-[#004AAD] mb-1 "
           >
             {label}
           </label>
+          <div className="relative w-full  ">
           <input
             id={name}
             type={type}
@@ -114,8 +117,26 @@ export default function FormField({
               }
             }}
             onBlur={formik.handleBlur}
-            className="border border-[#CCA547]/80 rounded-lg px-3 py-2 focus:outline-none"
+            className="w-full border border-[#CCA547]/80 rounded-lg px-3 py-2 focus:outline-none"
           />
+         {rightElement && (
+  <div
+    className="
+      absolute 
+      left-[2px] right-[2px] top-[2px] bottom-[2px]
+      rounded-md
+      pointer-events-none
+      flex items-center pl-3
+      bg-white
+      z-10
+    "
+  >
+    {rightElement}
+  </div>
+)}
+
+  </div>
+
         </>
       ) : fieldType === "input" && type === "textarea" ? (
         <>
@@ -180,6 +201,9 @@ export default function FormField({
                 ...base,
                 padding: "0 6px",
                 fontSize: "0.95rem",
+                // fontWeight:500,
+                fontFamily:"Inter",
+                color:"black"
               }),
             }}
           />
