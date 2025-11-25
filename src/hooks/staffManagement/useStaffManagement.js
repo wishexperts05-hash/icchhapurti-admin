@@ -6,7 +6,7 @@ import conf from "../../config/index";
 import Swal from "sweetalert2";
 import { confirmBlock, confirmUnblock } from "../../utils/alertToast";
 import { staffDetailsAtom, staffListAtom } from '../../state/staffManagement/staffManagementState';
-import { data } from 'react-router-dom';
+
 
 
 const useStaffManagement = () => {
@@ -14,6 +14,12 @@ const useStaffManagement = () => {
     const [loading, setLoading] = useState(false);
     const [staffList, setStaffList] = useRecoilState(staffListAtom);
     const [staffDetail, setStaffDetail] = useRecoilState(staffDetailsAtom);
+    const [directSales, setDirectSales] = useState("");
+    const [indirectSales, setIndirectSales] = useState("");
+
+    const [dloading, setDloading] = useState(false);
+    const [iloading, setIloading] = useState(false);
+   
 
     const fetchStaffList = async (page, limit, debouncedSearch) => {
         setLoading(true);
@@ -46,19 +52,79 @@ const useStaffManagement = () => {
         try {
             const res = await fetchData({
                 method: "GET",
-                url: `${conf.apiBaseUrl}admin/staff/get-staff/${id}`,
+                url : `${conf.apiBaseUrl}admin/staff/get-staff/${id}`,
+                headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
             });
+
+           
             if (res) {
                 setStaffDetail(res);
-                setLoading(false);
+                
+                
             }
         } catch (error) {
             console.error("Error fetching staff details:", error);
-            setLoading(false);
+            
         } finally {
             setLoading(false);
         }
     };
+
+
+    const fetchDirectSalesById = async (id, type, page = 1, limit = 10) => {
+        setDloading(true);
+        try {
+            const res = await fetchData({
+                method: "GET",
+                url : `${conf.apiBaseUrl}admin/staff/staff-direct-sales/${id}?type=${type}&page=${page}&limit=${limit}`,
+                headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+            });
+
+           
+            if (res) {
+                setDirectSales(res);
+                
+                
+            }
+        } catch (error) {
+            console.error("Error fetching staff details:", error);
+            
+        } finally {
+            setDloading(false);
+        }
+    };
+
+    const fetchIndirectSalesById = async (id, type, page = 1, limit = 10) => {
+        setIloading(true);
+        try {
+            const res = await fetchData({
+                method: "GET",
+                url : `${conf.apiBaseUrl}admin/staff/staff-indirect-sales/${id}?type=${type}&page=${page}&limit=${limit}`,
+                headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+            });
+
+           
+            if (res) {
+                setIndirectSales(res);
+                
+                
+            }
+        } catch (error) {
+            console.error("Error fetching staff details:", error);
+            
+        } finally {
+            setIloading(false);
+        }
+    };
+
+
+
 
     const addStaff = async (data) => {
         setLoading(true);
@@ -141,9 +207,15 @@ const useStaffManagement = () => {
         setStaffDetail(null);
     };
 
+
+
+
+
     return {
         fetchStaffList, loading, staffList, staffDetail, fetchStaffDetails, addStaff, resetStaffDetails,
-        updateStaff, updateStatus
+        updateStaff, updateStatus,fetchDirectSalesById,directSales,fetchIndirectSalesById,indirectSales, dloading, iloading
+
+
     };
 }
 
