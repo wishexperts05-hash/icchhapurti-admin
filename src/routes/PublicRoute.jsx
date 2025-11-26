@@ -88,8 +88,11 @@ import AddProduct from "../pages/module/productManagment/AddProduct";
 import ManageShippingCost from "../pages/module/productManagment/ManageShippingCost";
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
-import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
-import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
+import AddShippingCostDomestic from "../pages/module/productManagment/AddShippingCostDomestic";
+import AddShippingCostInternational from "../pages/module/productManagment/AddShippingCostInternational"
+import EditDomasticShipingCost from "../pages/module/productManagment/EditDomasticShipingCost";
+import EditInternationalShipingCost from "../pages/module/productManagment/EditInternationalShipingCost"
+// -------------------------offer management --------------
 
 const OfferManagementAdd = lazy(
   () => import("../pages/module/offerManagement/OfferManagementAdd")
