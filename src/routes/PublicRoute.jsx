@@ -214,7 +214,7 @@ const AddWinner = lazy(() =>
   import("../pages/module/rewardManagement/luckyDrawManagement/AddWinner")
 );
 const SpinRewardManagementList = lazy(() =>
-  import("../pages/module/rewardManagement/spinRewardManagement/SpinRewardManagementList")
+  import("../pages/module/rewardManagement/spinRewardManagement/SpinRewardmanagementList")
 );
 const AddSpinReward = lazy(() =>
   import("../pages/module/rewardManagement/spinRewardManagement/AddSpinReward")
