@@ -98,6 +98,7 @@ export default function OfferManagementView() {
                         variant={2}
                         onClick={handleBack}
                     />
+                    
                 </div>
                 </div>
 

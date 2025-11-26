@@ -20,28 +20,9 @@ import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
+import CustomSelect from "../../../../components/uiComponent/CustomSelect";
 
-const CustomSelect = ({ label, value, onChange, options, className }) => {
-  return (
-    <div className="flex flex-col gap-1">
-      <select
-        value={value}
-        onChange={onChange}
-        className={`w-fit px-3 py-2 border border-gray-300 rounded-md 
-          focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white 
-          text-sm ${className}`}
-      >
-        <option value="">Select {label}</option>
 
-        {options.map((item, index) => (
-          <option key={index} value={item.value}>
-            {item.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
 
 const HighestSales = () => {
   const [selectedYear, setSelectedYear] = useState("thisyear");
@@ -282,7 +263,8 @@ const StaffPerformance = () => {
               </div>
             </div>
             <div className="mt-4 rounded-2xl overflow-hidden shadow-lg border border-gray-200">
-              <DataTable columns={columns} data={currentItems} />
+              <DataTable columns={columns} data={currentItems} currentPage={currentPage}
+               usersPerPage={itemsPerPage} />
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

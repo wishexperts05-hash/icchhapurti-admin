@@ -192,7 +192,7 @@ export const allNavigationItems = [
   {
     id: 9,
     title: "Reward Management",
-    url: "/customers",
+    url: "/lucky-draw-management",
     icon: rewardManagementIcon,
     badge: null,
     color: "purple",
@@ -201,7 +201,7 @@ export const allNavigationItems = [
       {
         id: 21,
         title: "Lucky Draw Management",
-        url: "/customers",
+        url: "/lucky-draw-management",
         icon: luckyDrawManagementIcon,
         badge: null,
         color: "blue",
@@ -209,7 +209,7 @@ export const allNavigationItems = [
       {
         id: 22,
         title: "Spin Reward Management",
-        url: "/pg-hostel-owner",
+        url: "/spin-reward-management",
         icon: spinRewardManagementIcon,
         badge: null,
         color: "purple",
@@ -271,7 +271,7 @@ export const allNavigationItems = [
       {
         id: 43,
         title: "Lucky Draw Analysis",
-        url: "/Continue-subscription",
+        url: "/lucky-draw-analysis",
         icon: luckyDrawAnalysisIcon,
         badge: null,
         color: "yellow",

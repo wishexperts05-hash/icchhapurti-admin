@@ -20,6 +20,7 @@ import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
+import CustomSelect from "../../../../components/uiComponent/CustomSelect";
 
 // StatCard Component
 const StatCard = ({ title, value, change, icon, variant }) => {
@@ -110,27 +111,6 @@ const RevenueChart = () => {
   );
 };
 
-const CustomSelect = ({ label, value, onChange, options, className }) => {
-  return (
-    <div className="flex flex-col gap-1">
-      <select
-        value={value}
-        onChange={onChange}
-        className={`w-48 px-3 py-2 border border-gray-300 rounded-md 
-          focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white 
-          text-sm ${className}`}
-      >
-        <option value="">Select {label}</option>
-
-        {options.map((item, index) => (
-          <option key={index} value={item.value}>
-            {item.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
 
 // Main Dashboard Component
 const Reports = () => {
@@ -174,6 +154,7 @@ const Reports = () => {
     { value: "usa", label: "USA" },
     { value: "uk", label: "UK" },
   ];
+  
 
   const cityList = [
     { value: "mumbai", label: "Mumbai" },
@@ -421,14 +402,14 @@ const Reports = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="mt-8 bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6">
             <div className="flex flex-row items-center justify-between mb-4">
               <h3 className="text-xl font-semibold">Revenue Chart</h3>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div>kartik</div>
+            <div className="flex items-center justify-end">
+        
 
               <div className="flex gap-4">
                 <CustomSelect
@@ -476,7 +457,8 @@ const Reports = () => {
               </div>
             </div>
             <div className="mt-4 rounded-2xl overflow-hidden shadow-lg border border-gray-200">
-              <DataTable columns={columns} data={currentItems} />
+              <DataTable columns={columns} data={currentItems}   currentPage={currentPage}
+               usersPerPage={itemsPerPage}/>
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
