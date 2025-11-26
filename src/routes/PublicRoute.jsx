@@ -112,17 +112,17 @@ const BlogManagement = lazy(
 const AddBlog = lazy(
   () => import("../pages/module/blogManagement/addBlog/AddBlog")
 );
-
-const EditBlog = lazy(
-  () => import("../pages/module/blogManagement/addBlog/EditBlog")
+const EditBlog = lazy(() =>
+  import("../pages/module/blogManagement/addBlog/EditBlog")
+);
+const ViewBlog = lazy(() =>
+  import("../pages/module/blogManagement/addBlog/ViewBlog")
 );
 
-const ViewBlog = lazy(
-  () => import("../pages/module/blogManagement/addBlog/ViewBlog")
-);
-// -------------------------------App Management-------------------------------------------------
-const TermsAndConditions = lazy(
-  () => import("../pages/module/appManagement/term&Condition/Terms&Conditions")
+// ---------------------------- App Management ----------------------------
+const TermsAndConditions = lazy(() =>
+  import("../pages/module/appManagement/term&condition/Term&Condition")
+
 );
 const CreateTermsAndConditions = lazy(
   () =>
@@ -189,6 +189,41 @@ const CountryManagementAdd = lazy(
 const CountryManagementEdit = lazy(
   () => import("../pages/module/countryManagement/CountryManagementEdit")
 );
+
+// ---------------------------- Reward Management ----------------------------
+const LuckyDrawManagementList = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementList")
+);
+const LuckyDrawManagementAdd = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementAdd")
+);
+const LuckyDrawManagementView = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementView")
+);
+const LuckyDrawManagementEdit = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementEdit")
+);
+
+const LuckyDrawManagementSelectWinner = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementSelectWinner")
+);
+const AddWinner = lazy(() =>
+  import("../pages/module/rewardManagement/luckyDrawManagement/AddWinner")
+);
+const SpinRewardManagementList = lazy(() =>
+  import("../pages/module/rewardManagement/spinRewardManagement/SpinRewardManagementList")
+);
+const AddSpinReward = lazy(() =>
+  import("../pages/module/rewardManagement/spinRewardManagement/AddSpinReward")
+);
+const EditSpinReward = lazy(() =>
+  import("../pages/module/rewardManagement/spinRewardManagement/EditSpinReward")
+);
+const SetSpinPrice = lazy(() =>
+  import("../pages/module/rewardManagement/spinRewardManagement/SetSpinPrice")
+);
+
+// ---------------------------- Chat Support System ----------------------------
 
 const ChatSupportSystem = lazy(
   () => import("../pages/module/chatSupportSystem/ChatSupportSystem")
