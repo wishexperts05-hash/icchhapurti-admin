@@ -6,20 +6,16 @@ import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import useProductManagement from "../../../hooks/productList/useProductManagment";
 import { toast } from "react-toastify";
-
 const validationSchema = Yup.object({
   cost: Yup.string().required("Required"),
 });
-
 const EditInternationalShippingCost = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-
   const {
     fetchInternationalShippingRateById,
     updateInternationalShippingRate,
   } = useProductManagement();
-
   const formik = useFormik({
     initialValues: {
       type: "International",
