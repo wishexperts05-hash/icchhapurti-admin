@@ -76,3 +76,90 @@ input[type="number"]::-webkit-inner-spin-button {
   margin: 0;
 }
 
+
+
+.custom-ios-picker {
+  width: 150px;
+  outline: none !important;
+  font-size: 15px; 
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  padding-left: 8px;
+  position: relative;
+
+}
+
+.react-calendar {
+  border-radius: 12px !important;
+  padding: 8px !important;
+  border: 1px solid #dcdcdc !important;
+  width: 260px !important;      /* smaller */
+  position: absolute;
+  top: 4px !important;          /* directly below input */
+  right: 0px;
+  z-index: 9999;
+}
+
+/* Month-Year Header */
+.react-calendar__navigation button {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px;
+}
+
+/* Days Grid */
+.react-calendar__tile {
+  padding: 8px 0 !important;
+  font-size: 13px;
+  border-radius: 50% !important;
+}
+
+/* Selected Day */
+.react-calendar__tile--active {
+  background: #facc15 !important;
+  color: white !important;
+}
+
+/* Hover Yellowish */
+.react-calendar__tile:hover {
+  background: #fde047 !important;   /* yellow-ish */
+  color: black;
+}
+
+.react-date-picker__wrapper {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+    border: none;
+}
+
+.react-date-picker__inputGroup__input:invalid {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.react-date-picker__inputGroup__input {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.react-date-picker__inputGroup__input {
+  caret-color: transparent; /* hide cursor */
+}
+
+.react-date-picker__inputGroup__input::-webkit-inner-spin-button,
+.react-date-picker__inputGroup__input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+
+
+
+
+

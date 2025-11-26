@@ -1,55 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import DataTable from "../../../components/uiComponent/DataTable";
 import Pagination from "../../../components/uiComponent/Pagination";
 import { FaEdit } from "react-icons/fa";
 
+import useProductManagement from "../../../hooks/productList/useProductManagment";
+
 const ManageShippingCost = () => {
   const navigate = useNavigate();
+  const { fetchAllDomesticShippingRates, fetchAllInternationalShippingRates, loading } = useProductManagement();
 
-  // 🔹 Tabs
   const [activeTab, setActiveTab] = useState("domestic");
+  const [shippingData, setShippingData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
 
-  // 🔹 Domestic Data
-  const domesticData = [
-    { id: 1, region: "North", cost: "₹ 10" },
-    { id: 2, region: "South", cost: "₹ 10" },
-    { id: 3, region: "Center", cost: "₹ 10" },
-    { id: 4, region: "East", cost: "₹ 10" },
-    { id: 5, region: "West", cost: "₹ 10" },
-  ];
-
-  // 🔹 International Data
-  const internationalData = [
-    { id: 1, region: "Asia", cost: "₹ 50" },
-    { id: 2, region: "Europe", cost: "₹ 80" },
-    { id: 3, region: "Africa", cost: "₹ 70" },
-    { id: 4, region: "America", cost: "₹ 90" },
-    { id: 5, region: "Australia", cost: "₹ 100" },
-  ];
-
-  // 🔹 Columns
   const columns = [
     { header: "Sr.No", field: "srNo" },
-    { header: "Region Name", field: "region" },
+      { header: activeTab === "domestic" ? "Region Name" : "Country", field: "region" },
     { header: "Shipping Cost", field: "cost" },
     { header: "Action", field: "action" },
   ];
 
-  // 🔹 Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  // 🔹 Fetch data based on tab
+  const fetchShippingData = async () => {
+    try {
+      let data = null;
 
-  const tableData = activeTab === "domestic" ? domesticData : internationalData;
-  const totalItems = tableData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+      if (activeTab === "domestic") {
+        data = await fetchAllDomesticShippingRates();
+      } else {
+        data = await fetchAllInternationalShippingRates();
+      }
 
-  // 🔹 Actions
+      if (data && data.items) {
+        const tableFormattedData = data.items.map((item, index) => ({
+          srNo: index + 1,
+          region: item.region ||item.country,
+          cost: `₹ ${item.shippingCost}`,
+          id: item._id,
+        }));
+        setShippingData(tableFormattedData);
+        setTotalItems(data.total);
+      }
+    } catch (error) {
+      console.error("Error fetching shipping data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchShippingData();
+  }, [activeTab]);
+
   const handleEdit = (row) => {
-    navigate("/product-management/shipping-cost/edit-shipping-cost");
+    navigate(`/product-management/shipping-cost/edit-shipping-cost/${row.id}`);
   };
 
   const actions = [
@@ -60,28 +67,27 @@ const ManageShippingCost = () => {
     },
   ];
 
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
   return (
     <div>
-      {/* Breadcrumb */}
       <BreadCrumb
         linkText={[
-          { text: "Product Managment", href: "/product-management" },
+          { text: "Product Management", href: "/product-management" },
           { text: "Manage Shipping Cost", href: "/product-management/shipping-cost" },
         ]}
       />
 
-      {/* Page Header */}
-      <PagePath2 title="Manage Shipping Cost" 
-      showSearch
-      // selectPlaceHolder = "Select Status"
-       showAddButton
-       showSelect
-       options={["Pen", "Book", "Bag"]}
-       selectPlaceHolder = "Select Product Type"
-       addButtonText="Add Shipping Cost"
+      <PagePath2
+        title="Manage Shipping Cost"
+        showSearch
+        showAddButton
+        showSelect
+        options={["Pen", "Book", "Bag"]}
+        selectPlaceHolder="Select Product Type"
+        addButtonText="Add Shipping Cost"
         onClick={() => navigate("/product-management/shipping-cost/add-shipping-cost")}
-       
-       />
+      />
 
       {/* Tabs */}
       <div className="flex justify-between border-b border-gray-300 mt-4">
@@ -89,7 +95,7 @@ const ManageShippingCost = () => {
           onClick={() => setActiveTab("domestic")}
           className={`px-6 py-2 font-semibold w-full ${
             activeTab === "domestic"
-              ? "border-b-4  border-red-700 text-red-700"
+              ? "border-b-4 border-red-700 text-red-700"
               : "text-yellow-600"
           }`}
         >
@@ -111,10 +117,11 @@ const ManageShippingCost = () => {
       <div className="mt-6 bg-white p-4 rounded shadow">
         <DataTable
           columns={columns}
-          data={tableData}
+          data={shippingData}
           actions={actions}
           usersPerPage={itemsPerPage}
           currentPage={currentPage}
+          loading={loading}
         />
       </div>
 

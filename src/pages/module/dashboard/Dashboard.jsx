@@ -262,7 +262,7 @@ const Dashboard = () => {
             <PagePath2
                 title="Dashboard"/>
 
-      <div className="max-w-[1600px] mx-auto px-6 py-8 space-y-8">
+      <div className="max-w-[2000px]  space-y-8">
         {/* Scrollable Stat Cards */}
         <div className="relative">
           <div 

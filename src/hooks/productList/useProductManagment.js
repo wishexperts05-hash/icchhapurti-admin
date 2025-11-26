@@ -14,6 +14,7 @@ const useProductManagement = () => {
   const [loading, setLoading] = useState(false);
   const [fetchData] = useFetch(); 
   const navigate = useNavigate();
+  
 
   const fetchProductList = async (page , limit , search ) => {
     setLoading(true);
@@ -42,6 +43,7 @@ const useProductManagement = () => {
   const resetProductList = () => {
     setProductList([]);
   };
+
 
    const updateProduct = async (id, formdata) => {
         setLoading(true);
@@ -157,6 +159,67 @@ const deleteProductListID = async (id) => {
     }
   };
 
+ const fetchAllDomesticShippingRates = async () => {
+  setLoading(true);
+  try {
+    const res = await fetch(`${conf.apiBaseUrl}admin/shipping/domestic`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch: ${res.statusText}`);
+    }
+
+    const data = await res.json();
+
+    if (data.success) {
+      // Return the whole response so component can use items, total, etc.
+      return data;
+    } else {
+      console.log(data.message || "Failed to fetch shipping rates");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching shipping rates:", error);
+    return null;
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+const fetchAllInternationalShippingRates = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${conf.apiBaseUrl}admin/shipping/international`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
+
+      if (!res.ok) throw new Error(`Failed to fetch: ${res.statusText}`);
+
+      const data = await res.json();
+
+      if (data.success) {
+        return data; // return full response
+      } else {
+        console.log(data.message || "Failed to fetch international shipping rates");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching international shipping rates:", error);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   return {
     loading,
     productList,
@@ -167,7 +230,9 @@ const deleteProductListID = async (id) => {
     updateProduct,
     fetchProductDetailById,
     resetProductDetails,
-    deleteProductListID
+    deleteProductListID,
+    fetchAllDomesticShippingRates,
+    fetchAllInternationalShippingRates,
   };
 };
 

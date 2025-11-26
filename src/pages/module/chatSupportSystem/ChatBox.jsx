@@ -1,42 +1,69 @@
 import { Box, Button, Chip, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
-import { href } from "react-router-dom";
-
+import { href, useLocation, useParams } from "react-router-dom";
+import useChatSystemSuport from "../../../hooks/chatSupportSystem/chatSupportSystem";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 const ChatBox = () => {
-  const data = [
-    {
-      id: 1,
-      type: "incoming",
-      time: "10:15 AM",
-      msg: "Hey! How are you?",
-    },
-    {
-      id: 2,
-      type: "outgoing",
-      time: "10:17 AM",
-      msg: "I'm good! What about you?",
-    },
-    {
-      id: 3,
-      type: "incoming",
-      time: "10:18 AM",
-      msg: "I'm doing great. Did you check the update?",
-    },
-    {
-      id: 4,
-      type: "outgoing",
-      time: "10:20 AM",
-      msg: "Yes, I checked it. Looks perfect!",
-    },
-    {
-      id: 5,
-      type: "incoming",
-      time: "10:22 AM",
-      msg: "Nice! Let's proceed then.",
-    },
-  ];
+  const [messages, setMessages] = useState([]);
+  const [username, setUsername] = useState("");
+  const [participants, setParticipants] = useState([]);
+  const {conversationId} = useParams();
+  const { state } = useLocation();
+  const [text, setText] = useState("");
+
+const {
+    fetchConversationById,
+    loading,sendMessage,
+  } = useChatSystemSuport();
+ 
+console.log("Conversation ID:", conversationId);
+  useEffect(() => {
+  const load = async () => {
+    const result = await fetchConversationById(conversationId);
+    setMessages(result.messages);
+    if (result.messages.length > 0) {
+    setUsername(result.messages[0].name);
+
+    setParticipants(result.conversation.participants);
+}
+
+  };
+  load();
+}, []);
+ console.log("Messages:", messages);
+ console.log("Username:", username);
+ console.log("Participants:", participants);
+
+ const handleSend = async () => {
+  if (!text.trim()) return;
+
+ const user = participants.find(p => p.userType === "User");
+
+  const receiverId = user?.userId; // ALWAYS User ID
+  const receiverType = "User"; // because admin is sending
+
+  const res = await sendMessage({
+    receiverId,
+    receiverType,
+    message: text,
+  });
+
+  if (res) {
+    // Add outgoing message to UI
+    setMessages(prev => [
+      ...prev,
+      {
+        msg: text,
+        type: "outgoing",
+        time: new Date().toLocaleTimeString(),
+      },
+    ]);
+    setText("");
+  }
+};
+
 
   return (
     <Box>
@@ -47,6 +74,12 @@ const ChatBox = () => {
         ]}
       />
       <PagePath2 title="Chat " />
+      <div>
+                    {loading ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <LoaderSpinner />
+              </div>
+            ) : (
       <Box
         sx={{
           // background: "white",
@@ -78,7 +111,7 @@ const ChatBox = () => {
             <Box sx={{}}>
               <img src="" alt="img" />
             </Box>
-            <Typography fontWeight="bold">Pratik </Typography>
+            <Typography fontWeight="bold">{username} </Typography>
           </Box>
           <Box
             sx={{
@@ -111,7 +144,7 @@ const ChatBox = () => {
               scrollbarWidth: "thin",
             }}
           >
-            {data.map((item, index) => (
+            {messages.map((item, index) => (
               <Box key={index}>
                 <Box
                   sx={{
@@ -168,31 +201,43 @@ const ChatBox = () => {
               alignItems: "center",
             }}
           >
-            <TextField fullWidth placeholder="Type a message..." size="small" />
-            <Box
-              sx={{
-                background: "#5D5FEF",
-                p: 1.5,
-                boxSizing: "border-box",
-                borderRadius: 2,
-              }}
-            >
-              <svg
-                width="23"
-                height="21"
-                viewBox="0 0 23 21"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0.0107555 20.25L22.5865 10.125L0.0107555 0L0 7.875L16.1332 10.125L0 12.375L0.0107555 20.25Z"
-                  fill="white"
-                />
-              </svg>
-            </Box>
+            <TextField
+  fullWidth
+  placeholder="Type a message..."
+  size="small"
+  value={text}
+  onChange={(e) => setText(e.target.value)}
+/>
+
+<Box
+  sx={{
+    background: "#5D5FEF",
+    p: 1.5,
+    boxSizing: "border-box",
+    borderRadius: 2,
+    cursor: "pointer",
+  }}
+  onClick={handleSend}
+>
+  <svg
+    width="23"
+    height="21"
+    viewBox="0 0 23 21"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M0.0107555 20.25L22.5865 10.125L0.0107555 0L0 7.875L16.1332 10.125L0 12.375L0.0107555 20.25Z"
+      fill="white"
+    />
+  </svg>
+</Box>
+
           </Box>
         </Box>
       </Box>
+            )}
+      </div>
     </Box>
   );
 };

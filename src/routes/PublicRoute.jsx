@@ -11,62 +11,76 @@ const ForgotPassword = lazy(() => import("../pages/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/auth/ResetPassword"));
 
 const Dashboard = lazy(() => import("../pages/module/dashboard/Dashboard"));
-const AdminProfile = lazy(() =>
-  import("../pages/module/adminProfile/AdminProfile")
+const AdminProfile = lazy(
+  () => import("../pages/module/adminProfile/AdminProfile")
 );
-const EditProfile = lazy(() =>
-  import("../pages/module/adminProfile/EditProfile")
+const EditProfile = lazy(
+  () => import("../pages/module/adminProfile/EditProfile")
 );
 const Layout = lazy(() => import("../components/Layouts/Layout"));
 
 // ---------------------------- User Management ----------------------------
-const UserManagement = lazy(() =>
-  import("../pages/module/userManagement/UserManagementList")
+const UserManagement = lazy(
+  () => import("../pages/module/userManagement/UserManagementList")
 );
-const UserDetails = lazy(() =>
-  import("../pages/module/userManagement/UserManagementDetails")
+const UserDetails = lazy(
+  () => import("../pages/module/userManagement/UserManagementDetails")
 );
 
 // ---------------------------- Promoter Management ----------------------------
-const PromoterManagement = lazy(() =>
-  import("../pages/module/promotermanagement/PromoterManagement")
+const PromoterManagement = lazy(
+  () => import("../pages/module/promotermanagement/PromoterManagement")
 );
-const PromoterManagementEdit = lazy(() =>
-  import("../pages/module/promotermanagement/PromoterManagementEdit")
+const PromoterManagementEdit = lazy(
+  () => import("../pages/module/promotermanagement/PromoterManagementEdit")
 );
-const PromoterManagementAdd = lazy(() =>
-  import("../pages/module/promotermanagement/PromoterManagementAdd")
+const PromoterManagementAdd = lazy(
+  () => import("../pages/module/promotermanagement/PromoterManagementAdd")
+);
+const PromoterDetails = lazy(
+  () => import("../pages/module/promotermanagement/PromotorDetails")
 );
 
 // ---------------------------- Order Management ----------------------------
-const OrderManagement = lazy(() =>
-  import("../pages/module/OrderManagement/OrderManagement")
-);
-const OrderDetails = lazy(() =>
-  import("../pages/module/OrderManagement/OrderDetails")
-);
-const EditOrderDetails = lazy(() =>
-  import("../pages/module/OrderManagement/EditOrderDetails")
+
+
+const OrderManagement = lazy(
+  () => import("../pages/module/OrderManagement/OrderManagement")
 );
 
+const OrderDetails = lazy(
+  () => import("../pages/module/OrderManagement/OrderDetails")
+);
+
+const EditOrderDetails = lazy(
+  () => import("../pages/module/OrderManagement/EditOrderDetails")
+);
+// ---------------------------- Report and Analytics ----------------------------
+const Reports = lazy(() => import("../pages/module/report&Analytics/reports/Reports"));
+const StaffPerformance = lazy(() => import("../pages/module/report&Analytics/staffPerformance/StaffPerformance"));
+const LuckyDrawAnalysis = lazy(()=>import("../pages/module/report&Analytics/luckyDrawAnalysis/LuckyDrawAnalysis"))
+
 // ---------------------------- Staff Management ----------------------------
-const StaffManagement = lazy(() =>
-  import("../pages/module/staffManagement/staffList/StaffListing")
+const StaffManagement = lazy(
+  () => import("../pages/module/staffManagement/staffList/StaffListing")
 );
-const AddStaffForm = lazy(() =>
-  import("../pages/module/staffManagement/addStaff/AddStaff")
+const AddStaffForm = lazy(
+  () => import("../pages/module/staffManagement/addStaff/AddStaff")
 );
-const EditStaff = lazy(() =>
-  import("../pages/module/staffManagement/addStaff/EditStaff")
+const EditStaff = lazy(
+  () => import("../pages/module/staffManagement/addStaff/EditStaff")
 );
-const AttendanceListing = lazy(() =>
-  import("../pages/module/staffManagement/attendance/AttendanceListing")
+const AttendanceListing = lazy(
+  () => import("../pages/module/staffManagement/attendance/AttendanceListing")
 );
-const StaffSales = lazy(() =>
-  import("../pages/module/staffManagement/Sales/SalesListing")
+const StaffSales = lazy(
+  () => import("../pages/module/staffManagement/Sales/SalesListing")
 );
-const StaffMapPage = lazy(() =>
-  import("../pages/module/staffManagement/attendance/StaffMapPage")
+const StaffMapPage = lazy(
+  () => import("../pages/module/staffManagement/attendance/StaffMapPage")
+);
+const ViewStaff = lazy(
+  () => import("../pages/module/staffManagement/addStaff/ViewStaff")
 );
 
 // ---------------------------- Product Management (Non-lazy) ----------------------------
@@ -77,96 +91,123 @@ import ViewProduct from "../pages/module/productManagment/ViewProduct";
 import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
 import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
 
-// ---------------------------- Offer Management ----------------------------
-const OfferManagementAdd = lazy(() =>
-  import("../pages/module/offerManagement/OfferManagementAdd")
+const OfferManagementAdd = lazy(
+  () => import("../pages/module/offerManagement/OfferManagementAdd")
 );
-const OfferManagementEdit = lazy(() =>
-  import("../pages/module/offerManagement/OfferManagementEdit")
+const OfferManagementEdit = lazy(
+  () => import("../pages/module/offerManagement/OfferManagementEdit")
 );
-const OfferManagementList = lazy(() =>
-  import("../pages/module/offerManagement/OfferManagementList")
+const OfferManagementList = lazy(
+  () => import("../pages/module/offerManagement/OfferManagementList")
 );
-const OfferManagementView = lazy(() =>
-  import("../pages/module/offerManagement/OfferManagementView")
+const OfferManagementView = lazy(
+  () => import("../pages/module/offerManagement/OfferManagementView")
 );
 
 // ---------------------------- Blog Management ----------------------------
-const BlogManagement = lazy(() =>
-  import("../pages/module/blogManagement/blogList/BlogListing")
+
+const BlogManagement = lazy(
+  () => import("../pages/module/blogManagement/blogList/BlogListing")
 );
-const AddBlog = lazy(() =>
-  import("../pages/module/blogManagement/addBlog/AddBlog")
-);
-const EditBlog = lazy(() =>
-  import("../pages/module/blogManagement/addBlog/EditBlog")
-);
-const ViewBlog = lazy(() =>
-  import("../pages/module/blogManagement/addBlog/ViewBlog")
+const AddBlog = lazy(
+  () => import("../pages/module/blogManagement/addBlog/AddBlog")
 );
 
-// ---------------------------- App Management ----------------------------
-const TermsAndConditions = lazy(() =>
-  import("../pages/module/appManagement/term&condition/Term&Condition")
+const EditBlog = lazy(
+  () => import("../pages/module/blogManagement/addBlog/EditBlog")
+);
+
+const ViewBlog = lazy(
+  () => import("../pages/module/blogManagement/addBlog/ViewBlog")
+);
+// -------------------------------App Management-------------------------------------------------
+const TermsAndConditions = lazy(
+  () => import("../pages/module/appManagement/term&Condition/Terms&Conditions")
+);
+const CreateTermsAndConditions = lazy(
+  () =>
+    import("../pages/module/appManagement/term&Condition/CreateTerms&Conditions")
+);
+const ViewTermsAndConditions = lazy(
+  () => import("../pages/module/appManagement/term&Condition/ViewTerms&Conditions")
 );
 import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
 
-// ---------------------------- Manage Redeem Request ----------------------------
+const PrivacyPolicy = lazy(
+  () => import("../pages/module/appManagement/privicy&Policy/Privacy&Policy")
+);
+const CreatePrivacyPolicy = lazy(
+  () => import("../pages/module/appManagement/privicy&Policy/CreatePrivacy&Policy")
+);
+const ViewPrivacyPolicy = lazy(
+  () => import("../pages/module/appManagement/privicy&Policy/ViewPrivacy&Policy")
+);
+const OtherSettings = lazy(
+  () => import("../pages/module/appManagement/otherSettings/OtherSettings")
+);
+// ---------------------------- Banner Management ----------------------------
+const Banner = lazy(
+  () => import("../pages/module/appManagement/manageBanner/Banner")
+);
+const BannerDetails = lazy(
+  () => import("../pages/module/appManagement/manageBanner/BannerDetails")
+);
+const CreateBanner = lazy(
+  () => import("../pages/module/appManagement/manageBanner/CreateBanner")
+);
+const UpdateBanner = lazy(
+  () => import("../pages/module/appManagement/manageBanner/CreateBanner")
+);
+const EditBanner = lazy(
+  () => import("../pages/module/appManagement/manageBanner/CreateBanner")
+);
+
+// ---------------------------- Help & Support Number ----------------------------
+
+const HelpSupport = lazy(
+  () => import("../pages/module/appManagement/help&Support/Help&Support")
+);
+//-------------------------Manage Redeem Request-----------------------------------------
 import {
   ManageRedeemRequest,
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
+// import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
+// import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
 
-// ---------------------------- Country Management ----------------------------
-const CountryManagementList = lazy(() =>
-  import("../pages/module/countryManagement/CountryManagementList")
-);
-const CountryManagementAdd = lazy(() =>
-  import("../pages/module/countryManagement/CountryManagementAdd")
-);
-const CountryManagementEdit = lazy(() =>
-  import("../pages/module/countryManagement/CountryManagementEdit")
-);
 
-// ---------------------------- Reward Management ----------------------------
-const LuckyDrawManagementList = lazy(() =>
-  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementList")
+
+
+
+//------------------------------- Country Management ---------------------------------------------
+const CountryManagementList = lazy(
+  () => import("../pages/module/countryManagement/CountryManagementList")
 );
-const LuckyDrawManagementAdd = lazy(() =>
-  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementAdd")
+const CountryManagementAdd = lazy(
+  () => import("../pages/module/countryManagement/CountryManagementAdd")
 );
-const LuckyDrawManagementView = lazy(() =>
-  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementView")
-);
-const LuckyDrawManagementEdit = lazy(() =>
-  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementEdit")
+const CountryManagementEdit = lazy(
+  () => import("../pages/module/countryManagement/CountryManagementEdit")
 );
 
-const LuckyDrawManagementSelectWinner = lazy(() =>
-  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementSelectWinner")
-);
-const AddWinner = lazy(() =>
-  import("../pages/module/rewardManagement/luckyDrawManagement/AddWinner")
-);
-const SpinRewardManagementList = lazy(() =>
-  import("../pages/module/rewardManagement/spinRewardManagement/SpinRewardManagementList")
-);
-const AddSpinReward = lazy(() =>
-  import("../pages/module/rewardManagement/spinRewardManagement/AddSpinReward")
-);
-const EditSpinReward = lazy(() =>
-  import("../pages/module/rewardManagement/spinRewardManagement/EditSpinReward")
-);
-const SetSpinPrice = lazy(() =>
-  import("../pages/module/rewardManagement/spinRewardManagement/SetSpinPrice")
-);
-
-// ---------------------------- Chat Support System ----------------------------
-const ChatSupportSystem = lazy(() =>
-  import("../pages/module/chatSupportSystem/ChatSupportSystem")
+const ChatSupportSystem = lazy(
+  () => import("../pages/module/chatSupportSystem/ChatSupportSystem")
 );
 const ChatBox = lazy(() =>
   import("../pages/module/chatSupportSystem/ChatBox")
+);
+
+
+
+// ---------------------------- Monetary Settings ----------------------------
+const CommissionSetting = lazy(
+  () => import("../pages/module/monetarySettings/commissionSettings/CommissionSetting")
+);
+const CoinSettings = lazy(
+  () => import("../pages/module/monetarySettings/coinSettings/CoinSettings")
+);
+const WithDrawSettings = lazy(
+  () => import("../pages/module/monetarySettings/withdrawSettings/WithDrawSettings")
 );
 
 function PublicRoute() {
@@ -206,14 +247,18 @@ function PublicRoute() {
           <Route path="adminProfile/editProfile" element={<EditProfile />} />
 
           {/* ---------------------------- Promoter Management ---------------------------- */}
-          <Route path="promotermanagement" element={<PromoterManagement />} />
+          <Route path="promoter-management" element={<PromoterManagement />} />
           <Route
-            path="promotermanagementedit"
+            path="/promoter-management/promoter-managementedit"
             element={<PromoterManagementEdit />}
           />
           <Route
-            path="promotermanagementadd"
+            path="/promoter-management/promoter-managementadd"
             element={<PromoterManagementAdd />}
+          />
+          <Route
+            path="/promoter-management/promoter-details"
+            element={<PromoterDetails />}
           />
 
           {/* -------------------------- Order Management -------------------------- */}
@@ -248,7 +293,7 @@ function PublicRoute() {
           {/* -------------------------- User Management -------------------------- */}
           <Route path="user-management" element={<UserManagement />} />
           <Route
-            path="user-management/user-details"
+            path="user-management/user-details/:id"
             element={<UserDetails />}
           />
 
@@ -272,13 +317,16 @@ function PublicRoute() {
             }
           />
           <Route
-            path="/staff-management/editStaff"
-            element={
-              <EditStaff
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
-              />
-            }
+            path="/staff-management/staff-details/:id"
+            element={<ViewStaff />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+          />
+          <Route
+            path="/staff-management/editStaff/:id"
+            element={<EditStaff />}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
           />
           <Route
             path="/staff-management/attendanceListing"
@@ -362,14 +410,65 @@ function PublicRoute() {
             element={<ViewBlog />}
           />
 
-          {/* -------------------------- App Management -------------------------- */}
+          {/* App Management */}
+          <Route path="/app-management" element={<TermsAndConditions />} />  
           <Route
-            path="/app-management/termandcondition"
-            element={<TermsAndConditions />}
+            path="/app-management/terms-and-conditions"
+            element={<TermsAndConditions />}  
+          />
+           <Route
+            path="/app-management/create-terms-and-conditions"
+            element={<CreateTermsAndConditions />}  
+          />  
+          <Route
+          path="/app-management/edit-terms-and-conditions/:id"
+            element={<CreateTermsAndConditions />}
+          /> 
+          <Route
+            path="/app-management/terms-and-conditions/view"
+            element={<ViewTermsAndConditions />}
           />
           <Route
-            path="/app-management/edittermandcondition"
-            element={<EditTermsAndConditions />}
+            path="/app-management/privacy-policy"
+            element={<PrivacyPolicy />} 
+          />
+          <Route
+            path="/app-management/create-privacy-policy"
+            element={<CreatePrivacyPolicy />}
+          />
+          <Route
+            path="/app-management/edit-privacy-policy/:id"  
+            element={<CreatePrivacyPolicy />}
+          />
+          <Route
+            path="/app-management/privacy-policy/view/"
+            element={<ViewPrivacyPolicy />}
+          />
+         
+          <Route path="/app-management/manage-banner" element={<Banner />} />
+          <Route
+            path="/app-management/manage-banner/banner-details/:id"   
+            element={<BannerDetails />}
+          />
+          <Route
+            path="/app-management/manage-banner/create-banner"
+            element={<CreateBanner />}
+          />
+       <Route
+            path="/app-management/manage-banner/edit-banner/:id"
+            element={<EditBanner />}
+          />
+          <Route
+            path="/app-management/manage-banner/update-banner/:id"
+            element={<UpdateBanner />}
+          />
+          <Route
+           path="/app-management/help-and-support"
+            element={<HelpSupport />} 
+            />
+            <Route
+            path="/app-management/other-settings"
+            element={<OtherSettings />} 
           />
 
           {/* -------------------------- Country Management -------------------------- */}
@@ -382,8 +481,8 @@ function PublicRoute() {
             element={<CountryManagementAdd />}
           />
           <Route
-            path="country-management/edit-country"
-            element={<CountryManagementEdit />}
+            path="country-management/edit-country/:id"
+            element={<CountryManagementAdd />}
           />
 
           {/* -------------------------- Reward Management -------------------------- */}
@@ -441,7 +540,24 @@ function PublicRoute() {
 
           {/* -------------------------- Chat Support System -------------------------- */}
           <Route path="chat-support-system" element={<ChatSupportSystem />} />
-          <Route path="chat-support-system/chatbox" element={<ChatBox />} />
+          <Route path="chat-support-system/chatbox/:conversationId" element={<ChatBox />} />
+
+
+          {/* -------------------------------------Monetary Setting ------------------------------------------- */}
+          <Route path="/commission-settings" element={<CommissionSetting />} />
+          <Route path="/coin-settings" element={<CoinSettings />} />
+          <Route path="/withdraw-settings" element={<WithDrawSettings />} />
+
+           {/* -------------------------------------Reports & Analytics------------------------------------------- */} 
+
+           <Route path="/reports" element={<Reports />} />
+           <Route path="/staff-performance" element={<StaffPerformance />} />
+
+           <Route path="/lucky-draw-analysis" element={<LuckyDrawAnalysis />} />
+
+
+
+
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}

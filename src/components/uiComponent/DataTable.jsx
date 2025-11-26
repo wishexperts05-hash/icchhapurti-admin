@@ -70,11 +70,12 @@ const DataTable = ({
                             displayValue === "Confirmed" ||
                             displayValue === "Ongoing" ||
                             displayValue === "Shown" ||
-                            displayValue === "Resolved"
+                            displayValue === "Resolved" ||
+                            displayValue === "Active"
                               ? "bg-green-100 text-green-700"
                               : displayValue === "Absent" ||
                                 displayValue === "Upcoming" ||
-                                displayValue === "Blocked" ||
+                                // displayValue === "Blocked" ||
                                 displayValue === "Created" ||
                                 displayValue === "Pending"
                               ? "bg-yellow-100 text-yellow-700"
