@@ -122,7 +122,7 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
   const columns = [
     { header: "Sr. No.", field: "srNo" },
     { header: "Lucky Draw ID", field: "luckyDrawId" },
-    { header: "Event Name", field: "eventName" },
+    { header: "Draw Name", field: "eventName" },
     { header: "Start - End Date", field: "startEndDate" },
     { header: "Status", field: "status" },
     { header: "Action", field: "action" },
