@@ -524,24 +524,24 @@ function PublicRoute() {
             element={<LuckyDrawManagementList />}
           />
           <Route
-            path="lucky-draw-management/view-lucky-draw"
+            path="/lucky-draw-management/view-lucky-draw"
             element={<LuckyDrawManagementView />}
           />
           <Route
-            path="lucky-draw-management/add-lucky-draw"
+            path="/lucky-draw-management/add-lucky-draw"
             element={<LuckyDrawManagementAdd />}
           />
           <Route
-            path="lucky-draw-management/edit-lucky-draw"
+            path="/lucky-draw-management/edit-lucky-draw"
             element={<LuckyDrawManagementEdit />}
           />
           
           <Route
-            path="lucky-draw-management/select-winner"
+            path="/lucky-draw-management/select-winner"
             element={<LuckyDrawManagementSelectWinner />}
           />
           <Route
-            path="lucky-draw-management/add-winner"
+            path="/lucky-draw-management/add-winner"
             element={<AddWinner />}
           />
           <Route
