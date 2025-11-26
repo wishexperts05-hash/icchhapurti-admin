@@ -6,11 +6,9 @@ import DataTable from "../../../../components/uiComponent/DataTable";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaRegEdit } from "react-icons/fa";
 import Pagination from "../../../../components/uiComponent/Pagination";
-import useManageRedeemRequest from "../../../../hooks/ManageRedeemRequest/useManageRedeemRequest";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import { Trash2 } from "lucide-react";
 import useCommissionSetting from "../../../../hooks/monetarySettings/useCommissionSetting";
-import { use } from "react";
 import useDebounce from "../../../../hooks/debounce/useDebounce";
 
 const CommissionSetting = () => {
@@ -18,18 +16,10 @@ const CommissionSetting = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
-  const { fetchCommissionSettingsList, loading, commissionSettingList } = useCommissionSetting();
+  const { fetchCommissionSettingsList, loading, commissionSettingList, deleteCommissionSetting } = useCommissionSetting();
   const debouncedSearch = useDebounce(search, 500);
   const [userType, setUserType] = useState("");
   const [salesType, setSalesType] = useState("");
-
-  const {
-    loading: redeemRequestLoading,
-    fetchRedeemRequests,
-    redeemRequests,
-    fetchDropdownOfStatus,
-    dropdownOfStatus,
-  } = useManageRedeemRequest();
 
   useEffect(() => {
     fetchCommissionSettingsList(page, limit, debouncedSearch, userType, salesType);
@@ -62,6 +52,11 @@ const CommissionSetting = () => {
     setPage(1);
   };
 
+  const handleDelete = async (row) => {
+    await deleteCommissionSetting(row._id);
+    fetchCommissionSettingsList(page, limit, debouncedSearch, userType, salesType);
+  }
+
   const columns = [
     { header: "Sr.No", field: "srNo" },
     { header: "Sales Type", field: "salesType" },
@@ -90,7 +85,7 @@ const CommissionSetting = () => {
     },
     {
       icon: <Trash2 className="w-5 h-5 text-red-600" />,
-      //  onClick: handleDelete,
+      onClick: handleDelete,
       title: "Delete",
     },
   ];
