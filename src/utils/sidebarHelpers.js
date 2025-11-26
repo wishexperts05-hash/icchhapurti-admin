@@ -276,14 +276,7 @@ export const allNavigationItems = [
         badge: null,
         color: "yellow",
       },
-      {
-        id: 44,
-        title: "Blocked User & Staffs",
-        url: "/cms/notification-management",
-        icon: blockedUserandStaffsIcon,
-        badge: null,
-        color: "yellow",
-      },
+   
     ],
   },
   {
@@ -345,14 +338,14 @@ export const allNavigationItems = [
     badge: null,
     color: "yellow",
   },
-  {
-    id: 15,
-    title: "Product Managment",
-    url: "/productMangment",
-    icon: productManagementIcon,
-    badge: null,
-    color: "gray",
-  },
+  // {
+  //   id: 15,
+  //   title: "Product Managment",
+  //   url: "/productMangment",
+  //   icon: productManagementIcon,
+  //   badge: null,
+  //   color: "gray",
+  // },
   {
     id: 16,
     title: "Theme Customization",

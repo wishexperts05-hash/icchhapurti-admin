@@ -40,12 +40,12 @@ const useUserManagement = () => {
         }
     };
 
-    const fetchUserDetails = async (id) => {
+    const fetchUserDetails = async (id, type, page = 1, limit = 10) => {
         setLoading(true);
         try {
             const res = await fetchData({
                 method: "GET",
-                url: `${conf.apiBaseUrl}admin/user/${id}`,
+                url: `${conf.apiBaseUrl}admin/user/${id}?type=${type}&page=${page}&limit=${limit}`,
             });
             if (res) {
                 setUserDetail(res);
