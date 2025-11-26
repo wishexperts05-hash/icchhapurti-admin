@@ -276,14 +276,7 @@ export const allNavigationItems = [
         badge: null,
         color: "yellow",
       },
-      {
-        id: 44,
-        title: "Blocked User & Staffs",
-        url: "/cms/notification-management",
-        icon: blockedUserandStaffsIcon,
-        badge: null,
-        color: "yellow",
-      },
+   
     ],
   },
   {
