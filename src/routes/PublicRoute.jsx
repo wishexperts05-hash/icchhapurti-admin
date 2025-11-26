@@ -520,7 +520,7 @@ function PublicRoute() {
 
           {/* -------------------------- Reward Management -------------------------- */}
           <Route
-            path="lucky-draw-management"
+            path="/lucky-draw-management"
             element={<LuckyDrawManagementList />}
           />
           <Route
