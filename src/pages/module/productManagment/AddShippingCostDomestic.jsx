@@ -5,34 +5,47 @@ import { useNavigate } from "react-router-dom";
 
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
+import { Select } from "@mui/material";
+import useProductManagement from "../../../hooks/productList/useProductManagment";
+import { toast } from "react-toastify";
+
+
 
 // 🔹 Validation Schema
 const validationSchema = Yup.object({
   type: Yup.string().required("Required"),
   zone: Yup.string().required("Required"),
-  category: Yup.string().required("Required"),
-  cost: Yup.string()
-    .matches(/^₹?\s?\d+$/, "Enter valid amount")
-    .required("Required"),
+  cost: Yup.number().required("Required"),
 });
 
 const AddShippingCost = () => {
   const navigate = useNavigate();
-
+  const { addDomesticShippingRate } = useProductManagement();
   // 🔹 Formik Setup
   const formik = useFormik({
-    initialValues: {
-      type: "Domestic",
-      zone: "West",
-      category: "Pen",
-      cost: "₹ 10",
-    },
-    validationSchema,
-    onSubmit: (values) => {
-      alert(`Shipping cost added:\n${JSON.stringify(values, null, 2)}`);
+  initialValues: {
+    type: "Domestic",
+    zone: "North",
+    cost: "",
+  },
+
+  validationSchema,
+  onSubmit: async (values) => {
+    const payload = {
+      region: values.zone,
+      shippingCost: Number(values.cost.replace("₹", "").trim())
+    };
+
+    const res = await addDomesticShippingRate(payload);
+
+    if (res?.success) {
+      toast.success("Domestic Shipping Cost Added Successfully!");
       navigate("/product-management/shipping-cost");
-    },
-  });
+    } else {
+      toast.error(res?.message || "Failed to add shipping cost");
+    }
+  },
+});
 
   return (
     <div>
@@ -40,13 +53,14 @@ const AddShippingCost = () => {
       <BreadCrumb
         linkText={[
           { text: "Product Management", href: "/product-management" },
-            { text: "Manage Shipping Cost", href: "/product-management/shipping-cost" },
-          { text: "Edit Shipping Cost", href: "/product-management/shipping-cost/edit-shipping-cost" },
+          { text: "Manage Shipping Cost", href: "/product-management/shipping-cost" },
+          
+          { text: "Add Shipping Cost", href: "/product-management/shipping-cost/add-shipping-cost" },
         ]}
       />
 
       {/* Page Title */}
-      <PagePath2 title="Edit Shipping Cost" />
+      <PagePath2 title="Add Shipping Cost" />
 
       <form onSubmit={formik.handleSubmit} className="mt-6 bg-white p-6 rounded shadow">
         {/* Form Grid */}
@@ -64,7 +78,7 @@ const AddShippingCost = () => {
               className="w-full border rounded-md px-3 py-2"
             >
               <option value="Domestic">Domestic</option>
-              <option value="International">International</option>
+              {/* <option value="International">International</option> */}
             </select>
             {formik.touched.type && formik.errors.type && (
               <p className="text-red-500 text-sm mt-1">{formik.errors.type}</p>
@@ -73,7 +87,7 @@ const AddShippingCost = () => {
 
           {/* Select Zone */}
           <div>
-            <label className="block font-medium mb-2">Select Zone :</label>
+            <label className="block font-medium mb-2">Select Region :</label>
             <select
               name="zone"
               value={formik.values.zone}
@@ -93,7 +107,7 @@ const AddShippingCost = () => {
           </div>
 
           {/* Product Category */}
-          <div>
+          {/* <div>
             <label className="block font-medium mb-2">Product Category :</label>
             <select
               name="category"
@@ -110,7 +124,7 @@ const AddShippingCost = () => {
             {formik.touched.category && formik.errors.category && (
               <p className="text-red-500 text-sm mt-1">{formik.errors.category}</p>
             )}
-          </div>
+          </div> */}
 
           {/* Shipping Cost */}
           <div>
