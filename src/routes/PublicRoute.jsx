@@ -112,17 +112,17 @@ const BlogManagement = lazy(
 const AddBlog = lazy(
   () => import("../pages/module/blogManagement/addBlog/AddBlog")
 );
-const EditBlog = lazy(() =>
-  import("../pages/module/blogManagement/addBlog/EditBlog")
-);
-const ViewBlog = lazy(() =>
-  import("../pages/module/blogManagement/addBlog/ViewBlog")
+
+const EditBlog = lazy(
+  () => import("../pages/module/blogManagement/addBlog/EditBlog")
 );
 
-// ---------------------------- App Management ----------------------------
-const TermsAndConditions = lazy(() =>
-  import("../pages/module/appManagement/term&condition/Term&Condition")
-
+const ViewBlog = lazy(
+  () => import("../pages/module/blogManagement/addBlog/ViewBlog")
+);
+// -------------------------------App Management-------------------------------------------------
+const TermsAndConditions = lazy(
+  () => import("../pages/module/appManagement/term&Condition/Terms&Conditions")
 );
 const CreateTermsAndConditions = lazy(
   () =>
@@ -131,7 +131,7 @@ const CreateTermsAndConditions = lazy(
 const ViewTermsAndConditions = lazy(
   () => import("../pages/module/appManagement/term&Condition/ViewTerms&Conditions")
 );
-import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
+// import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
 
 const PrivacyPolicy = lazy(
   () => import("../pages/module/appManagement/privicy&Policy/Privacy&Policy")
@@ -228,11 +228,9 @@ const SetSpinPrice = lazy(() =>
 const ChatSupportSystem = lazy(
   () => import("../pages/module/chatSupportSystem/ChatSupportSystem")
 );
-const ChatBox = lazy(() =>
-  import("../pages/module/chatSupportSystem/ChatBox")
-);
 
 
+const ChatBox = lazy(() => import("../pages/module/chatSupportSystem/ChatBox"));
 
 // ---------------------------- Monetary Settings ----------------------------
 const CommissionSetting = lazy(
