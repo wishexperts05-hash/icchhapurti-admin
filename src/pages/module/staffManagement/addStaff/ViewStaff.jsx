@@ -227,7 +227,7 @@ const ViewStaff = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <DetailsField
                 label="Current Wallet Balance"
-                value={staffDetail?.wallet?.balance}
+                value={staffDetail?.wallet?.balance }
                 type="number"
               />
 
