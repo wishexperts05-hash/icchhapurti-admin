@@ -4,7 +4,7 @@ function DetailsField({ label, value, type = "text", className = "" }) {
       <label className="text-sm font-medium text-gray-600">{label}</label>
       <input
         type={type}
-        value={value || ""}
+        value={value}
         readOnly
         className={`bg-white border border-gray-300 rounded-[8px] px-4 py-3 outline-none ${className}`}
       />
