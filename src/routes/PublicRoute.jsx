@@ -223,7 +223,7 @@ const SetSpinPrice = lazy(() =>
   import("../pages/module/rewardManagement/spinRewardManagement/SetSpinPrice")
 );
 
-// ---------------------------- Chat Support System ----------------------------
+// ---------------------------- Chat Support System ---------
 
 const ChatSupportSystem = lazy(
   () => import("../pages/module/chatSupportSystem/ChatSupportSystem")
