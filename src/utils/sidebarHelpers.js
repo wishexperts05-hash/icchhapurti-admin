@@ -381,7 +381,7 @@ export const allNavigationItems = [
   {
     id: 20,
     title: "Comment & Reviews",
-    url: "/analytics",
+    url: "/manage-comments",
     icon: commentandReviewIcon,
     badge: null,
     color: "gray",
