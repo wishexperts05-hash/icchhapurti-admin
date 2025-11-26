@@ -5,7 +5,7 @@ import PagePath2 from "../../../components/uiComponent/PagePath2";
 import DataTable from "../../../components/uiComponent/DataTable";
 import Pagination from "../../../components/uiComponent/Pagination";
 import { FaEdit } from "react-icons/fa";
-
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 import useProductManagement from "../../../hooks/productList/useProductManagment";
 
 const ManageShippingCost = () => {
@@ -56,7 +56,11 @@ const ManageShippingCost = () => {
   }, [activeTab]);
 
   const handleEdit = (row) => {
-    navigate(`/product-management/shipping-cost/edit-shipping-cost/${row.id}`);
+    if (activeTab =="domestic")
+    navigate(`/product-management/shipping-cost/edit-shipping-cost/domestic/${row.id}`);
+     else{
+      navigate(`/product-management/shipping-cost/edit-shipping-cost/international/${row.id}`);
+     }
   };
 
   const actions = [
@@ -86,7 +90,15 @@ const ManageShippingCost = () => {
         options={["Pen", "Book", "Bag"]}
         selectPlaceHolder="Select Product Type"
         addButtonText="Add Shipping Cost"
-        onClick={() => navigate("/product-management/shipping-cost/add-shipping-cost")}
+        // onClick={() => navigate("/product-management/shipping-cost/add-shipping-cost/domestic")}
+        onClick={() => {
+        if (activeTab === "domestic") {
+            navigate("/product-management/shipping-cost/add-shipping-cost/domestic");
+            } else {
+             navigate("/product-management/shipping-cost/add-shipping-cost/international");
+            }
+            }}
+
       />
 
       {/* Tabs */}
@@ -115,6 +127,11 @@ const ManageShippingCost = () => {
 
       {/* Table */}
       <div className="mt-6 bg-white p-4 rounded shadow">
+            {loading ? (
+                <div className="w-full flex items-center justify-center">
+                  <LoaderSpinner />
+                </div>
+              ) : (
         <DataTable
           columns={columns}
           data={shippingData}
@@ -123,6 +140,7 @@ const ManageShippingCost = () => {
           currentPage={currentPage}
           loading={loading}
         />
+              )}
       </div>
 
       {/* Pagination */}
@@ -134,6 +152,7 @@ const ManageShippingCost = () => {
         onPageChange={setCurrentPage}
         onItemsPerPageChange={setItemsPerPage}
       />
+           
     </div>
   );
 };

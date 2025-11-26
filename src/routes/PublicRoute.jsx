@@ -88,8 +88,9 @@ import ManageShippingCost from "../pages/module/productManagment/ManageShippingC
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
 
-import AddShippingCost from "../pages/module/productManagment/AddShippingCost";
-import EditShipingCost from "../pages/module/productManagment/EditShipingCost";
+import AddShippingCostDomestic from "../pages/module/productManagment/AddShippingCostDomestic";
+import EditDomasticShipingCost from "../pages/module/productManagment/EditDomasticShipingCost";
+import EditInternationalShipingCost from "../pages/module/productManagment/EditInternationalShipingCost"
 // -------------------------offer management --------------
 
 const OfferManagementAdd = lazy(
@@ -172,6 +173,7 @@ import {
   ManageRedeemRequest,
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
+import AddShippingCostInternational from "../pages/module/productManagment/AddShippingCostInternational";
 
 //------------------------------- Country Management ---------------------------------------------
 const CountryManagementList = lazy(
@@ -340,12 +342,20 @@ function PublicRoute() {
             element={<ManageShippingCost />}
           />
           <Route
-            path="/product-management/shipping-cost/add-shipping-cost"
-            element={<AddShippingCost />}
+            path="/product-management/shipping-cost/add-shipping-cost/domestic"
+            element={<AddShippingCostDomestic />}
           />
           <Route
-            path="/product-management/shipping-cost/edit-shipping-cost/:id"
-            element={<EditShipingCost />}
+            path="/product-management/shipping-cost/add-shipping-cost/international"
+            element={<AddShippingCostInternational />}
+          />
+          <Route
+            path="/product-management/shipping-cost/edit-shipping-cost/domestic/:id"
+            element={<EditDomasticShipingCost />}
+          />
+          <Route
+            path="/product-management/shipping-cost/edit-shipping-cost/international/:id"
+            element={<EditInternationalShipingCost />}
           />
           {/* -------------------------------------Offer Management ------------------------------------------- */}
           <Route path="offer-management" element={<OfferManagementList />} />
