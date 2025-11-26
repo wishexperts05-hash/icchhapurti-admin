@@ -242,6 +242,19 @@ const CoinSettings = lazy(
 const WithDrawSettings = lazy(
   () => import("../pages/module/monetarySettings/withdrawSettings/WithDrawSettings")
 );
+// ---------------------------- Comments and Reviews ----------------------------
+const ManageComments = lazy(
+  () => import("../pages/module/commentsandreviews/ManageComments")
+);
+const ManageCommentsView = lazy(
+  () => import("../pages/module/commentsandreviews/ManageCommentsView")
+);
+const SetReviewDisplay = lazy(
+  () => import("../pages/module/commentsandreviews/SetReviewDisplay")
+);
+const EditReviewDisplay = lazy(
+  () => import("../pages/module/commentsandreviews/EditReviewDisplay")
+);
 
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
@@ -587,6 +600,13 @@ function PublicRoute() {
            <Route path="/staff-performance" element={<StaffPerformance />} />
 
            <Route path="/lucky-draw-analysis" element={<LuckyDrawAnalysis />} />
+           
+
+          {/* -------------------------- Comments and Reviews -------------------------- */}
+          <Route path="/manage-comments" element={<ManageComments />} />
+          <Route path="/manage-comments/view-comment" element={<ManageCommentsView />} />
+          <Route path="/set-review-display" element={<SetReviewDisplay />} />
+          <Route path="/edit-review-display" element={<EditReviewDisplay />} />
 
 
 
