@@ -9,6 +9,7 @@ import Pagination from "../../../../components/uiComponent/Pagination";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import { Trash2 } from "lucide-react";
 import useCommissionSetting from "../../../../hooks/monetarySettings/useCommissionSetting";
+import useDropdown from "../../../../hooks/dropdown/useDropdown";
 import useDebounce from "../../../../hooks/debounce/useDebounce";
 
 const CommissionSetting = () => {
@@ -17,6 +18,7 @@ const CommissionSetting = () => {
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const { fetchCommissionSettingsList, loading, commissionSettingList, deleteCommissionSetting } = useCommissionSetting();
+  const { fetchSalesType, fetchUserType, salesType: salesTypeOptions, userType: userTypeOptions, loadingSales, loadingUser, resetUserType } = useDropdown();
   const debouncedSearch = useDebounce(search, 500);
   const [userType, setUserType] = useState("");
   const [salesType, setSalesType] = useState("");
@@ -24,6 +26,11 @@ const CommissionSetting = () => {
   useEffect(() => {
     fetchCommissionSettingsList(page, limit, debouncedSearch, userType, salesType);
   }, [page, limit, debouncedSearch, userType, salesType]);
+
+  useEffect(() => {
+    // fetch sales types on mount
+    fetchSalesType();
+  }, []);
 
   console.log("commissionSettingList", commissionSettingList);
 
@@ -43,8 +50,12 @@ const CommissionSetting = () => {
   };
 
   const onChangeSelectFunc = (option) => {
-    setSalesType(option ? option.value : "");
+    const selected = option ? option.value : "";
+    setSalesType(selected);
     setPage(1);
+    // reset and fetch user types filtered by sales type
+    resetUserType();
+    if (selected) fetchUserType(selected);
   };
 
   const onChangeUserRole = (option) => {
@@ -61,10 +72,6 @@ const CommissionSetting = () => {
     navigate(`/commission-settings/edit-commission/${row._id}`);
   }
 
-  const handleView = (row) => {
-    navigate(`/commission-settings/edit-commission/${row._id}`);
-  }
-
   const columns = [
     { header: "Sr.No", field: "srNo" },
     { header: "Sales Type", field: "salesType" },
@@ -76,11 +83,6 @@ const CommissionSetting = () => {
   ];
 
   const actions = [
-    {
-      icon: <FaEye className="text-yellow-600" />,
-      onClick: handleView,
-      title: "View",
-    },
     {
       icon: (row) => (
         <FaRegEdit
@@ -101,7 +103,7 @@ const CommissionSetting = () => {
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Monetary Settings" }, { text: "Commission Settings" }]} />
-      <PagePath2
+        <PagePath2
         title="Commission Settings"
         // ShowSearch
         showSearch
@@ -109,15 +111,15 @@ const CommissionSetting = () => {
         handleSearchTerm={onSearchChange}
         // Show Select type
         showSelect
-        options={["Direct Sale", "Indirect Sale"]}
-        optionsLoading={loading}
+        options={salesTypeOptions}
+        optionsLoading={loadingSales}
         onChangeSelectFunc={onChangeSelectFunc}
         selectPlaceHolder="Sales Type"
         // Second Select (User Role)
         showSecondSelect
-        secondSelectOptions={["User", "Staff", "Promoter"]}
+        secondSelectOptions={userTypeOptions}
         secondSelectPlaceholder="User Type"
-        secondSelectLoading={loading}
+        secondSelectLoading={loadingUser}
         onChangeSecondSelect={onChangeUserRole}
         // ShowAddButton
         showAddButton

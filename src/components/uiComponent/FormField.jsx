@@ -13,9 +13,10 @@ export default function FormField({
   loading = false,
   isMulti = false,
   readOnly,
-  autoComplete="on",
-  disabled=false,
-  rightElement
+  autoComplete = "on",
+  disabled = false,
+  rightElement,
+  onChange,
 }) {
   const formik = useFormikContext();
 
@@ -178,6 +179,10 @@ export default function FormField({
                 );
               } else {
                 formik.setFieldValue(name, selected?.value || "");
+              }
+              // Forward onChange to parent if provided (passes the selected option(s))
+              if (typeof onChange === "function") {
+                onChange(selected);
               }
             }}
             onBlur={() => formik.setFieldTouched(name, true)}
