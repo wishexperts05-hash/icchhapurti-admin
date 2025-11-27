@@ -6,3 +6,5 @@ export const withdrawSettingAtom = atom(createPersistedAtom("withdrawSettingKey"
 export const commsissionSettingsListAtom = atom(createPersistedAtom("commsissionSettingsListKey", []));
 
 export const commsissionSettingDetailsAtom = atom(createPersistedAtom("commsissionSettingDetailsKey", null));
+
+export const coinSettingAtom = atom(createPersistedAtom("coinSettingKey", null));
