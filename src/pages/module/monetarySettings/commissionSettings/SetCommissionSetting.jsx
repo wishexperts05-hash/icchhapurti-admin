@@ -32,17 +32,25 @@ const SetCommissionSetting = () => {
                     <Formik
                         enableReinitialize
                         initialValues={{
-                            name: countryDetail?.country?.name || "",
-                            defaultLanguage: countryDetail?.country?.defaultLanguage || "",
-                            defaultCurrency: countryDetail?.country?.defaultCurrency || "",
+                            salesType: countryDetail?.country?.salesType || "",
+                            userType: countryDetail?.country?.userType || "",
+                            productId: countryDetail?.country?.productId || "",
+                            productQuantity: countryDetail?.country?.productQuantity || "",
+                            commissionIn: countryDetail?.country?.commissionIn || "",
                         }}
                         validationSchema={Yup.object({
-                            name: Yup.string().required("Country is required"),
-                            defaultLanguage: Yup.string().required(
-                                "Default language is required"
+                            salesType: Yup.string().required("Sales Type is required"),
+                            userType: Yup.string().required(
+                                "User Type is required"
                             ),
-                            defaultCurrency: Yup.string().required(
-                                "Default Currency is required"
+                            productId: Yup.string().required(
+                                "Product is required"
+                            ),
+                            productQuantity: Yup.string().required(
+                                "Product Quantity is required"
+                            ),
+                            commissionIn: Yup.string().required(
+                                "Commission is required"
                             ),
                         })}
                         onSubmit={async (values) => {
@@ -65,10 +73,10 @@ const SetCommissionSetting = () => {
                                 const autoFill = async () => {
                                     if (values.name) {
                                         setLocalLoading(true);
-                                        const data = await getCountryByName(values.name);
+                                        const data = await getCountryByName(values.salesType);
                                         if (data) {
-                                            setFieldValue("defaultLanguage", data.defaultLanguage || "");
-                                            setFieldValue("defaultCurrency", data.defaultCurrency || "");
+                                            setFieldValue("userType", data.userType || "");
+                                            setFieldValue("productId", data.productId || "");
 
                                         }
                                         setLocalLoading(false);
@@ -80,26 +88,25 @@ const SetCommissionSetting = () => {
                             return (
                                 <Form className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     <FormField
-                                        label="Country"
-                                        name="name"
+                                        label="Sales Type"
+                                        name="salesType"
                                         fieldType="select"
                                         options={[
-                                            { value: "", label: "Choose Country" },
+                                            { value: "", label: "Choose Sales Type" },
                                             ...dropdownOptions,
                                         ]}
                                     />
 
                                     <FormField
-                                        label="Default Language"
-                                        name="defaultLanguage"
-                                        placeholder="Enter default language (e.g., EN)"
+                                        label="User Type"
+                                        name="userType"
+                                        placeholder="Enter user type"
                                         rightElement={localLoading ? <BeatLoader size={6} /> : null}
                                     />
 
-
                                     <FormField
-                                        label="Default Currency"
-                                        name="defaultCurrency"
+                                        label="Select Product"
+                                        name="productId"
                                         placeholder="Enter currency (e.g., USD, INR)"
                                         rightElement={localLoading ? <BeatLoader size={6} /> : null}
                                     />
