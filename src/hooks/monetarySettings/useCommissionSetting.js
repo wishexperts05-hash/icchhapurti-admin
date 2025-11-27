@@ -47,7 +47,7 @@ const useCommissionSetting = () => {
         try {
             const res = await fetchData({
                 method: "GET",
-                url: `${conf.apiBaseUrl}admin/commissionSetting/getCommissionSettingById/${id}`,
+                url: `${conf.apiBaseUrl}admin/commissionSetting/getCommissionSetting/${id}`,
             });
             if (res) {
                 setCommissionSettingDetails(res?.data);
