@@ -7,45 +7,15 @@ import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import FormField from "../../../../components/uiComponent/FormField";
 import Button from "../../../../components/uiComponent/Button";
 import { FaEquals } from "react-icons/fa";
+import useCoinSetting from "../../../../hooks/monetarySettings/useCoinSetting";
 
 export default function CoinSettings() {
-  // const { updateChargesAndBenefits, fetchChargesAndBenefits, loading, chargesAndBenefits } = useChargesAndBenefits();
-  const [currentPage, setCurrentPage] = useState("commission-settings");
-  const [coinSettings, setCoinSettings] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { coinSetting, loading, fetchCoinSetting, updateCoinSetting } = useCoinSetting();
+  const [currentPage, setCurrentPage] = useState("view");
   const [canUpdate] = useState(true);
 
-  // TEMPORARY DUMMY Data
-  const dummyApiData = {
-    minimumCoins: 10,
-    setCoinValue: {
-      coin: 2,
-      rate: 3,
-    },
-  };
-
-  const fetchCoinSettings = async () => {
-    setLoading(true);
-    setTimeout(() => {
-      setCoinSettings(dummyApiData);
-      setLoading(false);
-    }, 500);
-  };
-
-  const updateCoinSettings = async (values) => {
-    setLoading(true);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log("UPDATED DATA:", values);
-        setCoinSettings(values); // update UI
-        setLoading(false);
-        resolve(true);
-      }, 800);
-    });
-  };
-
   useEffect(() => {
-    fetchCoinSettings();
+    fetchCoinSetting();
   }, []);
 
   //   const { subAdminAccess } = useLogin();
@@ -59,19 +29,30 @@ export default function CoinSettings() {
   };
 
   const handleUpdate = async (values) => {
-    const isSuccess = await updateCoinSettings(values);
-    if (isSuccess) {
-      handleBack();
-    }
+    // Format data to match API requirement
+    const formattedData = {
+      setCoinValue: {
+        coin: values.setCoinValue?.coin || 0,
+        rate: values.setCoinValue?.rate || 0,
+      },
+      minimumCoinsToConvert: values.minimumCoinsToConvert || 0,
+    };
+    await updateCoinSetting(formattedData);
+    // Refetch updated data
+    await fetchCoinSetting();
+    handleBack();
   };
 
-  const handleBack = () => setCurrentPage("commission-settings");
+  const handleBack = () => setCurrentPage("view");
 
   const formatCoinSettingData = (data) => {
-    if (!data) return {};
+    if (!data) return {
+      minimumCoinsToConvert: 0,
+      setCoinValue: { coin: 0, rate: 0 }
+    };
 
     return {
-      minimumCoins: data.minimumCoins || 0,
+      minimumCoinsToConvert: data.minimumCoinsToConvert || 0,
       setCoinValue: {
         coin: data.setCoinValue?.coin || 0,
         rate: data.setCoinValue?.rate || 0,
@@ -81,16 +62,16 @@ export default function CoinSettings() {
 
   return (
     <div className="min-h-screen">
-      {currentPage === "commission-settings" && (
+      {currentPage === "view" && (
         <CoinSetting
           onEdit={handleEdit}
-          coinSettingData={formatCoinSettingData(coinSettings)}
+          coinSettingData={formatCoinSettingData(coinSetting)}
           canUpdate={canUpdate}
         />
       )}
       {currentPage === "edit" && (
         <EditCoinSetting
-          initialData={formatCoinSettingData(coinSettings)}
+          initialData={formatCoinSettingData(coinSetting)}
           onBack={handleBack}
           onUpdate={handleUpdate}
           loading={loading}
@@ -102,7 +83,7 @@ export default function CoinSettings() {
 
 function CoinSetting({ onEdit, coinSettingData, canUpdate }) {
   return (
-    <div>
+    <>
       <BreadCrumb
         linkText={[
           { text: "Commission Settings" },
@@ -116,7 +97,7 @@ function CoinSetting({ onEdit, coinSettingData, canUpdate }) {
         <Section title="Set Minimum Coins to Convert into Money">
           <FieldView
             label="Minimum Coins"
-            value={coinSettingData.minimumCoins}
+            value={coinSettingData.minimumCoinsToConvert}
           />
         </Section>
 
@@ -131,7 +112,7 @@ function CoinSetting({ onEdit, coinSettingData, canUpdate }) {
             label="Rate (₹)"
             value={coinSettingData.setCoinValue?.rate}
           />
-        </Section>   
+        </Section>
       </div>
 
       <div className="flex justify-center py-6 gap-4">
@@ -143,41 +124,28 @@ function CoinSetting({ onEdit, coinSettingData, canUpdate }) {
           disabled={!canUpdate}
         />
       </div>
-    </div>
+    </>
   );
 }
 
 function EditCoinSetting({ initialData, onBack, onUpdate, loading }) {
   const validationSchema = Yup.object({
-    directSaleQuantity: Yup.number()
-      .required("Required")
+    minimumCoinsToConvert: Yup.number()
+      .required("Minimum coins is required")
       .min(0, "Must be positive"),
-    directSaleCoins: Yup.number()
-      .required("Required")
-      .min(0, "Must be positive"),
-    luckDraw: Yup.object({
-      luckyDrawTicketQuantity: Yup.number()
-        .required("Required")
-        .min(0, "Must be positive")
-        .max(100, "Cannot exceed 100%"),
-      luckyDrawTicket: Yup.number()
-        .required("Required")
-        .min(0, "Must be positive")
-    }),
-    withdrawAmount: Yup.object({
-      totalWalletBalance: Yup.number()
-        .required("Required")
-        .min(0, "Must be positive")
-        .max(100, "Cannot exceed 100%"),
-      dayForWithdraw: Yup.number()
-        .required("Required")
-        .min(0, "Must be positive")
+    setCoinValue: Yup.object({
+      coin: Yup.number()
+        .required("Coin value is required")
+        .min(0, "Must be positive"),
+      rate: Yup.number()
+        .required("Rate is required")
+        .min(0, "Must be positive"),
     }),
   });
 
   return (
-    <div>
-       <BreadCrumb
+    <>
+      <BreadCrumb
         linkText={[{ text: "Commission Setting" }, { text: "Edit Coin Setting" }]}
       />
       <PagePath2 title="Edit Coin Setting" />
@@ -193,7 +161,7 @@ function EditCoinSetting({ initialData, onBack, onUpdate, loading }) {
             <Section title="Set Minimum Coins to Convert into Money">
               <FormField
                 label="Minimum Coins :"
-                name="minimumCoins"
+                name="minimumCoinsToConvert"
                 type="number"
               />
             </Section>
@@ -230,7 +198,7 @@ function EditCoinSetting({ initialData, onBack, onUpdate, loading }) {
           </Form>
         )}
       </Formik>
-    </div>
+    </>
   );
 }
 
