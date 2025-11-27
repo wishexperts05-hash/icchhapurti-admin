@@ -6,13 +6,15 @@ import { useRecoilState } from 'recoil';
 
 const useDropdown = () => {
     const [fetchData] = useFetch();
-    const [loading, setLoading] = useState(false);
+    const [loadingSales, setLoadingSales] = useState(false);
+    const [loadingUser, setLoadingUser] = useState(false);
+    const [loadingProduct, setLoadingProduct] = useState(false);
     const [salesType, setSalesType] = useRecoilState(salesTypeAtom);
     const [userType, setUserType] = useRecoilState(userTypeAtom);
     const [productDropdown, setProductDropdown] = useRecoilState(productDropdownAtom);
 
     const fetchSalesType = async () => {
-        setLoading(true);
+        setLoadingSales(true);
         try {
             const res = await fetchData({
                 method: "GET",
@@ -20,37 +22,49 @@ const useDropdown = () => {
             });
             if (res) {
                 setSalesType(res?.data);
-                setLoading(false);
             }
         } catch (error) {
             console.error("Error fetching sales type:", error);
-            setLoading(false);
         } finally {
-            setLoading(false);
+            setLoadingSales(false);
         }
     };
 
-    const fetchUserType = async () => {
-        setLoading(true);
+    const fetchUserType = async (salesType = null) => {
+        setLoadingUser(true);
         try {
+            const params = new URLSearchParams();
+            if (salesType) {
+                params.append('salesType', salesType);
+            }
+            const url = salesType 
+                ? `${conf.apiBaseUrl}admin/commissionSetting/getUserTypeDropdownValues?${params.toString()}`
+                : `${conf.apiBaseUrl}admin/commissionSetting/getUserTypeDropdownValues`;
+            
             const res = await fetchData({
                 method: "GET",
-                url: `${conf.apiBaseUrl}admin/commissionSetting/getUserTypeDropdownValues`,
+                url,
             });
+            // Debug: log requested URL and response
+            // (helps detect whether API respects the salesType query)
+            // eslint-disable-next-line no-console
+            console.log("fetchUserType -> url:", url, "res:", res);
             if (res) {
                 setUserType(res?.data);
-                setLoading(false);
             }
         } catch (error) {
             console.error("Error fetching user type:", error);
-            setLoading(false);
         } finally {
-            setLoading(false);
+            setLoadingUser(false);
         }
     };
 
+    const resetUserType = () => {
+        setUserType([]);
+    }
+
     const fetchProductDropdown = async () => {
-        setLoading(true);
+        setLoadingProduct(true);
         try {
             const res = await fetchData({
                 method: "GET",
@@ -58,17 +72,16 @@ const useDropdown = () => {
             });
             if (res) {
                 setProductDropdown(res?.products);
-                setLoading(false);
             }   
         } catch (error) {
             console.error("Error fetching product dropdown:", error);
-            setLoading(false);
         } finally {
-            setLoading(false);
+            setLoadingProduct(false);
         }
     };
 
-  return {loading, fetchSalesType, fetchUserType, fetchProductDropdown, salesType, userType, productDropdown}
+    const loading = loadingSales || loadingUser || loadingProduct;
+    return {loading, loadingSales, loadingUser, loadingProduct, fetchSalesType, fetchUserType, fetchProductDropdown, salesType, userType, productDropdown, resetUserType}
 }
 
 export default useDropdown

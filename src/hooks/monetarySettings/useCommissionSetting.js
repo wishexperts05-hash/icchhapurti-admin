@@ -61,6 +61,50 @@ const useCommissionSetting = () => {
         }
     };
 
+    const addCommissionSetting = async (data) => {
+        setLoading(true);
+        try {
+            const res = await fetchData({
+                method: "POST",
+                url: `${conf.apiBaseUrl}admin/commissionSetting/createCommissionSetting`,
+                data: data,
+            });
+            if (res) {
+                toast.success(res?.message);
+                setLoading(false);
+                return res;
+            }
+        } catch (error) {
+            console.error("Error adding commission setting:", error);
+            toast.error(error?.response?.data?.message);
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const updateCommissionSetting = async (id, data) => {
+        setLoading(true);
+        try {
+            const res = await fetchData({
+                method: "PUT",
+                url: `${conf.apiBaseUrl}admin/commissionSetting/updateCommissionSetting/${id}`,
+                data: data,
+            });
+            if (res) {
+                toast.success(res?.message);
+                setLoading(false);
+                return res;
+            }
+        } catch (error) {
+            console.error("Error updating commission setting:", error);
+            toast.error(error?.response?.data?.message);
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const deleteCommissionSetting = async (id) => {
         const result = await confirmAlert("Are you sure you want to delete this commission setting?");
         if (!result) return;
@@ -89,9 +133,12 @@ const useCommissionSetting = () => {
         }
     };
 
+     const resetCommissionSettingDetails = () => {
+        setCommissionSettingDetails(null);
+    };
 
     return { fetchCommissionSettingsList, loading, commissionSettingList, commissionSettingDetails, fetchCommissionSettingDetails,
-        deleteCommissionSetting
+        deleteCommissionSetting, addCommissionSetting, updateCommissionSetting, resetCommissionSettingDetails
      };
 }
 
