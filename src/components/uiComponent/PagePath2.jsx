@@ -20,6 +20,11 @@ const PagePath2 = ({
   selectPlaceHolder = "Select Status",
   onChangeSelectFunc,
   disabled = false,
+  showSecondSelect,
+  secondSelectOptions = [],
+  secondSelectPlaceholder = "Select Option",
+  onChangeSecondSelect,
+  secondSelectLoading = false,
 }) => {
   return (
     <div className="bg-white p-4 mb-4 border-b rounded-2xl shadow-xl">
@@ -86,6 +91,49 @@ const PagePath2 = ({
             }}
           />
         )}
+
+        {showSecondSelect && (
+          <Select
+            options={secondSelectOptions?.map((option) => ({
+              label: option,
+              value: option,
+            }))}
+            isLoading={secondSelectLoading}
+            placeholder={secondSelectPlaceholder}
+            onChange={onChangeSecondSelect}
+            isClearable
+            isDisabled={disabled}
+            styles={{
+              control: (provided, state) => ({
+                ...provided,
+                borderRadius: "0.5rem",
+                borderColor: state.isFocused ? "#FF6B00" : "#d1d5db",
+                boxShadow: state.isFocused ? "0 0 0 1px #FF6B00" : "none",
+                "&:hover": { borderColor: "#FF6B00" },
+                fontSize: "0.875rem",
+                minHeight: "40px",
+              }),
+              menu: (provided) => ({
+                ...provided,
+                borderRadius: "0.75rem",
+                fontSize: "0.875rem",
+                zIndex: 9999,
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                backgroundColor: state.isSelected
+                  ? "#FF6B00"
+                  : state.isFocused
+                    ? "#FFE5D1"
+                    : "white",
+                color: state.isSelected ? "white" : "black",
+                "&:active": { backgroundColor: "#FF6B00", color: "white" },
+              }),
+              placeholder: (provided) => ({ ...provided, color: "#9ca3af" }),
+            }}
+          />
+        )}
+
         <div className="flex items-center gap-3">
           {showAddButton && addButtonText && (
             <button
