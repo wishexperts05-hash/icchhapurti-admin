@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import useFetch from '../useFetch';
 import conf from "../../config/index";
 import { productDropdownAtom, salesTypeAtom, userTypeAtom } from '../../state/dropdown/dropdownState';
+import { useRecoilState } from 'recoil';
 
 const useDropdown = () => {
     const [fetchData] = useFetch();

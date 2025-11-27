@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import BreadCrumb from '../../../../components/uiComponent/BreadCrumb';
 import PagePath2 from '../../../../components/uiComponent/PagePath2';
 import LoaderSpinner from '../../../../components/uiComponent/LoaderSpinner';
@@ -6,8 +6,27 @@ import { Form, Formik } from 'formik';
 import FormField from '../../../../components/uiComponent/FormField';
 import { BeatLoader } from 'react-spinners';
 import Button from '../../../../components/uiComponent/Button';
+import useDropdown from '../../../../hooks/dropdown/useDropdown';
+import useCommissionSetting from '../../../../hooks/monetarySettings/useCommissionSetting';
+import { useParams } from 'react-router-dom';
 
 const SetCommissionSetting = () => {
+    const { id } = useParams();
+    const { loading: dropLoading, fetchSalesType, fetchUserType, fetchProductDropdown, salesType, userType, productDropdown } = useDropdown();
+    const { fetchCommissionSettingDetails, commissionSettingDetails, loading } = useCommissionSetting();
+    console.log(
+        "commissionSettingDetails", commissionSettingDetails,
+        "salesType", salesType,
+        "userType", userType,
+        "productDropdown", productDropdown
+    );
+    useEffect(() => {
+        fetchSalesType();
+        fetchUserType();
+        fetchProductDropdown();
+        if (id) fetchCommissionSettingDetails(id);
+    }, []);
+
     return (
         <div className="bg-gray-50 min-h-screen">
             <BreadCrumb
