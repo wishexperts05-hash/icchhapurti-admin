@@ -33,9 +33,6 @@ const useCountryManagement = () => {
       const res = await fetchData({
         method: "GET",
         url,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
 
       if (res) {
@@ -60,10 +57,6 @@ const useCountryManagement = () => {
       const res = await fetchData({
         method: "PUT",
         url: `${conf.apiBaseUrl}admin/country/${id}`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
         data,
       });
 
@@ -89,9 +82,6 @@ const useCountryManagement = () => {
       const res = await fetchData({
         method: "POST",
         url: `${conf.apiBaseUrl}admin/country/add`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
         data: formdata,
       });
       if (res) {
@@ -118,9 +108,6 @@ const useCountryManagement = () => {
       const res = await fetchData({
         method: "GET",
         url: `${conf.apiBaseUrl}admin/country/${id}`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
       if (res) {
         setCountryDetail(res);
@@ -146,9 +133,6 @@ const useCountryManagement = () => {
         const res = await fetchData({
           method: "DELETE",
           url: `${conf.apiBaseUrl}admin/country/delete/${id}`,
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         });
 
         if (res) {
@@ -179,9 +163,6 @@ const useCountryManagement = () => {
         const res = await fetchData({
             method:"GET",
             url: `${conf.apiBaseUrl}admin/country/all/dropdown-add`,
-            headers:{
-                Authorization: `Bearer ${sessionStorage.getItem("token")}`
-            }
         });
 
         if (res) {
@@ -204,9 +185,6 @@ const useCountryManagement = () => {
     const res = await fetchData({
       method: "GET",
       url: `${conf.apiBaseUrl}admin/country/name/${name}`,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
     });
 
     return res?.country || null;

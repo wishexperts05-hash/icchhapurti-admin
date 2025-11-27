@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
@@ -8,16 +8,36 @@ import Pagination from "../../../../components/uiComponent/Pagination";
 import { FaRegEdit } from "react-icons/fa";
 import Button from "../../../../components/uiComponent/Button";
 
-export default function SpinRewardManagementList({ activeItem, setActiveItem }) {
+import useSpinRewardManagement from "../../../../hooks/rewardManagement/useSpinRewardManagement";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+
+export default function SpinRewardManagementList() {
   const navigate = useNavigate();
+
+  const { loading, spinRewardList, fetchSpinRewardList } =
+    useSpinRewardManagement();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+  useEffect(() => {
+    fetchSpinRewardList();
+  }, []);
+
+  const filteredRewards = (spinRewardList || []).filter((item) => {
+    if (!searchTerm.trim()) return true;
+    const q = searchTerm.toLowerCase();
+    return (
+      item?.title?.toLowerCase().includes(q) ||
+      item?.rewardType?.toLowerCase().includes(q) ||
+      item?.userType?.toLowerCase().includes(q)
+    );
+  });
+
   const handleSearchTerm = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const handleAddReward = () => {
@@ -28,97 +48,33 @@ export default function SpinRewardManagementList({ activeItem, setActiveItem }) 
     navigate("/spin-reward-management/set-spin-price");
   };
 
-  const [rewards, setRewards] = useState([
-    {
-      srNo: 1,
-      rewardTitle: "Buy One Get One Pen Free",
-      rewardGet: "Pen",
-    },
-    {
-      srNo: 2,
-      rewardTitle: "Batter Luck Next Time",
-      rewardGet: "NA",
-    },
-    {
-      srNo: 3,
-      rewardTitle: "Get Free Talk With Astrologer",
-      rewardGet: "Free Talk",
-    },
-    {
-      srNo: 4,
-      rewardTitle: "Flat 15% Off On Next Purchase",
-      rewardGet: "15% Off",
-    },
-    {
-      srNo: 5,
-      rewardTitle: "Batter Luck Next Time",
-      rewardGet: "NA",
-    },
-    {
-      srNo: 6,
-      rewardTitle: "Grab One More Ticket",
-      rewardGet: "Pen",
-    },
-    {
-      srNo: 7,
-      rewardTitle: "Flat 50% Off On Next Purchase",
-      rewardGet: "50% Off",
-    },
-    {
-      srNo: 8,
-      rewardTitle: "Flat 5% Off On First Purchase",
-      rewardGet: "5% Off",
-    },
-    ...Array.from({ length: 22 }, (_, i) => ({
-      srNo: i + 9,
-      rewardTitle: `Reward ${i + 9}`,
-      rewardGet: i % 3 === 0 ? "Pen" : i % 3 === 1 ? "NA" : `${(i % 5) + 5}% Off`,
-    })),
-  ]);
-
-
-  const filteredData = useMemo(
-    () =>
-      rewards.filter(
-        (item) =>
-          item.rewardTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.rewardGet.toLowerCase().includes(searchTerm.toLowerCase())
-      ),
-    [rewards, searchTerm]
-  );
-
- 
-  const totalItems = filteredData.length;
+  const totalItems = filteredRewards.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentItems = filteredData.slice(startIndex, endIndex);
+  const currentItems = filteredRewards.slice(startIndex, endIndex);
 
- 
   const handleEdit = (reward) => {
-    
     navigate(`/spin-reward-management/edit-spin-reward`, {
-      state: { reward } 
+      state: { reward },
     });
   };
 
   const handleDelete = (reward) => {
-    
- 
-    if (window.confirm(`Are you sure you want to delete "${reward.rewardTitle}"?`)) {
+    if (
+      window.confirm(`Are you sure you want to delete "${reward.rewardTitle}"?`)
+    ) {
       setRewards((prev) => prev.filter((item) => item.srNo !== reward.srNo));
       alert("Reward deleted successfully!");
     }
   };
 
-
   const columns = [
     { header: "Sr. No.", field: "srNo" },
-    { header: "Reward Title", field: "rewardTitle" },
-    { header: "Reward Get", field: "rewardGet" },
+    { header: "Reward Title", field: "title" },
+    { header: "Reward Get", field: "rewardType" },
     { header: "Action", field: "action" },
   ];
-
 
   const actions = [
     {
@@ -160,27 +116,24 @@ export default function SpinRewardManagementList({ activeItem, setActiveItem }) 
         onExtraClick={handleAddReward}
       />
 
-      {/* Data Table */}
-      <div className="mt-6 bg-white p-4 rounded shadow">
-        <DataTable
-          columns={columns}
-          data={currentItems.map((item, index) => ({
-            ...item,
-            srNo: startIndex + index + 1,
-          }))}
-          actions={actions}
-        />
-      </div>
+      {loading ? (
+        <div className="flex w-full items-center justify-center py-10">
+          <LoaderSpinner />
+        </div>
+      ) : (
+        <div className="mt-6 bg-white p-4 rounded shadow">
+          <DataTable columns={columns} data={currentItems} actions={actions} />
 
-      {/* Pagination */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-        onPageChange={setCurrentPage}
-        onItemsPerPageChange={setItemsPerPage}
-      />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={setItemsPerPage}
+          />
+        </div>
+      )}
     </div>
   );
 }

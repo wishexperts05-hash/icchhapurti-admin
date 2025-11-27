@@ -1,12 +1,17 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Trash2 } from "lucide-react";
+import { FaRegEdit } from "react-icons/fa";
+
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import Pagination from "../../../../components/uiComponent/Pagination";
-import { FaRegEdit } from "react-icons/fa";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+import useLuckyDrawManagement from "../../../../hooks/rewardManagement/useLuckyDrawManagement";
+
+
 
 export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
   const navigate = useNavigate();
@@ -14,6 +19,9 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const { luckyDrawList, loading, fetchLuckyDrawList } =
+    useLuckyDrawManagement();
 
   const handleSearchTerm = (e) => {
     setSearchTerm(e.target.value);
@@ -24,101 +32,61 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
     navigate("/lucky-draw-management/add-lucky-draw");
   };
 
-  const handleViewLuckyDraw = () => {
-    navigate("/lucky-draw-management/view-lucky-draw");
+  const handleViewLuckyDraw = (row) => {
+  // we pass Mongo `_id` as param (this matches :luckyDrawId in API)
+  navigate(`/lucky-draw-management/view-lucky-draw/${row._id}`);
+};
+
+
+const handleEdit = (row) => {
+  navigate(`/lucky-draw-management/edit-lucky-draw/${row._id}`);
+};
+
+
+  const handleDelete = (row) => {
+    // TODO: integrate delete API when available
+    console.log("Delete Lucky Draw:", row?._id);
   };
- 
 
-  const [luckyDraws, setLuckyDraws] = useState([
-    {
-      luckyDrawId: "G458",
-      eventName: "Diwali Dhamaka",
-      startEndDate: "20-25 Oct",
-      status: "ongoing",
-    },
-    {
-      luckyDrawId: "G459",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "upcoming",
-    },
-    {
-      luckyDrawId: "G460",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G461",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G462",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G463",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G464",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G465",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G466",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    ...Array.from({ length: 21 }, (_, i) => ({
-      luckyDrawId: `G${467 + i}`,
-      eventName: i % 2 === 0 ? "Festival Bonanza" : "New Year Special",
-      startEndDate: "20-25 Oct",
-      status: i % 3 === 0 ? "completed" : i % 3 === 1 ? "ongoing" : "upcoming",
-    })),
-  ]);
+  // 🔹 Format ISO date to "dd MMM yyyy"
+  const formatDate = (iso) => {
+    if (!iso) return "-";
+    const d = new Date(iso);
+    return d.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
 
-  const filteredData = useMemo(
+  // 🔹 Fetch from API whenever page / limit / search changes
+  useEffect(() => {
+    fetchLuckyDrawList(currentPage, itemsPerPage, searchTerm);
+  }, [currentPage, itemsPerPage, searchTerm]);
+
+  const apiData = luckyDrawList?.data || [];
+  const pagination = luckyDrawList?.pagination || {};
+  const totalItems = pagination.totalRecords || 0;
+  const totalPages = pagination.totalPages || 1;
+  const currentApiPage = pagination.currentPage || currentPage;
+  const limitFromApi = pagination.limit || itemsPerPage;
+
+  // 🔹 Map API data → table rows
+  const tableData = useMemo(
     () =>
-      luckyDraws.filter(
-        (item) =>
-          item.eventName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.luckyDrawId.toLowerCase().includes(searchTerm.toLowerCase())
-      ),
-    [luckyDraws, searchTerm]
+      apiData.map((item, index) => ({
+        ...item,
+        srNo: (currentApiPage - 1) * limitFromApi + index + 1,
+        luckyDrawId: item.eventId,
+        eventName: item.eventName,
+        startEndDate: `${formatDate(item.startDate)} - ${formatDate(
+          item.endDate
+        )}`,
+        status: item.status, // Already "Upcoming" / "Ongoing" / etc. from API
+      })),
+    [apiData, currentApiPage, limitFromApi]
   );
 
-  
-  const totalItems = filteredData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = filteredData.slice(startIndex, endIndex);
-
-  const handleEdit = (draw) => {
-   
-    navigate(`/lucky-draw-management/edit-lucky-draw`);
-  };
-
-  const handleDelete = (draw) => {
-   
-  };
-
-  
   const columns = [
     { header: "Sr. No.", field: "srNo" },
     { header: "Lucky Draw ID", field: "luckyDrawId" },
@@ -127,7 +95,6 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
     { header: "Status", field: "status" },
     { header: "Action", field: "action" },
   ];
-
 
   const actions = [
     {
@@ -176,31 +143,37 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
       />
 
       {/* Data Table */}
-      <div className="mt-6 bg-white p-4 rounded shadow">
-        <DataTable
-          columns={columns}
-          data={currentItems.map((item, index) => ({
-            ...item,
-            srNo: startIndex + index + 1,
-            status: item.status === "ongoing" ? "Ongoing"
-              : item.status === "upcoming" ? "Upcoming"
-                : "Completed"
-          }))}
-          actions={actions}
-          currentPage={currentPage}
-          usersPerPage={itemsPerPage}
-        />
-      </div>
+    
+        {loading ? (
+          <div className="flex w-full items-center justify-center py-10">
+            <LoaderSpinner />
+          </div>
+        ) : (
 
-      {/* Pagination */}
-      <Pagination
-        currentPage={currentPage}
+            <div className="mt-6 bg-white p-4 rounded shadow">
+          <DataTable
+            columns={columns}
+            data={tableData}
+            actions={actions}
+            currentPage={currentApiPage}
+            usersPerPage={limitFromApi}
+          />
+
+           <Pagination
+        currentPage={currentApiPage}
         totalPages={totalPages}
         totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
+        itemsPerPage={limitFromApi}
         onPageChange={setCurrentPage}
         onItemsPerPageChange={setItemsPerPage}
       />
+
+            </div>
+        )}
+    
+
+     
+     
     </div>
   );
 }

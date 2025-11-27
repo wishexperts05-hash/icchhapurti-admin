@@ -535,7 +535,7 @@ function PublicRoute() {
             element={<LuckyDrawManagementList />}
           />
           <Route
-            path="/lucky-draw-management/view-lucky-draw"
+            path="/lucky-draw-management/view-lucky-draw/:id"
             element={<LuckyDrawManagementView />}
           />
           <Route
@@ -543,7 +543,7 @@ function PublicRoute() {
             element={<LuckyDrawManagementAdd />}
           />
           <Route
-            path="/lucky-draw-management/edit-lucky-draw"
+            path="/lucky-draw-management/edit-lucky-draw/:id"
             element={<LuckyDrawManagementEdit />}
           />
           
