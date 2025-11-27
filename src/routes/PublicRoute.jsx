@@ -239,6 +239,12 @@ const ChatBox = lazy(() => import("../pages/module/chatSupportSystem/ChatBox"));
 const CommissionSetting = lazy(
   () => import("../pages/module/monetarySettings/commissionSettings/CommissionSetting")
 );
+
+const SetCommissionSetting = lazy(
+  () =>
+    import("../pages/module/monetarySettings/commissionSettings/SetCommissionSetting")
+);
+
 const CoinSettings = lazy(
   () => import("../pages/module/monetarySettings/coinSettings/CoinSettings")
 );
@@ -602,6 +608,8 @@ function PublicRoute() {
 
           {/* -------------------------------------Monetary Setting ------------------------------------------- */}
           <Route path="/commission-settings" element={<CommissionSetting />} />
+          <Route path="/commission-settings/add-commission" element={<SetCommissionSetting />} />
+          <Route path="/commission-settings/edit-commission/:id" element={<SetCommissionSetting />} />
           <Route path="/coin-settings" element={<CoinSettings />} />
           <Route path="/withdraw-settings" element={<WithDrawSettings />} />
 

@@ -4,6 +4,8 @@ import { useRecoilState } from 'recoil';
 import useFetch from '../useFetch';
 import { toast } from "react-toastify";
 import conf from "../../config/index";
+import { confirmAlert } from '../../utils/alertToast';
+import Swal from 'sweetalert2';
 
 const useCommissionSetting = () => {
     const [fetchData] = useFetch();
@@ -59,7 +61,38 @@ const useCommissionSetting = () => {
         }
     };
 
-  return { fetchCommissionSettingsList, loading, commissionSettingList, commissionSettingDetails, fetchCommissionSettingDetails};
+    const deleteCommissionSetting = async (id) => {
+        const result = await confirmAlert("Are you sure you want to delete this commission setting?");
+        if (!result) return;
+        setLoading(true);
+        try {
+            const res = await fetchData({
+                method: "DELETE",
+                url: `${conf.apiBaseUrl}admin/commissionSetting/deleteCommissionSetting/${id}`,
+            });
+            if (res) {
+                Swal.fire({
+                    title: "Deleted!",
+                    text: res?.message,
+                    icon: "success",
+                    confirmButtonText: "OK",
+                });
+                setLoading(false);
+                return res;
+            }
+        } catch (error) {
+            console.error("Error deleting commission setting:", error);
+            toast.error(error?.response?.data?.message);
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    return { fetchCommissionSettingsList, loading, commissionSettingList, commissionSettingDetails, fetchCommissionSettingDetails,
+        deleteCommissionSetting
+     };
 }
 
 export default useCommissionSetting
