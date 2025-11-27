@@ -57,6 +57,14 @@ const CommissionSetting = () => {
     fetchCommissionSettingsList(page, limit, debouncedSearch, userType, salesType);
   }
 
+  const handleEdit = (row) => {
+    navigate(`/commission-settings/edit-commission/${row._id}`);
+  }
+
+  const handleView = (row) => {
+    navigate(`/commission-settings/edit-commission/${row._id}`);
+  }
+
   const columns = [
     { header: "Sr.No", field: "srNo" },
     { header: "Sales Type", field: "salesType" },
@@ -70,7 +78,7 @@ const CommissionSetting = () => {
   const actions = [
     {
       icon: <FaEye className="text-yellow-600" />,
-      //  onClick: handleView,
+      onClick: handleView,
       title: "View",
     },
     {
@@ -80,7 +88,7 @@ const CommissionSetting = () => {
           title="Edit"
         />
       ),
-      //  onClick: handleEdit,
+      onClick: handleEdit,
       title: "Edit",
     },
     {
@@ -114,7 +122,7 @@ const CommissionSetting = () => {
         // ShowAddButton
         showAddButton
         addButtonText="Set Commission"
-        onClick={() => navigate("/monetary-settings/commission-settings/add-commission")}
+        onClick={() => navigate("/commission-settings/add-commission")}
       />
       {loading ? (
         <Box
