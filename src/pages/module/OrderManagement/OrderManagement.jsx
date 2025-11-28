@@ -1,163 +1,150 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import { Box } from "@mui/material";
 import DataTable from "../../../components/uiComponent/DataTable";
 import { FiEye, FiTrash2 } from "react-icons/fi";
-import { FaRegEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../../../components/uiComponent/Pagination";
+import useDebounce from "../../../hooks/debounce/useDebounce";
+import useOrderManagement from "../../../hooks/orderManagement/useOrderManagement";
+import useDropdown from "../../../hooks/dropdown/useDropdown";
 
 const OrderManagement = () => {
+  const { loading, orderList, fetchOrderList, } = useOrderManagement();
+  const { fetchOrderStatus, orderStatus, fetchUserType, userType: userTypeOptions, loadingUser, loadingOrderStatus } = useDropdown();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
-  const data = [
-    {
-      orderId: "OI6798",
-      userName: "Dheeraj Jadhav",
-      userRole: "Staff",
-      items: ["1 Ball-Pen", "2 Parker Pen"],
-      quantity: 1,
-      orderDate: "10/11/2025",
-      status: "Delivered",
-    },
-    {
-      orderId: "OI9743",
-      userName: "Raeesh Khan",
-      userRole: "User",
-      items: ["1 Ball-Pen", "2 Parker Pen"],
-      quantity: 2,
-      orderDate: "10/11/2025",
-      status: "Pending",
-    },
-    {
-      orderId: "OI9834",
-      userName: "Dheeraj Jadhav",
-      userRole: "User",
-      items: ["1 Ball-Pen", "2 Parker Pen"],
-      quantity: 1,
-      orderDate: "10/11/2025",
-      status: "Returned",
-    },
-    {
-      orderId: "OI1234",
-      userName: "Sahai Meena",
-      userRole: "User",
-      items: ["1 Ball-Pen", "2 Parker Pen"],
-      quantity: 1,
-      orderDate: "10/11/2025",
-      status: "Processing",
-    },
-    {
-      orderId: "OI7850",
-      userName: "Raeesh Khan",
-      userRole: "Staff",
-      items: ["1 Ball-Pen", "2 Parker Pen"],
-      quantity: 1,
-      orderDate: "10/11/2025",
-      status: "Cancelled",
-    },
-    {
-      orderId: "OI6852",
-      userName: "Sahai Meena",
-      userRole: "User",
-      items: ["1 Ball-Pen", "2 Parker Pen"],
-      quantity: 1,
-      orderDate: "10/11/2025",
-      status: "Returned",
-    },
-    {
-      orderId: "OI0689",
-      userName: "Dheeraj Jadhav",
-      userRole: "Staff",
-      items: ["1 Ball-Pen", "2 Parker Pen"],
-      quantity: 1,
-      orderDate: "10/11/2025",
-      status: "Delivered",
-    },
-    {
-      orderId: "OI5548",
-      userName: "Raeesh Khan",
-      userRole: "User",
-      items: ["1 Ball-Pen", "2 Parker Pen"],
-      quantity: 1,
-      orderDate: "10/11/2025",
-      status: "Pending",
-    },
-    {
-      orderId: "OI6978",
-      userName: "Dheeraj Jadhav",
-      userRole: "User",
-      items: ["1 Ball-Pen", "2 Parker Pen"],
-      quantity: 2,
-      orderDate: "10/11/2025",
-      status: "Processing",
-    },
-  ];
+  const [userType, setUserType] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
+
+  useEffect(() => {
+    fetchOrderList(page, limit, debouncedSearch, status, userType, startDate, endDate);
+  }, [page, limit, debouncedSearch, status, userType, startDate, endDate]);
+
+  useEffect(() => {
+    fetchUserType();
+    fetchOrderStatus();
+  }, []);
+
+  console.log(
+    "orderList", orderList,
+    "orderStatus", orderStatus,
+    "userTypeOptions", userTypeOptions
+  );
+
+  const onPageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const onItemsPerPageChange = (newLimit) => {
+    setLimit(newLimit);
+    setPage(1);
+  };
+
   const columns = [
-    { header: "order Id", field: "orderId" },
-    { header: "user Name", field: "userName" },
-    { header: "user Role", field: "userRole" },
-    {
-      header: "Items",
-      field: "items",
-      render: (row) => row.items.join(", "),
-    },
-    { header: "quantity", field: "quantity" },
-    { header: "order Date", field: "orderDate" },
-    { header: "status", field: "status" },
+    { header: "Sr.No", field: "srNo" },
+    { header: "User Name", field: "userName" },
+    { header: "Order Id", field: "orderId" },
+    { header: "User Type", field: "userType" },
+    { header: "Total Amount", field: "totalAmount" },
+    { header: "Order Date", field: "orderDate" },
+    { header: "Status", field: "status" },
     { header: "Action", field: "action" },
   ];
 
+  const handleView = (row) => {
+    navigate(`/order-management/order-details/${row._id}`);
+  }
+
+  const actions = [
+    {
+      icon: (row) => (
+        <FiEye
+          className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
+          title="View"
+        />
+      ),
+      onClick: handleView,
+      title: "View",
+    },
+  ];
+
+  const onSearchChange = (e) => {
+    const newSearchTerm = e.target.value;
+    setSearch(newSearchTerm);
+    setPage(1);
+  };
+
+  const onChangeSelectFunc = (option) => {
+    const selected = option ? option.value : "";
+    setUserType(selected);
+    setPage(1);
+  };
+
+  const onChangeOrderStatus = (option) => {
+    const selected = option ? option.value : "";
+    setStatus(selected);
+    setPage(1);
+  }
+ const onStartDateChange = (e) => {
+    setStartDate(e.target.value);
+    setPage(1);
+  };
+
+  const onEndDateChange = (e) => {
+    setEndDate(e.target.value);
+    setPage(1);
+  };
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Order Management" }]} />
-      <PagePath2 title="Order Management" showSelect />
+      <PagePath2 title="Order Management"
+        // ShowSearch
+        showSearch
+        searchTerm={search}
+        handleSearchTerm={onSearchChange}
+        // Date range filters
+        showDateRange
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={onStartDateChange}
+        onEndDateChange={onEndDateChange}
+        // Show User type
+        showSelect
+        options={userTypeOptions}
+        optionsLoading={loadingUser}
+        onChangeSelectFunc={onChangeSelectFunc}
+        selectPlaceHolder="User Type"
+        // Show Order Status
+        showSecondSelect
+        secondSelectOptions={orderStatus}
+        secondSelectPlaceholder="Order Status"
+        secondSelectLoading={loadingOrderStatus}
+        onChangeSecondSelect={onChangeOrderStatus}
+      />
 
       <Box>
         <DataTable
           columns={columns}
-          data={data}
-          currentPage={1}
-          usersPerPage={5}
-          actions={[
-            {
-              icon: <FiEye className="w-5 h-5 text-[#CCA547]" />,
-              title: "View",
-              onClick: (row) => {
-                navigate(`/order-management/order-details`);
-              },
-              className: "hover:bg-blue-100 hover:text-[#004AAD]",
-            },
-            {
-              icon: <FaRegEdit className="w-5 h-5 text-[#34C759]" />,
-              title: "Edit",
-              onClick: (row) => {
-                navigate(`/order-management/edit-order-details`);
-              },
-
-              className: "hover:bg-blue-100 hover:text-[#004AAD]",
-            },
-            // {
-            //   icon: <FiTrash2 className="w-5 h-5 text-[#FF6B00]" />,
-            //   title: "Delete",
-            //   onClick: (row) => {
-            //     // handleDelete(row?._id);
-            //   },
-            //   className: "hover:bg-blue-100 hover:text-[#004AAD]",
-            // },
-          ]}
+          data={orderList?.data}
+          currentPage={page}
+          usersPerPage={limit}
+          actions={actions}
         />
       </Box>
       <Pagination
-        currentPage={page}
-        totalPages={10}
-        totalItems={12}
-        itemsPerPage={10}
-        // onPageChange={setCurrentPage}
-        // onItemsPerPageChange={setItemsPerPage}
+        currentPage={orderList?.pagination?.currentPage}
+        totalPages={orderList?.pagination?.totalPages}
+        totalItems={orderList?.pagination?.totalRecords}
+        itemsPerPage={orderList?.pagination?.limit}
+        onPageChange={onPageChange}
+        onItemsPerPageChange={onItemsPerPageChange}
       />
     </Box>
   );

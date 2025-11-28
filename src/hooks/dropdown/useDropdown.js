@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import useFetch from '../useFetch';
 import conf from "../../config/index";
-import { productDropdownAtom, salesTypeAtom, userTypeAtom } from '../../state/dropdown/dropdownState';
+import { orderStatusAtom, productCategoryAtom, productDropdownAtom, salesTypeAtom, userTypeAtom } from '../../state/dropdown/dropdownState';
 import { useRecoilState } from 'recoil';
 
 const useDropdown = () => {
@@ -9,9 +9,12 @@ const useDropdown = () => {
     const [loadingSales, setLoadingSales] = useState(false);
     const [loadingUser, setLoadingUser] = useState(false);
     const [loadingProduct, setLoadingProduct] = useState(false);
+    const [loadingOrderStatus, setLoadingOrderStatus] = useState(false);
     const [salesType, setSalesType] = useRecoilState(salesTypeAtom);
     const [userType, setUserType] = useRecoilState(userTypeAtom);
     const [productDropdown, setProductDropdown] = useRecoilState(productDropdownAtom);
+    const [productCategory, setProductCategory] = useRecoilState(productCategoryAtom);
+    const [orderStatus, setOrderStatus] = useRecoilState(orderStatusAtom);
 
     const fetchSalesType = async () => {
         setLoadingSales(true);
@@ -37,10 +40,10 @@ const useDropdown = () => {
             if (salesType) {
                 params.append('salesType', salesType);
             }
-            const url = salesType 
+            const url = salesType
                 ? `${conf.apiBaseUrl}admin/commissionSetting/getUserTypeDropdownValues?${params.toString()}`
                 : `${conf.apiBaseUrl}admin/commissionSetting/getUserTypeDropdownValues`;
-            
+
             const res = await fetchData({
                 method: "GET",
                 url,
@@ -72,7 +75,7 @@ const useDropdown = () => {
             });
             if (res) {
                 setProductDropdown(res?.products);
-            }   
+            }
         } catch (error) {
             console.error("Error fetching product dropdown:", error);
         } finally {
@@ -80,8 +83,44 @@ const useDropdown = () => {
         }
     };
 
-    const loading = loadingSales || loadingUser || loadingProduct;
-    return {loading, loadingSales, loadingUser, loadingProduct, fetchSalesType, fetchUserType, fetchProductDropdown, salesType, userType, productDropdown, resetUserType}
+    const fetchProductCategory = async () => {
+        setLoadingProduct(true);
+        try {
+            const res = await fetchData({
+                method: "GET",
+                url: `${conf.apiBaseUrl}admin/orders/getProductCategory`,
+            });
+            if (res) {
+                setProductCategory(res?.products);
+            }
+        } catch (error) {
+            console.error("Error fetching product dropdown:", error);
+        } finally {
+            setLoadingProduct(false);
+        }
+    };
+
+    const fetchOrderStatus = async () => {
+        setLoadingOrderStatus(true);
+        try {
+            const res = await fetchData({
+                method: "GET",
+                url: `${conf.apiBaseUrl}admin/orders/getOrderStatus`,
+            });
+            if (res) {
+                setOrderStatus(res?.data);
+            }
+        } catch (error) {
+            console.error("Error fetching product dropdown:", error);
+        } finally {
+            setLoadingOrderStatus(false);
+        }
+    };
+
+    const loading = loadingSales || loadingUser || loadingProduct || loadingOrderStatus;
+    return { loading, loadingSales, loadingUser, loadingProduct, loadingOrderStatus, fetchSalesType, 
+        fetchProductCategory, fetchOrderStatus, fetchUserType, fetchProductDropdown, salesType, userType, productDropdown, 
+        productCategory, orderStatus, resetUserType }
 }
 
 export default useDropdown
