@@ -219,7 +219,7 @@ export const allNavigationItems = [
   {
     id: 10,
     title: " Refer & Earn ",
-    url: "/feature-facilities",
+    url: "/refer-and-earn",
     icon: referandearnIcon,
     badge: null,
     color: "green",
@@ -228,7 +228,7 @@ export const allNavigationItems = [
       {
         id: 31,
         title: "Referral Tracking",
-        url: "/feature-facilities",
+        url: "/refer-and-earn",
         icon: refferralTrackingIcon,
         badge: null,
         color: "Pink",
@@ -325,7 +325,7 @@ export const allNavigationItems = [
   {
     id: 13,
     title: "Target Management",
-    url: "/coupon",
+    url: "/target-management",
     icon: targetManagementIcon,
     badge: null,
     color: "pink",
