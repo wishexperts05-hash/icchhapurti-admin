@@ -32,12 +32,6 @@ const OrderManagement = () => {
     fetchOrderStatus();
   }, []);
 
-  console.log(
-    "orderList", orderList,
-    "orderStatus", orderStatus,
-    "userTypeOptions", userTypeOptions
-  );
-
   const onPageChange = (newPage) => {
     setPage(newPage);
   };
@@ -59,7 +53,7 @@ const OrderManagement = () => {
   ];
 
   const handleView = (row) => {
-    navigate(`/order-management/order-details/${row._id}`);
+    navigate(`/order-management/order-details/${row?.userType}/${row?.orderId}`);
   }
 
   const actions = [
