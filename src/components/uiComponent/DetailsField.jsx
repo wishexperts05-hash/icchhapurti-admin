@@ -1,5 +1,6 @@
-function DetailsField({ label, value, type = "text", className = "" }) {
+function DetailsField({ label, value, type = "text", className = "",  }) {
   return (
+    
     <div className="flex flex-col w-full gap-1">
       <label className="text-sm font-medium text-gray-600">{label}</label>
       <input
