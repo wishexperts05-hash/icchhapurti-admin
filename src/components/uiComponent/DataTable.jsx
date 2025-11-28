@@ -29,7 +29,7 @@ const DataTable = ({
             data.map((row, rowIndex) => (
               <tr
                 key={row.id || rowIndex}
-                className="border-b border-border/50 hover:bg-blue-50  transition-colors duration-200 group "
+                className="border-b border-border/50 hover:bg-blue-50 transition-colors duration-200 group "
               >
                 {columns.map((col, colIndex) => {
                   const value = row[col.field];
@@ -37,7 +37,6 @@ const DataTable = ({
                   if (col.field === "banner") {
                     return (
                       <td key={colIndex} className="px-4 py-3 align-middle">
-                        {" "}
                         <div className="flex justify-center">
                           <img
                             src={value}
@@ -50,6 +49,7 @@ const DataTable = ({
                     );
                   }
 
+                  /* ------------------- UPDATED STATUS BLOCK ------------------- */
                   if (col.field === "status" || col.field === "isActive") {
                     const displayValue =
                       value === true
@@ -58,35 +58,62 @@ const DataTable = ({
                         ? "Blocked"
                         : value;
 
+                    // New order status colors
+                    const orderStatusColors = {
+                      Placed: "bg-gray-200 text-gray-700",
+                      Confirmed: "bg-blue-100 text-blue-700",
+                      Packed: "bg-indigo-100 text-indigo-700",
+                      Shipped: "bg-blue-200 text-blue-800",
+                      "Out For Delivery": "bg-sky-100 text-sky-700",
+                      Delivered: "bg-green-100 text-green-700",
+
+                      "Return Requested": "bg-amber-100 text-amber-700",
+                      "Return Approved": "bg-lime-100 text-lime-700",
+                      "Return Rejected": "bg-orange-100 text-orange-700",
+
+                      "Pickup Scheduled": "bg-purple-100 text-purple-700",
+                      "Picked Up": "bg-violet-100 text-violet-700",
+
+                      "Refund Initiated": "bg-orange-100 text-orange-700",
+                      Refunded: "bg-emerald-100 text-emerald-700",
+
+                      Cancelled: "bg-red-100 text-red-700",
+                    };
+
+                    // Old logic (unchanged)
+                    const oldColorClass =
+                      displayValue === "Present" ||
+                      displayValue === "Approved" ||
+                      displayValue === "Paid" ||
+                      displayValue === "Confirmed" ||
+                      displayValue === "Ongoing" ||
+                      displayValue === "Shown" ||
+                      displayValue === "Resolved" ||
+                      displayValue === "Active"
+                        ? "bg-green-100 text-green-700"
+                        : displayValue === "Absent" ||
+                          displayValue === "Upcoming" ||
+                          displayValue === "Created" ||
+                          displayValue === "Pending"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-red-100 text-red-700";
+
+                    // If order status found → use it, else fallback to old
+                    const finalClass =
+                      orderStatusColors[displayValue] || oldColorClass;
+
                     return (
                       <td key={colIndex} className="px-4 py-3 align-middle">
                         <span
                           onClick={() => onToggleStatus?.(row)}
-                          className={`px-2 py-1 rounded-full text-xs sm:text-sm font-medium cursor-pointer hover:scale-105 transition-transform ${
-                            displayValue === "Present" ||
-                            displayValue === "Approved" ||
-                            displayValue === "Paid" ||
-                            displayValue === "Paid" ||
-                            displayValue === "Confirmed" ||
-                            displayValue === "Ongoing" ||
-                            displayValue === "Shown" ||
-                            displayValue === "Resolved" ||
-                            displayValue === "Active"
-                              ? "bg-green-100 text-green-700"
-                              : displayValue === "Absent" ||
-                                displayValue === "Upcoming" ||
-                                // displayValue === "Blocked" ||
-                                displayValue === "Created" ||
-                                displayValue === "Pending"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
-                          }`}
+                          className={`px-2 py-1 rounded-full text-xs sm:text-sm font-medium cursor-pointer hover:scale-105 transition-transform ${finalClass}`}
                         >
                           {displayValue}
                         </span>
                       </td>
                     );
                   }
+                  /* ------------------- END STATUS BLOCK ------------------- */
 
                   if (col.field === "action") {
                     return (
@@ -96,7 +123,6 @@ const DataTable = ({
                             const isDisabledAction =
                               action.disableCondition?.(row) || false;
 
-                            // Case 1: Custom render
                             if (action.render) {
                               return (
                                 <React.Fragment key={idx}>
@@ -105,7 +131,6 @@ const DataTable = ({
                               );
                             }
 
-                            // Case 2: Icon-only
                             if (action.icon && !action.label) {
                               const iconElement =
                                 typeof action.icon === "function"
@@ -131,19 +156,18 @@ const DataTable = ({
                               );
                             }
 
-                            // Case 3: Label button (e.g., "Pay Amount")
                             return (
                               <button
                                 key={idx}
                                 title={action.title || ""}
                                 className={`flex items-center gap-2 px-3 py-1 rounded text-sm sm:text-sm transition
-        ${action.className || "bg-gray-200 text-black hover:bg-gray-300"}
-        ${isDisabledAction ? "opacity-40 cursor-not-allowed" : ""}
-      `}
+                                  ${action.className || "bg-gray-200 text-black hover:bg-gray-300"}
+                                  ${isDisabledAction ? "opacity-40 cursor-not-allowed" : ""}
+                                `}
                                 onClick={() =>
                                   !isDisabledAction && action.onClick?.(row)
                                 }
-                                disabled={isDisabledAction} // ✅ Critical for accessibility & form behavior
+                                disabled={isDisabledAction}
                                 type="button"
                               >
                                 {action.icon && (
@@ -164,7 +188,6 @@ const DataTable = ({
                     );
                   }
 
-                  // Add here column fields that need text wrapping like address
                   return (
                     <td
                       key={colIndex}
@@ -177,7 +200,7 @@ const DataTable = ({
                       }`}
                     >
                       {col.render
-                        ? col.render(row) // ✅ use custom render if provided
+                        ? col.render(row)
                         : col.field === "srNo"
                         ? (currentPage - 1) * usersPerPage + rowIndex + 1
                         : [

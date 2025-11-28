@@ -25,6 +25,11 @@ const PagePath2 = ({
   secondSelectPlaceholder = "Select Option",
   onChangeSecondSelect,
   secondSelectLoading = false,
+  showDateRange = false,
+  startDate = "",
+  endDate = "",
+  onStartDateChange = () => { },
+  onEndDateChange = () => { },
 }) => {
   return (
     <div className="bg-white p-4 mb-4 border-b rounded-2xl shadow-xl">
@@ -132,6 +137,26 @@ const PagePath2 = ({
               placeholder: (provided) => ({ ...provided, color: "#9ca3af" }),
             }}
           />
+        )}
+
+        {showDateRange && (
+          <div className="flex items-center gap-3">
+            <input
+              type="date"
+              value={startDate}
+              onChange={onStartDateChange}
+              className="bg-white border border-gray-300 rounded-lg px-3 py-[8.8px] text-sm"
+              placeholder="Start Date"
+            />
+
+            <input
+              type="date"
+              value={endDate}
+              onChange={onEndDateChange}
+              className="bg-white border border-gray-300 rounded-lg px-3 py-[8.8px] text-sm"
+              placeholder="End Date"
+            />
+          </div>
         )}
 
         <div className="flex items-center gap-3">
