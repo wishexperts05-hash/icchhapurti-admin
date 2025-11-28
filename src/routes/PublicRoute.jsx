@@ -327,7 +327,7 @@ function PublicRoute() {
             }
           />
           <Route
-            path="order-management/order-details"
+            path="order-management/order-details/:userType/:orderId"
             element={
               <OrderDetails
                 activeItem={activeItem}
