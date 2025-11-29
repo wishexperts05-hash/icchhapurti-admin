@@ -338,14 +338,14 @@ export const allNavigationItems = [
     badge: null,
     color: "yellow",
   },
-  // {
-  //   id: 15,
-  //   title: "Product Managment",
-  //   url: "/productMangment",
-  //   icon: productManagementIcon,
-  //   badge: null,
-  //   color: "gray",
-  // },
+   {
+     id: 15,
+     title: "Notification Managment",
+     url: "/notification-management",
+     icon: productManagementIcon,
+     badge: null,
+     color: "gray",
+   },
   {
     id: 16,
     title: "Theme Customization",
