@@ -58,7 +58,7 @@ const EditOrderDetails = lazy(
 // ---------------------------- Report and Analytics ----------------------------
 const Reports = lazy(() => import("../pages/module/report&Analytics/reports/Reports"));
 const StaffPerformance = lazy(() => import("../pages/module/report&Analytics/staffPerformance/StaffPerformance"));
-const LuckyDrawAnalysis = lazy(()=>import("../pages/module/report&Analytics/luckyDrawAnalysis/LuckyDrawAnalysis"))
+const LuckyDrawAnalysis = lazy(() => import("../pages/module/report&Analytics/luckyDrawAnalysis/LuckyDrawAnalysis"))
 
 // ---------------------------- Staff Management ----------------------------
 const StaffManagement = lazy(
@@ -272,9 +272,24 @@ const NotificationSend = lazy(
   () => import("../pages/module/notificationManagement/NotificationSend")
 );
 
+// ----------------------------  Target Management ----------------------------
+
+const TargetManagement = lazy(
+  () => import("../pages/module/targetManagement/TargetManagement")
+);
+const SetTargetManagement = lazy(
+  () => import("../pages/module/targetManagement/SetTargetManagement")
+);
+// ----------------------------  Refer & Earn ----------------------------
+
+const ReferralTracking = lazy(
+  () => import("../pages/module/refer&Earn/ReferralTracking")
+);
+
+
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
-  
+
   return (
     <Suspense
       fallback={
@@ -334,7 +349,7 @@ function PublicRoute() {
             }
           />
           <Route
-            path="order-management/order-details"
+            path="order-management/order-details/:userType/:orderId"
             element={
               <OrderDetails
                 activeItem={activeItem}
@@ -481,50 +496,50 @@ function PublicRoute() {
           />
 
           {/* App Management */}
-          <Route path="/app-management" element={<TermsAndConditions />} />  
+          <Route path="/app-management" element={<TermsAndConditions />} />
           <Route
             path="/app-management/terms-and-conditions"
-            element={<TermsAndConditions />}  
+            element={<TermsAndConditions />}
           />
-           <Route
-            path="/app-management/create-terms-and-conditions"
-            element={<CreateTermsAndConditions />}  
-          />  
           <Route
-          path="/app-management/edit-terms-and-conditions/:id"
+            path="/app-management/create-terms-and-conditions"
             element={<CreateTermsAndConditions />}
-          /> 
+          />
+          <Route
+            path="/app-management/edit-terms-and-conditions/:id"
+            element={<CreateTermsAndConditions />}
+          />
           <Route
             path="/app-management/terms-and-conditions/view/:id"
             element={<ViewTermsAndConditions />}
           />
           <Route
             path="/app-management/privacy-policy"
-            element={<PrivacyPolicy />} 
+            element={<PrivacyPolicy />}
           />
           <Route
             path="/app-management/create-privacy-policy"
             element={<CreatePrivacyPolicy />}
           />
           <Route
-            path="/app-management/edit-privacy-policy/:id"  
+            path="/app-management/edit-privacy-policy/:id"
             element={<CreatePrivacyPolicy />}
           />
           <Route
             path="/app-management/privacy-policy/view/:id"
             element={<ViewPrivacyPolicy />}
           />
-         
+
           <Route path="/app-management/manage-banner" element={<Banner />} />
           <Route
-            path="/app-management/manage-banner/banner-details/:id"   
+            path="/app-management/manage-banner/banner-details/:id"
             element={<BannerDetails />}
           />
           <Route
             path="/app-management/manage-banner/create-banner"
             element={<CreateBanner />}
           />
-       <Route
+          <Route
             path="/app-management/manage-banner/edit-banner/:id"
             element={<EditBanner />}
           />
@@ -533,12 +548,12 @@ function PublicRoute() {
             element={<UpdateBanner />}
           />
           <Route
-           path="/app-management/help-and-support"
-            element={<HelpSupport />} 
-            />
-            <Route
+            path="/app-management/help-and-support"
+            element={<HelpSupport />}
+          />
+          <Route
             path="/app-management/other-settings"
-            element={<OtherSettings />} 
+            element={<OtherSettings />}
           />
 
           {/* -------------------------- Country Management -------------------------- */}
@@ -572,7 +587,7 @@ function PublicRoute() {
             path="/lucky-draw-management/edit-lucky-draw"
             element={<LuckyDrawManagementEdit />}
           />
-          
+
           <Route
             path="/lucky-draw-management/select-winner"
             element={<LuckyDrawManagementSelectWinner />}
@@ -620,15 +635,24 @@ function PublicRoute() {
           <Route path="/coin-settings" element={<CoinSettings />} />
           <Route path="/withdraw-settings" element={<WithDrawSettings />} />
 
-           {/* -------------------------------------Reports & Analytics------------------------------------------- */} 
+          {/* -------------------------------------Reports & Analytics------------------------------------------- */}
 
-           <Route path="/reports" element={<Reports />} />
-           <Route path="/staff-performance" element={<StaffPerformance />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/staff-performance" element={<StaffPerformance />} />
 
-           <Route path="/lucky-draw-analysis" element={<LuckyDrawAnalysis />} />
-           
+          <Route path="/lucky-draw-analysis" element={<LuckyDrawAnalysis />} />
+
+          {/* -------------------------- Target Management -------------------------- */}
+
+          <Route path="/target-management" element={<TargetManagement />} />
+
+          <Route path="/target-management/setTarget-management" element={<SetTargetManagement />} />
+          {/* -------------------------- Refer & Earn -------------------------- */}
+
+          <Route path="/refer-and-earn" element={<ReferralTracking/>}/>
 
           {/* -------------------------- Comments and Reviews -------------------------- */}
+
           <Route path="/manage-comments" element={<ManageComments />} />
           <Route path="/manage-comments/view-comment" element={<ManageCommentsView />} />
           <Route path="/set-review-display" element={<SetReviewDisplay />} />

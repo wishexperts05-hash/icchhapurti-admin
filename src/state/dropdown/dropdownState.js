@@ -6,3 +6,7 @@ export const salesTypeAtom = atom(createPersistedAtom("salesTypeKey", []));
 export const userTypeAtom = atom(createPersistedAtom("userTypeKey", []));
 
 export const productDropdownAtom = atom(createPersistedAtom("productDropdownKey", []));
+
+export const productCategoryAtom = atom(createPersistedAtom("productCategoryKey", []));
+
+export const orderStatusAtom = atom(createPersistedAtom("orderStatusKey", []));

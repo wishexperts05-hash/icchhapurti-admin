@@ -65,10 +65,9 @@ const CountryManagementAdd = () => {
   const handleCancel = () => navigate("/country-management");
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 ">
       <BreadCrumb
         linkText={[
-          { text: "Dashboard" },
           { text: "Country Management", href: "/country-management" },
           { text: isEditMode ? "Edit Country" : "Add Country" },
         ]}
@@ -84,7 +83,7 @@ const CountryManagementAdd = () => {
           <LoaderSpinner />
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-md p-6 mt-4">
+        <div className="bg-white p-4 mb-4 border-b rounded-xl shadow-md">
           <Formik
             enableReinitialize
             initialValues={{

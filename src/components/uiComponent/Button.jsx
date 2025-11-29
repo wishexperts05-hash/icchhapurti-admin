@@ -33,18 +33,24 @@ const Button = ({
       //Approve button
       case 3:
         return `bg-green-600 text-white px-6 py-3 rounded-xl 
-                flex justify-center items-center gap-2 cursor-pointer 
-                font-medium shadow-md 
-                hover:bg-green-700 hover:shadow-lg 
+                 flex justify-center items-center gap-2 cursor-pointer 
+                 font-medium shadow-md 
+                 hover:bg-green-700 hover:shadow-lg 
                 transition duration-300`;
+          
+
 
       //Reject button
       case 4:
         return `bg-red-600 text-white px-6 py-3 rounded-xl 
-                flex justify-center items-center gap-2 cursor-pointer 
+               flex justify-center items-center gap-2 cursor-pointer 
                 font-medium shadow-md 
-                hover:bg-red-700 hover:shadow-lg 
-                transition duration-300`;
+                 hover:bg-red-700 hover:shadow-lg 
+                 transition duration-300
+`;
+
+
+
       default:
         return "";
     }
