@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import DataTable from "../../../components/uiComponent/DataTable";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import Pagination from "../../../components/uiComponent/Pagination";
+import useCommentandReviews from "../../../hooks/CommentandReviews/useCommentandReviews";
 
 export default function ManageComments({ activeItem, setActiveItem }) {
   const navigate = useNavigate();
@@ -12,6 +13,14 @@ export default function ManageComments({ activeItem, setActiveItem }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  //change
+  const { loading, commentAndReviews, fetchCommentsList } =
+    useCommentandReviews();
+  //Calling Api Whenever Page , Search, limit Changes
+  useEffect(() => {
+    fetchCommentsList(currentPage, itemsPerPage, searchTerm);
+  }, [currentPage, itemsPerPage, searchTerm, fetchCommentsList]);
 
   const handleSearchTerm = (e) => {
     setSearchTerm(e.target.value);
@@ -23,93 +32,35 @@ export default function ManageComments({ activeItem, setActiveItem }) {
     navigate("/set-review-display");
   };
 
-  const [comments, setComments] = useState([
-    {
-      srNo: 1,
-      name: "Jane Cooper",
-      mobileNumber: "+91 9876543210",
-      email: "example@mail.com",
-      status: "shown",
-      review: 4,
-    },
-    {
-      srNo: 2,
-      name: "Sahai Meena",
-      mobileNumber: "+91 9876543210",
-      email: "example@mail.com",
-      status: "shown",
-      review: 5,
-    },
-    {
-      srNo: 3,
-      name: "Raeesh Khan",
-      mobileNumber: "+91 9876543210",
-      email: "example@mail.com",
-      status: "hidden",
-      review: 5,
-    },
-    {
-      srNo: 4,
-      name: "Devendra Sharma",
-      mobileNumber: "+91 9876543210",
-      email: "example@mail.com",
-      status: "hidden",
-      review: 5,
-    },
-    {
-      srNo: 5,
-      name: "Anil Pabbi Ap",
-      mobileNumber: "+91 9876543210",
-      email: "example@mail.com",
-      status: "shown",
-      review: 4,
-    },
-    {
-      srNo: 6,
-      name: "Ashpak Tamboli",
-      mobileNumber: "+91 9876543210",
-      email: "example@mail.com",
-      status: "shown",
-      review: 4,
-    },
-    {
-      srNo: 7,
-      name: "Kamal Verma",
-      mobileNumber: "+91 9876543210",
-      email: "example@mail.com",
-      status: "hidden",
-      review: 3,
-    },
-    ...Array.from({ length: 23 }, (_, i) => ({
-      srNo: 8 + i,
-      name: `User ${8 + i}`,
-      mobileNumber: "+91 9876543210",
-      email: "example@mail.com",
-      status: i % 2 === 0 ? "shown" : "hidden",
-      review: Math.floor(Math.random() * 3) + 3,
-    })),
-  ]);
 
-  const filteredData = useMemo(
-    () =>
-      comments.filter(
-        (item) =>
-          item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.mobileNumber.includes(searchTerm)
-      ),
-    [comments, searchTerm]
-  );
+  //comments from recoil
+  const comments =
+    commentAndReviews?.data ||
+    commentAndReviews?.reviews ||
+    commentAndReviews?.rows ||
+    [];
 
-  const totalItems = filteredData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  //Changes
+  const totalItems =
+    commentAndReviews?.total ||
+    commentAndReviews?.totalReviews ||
+    commentAndReviews?.count ||
+    comments.length;
+
+  const totalPages = Math.ceil((totalItems || 0) / itemsPerPage);
+
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = filteredData.slice(startIndex, endIndex);
+  const currentItems = comments.slice(startIndex, startIndex + itemsPerPage);
 
-  const handleViewComment = (comment) => {
-    navigate("/manage-comments/view-comment");
-    // Navigate to view comment page or open modal
+  //main
+  // const handleViewComment = (comment) => {
+  //   navigate("/manage-comments/view-comment");
+  //   // Navigate to view comment page or open modal
+  // };
+  //---------------------------------------------------
+  const handleViewComment = (row) => {
+    console.log("Row on eye click:", row); // just to verify _id and reviewType
+    navigate(`/manage-comments/view-comment/${row._id}/${row.reviewType}`);
   };
 
   const renderStars = (rating) => {
@@ -175,12 +126,12 @@ export default function ManageComments({ activeItem, setActiveItem }) {
             ...item,
             srNo: startIndex + index + 1,
             status:
-              item.status === "shown" ? (
+              item.status === "show" ? (
                 <span className="text-green-600 font-medium">Shown</span>
               ) : (
                 <span className="text-red-600 font-medium">Hidden</span>
               ),
-            review: renderStars(item.review),
+            review: renderStars(item.stars || 0),
           }))}
           actions={actions}
           currentPage={currentPage}
