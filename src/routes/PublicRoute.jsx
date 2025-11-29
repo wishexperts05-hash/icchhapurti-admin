@@ -276,10 +276,22 @@ const SetTargetManagement = lazy(
 // ----------------------------  Refer & Earn ----------------------------
 
 const ReferralTracking = lazy(
-  () => import("../pages/module/refer&Earn/ReferralTracking")
+  () => import("../pages/module/refer&Earn/referralTracking/ReferralTracking")
+);
+const RefferalDiscountSetting = lazy(
+  () => import("../pages/module/refer&Earn/referralTracking/ReferralDiscountSetting")
 );
 
-
+const ViewUserReferral=lazy(
+  ()=>import("../pages/module/refer&Earn/referralTracking/ViewUserReferral")
+)
+// ----------------------------  Upload Video ----------------------------
+const UploadVideo=lazy(
+  ()=>import("../pages/module/refer&Earn/uploadVideo/UploadVideo")
+)
+const EditVideo=lazy(
+  ()=>import("../pages/module/refer&Earn/uploadVideo/EditVideo")
+)
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
 
@@ -643,6 +655,13 @@ function PublicRoute() {
           {/* -------------------------- Refer & Earn -------------------------- */}
 
           <Route path="/refer-and-earn" element={<ReferralTracking/>}/>
+          <Route path="/referral-discount-setting" element={<RefferalDiscountSetting/>}/>
+          <Route path="/view-user-referral" element={<ViewUserReferral/>}/>
+
+           {/* -------------------------- Upload Video -------------------------- */}
+          <Route path="/upload-video" element={<UploadVideo/>}/>
+          <Route path="/edit-video" element={<EditVideo/>}/>
+          
 
           {/* -------------------------- Comments and Reviews -------------------------- */}
 
@@ -650,7 +669,6 @@ function PublicRoute() {
           <Route path="/manage-comments/view-comment/:reviewId/:reviewType" element={<ManageCommentsView />} /> 
           <Route path="/set-review-display" element={<SetReviewDisplay />} />
           <Route path="/edit-review-display" element={<EditReviewDisplay />} />
-
 
 
 

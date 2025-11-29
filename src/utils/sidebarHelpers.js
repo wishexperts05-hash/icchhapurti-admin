@@ -236,7 +236,7 @@ export const allNavigationItems = [
       {
         id: 32,
         title: " Upload Video ",
-        url: "/pg-hostel-listing",
+        url: "/upload-video",
         icon: uploadVideoIcon,
         badge: null,
         color: "purple",
