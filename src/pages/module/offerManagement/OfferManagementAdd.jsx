@@ -64,7 +64,6 @@ const OfferManagementAdd = () => {
         <div className="bg-gray-50 min-h-screen">
             <BreadCrumb
                 linkText={[
-                    { text: "Dashboard" },
                     { text: "Offer Management", href: "/offer-management" },
                     { text: isEditMode ? "Edit Offer" : "Add New Offer" },
                 ]}

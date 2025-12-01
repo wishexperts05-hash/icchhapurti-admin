@@ -109,37 +109,40 @@ const useCommissionSetting = () => {
         const result = await confirmAlert("Are you sure you want to delete this commission setting?");
         if (!result) return;
         setLoading(true);
-        try {
-            const res = await fetchData({
-                method: "DELETE",
-                url: `${conf.apiBaseUrl}admin/commissionSetting/deleteCommissionSetting/${id}`,
-            });
-            if (res) {
-                Swal.fire({
-                    title: "Deleted!",
-                    text: res?.message,
-                    icon: "success",
-                    confirmButtonText: "OK",
+        if (result.isConfirmed) {
+            try {
+                const res = await fetchData({
+                    method: "DELETE",
+                    url: `${conf.apiBaseUrl}admin/commissionSetting/deleteCommissionSetting/${id}`,
                 });
+                if (res) {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: res?.message,
+                        icon: "success",
+                        confirmButtonText: "OK",
+                    });
+                    setLoading(false);
+                    return res;
+                }
+            } catch (error) {
+                console.error("Error deleting commission setting:", error);
+                toast.error(error?.response?.data?.message);
                 setLoading(false);
-                return res;
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.error("Error deleting commission setting:", error);
-            toast.error(error?.response?.data?.message);
-            setLoading(false);
-        } finally {
-            setLoading(false);
         }
     };
 
-     const resetCommissionSettingDetails = () => {
+    const resetCommissionSettingDetails = () => {
         setCommissionSettingDetails(null);
     };
 
-    return { fetchCommissionSettingsList, loading, commissionSettingList, commissionSettingDetails, fetchCommissionSettingDetails,
+    return {
+        fetchCommissionSettingsList, loading, commissionSettingList, commissionSettingDetails, fetchCommissionSettingDetails,
         deleteCommissionSetting, addCommissionSetting, updateCommissionSetting, resetCommissionSettingDetails
-     };
+    };
 }
 
 export default useCommissionSetting
