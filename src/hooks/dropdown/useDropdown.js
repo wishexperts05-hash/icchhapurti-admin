@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import useFetch from '../useFetch';
 import conf from "../../config/index";
-import { orderStatusAtom, productCategoryAtom, productDropdownAtom, salesTypeAtom, userTypeAtom } from '../../state/dropdown/dropdownState';
+import { orderStatusAtom, productCategoryAtom, productDropdownAtom, salesTypeAtom, userTypeAtom, countriesAtom } from '../../state/dropdown/dropdownState';
 import { useRecoilState } from 'recoil';
+import { toast } from 'react-toastify'; // Add this import
 
 const useDropdown = () => {
     const [fetchData] = useFetch();
@@ -10,11 +11,13 @@ const useDropdown = () => {
     const [loadingUser, setLoadingUser] = useState(false);
     const [loadingProduct, setLoadingProduct] = useState(false);
     const [loadingOrderStatus, setLoadingOrderStatus] = useState(false);
+    const [countryLoading, setCountryLoading] = useState(false); 
     const [salesType, setSalesType] = useRecoilState(salesTypeAtom);
     const [userType, setUserType] = useRecoilState(userTypeAtom);
     const [productDropdown, setProductDropdown] = useRecoilState(productDropdownAtom);
     const [productCategory, setProductCategory] = useRecoilState(productCategoryAtom);
     const [orderStatus, setOrderStatus] = useRecoilState(orderStatusAtom);
+    const [countries, setCountries] = useRecoilState(countriesAtom); 
 
     const fetchSalesType = async () => {
         setLoadingSales(true);
@@ -99,6 +102,27 @@ const useDropdown = () => {
             setLoadingProduct(false);
         }
     };
+    
+    const fetchCountryDropdown = async () => {
+        setCountryLoading(true);
+        try {
+            const url = `${conf.apiBaseUrl}admin/country/all/dropdown`;
+
+            const res = await fetchData({
+                method: "GET",
+                url,
+            });
+
+            if (res) {
+                setCountries(res?.countries || res?.data || res || []);
+            }
+        } catch (error) {
+            console.error("Error fetching countries:", error);
+            toast.error("Failed to load countries");
+        } finally {
+            setCountryLoading(false);
+        }
+    };
 
     const fetchOrderStatus = async () => {
         setLoadingOrderStatus(true);
@@ -116,11 +140,30 @@ const useDropdown = () => {
             setLoadingOrderStatus(false);
         }
     };
-
-    const loading = loadingSales || loadingUser || loadingProduct || loadingOrderStatus;
-    return { loading, loadingSales, loadingUser, loadingProduct, loadingOrderStatus, fetchSalesType, 
-        fetchProductCategory, fetchOrderStatus, fetchUserType, fetchProductDropdown, salesType, userType, productDropdown, 
-        productCategory, orderStatus, resetUserType }
+    
+    const loading = loadingSales || loadingUser || loadingProduct || loadingOrderStatus || countryLoading;
+    
+    return { 
+        loading, 
+        loadingSales, 
+        loadingUser, 
+        loadingProduct, 
+        loadingOrderStatus,
+        countryLoading,
+        fetchSalesType, 
+        fetchProductCategory, 
+        fetchOrderStatus, 
+        fetchUserType, 
+        fetchProductDropdown,
+        fetchCountryDropdown,
+        salesType, 
+        userType, 
+        productDropdown, 
+        productCategory, 
+        orderStatus,
+        countries,
+        resetUserType 
+    }
 }
 
 export default useDropdown
