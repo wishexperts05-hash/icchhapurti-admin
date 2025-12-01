@@ -435,6 +435,14 @@ export const allNavigationItems = [
         badge: null,
         color: "yellow",
       },
+       {
+        id: 66,
+        title: "Faq",
+        url: "/app-management/faq",
+        icon: otherSettingsIcon,
+        badge: null,
+        color: "yellow",
+      },
     ],
   },
 ];
