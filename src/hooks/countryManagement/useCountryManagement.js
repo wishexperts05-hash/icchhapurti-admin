@@ -8,17 +8,15 @@ import { toast } from "react-toastify";
 import { confirmAlert } from "../../utils/alertToast";
 import Swal from "sweetalert2";
 
-
 const useCountryManagement = () => {
   const [countryList, setCountryList] = useRecoilState(
     countryManagementListAtom
   );
   const [countryDetail, setCountryDetail] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [dropdown,setDropdown] = useState([]);
+  const [dropdown, setDropdown] = useState([]);
   const [fetchData] = useFetch();
   const navigate = useNavigate();
-
 
   const fetchCountryList = async (page, limit, search) => {
     setLoading(true);
@@ -33,9 +31,6 @@ const useCountryManagement = () => {
       const res = await fetchData({
         method: "GET",
         url,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
 
       if (res) {
@@ -60,16 +55,12 @@ const useCountryManagement = () => {
       const res = await fetchData({
         method: "PUT",
         url: `${conf.apiBaseUrl}admin/country/${id}`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
         data,
       });
 
       if (res) {
         toast.success(res?.message);
-        
+
         navigate(`/country-management`);
         // console.log(res);
       }
@@ -89,9 +80,6 @@ const useCountryManagement = () => {
       const res = await fetchData({
         method: "POST",
         url: `${conf.apiBaseUrl}admin/country/add`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
         data: formdata,
       });
       if (res) {
@@ -118,9 +106,6 @@ const useCountryManagement = () => {
       const res = await fetchData({
         method: "GET",
         url: `${conf.apiBaseUrl}admin/country/${id}`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
       if (res) {
         setCountryDetail(res);
@@ -146,9 +131,6 @@ const useCountryManagement = () => {
         const res = await fetchData({
           method: "DELETE",
           url: `${conf.apiBaseUrl}admin/country/delete/${id}`,
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         });
 
         if (res) {
@@ -170,53 +152,41 @@ const useCountryManagement = () => {
     }
   };
 
-  const countryDropdown = async()=>{
-
+  const countryDropdown = async () => {
     setDropdown([]);
     setLoading(true);
 
-    try{
-        const res = await fetchData({
-            method:"GET",
-            url: `${conf.apiBaseUrl}admin/country/all/dropdown-add`,
-            headers:{
-                Authorization: `Bearer ${sessionStorage.getItem("token")}`
-            }
-        });
+    try {
+      const res = await fetchData({
+        method: "GET",
+        url: `${conf.apiBaseUrl}admin/country/all/dropdown-add`,
+      });
 
-        if (res) {
-  const list = res?.data || res?.countries || res?.list || [];
-  setDropdown(list);
-//   console.log("Dropdown list:", list);
-}
+      if (res) {
+        const list = res?.data || res?.countries || res?.list || [];
+        setDropdown(list);
+        //   console.log("Dropdown list:", list);
+      }
+    } catch (error) {
+      console.error("Failed to load dropdown:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    }catch (error) {
-            console.error("Failed to load dropdown:", error);
-        }
-        finally {
-            setLoading(false)
-        }
-    };
-    
+  const getCountryByName = async (name) => {
+    try {
+      const res = await fetchData({
+        method: "GET",
+        url: `${conf.apiBaseUrl}admin/country/name/${name}`,
+      });
 
-    const getCountryByName = async (name) => {
-  try {
-    const res = await fetchData({
-      method: "GET",
-      url: `${conf.apiBaseUrl}admin/country/name/${name}`,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    });
-
-    return res?.country || null;
-  } catch (error) {
-    console.error("Error fetching country by name:", error);
-    return null;
-  }
-};
-
- 
+      return res?.country || null;
+    } catch (error) {
+      console.error("Error fetching country by name:", error);
+      return null;
+    }
+  };
 
   return {
     loading,
@@ -231,7 +201,7 @@ const useCountryManagement = () => {
     resetCountryDetails,
     deleteCountryListById,
     dropdown,
-    getCountryByName
+    getCountryByName,
   };
 };
 
