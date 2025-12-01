@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import useNotificationManagement from "../../../hooks/notificationManagement/useNotificationManagement";
-import useCountryManagement from "../../../hooks/countryManagement/useCountryManagement";
 import { ChevronDown, X } from "lucide-react";
 
 const SendNotification = () => {
@@ -17,12 +16,25 @@ const SendNotification = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const { loading, sendNotification } = useNotificationManagement();
-  const { dropdown: countries, countryDropdown, loading: countryLoading } = useCountryManagement();
+  const { 
+    loading, 
+    sendNotification, 
+    countries, 
+    countryLoading, 
+    fetchCountryDropdown 
+  } = useNotificationManagement();
+
+  // User type options for multi-select
+  const userTypeOptions = [
+    { value: "all", label: "All Users" },
+    { value: "User", label: "User" },
+    { value: "Staff", label: "Staff" },
+    { value: "Promoter", label: "Promoter" },
+  ];
 
   // Fetch countries on mount
   useEffect(() => {
-    countryDropdown();
+    fetchCountryDropdown();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -40,21 +52,15 @@ const SendNotification = () => {
     };
   }, []);
 
-  // User type options for multi-select
-  const userTypeOptions = [
-    { value: "all", label: "All Users" },
-    { value: "User", label: "User" },
-    { value: "Staff", label: "Staff" },
-    { value: "Promoter", label: "Promoter" },
-  ];
-
   // Convert countries to options format
-  const countryOptions = countries.map((country) => ({
-    value: country._id || country.name,
+  const countryOptions = Array.isArray(countries) ? countries.map((country) => ({
+    value: country._id || country.id || country.name,
     label: country.name,
-  }));
+  })) : [];
 
-  const handleCancel = () => navigate("/notification-management");
+  const handleCancel = () => {
+    navigate("/notification-management");
+  };
 
   const validationSchema = Yup.object({
     title: Yup.string()
@@ -79,19 +85,14 @@ const SendNotification = () => {
   const handleTargetAudienceChange = (value, setFieldValue) => {
     setTargetAudience(value);
     setFieldValue("targetAudience", value);
-
-    // Don't reset fields - keep the selections
-    // Users can manually clear them if needed
   };
 
   const handleUserSelectionToggle = (userValue, setFieldValue, currentSelection) => {
     let newSelection;
 
     if (userValue === "all") {
-      // If "All Users" is selected, clear other selections
       newSelection = currentSelection.includes("all") ? [] : ["all"];
     } else {
-      // Remove "All Users" if any specific user type is selected
       const filteredSelection = currentSelection.filter((val) => val !== "all");
       
       if (filteredSelection.includes(userValue)) {
@@ -106,7 +107,7 @@ const SendNotification = () => {
   };
 
   const getSelectedUsersDisplay = (selectedUsers) => {
-    if (selectedUsers.length === 0) return "Select user types";
+    if (!selectedUsers || selectedUsers.length === 0) return "Select user types";
     if (selectedUsers.includes("all")) return "All Users";
     
     const labels = selectedUsers.map(val => {
@@ -124,7 +125,7 @@ const SendNotification = () => {
   };
 
   const getSelectedUsersLabels = (selectedUsers) => {
-    if (selectedUsers.length === 0) return [];
+    if (!selectedUsers || selectedUsers.length === 0) return [];
     
     return selectedUsers.map(val => {
       const option = userTypeOptions.find(opt => opt.value === val);
@@ -136,24 +137,30 @@ const SendNotification = () => {
     let payload = {
       title: values.title,
       message: values.message,
+      targetAudience: [],
+      targetCountry: "all",
     };
 
-    // Build targetAudience array based on selection
     if (values.targetAudience === "selectUsers") {
-      // If "all" is selected in the multi-select, send all types
       if (values.selectedUsers.includes("all")) {
         payload.targetAudience = ["User", "all"];
+        payload.targetCountry = "all";
       } else {
         payload.targetAudience = values.selectedUsers;
+        payload.targetCountry = "all";
       }
     } else if (values.targetAudience === "specificCountry") {
       payload.targetAudience = ["User"];
       payload.targetCountry = values.targetCountry;
     }
 
-    const result = await sendNotification(payload);
-    if (result) {
-      navigate("/notification-management");
+    try {
+      const result = await sendNotification(payload);
+      if (result) {
+        navigate("/notification-management");
+      }
+    } catch (error) {
+      console.error("Error submitting notification:", error);
     }
   };
 
@@ -248,14 +255,13 @@ const SendNotification = () => {
                 </div>
               </div>
 
-              {/* Multi-Select User Types - Show only when Select Users is selected */}
+              {/* Multi-Select User Types */}
               {targetAudience === "selectUsers" && (
                 <div className="mb-6">
                   <label className="block text-gray-700 font-medium mb-2">
                     Select User Types <span className="text-red-500">*</span>
                   </label>
                   <div className="relative" ref={dropdownRef}>
-                    {/* Dropdown Button */}
                     <button
                       type="button"
                       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -269,7 +275,6 @@ const SendNotification = () => {
                       />
                     </button>
 
-                    {/* Dropdown Menu */}
                     {isDropdownOpen && (
                       <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
                         {userTypeOptions.map((userType) => (
@@ -300,8 +305,7 @@ const SendNotification = () => {
                     <p className="text-red-500 text-sm mt-1">{errors.selectedUsers}</p>
                   )}
 
-                  {/* Selected Users Tags */}
-                  {values.selectedUsers.length > 0 && (
+                  {values.selectedUsers && values.selectedUsers.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
                       {getSelectedUsersLabels(values.selectedUsers).map((user) => (
                         <div
@@ -323,7 +327,31 @@ const SendNotification = () => {
                 </div>
               )}
 
-              {/* Country Dropdown - Show only when Specific Country is selected */}
+              {targetAudience === "specificCountry" && values.selectedUsers && values.selectedUsers.length > 0 && (
+                <div className="mb-6">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Previously Selected User Types
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {getSelectedUsersLabels(values.selectedUsers).map((user) => (
+                      <div
+                        key={user.value}
+                        className="inline-flex items-center gap-2 bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full text-sm font-medium"
+                      >
+                        <span>{user.label}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeUserSelection(user.value, setFieldValue, values.selectedUsers)}
+                          className="hover:bg-gray-300 rounded-full p-0.5 transition-colors"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {targetAudience === "specificCountry" && (
                 <div className="relative mb-6">
                   <FormField
@@ -343,7 +371,6 @@ const SendNotification = () => {
                     </div>
                   )}
 
-                  {/* Selected Country Tag */}
                   {values.targetCountry && (
                     <div className="flex flex-wrap gap-2 mt-3">
                       <div className="inline-flex items-center gap-2 bg-[#FF6B00] text-white px-3 py-1.5 rounded-full text-sm font-medium">
@@ -363,7 +390,6 @@ const SendNotification = () => {
                 </div>
               )}
 
-              {/* Show Selected Country Tag even when user selection is active */}
               {targetAudience === "selectUsers" && values.targetCountry && (
                 <div className="mb-6">
                   <label className="block text-gray-700 font-medium mb-2">
@@ -396,9 +422,7 @@ const SendNotification = () => {
                   disabled={loading || isSubmitting}
                 />
                 <Button
-                  text={
-                    loading || isSubmitting ? "Sending..." : "Send Notification"
-                  }
+                  text={loading || isSubmitting ? "Sending..." : "Send Notification"}
                   type="submit"
                   variant={1}
                   disabled={loading || isSubmitting}

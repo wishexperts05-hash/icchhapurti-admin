@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
 import { notificationListAtom } from "../../state/notificationManagement/NotificationManagementState";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import useFetch from "../useFetch";
 import conf from "../../config";
 import { toast } from "react-toastify";
@@ -8,11 +8,13 @@ import { toast } from "react-toastify";
 const useNotificationManagement = () => {
   const [notificationList, setNotificationList] = useRecoilState(notificationListAtom);
   const [notificationDetail, setNotificationDetail] = useState(null);
+  const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [countryLoading, setCountryLoading] = useState(false);
   const [fetchData] = useFetch();
 
   // Fetch All Notifications - GET /api/admin/notifications/all
-  const fetchNotificationList = async () => {
+  const fetchNotificationList = useCallback(async () => {
     setLoading(true);
     try {
       const url = `${conf.apiBaseUrl}admin/notifications/all`;
@@ -30,10 +32,10 @@ const useNotificationManagement = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchData, setNotificationList]);
 
   // Reset Notification List
-  const resetNotificationList = () => {
+  const resetNotificationList = useCallback(() => {
     setNotificationList({
       data: [],
       pagination: {
@@ -45,10 +47,32 @@ const useNotificationManagement = () => {
         hasPrevPage: false,
       },
     });
-  };
+  }, [setNotificationList]);
+
+  // Fetch Country Dropdown - GET /api/admin/country/all/dropdown
+  const fetchCountryDropdown = useCallback(async () => {
+    setCountryLoading(true);
+    try {
+      const url = `${conf.apiBaseUrl}admin/country/all/dropdown`;
+
+      const res = await fetchData({
+        method: "GET",
+        url,
+      });
+
+      if (res) {
+        setCountries(res?.data || res || []);
+      }
+    } catch (error) {
+      console.error("Error fetching countries:", error);
+      toast.error("Failed to load countries");
+    } finally {
+      setCountryLoading(false);
+    }
+  }, [fetchData]);
 
   // Create/Send Notification - POST /api/admin/notifications/add
-  const sendNotification = async (formdata) => {
+  const sendNotification = useCallback(async (formdata) => {
     setLoading(true);
     try {
       const res = await fetchData({
@@ -61,16 +85,18 @@ const useNotificationManagement = () => {
         toast.success(res?.message || "Notification created successfully");
         return res;
       }
+      return null;
     } catch (error) {
       console.error("Error sending notification:", error);
       toast.error(error?.response?.data?.message || "Failed to send notification");
+      return null;
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchData]);
 
   // Fetch Notification by ID - GET /api/admin/notifications/getbyid/:id
-  const fetchNotificationById = async (id) => {
+  const fetchNotificationById = useCallback(async (id) => {
     setLoading(true);
     try {
       const res = await fetchData({
@@ -86,12 +112,12 @@ const useNotificationManagement = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchData]);
 
   // Reset Notification Details
-  const resetNotificationDetails = () => {
+  const resetNotificationDetails = useCallback(() => {
     setNotificationDetail(null);
-  };
+  }, []);
 
   return {
     loading,
@@ -102,6 +128,9 @@ const useNotificationManagement = () => {
     sendNotification,
     fetchNotificationById,
     resetNotificationDetails,
+    countries,
+    countryLoading,
+    fetchCountryDropdown,
   };
 };
 
