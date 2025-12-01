@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import { useState } from "react";
+import Button from "../../../components/uiComponent/Button";
 
 
 const FormInput = ({ label, id, icon: Icon, ...props }) => (
@@ -153,21 +154,13 @@ const SetTargetManagement = () => {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="w-full sm:w-64 px-12 py-3 border border-[#CCA547] text-[#CCA547] text-base font-medium rounded-lg
-                         hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-[#CCA547] transition-all"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="w-full sm:w-64 px-12 py-3 bg-[#CCA547] text-white text-base font-medium rounded-lg
-                         hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-[#CCA547] transition-all"
-            >
-              Save
-            </button>
+            <div className="flex justify-center gap-8 mt-8 mb-8 ">
+              <Button text="Cancel" variant={2} onClick={handleCancel} />
+            </div>
+            {/* Action Buttons */}
+            <div className="flex justify-center gap-8 mt-8 mb-8 ">
+              <Button text="Save" variant={1} onClick={handleSubmit} />
+            </div>
           </div>
         </form>
       </div>

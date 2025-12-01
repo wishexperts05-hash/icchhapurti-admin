@@ -7,6 +7,7 @@ import { useState } from "react";
 import useDebounce from "../../../../hooks/debounce/useDebounce";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import Pagination from "../../../../components/uiComponent/Pagination";
+import Button from "../../../../components/uiComponent/Button";
 
 const ViewUserReferral = () => {
 
@@ -43,12 +44,12 @@ const ViewUserReferral = () => {
     // Handle Back Button
 
     const handleBack = () => {
-        navigate("/refer-and-earn");
+        navigate("/refer-and-earn-user");
     };
     return (
         <Box>
 
-            <BreadCrumb linkText={[{ text: "Refer & Earn" }, { text: "Referral Tracking", href: "/refer-and-earn" }, { text: "View User Referral" }]} />
+            <BreadCrumb linkText={[{ text: "Refer & Earn" }, { text: "Referral Tracking", href: "/refer-and-earn-user" }, { text: "View User Referral" }]} />
             <PagePath2
                 title="Referral Tracking"
             />
@@ -67,15 +68,12 @@ const ViewUserReferral = () => {
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
-                <button
-                    type="button"
-                    onClick={handleBack}
-                    className="w-full sm:w-64 px-12 py-3 bg-[#CCA547] text-white text-base font-medium rounded-lg
-                         hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-[#CCA547] transition-all"
-                >
-                    Back
-                </button>
+                <div className="flex justify-center gap-8 mt-8 mb-8 ">
+                    <Button text="Back" variant={1} onClick={handleBack} />
+                </div>
             </div>
+
+
 
         </Box>
 
