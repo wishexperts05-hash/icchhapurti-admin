@@ -228,7 +228,7 @@ export const allNavigationItems = [
       {
         id: 31,
         title: "Referral Tracking",
-        url: "/refer-and-earn",
+        url: "/refer-and-earn-user",
         icon: refferralTrackingIcon,
         badge: null,
         color: "Pink",

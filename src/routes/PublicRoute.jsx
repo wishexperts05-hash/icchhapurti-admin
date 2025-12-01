@@ -282,8 +282,11 @@ const SetTargetManagement = lazy(
 );
 // ----------------------------  Refer & Earn ----------------------------
 
-const ReferralTracking = lazy(
-  () => import("../pages/module/refer&Earn/referralTracking/ReferralTracking")
+const ReferralTrackingForUser = lazy(
+  () => import("../pages/module/refer&Earn/referralTracking/referralTracking/ReferralTrackingForUser.jsx")
+);
+const ReferralTrackingForStaff = lazy(
+  () => import("../pages/module/refer&Earn/referralTracking/referralTracking/ReferralTrackingForStaff.jsx")
 );
 const RefferalDiscountSetting = lazy(
   () => import("../pages/module/refer&Earn/referralTracking/ReferralDiscountSetting")
@@ -292,13 +295,14 @@ const RefferalDiscountSetting = lazy(
 const ViewUserReferral=lazy(
   ()=>import("../pages/module/refer&Earn/referralTracking/ViewUserReferral")
 )
+const EditReferralTracking=lazy(
+  ()=>import("../pages/module/refer&Earn/referralTracking/EditReferralTracking.jsx")
+)
 // ----------------------------  Upload Video ----------------------------
 const UploadVideo=lazy(
   ()=>import("../pages/module/refer&Earn/uploadVideo/UploadVideo")
 )
-const EditVideo=lazy(
-  ()=>import("../pages/module/refer&Earn/uploadVideo/EditVideo")
-)
+
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
 
@@ -663,13 +667,15 @@ function PublicRoute() {
           <Route path="/target-management/setTarget-management" element={<SetTargetManagement />} />
           {/* -------------------------- Refer & Earn -------------------------- */}
 
-          <Route path="/refer-and-earn" element={<ReferralTracking/>}/>
-          <Route path="/referral-discount-setting" element={<RefferalDiscountSetting/>}/>
-          <Route path="/view-user-referral" element={<ViewUserReferral/>}/>
+          <Route path="/refer-and-earn-user" element={<ReferralTrackingForUser/>}/>
+          <Route path="/refer-and-earn-staff" element={<ReferralTrackingForStaff/>}/>
+          <Route path="/refer-and-earn-user/referral-discount-setting" element={<RefferalDiscountSetting/>}/>
+          <Route path="/refer-and-earn-user/view-user-referral" element={<ViewUserReferral/>}/>
+          <Route path="/refer-and-earn-user/referral-discount-setting/edit-referral-tracking" element={<EditReferralTracking/>}/>
 
            {/* -------------------------- Upload Video -------------------------- */}
           <Route path="/upload-video" element={<UploadVideo/>}/>
-          <Route path="/edit-video" element={<EditVideo/>}/>
+          
           
 
           {/* -------------------------- Comments and Reviews -------------------------- */}

@@ -7,13 +7,17 @@ import { href, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import useDebounce from "../../../../hooks/debounce/useDebounce";
 import { FaEdit, FaEye } from "react-icons/fa";
+import EditReferralTracking from "./EditReferralTracking.jsx";
+
 
 const ReferralDiscountSetting = () => {
    const navigate = useNavigate();
    const [page, setPage] = useState(1);
    const [limit, setLimit] = useState(10);
    const [search, setSearch] = useState("");
+   const [openPopup, setOpenPopup] = useState(false);
    const debouncedSearch = useDebounce(search, 500);
+   
    // Static dummy data
    const dummyData = [
       { srNo: 1, userName: "Direct Referral", totalCoinEarned: "10%", action: "Edit" },
@@ -57,16 +61,22 @@ const ReferralDiscountSetting = () => {
       {
          icon: <FaEdit className="text-green-600" />,
          title: "Edit",
-         onClick: (row) => navigate(""),
+         onClick: () => setOpenPopup(true),
       }
    ];
    return (
       <Box>
          <BreadCrumb linkText={
-            [{ text: "Refer & Earn" }, { text: "Referral Tracking", href: "/refer-and-earn" }, { text: "Referral Discount Setting" }]} />
+            [{ text: "Refer & Earn" }, { text: "Referral Tracking", href: "/refer-and-earn-user" }, { text: "Referral Discount Setting" }]} />
          <PagePath2
             title="Referral Tracking"
          />
+          <div>
+
+      {openPopup && (
+        <EditReferralTracking onClose={() => setOpenPopup(false)} />
+      )}
+    </div>
          {(
             <>
                <Box>
