@@ -4,9 +4,10 @@ import { toast } from "react-toastify";
 
 import useFetch from "../useFetch";
 import conf from "../../config";
-import { spinRewardListAtom } from "../../state/rewardManagement/rewardManagementState";
+
 import Swal from "sweetalert2";
 import { confirmAlert } from "../../utils/alertToast";
+import { spinRewardListAtom } from "../../state/rewardManagement/spinRewardState";
 
 const useSpinRewardManagement = () => {
   const [spinRewardList, setSpinRewardList] = useRecoilState(spinRewardListAtom);
