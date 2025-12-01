@@ -264,6 +264,13 @@ const SetReviewDisplay = lazy(
 const EditReviewDisplay = lazy(
   () => import("../pages/module/commentsandreviews/EditReviewDisplay")
 );
+// ---------------------------- Notification Management ----------------------------
+const NotificationManagement = lazy( 
+  () => import("../pages/module/notificationManagement/NotificationManagement")
+);
+const NotificationSend = lazy(
+  () => import("../pages/module/notificationManagement/NotificationSend")
+);
 
 // ----------------------------  Target Management ----------------------------
 
@@ -515,7 +522,7 @@ function PublicRoute() {
             element={<CreateTermsAndConditions />}
           />
           <Route
-            path="/app-management/terms-and-conditions/view"
+            path="/app-management/terms-and-conditions/view/:id"
             element={<ViewTermsAndConditions />}
           />
           <Route
@@ -531,7 +538,7 @@ function PublicRoute() {
             element={<CreatePrivacyPolicy />}
           />
           <Route
-            path="/app-management/privacy-policy/view/"
+            path="/app-management/privacy-policy/view/:id"
             element={<ViewPrivacyPolicy />}
           />
 
@@ -671,6 +678,15 @@ function PublicRoute() {
           <Route path="/manage-comments/view-comment/:reviewId/:reviewType" element={<ManageCommentsView />} /> 
           <Route path="/set-review-display" element={<SetReviewDisplay />} />
           <Route path="/edit-review-display" element={<EditReviewDisplay />} />
+          {/* ---------------------------- Notification Management ----------------------------*/}
+          <Route
+            path="/notification-management"
+            element={<NotificationManagement />}
+          />
+          <Route
+            path="/notification-management/send-notification"
+            element={<NotificationSend />}
+          />
 
 
 

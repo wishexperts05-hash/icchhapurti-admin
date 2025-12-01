@@ -28,7 +28,7 @@ const CountryManagementAdd = () => {
     fetchCountryDetailById,
     addCountry,
     countryDetail,
-    loading,
+    LoaderSpinner,
     countryDropdown,
     dropdown,
     getCountryByName
