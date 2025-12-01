@@ -11,76 +11,81 @@ const ForgotPassword = lazy(() => import("../pages/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/auth/ResetPassword"));
 
 const Dashboard = lazy(() => import("../pages/module/dashboard/Dashboard"));
-const AdminProfile = lazy(
-  () => import("../pages/module/adminProfile/AdminProfile")
+const AdminProfile = lazy(() =>
+  import("../pages/module/adminProfile/AdminProfile")
 );
-const EditProfile = lazy(
-  () => import("../pages/module/adminProfile/EditProfile")
+const EditProfile = lazy(() =>
+  import("../pages/module/adminProfile/EditProfile")
 );
 const Layout = lazy(() => import("../components/Layouts/Layout"));
 
 // ---------------------------- User Management ----------------------------
-const UserManagement = lazy(
-  () => import("../pages/module/userManagement/UserManagementList")
+const UserManagement = lazy(() =>
+  import("../pages/module/userManagement/UserManagementList")
 );
-const UserDetails = lazy(
-  () => import("../pages/module/userManagement/UserManagementDetails")
+const UserDetails = lazy(() =>
+  import("../pages/module/userManagement/UserManagementDetails")
 );
 
 // ---------------------------- Promoter Management ----------------------------
-const PromoterManagement = lazy(
-  () => import("../pages/module/promotermanagement/PromoterManagement")
+const PromoterManagement = lazy(() =>
+  import("../pages/module/promotermanagement/PromoterManagement")
 );
-const PromoterManagementEdit = lazy(
-  () => import("../pages/module/promotermanagement/PromoterManagementEdit")
+const PromoterManagementEdit = lazy(() =>
+  import("../pages/module/promotermanagement/PromoterManagementEdit")
 );
-const PromoterManagementAdd = lazy(
-  () => import("../pages/module/promotermanagement/PromoterManagementAdd")
+const PromoterManagementAdd = lazy(() =>
+  import("../pages/module/promotermanagement/PromoterManagementAdd")
 );
-const PromoterDetails = lazy(
-  () => import("../pages/module/promotermanagement/PromotorDetails")
+const PromoterDetails = lazy(() =>
+  import("../pages/module/promotermanagement/PromotorDetails")
 );
 
 // ---------------------------- Order Management ----------------------------
 
-
-const OrderManagement = lazy(
-  () => import("../pages/module/OrderManagement/OrderManagement")
+const OrderManagement = lazy(() =>
+  import("../pages/module/OrderManagement/OrderManagement")
 );
 
-const OrderDetails = lazy(
-  () => import("../pages/module/OrderManagement/OrderDetails")
+const OrderDetails = lazy(() =>
+  import("../pages/module/OrderManagement/OrderDetails")
 );
 
-const EditOrderDetails = lazy(
-  () => import("../pages/module/OrderManagement/EditOrderDetails")
+const EditOrderDetails = lazy(() =>
+  import("../pages/module/OrderManagement/EditOrderDetails")
 );
 // ---------------------------- Report and Analytics ----------------------------
-const Reports = lazy(() => import("../pages/module/report&Analytics/reports/Reports"));
-const StaffPerformance = lazy(() => import("../pages/module/report&Analytics/staffPerformance/StaffPerformance"));
-const LuckyDrawAnalysis = lazy(() => import("../pages/module/report&Analytics/luckyDrawAnalysis/LuckyDrawAnalysis"))
+const Reports = lazy(() =>
+  import("../pages/module/report&Analytics/reports/Reports")
+);
+const StaffPerformance = lazy(() =>
+  import("../pages/module/report&Analytics/staffPerformance/StaffPerformance")
+);
+const LuckyDrawAnalysis = lazy(() =>
+  import("../pages/module/report&Analytics/luckyDrawAnalysis/LuckyDrawAnalysis")
+);
 
 // ---------------------------- Staff Management ----------------------------
-const StaffManagement = lazy(
-  () => import("../pages/module/staffManagement/staffList/StaffListing")
+const StaffManagement = lazy(() =>
+  import("../pages/module/staffManagement/staffList/StaffListing")
 );
-const AddStaffForm = lazy(
-  () => import("../pages/module/staffManagement/addStaff/AddStaff")
+const AddStaffForm = lazy(() =>
+  import("../pages/module/staffManagement/addStaff/AddStaff")
 );
-const EditStaff = lazy(
-  () => import("../pages/module/staffManagement/addStaff/EditStaff")
+const EditStaff = lazy(() =>
+  import("../pages/module/staffManagement/addStaff/EditStaff")
 );
-const AttendanceListing = lazy(
-  () => import("../pages/module/staffManagement/attendance/AttendanceListing")
+const AttendanceListing = lazy(() =>
+  import("../pages/module/staffManagement/attendance/AttendanceListing")
 );
-const StaffSales = lazy(
-  () => import("../pages/module/staffManagement/Sales/SalesListing")
+const StaffSales = lazy(() =>
+  import("../pages/module/staffManagement/Sales/SalesListing")
 );
-const StaffMapPage = lazy(
-  () => import("../pages/module/staffManagement/attendance/StaffMapPage")
+const StaffMapPage = lazy(() =>
+  import("../pages/module/staffManagement/attendance/StaffMapPage")
 );
-const ViewStaff = lazy(
-  () => import("../pages/module/staffManagement/addStaff/ViewStaff")
+const ViewStaff = lazy(() =>
+  import("../pages/module/staffManagement/addStaff/ViewStaff")
 );
 
 // ---------------------------- Product Management (Non-lazy) ----------------------------
@@ -89,86 +94,90 @@ import ManageShippingCost from "../pages/module/productManagment/ManageShippingC
 import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
 import AddShippingCostDomestic from "../pages/module/productManagment/AddShippingCostDomestic";
-import AddShippingCostInternational from "../pages/module/productManagment/AddShippingCostInternational"
+import AddShippingCostInternational from "../pages/module/productManagment/AddShippingCostInternational";
 import EditDomasticShipingCost from "../pages/module/productManagment/EditDomasticShipingCost";
-import EditInternationalShipingCost from "../pages/module/productManagment/EditInternationalShipingCost"
+import EditInternationalShipingCost from "../pages/module/productManagment/EditInternationalShipingCost";
 // -------------------------offer management --------------
 
-const OfferManagementAdd = lazy(
-  () => import("../pages/module/offerManagement/OfferManagementAdd")
+const OfferManagementAdd = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementAdd")
 );
-const OfferManagementEdit = lazy(
-  () => import("../pages/module/offerManagement/OfferManagementEdit")
+const OfferManagementEdit = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementEdit")
 );
-const OfferManagementList = lazy(
-  () => import("../pages/module/offerManagement/OfferManagementList")
+const OfferManagementList = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementList")
 );
-const OfferManagementView = lazy(
-  () => import("../pages/module/offerManagement/OfferManagementView")
+const OfferManagementView = lazy(() =>
+  import("../pages/module/offerManagement/OfferManagementView")
 );
 
 // ---------------------------- Blog Management ----------------------------
 
-const BlogManagement = lazy(
-  () => import("../pages/module/blogManagement/blogList/BlogListing")
+const BlogManagement = lazy(() =>
+  import("../pages/module/blogManagement/blogList/BlogListing")
 );
-const AddBlog = lazy(
-  () => import("../pages/module/blogManagement/addBlog/AddBlog")
-);
-
-const EditBlog = lazy(
-  () => import("../pages/module/blogManagement/addBlog/EditBlog")
+const AddBlog = lazy(() =>
+  import("../pages/module/blogManagement/addBlog/AddBlog")
 );
 
-const ViewBlog = lazy(
-  () => import("../pages/module/blogManagement/addBlog/ViewBlog")
+const EditBlog = lazy(() =>
+  import("../pages/module/blogManagement/addBlog/EditBlog")
+);
+
+const ViewBlog = lazy(() =>
+  import("../pages/module/blogManagement/addBlog/ViewBlog")
 );
 // -------------------------------App Management-------------------------------------------------
-const TermsAndConditions = lazy(
-  () => import("../pages/module/appManagement/term&Condition/Terms&Conditions")
+const TermsAndConditions = lazy(() =>
+  import("../pages/module/appManagement/term&Condition/Terms&Conditions")
 );
-const CreateTermsAndConditions = lazy(
-  () =>
-    import("../pages/module/appManagement/term&Condition/CreateTerms&Conditions")
+const CreateTermsAndConditions = lazy(() =>
+  import("../pages/module/appManagement/term&Condition/CreateTerms&Conditions")
 );
-const ViewTermsAndConditions = lazy(
-  () => import("../pages/module/appManagement/term&Condition/ViewTerms&Conditions")
+const ViewTermsAndConditions = lazy(() =>
+  import("../pages/module/appManagement/term&Condition/ViewTerms&Conditions")
 );
 // import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
 
-const PrivacyPolicy = lazy(
-  () => import("../pages/module/appManagement/privicy&Policy/Privacy&Policy")
+const PrivacyPolicy = lazy(() =>
+  import("../pages/module/appManagement/privicy&Policy/Privacy&Policy")
 );
-const CreatePrivacyPolicy = lazy(
-  () => import("../pages/module/appManagement/privicy&Policy/CreatePrivacy&Policy")
+const CreatePrivacyPolicy = lazy(() =>
+  import("../pages/module/appManagement/privicy&Policy/CreatePrivacy&Policy")
 );
-const ViewPrivacyPolicy = lazy(
-  () => import("../pages/module/appManagement/privicy&Policy/ViewPrivacy&Policy")
+const ViewPrivacyPolicy = lazy(() =>
+  import("../pages/module/appManagement/privicy&Policy/ViewPrivacy&Policy")
 );
-const OtherSettings = lazy(
-  () => import("../pages/module/appManagement/otherSettings/OtherSettings")
+const OtherSettings = lazy(() =>
+  import("../pages/module/appManagement/otherSettings/OtherSettings")
 );
 // ---------------------------- Banner Management ----------------------------
-const Banner = lazy(
-  () => import("../pages/module/appManagement/manageBanner/Banner")
+const Banner = lazy(() =>
+  import("../pages/module/appManagement/manageBanner/Banner")
 );
-const BannerDetails = lazy(
-  () => import("../pages/module/appManagement/manageBanner/BannerDetails")
+const BannerDetails = lazy(() =>
+  import("../pages/module/appManagement/manageBanner/BannerDetails")
 );
-const CreateBanner = lazy(
-  () => import("../pages/module/appManagement/manageBanner/CreateBanner")
+const CreateBanner = lazy(() =>
+  import("../pages/module/appManagement/manageBanner/CreateBanner")
 );
-const UpdateBanner = lazy(
-  () => import("../pages/module/appManagement/manageBanner/CreateBanner")
+const UpdateBanner = lazy(() =>
+  import("../pages/module/appManagement/manageBanner/CreateBanner")
 );
-const EditBanner = lazy(
-  () => import("../pages/module/appManagement/manageBanner/CreateBanner")
+const EditBanner = lazy(() =>
+  import("../pages/module/appManagement/manageBanner/CreateBanner")
 );
+// ---------------------------- Faq section ----------------------------
+const FaqList = lazy(() => import("../pages/module/appManagement/faq/FaqList"));
+const FaqAdd = lazy(() => import("../pages/module/appManagement/faq/FaqAdd"));
+const FaqEdit = lazy(() => import("../pages/module/appManagement/faq/FaqEdit"));
+const FaqView = lazy(() => import("../pages/module/appManagement/faq/FaqView"));
 
 // ---------------------------- Help & Support Number ----------------------------
 
-const HelpSupport = lazy(
-  () => import("../pages/module/appManagement/help&Support/Help&Support")
+const HelpSupport = lazy(() =>
+  import("../pages/module/appManagement/help&Support/Help&Support")
 );
 //-------------------------Manage Redeem Request-----------------------------------------
 import {
@@ -178,43 +187,51 @@ import {
 // import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
 // import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
 
-
-
-
-
 //------------------------------- Country Management ---------------------------------------------
-const CountryManagementList = lazy(
-  () => import("../pages/module/countryManagement/CountryManagementList")
+const CountryManagementList = lazy(() =>
+  import("../pages/module/countryManagement/CountryManagementList")
 );
-const CountryManagementAdd = lazy(
-  () => import("../pages/module/countryManagement/CountryManagementAdd")
+const CountryManagementAdd = lazy(() =>
+  import("../pages/module/countryManagement/CountryManagementAdd")
 );
-const CountryManagementEdit = lazy(
-  () => import("../pages/module/countryManagement/CountryManagementEdit")
+const CountryManagementEdit = lazy(() =>
+  import("../pages/module/countryManagement/CountryManagementEdit")
 );
 
 // ---------------------------- Reward Management ----------------------------
 const LuckyDrawManagementList = lazy(() =>
-  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementList")
+  import(
+    "../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementList"
+  )
 );
 const LuckyDrawManagementAdd = lazy(() =>
-  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementAdd")
+  import(
+    "../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementAdd"
+  )
 );
 const LuckyDrawManagementView = lazy(() =>
-  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementView")
+  import(
+    "../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementView"
+  )
 );
 const LuckyDrawManagementEdit = lazy(() =>
-  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementEdit")
+  import(
+    "../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementEdit"
+  )
 );
 
 const LuckyDrawManagementSelectWinner = lazy(() =>
-  import("../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementSelectWinner")
+  import(
+    "../pages/module/rewardManagement/luckyDrawManagement/LuckyDrawManagementSelectWinner"
+  )
 );
 const AddWinner = lazy(() =>
   import("../pages/module/rewardManagement/luckyDrawManagement/AddWinner")
 );
 const SpinRewardManagementList = lazy(() =>
-  import("../pages/module/rewardManagement/spinRewardManagement/SpinRewardmanagementList")
+  import(
+    "../pages/module/rewardManagement/spinRewardManagement/SpinRewardmanagementList"
+  )
 );
 const AddSpinReward = lazy(() =>
   import("../pages/module/rewardManagement/spinRewardManagement/AddSpinReward")
@@ -228,77 +245,66 @@ const SetSpinPrice = lazy(() =>
 
 // ---------------------------- Chat Support System ---------
 
-const ChatSupportSystem = lazy(
-  () => import("../pages/module/chatSupportSystem/ChatSupportSystem")
+const ChatSupportSystem = lazy(() =>
+  import("../pages/module/chatSupportSystem/ChatSupportSystem")
 );
-
 
 const ChatBox = lazy(() => import("../pages/module/chatSupportSystem/ChatBox"));
 
 // ---------------------------- Monetary Settings ----------------------------
-const CommissionSetting = lazy(
-  () => import("../pages/module/monetarySettings/commissionSettings/CommissionSetting")
+const CommissionSetting = lazy(() =>
+  import(
+    "../pages/module/monetarySettings/commissionSettings/CommissionSetting"
+  )
 );
 
-const SetCommissionSetting = lazy(
-  () =>
-    import("../pages/module/monetarySettings/commissionSettings/SetCommissionSetting")
+const SetCommissionSetting = lazy(() =>
+  import(
+    "../pages/module/monetarySettings/commissionSettings/SetCommissionSetting"
+  )
 );
 
-const CoinSettings = lazy(
-  () => import("../pages/module/monetarySettings/coinSettings/CoinSettings")
+const CoinSettings = lazy(() =>
+  import("../pages/module/monetarySettings/coinSettings/CoinSettings")
 );
-const WithDrawSettings = lazy(
-  () => import("../pages/module/monetarySettings/withdrawSettings/WithDrawSettings")
+const WithDrawSettings = lazy(() =>
+  import("../pages/module/monetarySettings/withdrawSettings/WithDrawSettings")
 );
 // ---------------------------- Comments and Reviews ----------------------------
-const ManageComments = lazy(
-  () => import("../pages/module/commentsandreviews/ManageComments")
+const ManageComments = lazy(() =>
+  import("../pages/module/commentsandreviews/ManageComments")
 );
-const ManageCommentsView = lazy(
-  () => import("../pages/module/commentsandreviews/ManageCommentsView")
+const ManageCommentsView = lazy(() =>
+  import("../pages/module/commentsandreviews/ManageCommentsView")
 );
-const SetReviewDisplay = lazy(
-  () => import("../pages/module/commentsandreviews/SetReviewDisplay")
+const SetReviewDisplay = lazy(() =>
+  import("../pages/module/commentsandreviews/SetReviewDisplay")
 );
-const EditReviewDisplay = lazy(
-  () => import("../pages/module/commentsandreviews/EditReviewDisplay")
+const EditReviewDisplay = lazy(() =>
+  import("../pages/module/commentsandreviews/EditReviewDisplay")
 );
 // ---------------------------- Notification Management ----------------------------
-const NotificationManagement = lazy( 
-  () => import("../pages/module/notificationManagement/NotificationManagement")
+const NotificationManagement = lazy(() =>
+  import("../pages/module/notificationManagement/NotificationManagement")
 );
-const NotificationSend = lazy(
-  () => import("../pages/module/notificationManagement/NotificationSend")
+const NotificationSend = lazy(() =>
+  import("../pages/module/notificationManagement/NotificationSend")
 );
 
 // ----------------------------  Target Management ----------------------------
 
-const TargetManagement = lazy(
-  () => import("../pages/module/targetManagement/TargetManagement")
+const TargetManagement = lazy(() =>
+  import("../pages/module/targetManagement/TargetManagement")
 );
-const SetTargetManagement = lazy(
-  () => import("../pages/module/targetManagement/SetTargetManagement")
+const SetTargetManagement = lazy(() =>
+  import("../pages/module/targetManagement/SetTargetManagement")
 );
 // ----------------------------  Refer & Earn ----------------------------
 
-const ReferralTracking = lazy(
-  () => import("../pages/module/refer&Earn/referralTracking/ReferralTracking")
-);
-const RefferalDiscountSetting = lazy(
-  () => import("../pages/module/refer&Earn/referralTracking/ReferralDiscountSetting")
+const ReferralTracking = lazy(() =>
+  import("../pages/module/refer&Earn/referralTracking/ReferralTracking")
 );
 
-const ViewUserReferral=lazy(
-  ()=>import("../pages/module/refer&Earn/referralTracking/ViewUserReferral")
-)
-// ----------------------------  Upload Video ----------------------------
-const UploadVideo=lazy(
-  ()=>import("../pages/module/refer&Earn/uploadVideo/UploadVideo")
-)
-const EditVideo=lazy(
-  ()=>import("../pages/module/refer&Earn/uploadVideo/EditVideo")
-)
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
 
@@ -605,7 +611,7 @@ function PublicRoute() {
             element={<LuckyDrawManagementSelectWinner />}
           />
           <Route
-            path="/lucky-draw-management/add-winner/:id"   
+            path="/lucky-draw-management/add-winner/:id"
             element={<AddWinner />}
           />
           <Route
@@ -621,7 +627,6 @@ function PublicRoute() {
             element={<EditSpinReward />}
           />
 
-          
           <Route
             path="spin-reward-management/set-spin-price"
             element={<SetSpinPrice />}
@@ -639,13 +644,21 @@ function PublicRoute() {
 
           {/* -------------------------- Chat Support System -------------------------- */}
           <Route path="chat-support-system" element={<ChatSupportSystem />} />
-          <Route path="chat-support-system/chatbox/:conversationId" element={<ChatBox />} />
-
+          <Route
+            path="chat-support-system/chatbox/:conversationId"
+            element={<ChatBox />}
+          />
 
           {/* -------------------------------------Monetary Setting ------------------------------------------- */}
           <Route path="/commission-settings" element={<CommissionSetting />} />
-          <Route path="/commission-settings/add-commission" element={<SetCommissionSetting />} />
-          <Route path="/commission-settings/edit-commission/:id" element={<SetCommissionSetting />} />
+          <Route
+            path="/commission-settings/add-commission"
+            element={<SetCommissionSetting />}
+          />
+          <Route
+            path="/commission-settings/edit-commission/:id"
+            element={<SetCommissionSetting />}
+          />
           <Route path="/coin-settings" element={<CoinSettings />} />
           <Route path="/withdraw-settings" element={<WithDrawSettings />} />
 
@@ -660,36 +673,30 @@ function PublicRoute() {
 
           <Route path="/target-management" element={<TargetManagement />} />
 
-          <Route path="/target-management/setTarget-management" element={<SetTargetManagement />} />
+          <Route
+            path="/target-management/setTarget-management"
+            element={<SetTargetManagement />}
+          />
           {/* -------------------------- Refer & Earn -------------------------- */}
 
-          <Route path="/refer-and-earn" element={<ReferralTracking/>}/>
-          <Route path="/referral-discount-setting" element={<RefferalDiscountSetting/>}/>
-          <Route path="/view-user-referral" element={<ViewUserReferral/>}/>
-
-           {/* -------------------------- Upload Video -------------------------- */}
-          <Route path="/upload-video" element={<UploadVideo/>}/>
-          <Route path="/edit-video" element={<EditVideo/>}/>
-          
+          <Route path="/refer-and-earn" element={<ReferralTracking />} />
 
           {/* -------------------------- Comments and Reviews -------------------------- */}
 
           <Route path="/manage-comments" element={<ManageComments />} />
-          <Route path="/manage-comments/view-comment/:reviewId/:reviewType" element={<ManageCommentsView />} /> 
+          <Route
+            path="/manage-comments/view-comment"
+            element={<ManageCommentsView />}
+          />
           <Route path="/set-review-display" element={<SetReviewDisplay />} />
           <Route path="/edit-review-display" element={<EditReviewDisplay />} />
-          {/* ---------------------------- Notification Management ----------------------------*/}
-          <Route
-            path="/notification-management"
-            element={<NotificationManagement />}
-          />
-          <Route
-            path="/notification-management/send-notification"
-            element={<NotificationSend />}
-          />
 
+          {/* --------------------------Faq Routes---------------------------------*/}
 
-
+          <Route path="/app-management/faq" element={<FaqList />} />
+          <Route path="/app-management/faq/add" element={<FaqAdd />} />
+          <Route path="/app-management/faq/edit/:id" element={<FaqEdit />} />
+          <Route path="/app-management/faq/view/:id" element={<FaqView />} />
 
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
