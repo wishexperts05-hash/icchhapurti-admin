@@ -571,7 +571,7 @@ function PublicRoute() {
             element={<LuckyDrawManagementSelectWinner />}
           />
           <Route
-            path="/lucky-draw-management/add-winner"
+            path="/lucky-draw-management/add-winner/:id"   
             element={<AddWinner />}
           />
           <Route
@@ -583,9 +583,11 @@ function PublicRoute() {
             element={<AddSpinReward />}
           />
           <Route
-            path="spin-reward-management/edit-spin-reward"
+            path="spin-reward-management/edit-spin-reward/:id"
             element={<EditSpinReward />}
           />
+
+          
           <Route
             path="spin-reward-management/set-spin-price"
             element={<SetSpinPrice />}

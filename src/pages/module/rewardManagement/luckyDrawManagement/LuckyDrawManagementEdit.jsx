@@ -11,8 +11,8 @@ import { FaTimes, FaPlus } from "react-icons/fa";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 
 import useLuckyDrawManagement from "../../../../hooks/rewardManagement/useLuckyDrawManagement";
+import useDropdown from "../../../../hooks/dropdown/useDropdown";
 
-// ✅ Validation: aligned with API fields
 const validationSchema = Yup.object().shape({
   eventName: Yup.string().required("Event name is required"),
   startDate: Yup.date().required("Start date is required"),
@@ -21,9 +21,9 @@ const validationSchema = Yup.object().shape({
     .required("End date is required"),
   rules: Yup.array().of(
     Yup.object().shape({
-      // this should be productId in final version
       productId: Yup.string().required("Product is required"),
       ticketsPerQuantity: Yup.number()
+        .typeError("Tickets per product must be a number")
         .positive("Tickets per product must be positive")
         .integer("Tickets per product must be an integer")
         .required("Tickets per product is required"),
@@ -50,24 +50,71 @@ const LuckyDrawManagementEdit = () => {
     updateLuckyDrawById,
   } = useLuckyDrawManagement();
 
-  // If you still want image sets UI, keep this local state
+  const {
+    loading: dropdownLoading,
+    fetchUserType,
+    fetchProductDropdown,
+    productDropdown,
+  } = useDropdown();
+
+  useEffect(() => {
+    fetchUserType();
+    fetchProductDropdown();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const dropdownOptions =
+    productDropdown?.map((item) => ({
+      value: item._id,
+      label: item.name,
+    })) || [];
+
   const [productImageSets, setProductImageSets] = useState([[]]);
 
-  // 🔹 Load event details by ID
   useEffect(() => {
     if (id) {
       fetchLuckyDrawDetailById(id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // 🔹 Helpers for date conversion (ISO → yyyy-MM-dd for input)
   const toInputDate = (iso) => {
     if (!iso) return "";
     const d = new Date(iso);
-    return d.toISOString().slice(0, 10); // yyyy-mm-dd
+    return d.toISOString().slice(0, 10);
   };
 
-  // 🔹 Build initial values from API
+  //
+  const mapApiRuleToFormRule = (rule) => {
+    if (rule.productId) {
+      const productId =
+        typeof rule.productId === "string"
+          ? rule.productId
+          : rule.productId?._id || "";
+
+      return {
+        productId,
+        ticketsPerQuantity: rule.ticketsPerQuantity || "",
+      };
+    }
+
+    if (rule.productName && productDropdown?.length) {
+      const matchedProduct = productDropdown.find(
+        (p) => p.name === rule.productName
+      );
+
+      return {
+        productId: matchedProduct?._id || "",
+        ticketsPerQuantity: rule.ticketsPerQuantity || "",
+      };
+    }
+
+    return {
+      productId: "",
+      ticketsPerQuantity: rule.ticketsPerQuantity || "",
+    };
+  };
+
   const initialValues = useMemo(() => {
     if (!luckyDrawDetail) {
       return {
@@ -91,33 +138,37 @@ const LuckyDrawManagementEdit = () => {
       endDate,
       announcementDate,
       productRules,
+      ticketsPerQuantity,
       numberOfWinners,
     } = luckyDrawDetail;
+
+    const rawRules =
+      (Array.isArray(productRules) && productRules.length > 0
+        ? productRules
+        : Array.isArray(ticketsPerQuantity) && ticketsPerQuantity.length > 0
+        ? ticketsPerQuantity
+        : []) || [];
+
+    const mappedRules =
+      rawRules.length > 0
+        ? rawRules.map((r) => mapApiRuleToFormRule(r))
+        : [
+            {
+              productId: "",
+              ticketsPerQuantity: "",
+            },
+          ];
 
     return {
       eventName: eventName || "",
       startDate: toInputDate(startDate),
       endDate: toInputDate(endDate),
-      // Map backend productRules → form rules
-      rules:
-        Array.isArray(productRules) && productRules.length > 0
-          ? productRules.map((pr) => ({
-              productId:
-                typeof pr.productId === "string"
-                  ? pr.productId
-                  : pr.productId?._id || "",
-              ticketsPerQuantity: pr.ticketsPerQuantity || "",
-            }))
-          : [
-              {
-                productId: "",
-                ticketsPerQuantity: "",
-              },
-            ],
+      rules: mappedRules,
       numberOfWinners: numberOfWinners ?? "",
       resultAnnouncementDate: toInputDate(announcementDate),
     };
-  }, [luckyDrawDetail]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [luckyDrawDetail, productDropdown]);
 
   const handleImageUpload = (e, setIndex) => {
     const files = Array.from(e.target.files);
@@ -158,23 +209,14 @@ const LuckyDrawManagementEdit = () => {
     navigate("/lucky-draw-management");
   };
 
-  // 🔹 Submit handler → call PUT /updateLuckyDraw/:id
   const handleSubmit = async (values) => {
-    // If you really need to enforce image sets:
-    // const hasInvalidSets = productImageSets.some(set => set.length < 3);
-    // if (hasInvalidSets) {
-    //   alert("Each product image set must have at least 3 images");
-    //   return;
-    // }
-
-    // Build payload as per API spec
     const payload = {
       eventName: values.eventName,
-      startDate: values.startDate, // "2025-11-24" (yyyy-mm-dd)
+      startDate: values.startDate,
       endDate: values.endDate,
       announcementDate: values.resultAnnouncementDate,
       productRules: (values.rules || []).map((r) => ({
-        productId: r.productId, // ensure this is actual productId
+        productId: r.productId,
         ticketsPerQuantity: Number(r.ticketsPerQuantity),
       })),
       numberOfWinners: Number(values.numberOfWinners),
@@ -248,12 +290,22 @@ const LuckyDrawManagementEdit = () => {
                           <div key={index} className="mb-4">
                             <div className="flex items-start gap-4">
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
-                                {/* Change to product dropdown later */}
+                                {/* ✅ Product dropdown */}
                                 <FormField
-                                  label="Product ID"
-                                  name={`productRules.${index}.productId.name`}
-                                  placeholder="Enter Product ID"
+                                  label="Select Product"
+                                  name={`rules.${index}.productId`}
+                                  fieldType="select"
+                                  options={[
+                                    {
+                                      value: "",
+                                      label: dropdownLoading
+                                        ? "Loading products..."
+                                        : "Select Product",
+                                    },
+                                    ...dropdownOptions,
+                                  ]}
                                 />
+
                                 <FormField
                                   label="Tickets per Quantity"
                                   name={`rules.${index}.ticketsPerQuantity`}
@@ -310,7 +362,6 @@ const LuckyDrawManagementEdit = () => {
                 </div>
 
                 {/* (Optional) Product Images Section – UI only for now */}
-                {/* You can later connect this to an upload API if available */}
                 <div className="pt-4">
                   <h3 className="text-lg font-semibold text-gray-700 mb-2">
                     Product Images (Min 3)
@@ -357,9 +408,7 @@ const LuckyDrawManagementEdit = () => {
                                 accept="image/*"
                                 multiple
                                 className="hidden"
-                                onChange={(e) =>
-                                  handleImageUpload(e, setIndex)
-                                }
+                                onChange={(e) => handleImageUpload(e, setIndex)}
                               />
                             </label>
                           </div>

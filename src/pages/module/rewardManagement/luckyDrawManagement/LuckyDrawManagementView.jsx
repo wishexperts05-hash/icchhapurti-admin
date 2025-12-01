@@ -1,42 +1,39 @@
-// src/pages/.../LuckyDrawManagementView.jsx
-
-import { useEffect, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import DetailsField from "../../../../components/uiComponent/DetailsField";
 import { Calendar, Trophy } from "lucide-react";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
-import Button from '../../../../components/uiComponent/Button';
+import Button from "../../../../components/uiComponent/Button";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 
 import useLuckyDrawManagement from "../../../../hooks/rewardManagement/useLuckyDrawManagement";
 
 export default function LuckyDrawManagementView() {
   const navigate = useNavigate();
-  const { id } = useParams(); // 🔹 /view-lucky-draw/:id
+  const { id } = useParams();
 
   const { loading, luckyDrawDetail, fetchLuckyDrawDetailById } =
     useLuckyDrawManagement();
 
-  // 🔹 Fetch detail on mount / id change
   useEffect(() => {
     if (id) {
       fetchLuckyDrawDetailById(id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // 🔹 Helpers to format dates
   const formatDate = (iso) => {
     if (!iso) return "-";
     const d = new Date(iso);
-    // 05/02/2025 style
-    return d.toLocaleDateString("en-GB"); // dd/mm/yyyy
+
+    return d.toLocaleDateString("en-GB");
   };
 
   const formatDateVerbose = (iso) => {
     if (!iso) return "-";
     const d = new Date(iso);
-    // 2 Nov 2025 style
+
     return d.toLocaleDateString("en-GB", {
       day: "numeric",
       month: "short",
@@ -44,7 +41,6 @@ export default function LuckyDrawManagementView() {
     });
   };
 
-  // 🔹 Map API response → UI structure you were using
   const luckyDrawData = useMemo(() => {
     if (!luckyDrawDetail) return null;
 
@@ -60,25 +56,13 @@ export default function LuckyDrawManagementView() {
       winners,
     } = luckyDrawDetail;
 
-    const ticketsText = Array.isArray(ticketsPerQuantity)
+    const rulesArray = Array.isArray(ticketsPerQuantity)
       ? ticketsPerQuantity
-          .map(
-            (t) =>
-              `${t.ticketsPerQuantity} Ticket${
-                t.ticketsPerQuantity > 1 ? "s" : ""
-              } per ${t.productName}`
-          )
-          .join(", ")
-      : "-";
+      : [];
 
     const normalizedWinners = Array.isArray(winners)
       ? winners.map((w) => ({
-          name:
-            w.name ||
-            w.fullName ||
-            w.userName ||
-            w.winnerName ||
-            "Winner",
+          name: w.name || w.fullName || w.userName || w.winnerName || "Winner",
         }))
       : [];
 
@@ -88,8 +72,7 @@ export default function LuckyDrawManagementView() {
       status: status || "-",
       startDate: formatDate(startDate),
       endDate: formatDate(endDate),
-      rulesOfLuckyDraw: ticketsText, // or keep separate rule later
-      ticketsPerQuantity: ticketsText,
+      rules: rulesArray,
       noOfWinners: numberOfWinners ?? "-",
       resultAnnouncementDate: formatDateVerbose(announcementDate),
       winners: normalizedWinners,
@@ -101,7 +84,7 @@ export default function LuckyDrawManagementView() {
   };
 
   const handleAddWinner = () => {
-    navigate("/lucky-draw-management/add-winner");
+    navigate(`/lucky-draw-management/add-winner/${id}`);
   };
 
   return (
@@ -143,16 +126,13 @@ export default function LuckyDrawManagementView() {
                   value={luckyDrawData.luckyDrawId}
                 />
 
-                <DetailsField
-                  label="Status"
-                  value={luckyDrawData.status}
-                />
+                <DetailsField label="Status" value={luckyDrawData.status} />
               </div>
             </div>
 
             {/* Lucky Draw Information Card */}
             <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
-              <div className="bg-white px  -6 py-4 border-b border-gray-300">
+              <div className="bg-white px-6 py-4 border-b border-gray-300">
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-gray-800" />
                   <h3 className="text-lg font-bold text-gray-900">
@@ -173,16 +153,35 @@ export default function LuckyDrawManagementView() {
                     value={luckyDrawData.endDate}
                   />
 
-                  <DetailsField
-                    label="Rules Of Lucky Draw"
-                    value={""}
-                    className="md:col-span-2"
-                  />
-
-                  <DetailsField
-                    label="Tickets Per Quantity"
-                    value={luckyDrawData.ticketsPerQuantity}
-                  />
+                  {/* 🔹 Render each product + tickets pair separately */}
+                  {luckyDrawData.rules.length === 0 ? (
+                    <DetailsField
+                      label="Products & Tickets"
+                      value="-"
+                      className="md:col-span-2"
+                    />
+                  ) : (
+                    luckyDrawData.rules.map((rule, index) => (
+                      <div
+                        key={index}
+                        className="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2 bg-gray-100 p-4 rounded"
+                      >
+                        <DetailsField
+                          label={`Product ${index + 1} Name`}
+                          value={rule.productName || "-"}
+                        />
+                        <DetailsField
+                          label={`Product ${index + 1} Tickets Per Quantity`}
+                          value={
+                            rule.ticketsPerQuantity !== undefined &&
+                            rule.ticketsPerQuantity !== null
+                              ? rule.ticketsPerQuantity
+                              : "-"
+                          }
+                        />
+                      </div>
+                    ))
+                  )}
 
                   <DetailsField
                     label="No Of Winners"
@@ -192,6 +191,12 @@ export default function LuckyDrawManagementView() {
                   <DetailsField
                     label="Result Announcement Date"
                     value={luckyDrawData.resultAnnouncementDate}
+                    className="md:col-span-2"
+                  />
+
+                  <DetailsField
+                    label="Rules Of Lucky Draw"
+                    value={""}
                     className="md:col-span-2"
                   />
                 </div>
@@ -225,8 +230,7 @@ export default function LuckyDrawManagementView() {
                 )}
               </div>
 
-
-{/* 
+              {/* 
                <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 mt-8">
                     <div className="bg-white px-6 py-4 border-b border-gray-300">
                         <div className="flex items-center gap-3">

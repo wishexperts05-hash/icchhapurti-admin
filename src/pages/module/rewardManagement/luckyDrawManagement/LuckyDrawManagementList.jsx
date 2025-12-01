@@ -10,15 +10,15 @@ import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import Pagination from "../../../../components/uiComponent/Pagination";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import useLuckyDrawManagement from "../../../../hooks/rewardManagement/useLuckyDrawManagement";
+import useDebounce from "../../../../hooks/debounce/useDebounce";
 
-
-
-export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
+export default function LuckyDrawManagementList() {
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(searchTerm, 500);
 
   const { luckyDrawList, loading, fetchLuckyDrawList } =
     useLuckyDrawManagement();
@@ -33,22 +33,17 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
   };
 
   const handleViewLuckyDraw = (row) => {
-  // we pass Mongo `_id` as param (this matches :luckyDrawId in API)
-  navigate(`/lucky-draw-management/view-lucky-draw/${row._id}`);
-};
+    navigate(`/lucky-draw-management/view-lucky-draw/${row._id}`);
+  };
 
-
-const handleEdit = (row) => {
-  navigate(`/lucky-draw-management/edit-lucky-draw/${row._id}`);
-};
-
+  const handleEdit = (row) => {
+    navigate(`/lucky-draw-management/edit-lucky-draw/${row._id}`);
+  };
 
   const handleDelete = (row) => {
-    // TODO: integrate delete API when available
     console.log("Delete Lucky Draw:", row?._id);
   };
 
-  // 🔹 Format ISO date to "dd MMM yyyy"
   const formatDate = (iso) => {
     if (!iso) return "-";
     const d = new Date(iso);
@@ -59,33 +54,31 @@ const handleEdit = (row) => {
     });
   };
 
-  // 🔹 Fetch from API whenever page / limit / search changes
   useEffect(() => {
-    fetchLuckyDrawList(currentPage, itemsPerPage, searchTerm);
-  }, [currentPage, itemsPerPage, searchTerm]);
+    fetchLuckyDrawList(currentPage, itemsPerPage, debouncedSearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, itemsPerPage, debouncedSearch]);
 
-  const apiData = luckyDrawList?.data || [];
   const pagination = luckyDrawList?.pagination || {};
   const totalItems = pagination.totalRecords || 0;
   const totalPages = pagination.totalPages || 1;
   const currentApiPage = pagination.currentPage || currentPage;
   const limitFromApi = pagination.limit || itemsPerPage;
 
-  // 🔹 Map API data → table rows
-  const tableData = useMemo(
-    () =>
-      apiData.map((item, index) => ({
-        ...item,
-        srNo: (currentApiPage - 1) * limitFromApi + index + 1,
-        luckyDrawId: item.eventId,
-        eventName: item.eventName,
-        startEndDate: `${formatDate(item.startDate)} - ${formatDate(
-          item.endDate
-        )}`,
-        status: item.status, // Already "Upcoming" / "Ongoing" / etc. from API
-      })),
-    [apiData, currentApiPage, limitFromApi]
-  );
+  const tableData = useMemo(() => {
+    const apiData = luckyDrawList?.data || [];
+
+    return apiData.map((item, index) => ({
+      ...item,
+      srNo: (currentApiPage - 1) * limitFromApi + index + 1,
+      luckyDrawId: item.eventId,
+      eventName: item.eventName,
+      startEndDate: `${formatDate(item.startDate)} - ${formatDate(
+        item.endDate
+      )}`,
+      status: item.status,
+    }));
+  }, [luckyDrawList, currentApiPage, limitFromApi]);
 
   const columns = [
     { header: "Sr. No.", field: "srNo" },
@@ -98,7 +91,7 @@ const handleEdit = (row) => {
 
   const actions = [
     {
-      icon: (row) => (
+      icon: () => (
         <FaEye
           className="w-4 h-4 text-yellow-600 hover:text-blue-600 transition-colors duration-200 cursor-pointer"
           title="View"
@@ -107,7 +100,7 @@ const handleEdit = (row) => {
       onClick: handleViewLuckyDraw,
     },
     {
-      icon: (row) => (
+      icon: () => (
         <FaRegEdit
           className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer"
           title="Edit"
@@ -116,7 +109,7 @@ const handleEdit = (row) => {
       onClick: handleEdit,
     },
     {
-      icon: (row) => (
+      icon: () => (
         <Trash2
           className="w-5 h-5 text-yellow-600 hover:text-red-600 transition-colors duration-200 cursor-pointer"
           title="Delete"
@@ -143,14 +136,13 @@ const handleEdit = (row) => {
       />
 
       {/* Data Table */}
-    
-        {loading ? (
-          <div className="flex w-full items-center justify-center py-10">
-            <LoaderSpinner />
-          </div>
-        ) : (
 
-            <div className="mt-6 bg-white p-4 rounded shadow">
+      {loading ? (
+        <div className="flex w-full items-center justify-center py-10">
+          <LoaderSpinner />
+        </div>
+      ) : (
+        <div className="mt-6 bg-white p-4 rounded shadow">
           <DataTable
             columns={columns}
             data={tableData}
@@ -159,21 +151,16 @@ const handleEdit = (row) => {
             usersPerPage={limitFromApi}
           />
 
-           <Pagination
-        currentPage={currentApiPage}
-        totalPages={totalPages}
-        totalItems={totalItems}
-        itemsPerPage={limitFromApi}
-        onPageChange={setCurrentPage}
-        onItemsPerPageChange={setItemsPerPage}
-      />
-
-            </div>
-        )}
-    
-
-     
-     
+          <Pagination
+            currentPage={currentApiPage}
+            totalPages={totalPages}
+            totalItems={totalItems}
+            itemsPerPage={limitFromApi}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={setItemsPerPage}
+          />
+        </div>
+      )}
     </div>
   );
 }

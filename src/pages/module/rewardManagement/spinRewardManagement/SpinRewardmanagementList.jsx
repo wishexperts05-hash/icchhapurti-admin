@@ -10,20 +10,23 @@ import Button from "../../../../components/uiComponent/Button";
 
 import useSpinRewardManagement from "../../../../hooks/rewardManagement/useSpinRewardManagement";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+import useDebounce from "../../../../hooks/debounce/useDebounce";
 
 export default function SpinRewardManagementList() {
   const navigate = useNavigate();
 
-  const { loading, spinRewardList, fetchSpinRewardList } =
+  const { loading, spinRewardList, fetchSpinRewardList, deleteSpinReward } =
     useSpinRewardManagement();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(searchTerm, 500);
 
   useEffect(() => {
-    fetchSpinRewardList();
-  }, []);
+    fetchSpinRewardList(currentPage, itemsPerPage, debouncedSearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, itemsPerPage, debouncedSearch]);
 
   const filteredRewards = (spinRewardList || []).filter((item) => {
     if (!searchTerm.trim()) return true;
@@ -55,18 +58,12 @@ export default function SpinRewardManagementList() {
   const currentItems = filteredRewards.slice(startIndex, endIndex);
 
   const handleEdit = (reward) => {
-    navigate(`/spin-reward-management/edit-spin-reward`, {
-      state: { reward },
-    });
+    navigate(`/spin-reward-management/edit-spin-reward/${reward._id}`);
   };
 
-  const handleDelete = (reward) => {
-    if (
-      window.confirm(`Are you sure you want to delete "${reward.rewardTitle}"?`)
-    ) {
-      setRewards((prev) => prev.filter((item) => item.srNo !== reward.srNo));
-      alert("Reward deleted successfully!");
-    }
+  const handleDelete = async (id) => {
+    await deleteSpinReward(id);
+    fetchSpinRewardList();
   };
 
   const columns = [
@@ -78,7 +75,7 @@ export default function SpinRewardManagementList() {
 
   const actions = [
     {
-      icon: (row) => (
+      icon: () => (
         <FaRegEdit
           className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer"
           title="Edit"
@@ -87,13 +84,13 @@ export default function SpinRewardManagementList() {
       onClick: handleEdit,
     },
     {
-      icon: (row) => (
+      icon: () => (
         <Trash2
           className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer"
           title="Delete"
         />
       ),
-      onClick: handleDelete,
+      onClick: (row) => handleDelete(row?._id),
     },
   ];
 
