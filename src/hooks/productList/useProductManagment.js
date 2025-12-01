@@ -48,6 +48,8 @@ const useProductManagement = () => {
     setProductList([]);
   };
 
+  
+
   const updateProduct = async (id, formdata) => {
     setLoading(true);
     try {

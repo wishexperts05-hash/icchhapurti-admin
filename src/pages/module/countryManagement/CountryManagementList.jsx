@@ -10,6 +10,7 @@ import Pagination from "../../../components/uiComponent/Pagination";
 import { FaRegEdit } from "react-icons/fa";
 import useCountryManagement from "../../../hooks/countryManagement/useCountryManagement";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
+import useDebounce from "../../../hooks/debounce/useDebounce";
 
 export default function CountryManagementList() {
   const navigate = useNavigate();
@@ -19,10 +20,11 @@ export default function CountryManagementList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+   const debouncedSearch = useDebounce(searchTerm, 500);
 
   useEffect(()=>{
-    fetchCountryList(page,itemsPerPage,searchTerm);
-  },[page,itemsPerPage,searchTerm])
+    fetchCountryList(page,itemsPerPage,debouncedSearch);
+  },[page,itemsPerPage,debouncedSearch])
   
   const setCurrentPage = (data) =>{
     setPage(data);

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
-import PagePath2 from "../../../components/uiComponent/PagePath2";
-import DataTable from "../../../components/uiComponent/DataTable";
+
+import PagePath2 from "../../../../components/uiComponent/PagePath2";
+import DataTable from "../../../../components/uiComponent/DataTable";
 import { useNavigate } from "react-router-dom";
-import useDebounce from "../../../hooks/debounce/useDebounce";
-import Pagination from "../../../components/uiComponent/Pagination";
+import useDebounce from "../../../../hooks/debounce/useDebounce";
+import Pagination from "../../../../components/uiComponent/Pagination";
 import { FaEye } from "react-icons/fa";
+import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 
 const ReferralTracking = () => {
   const navigate = useNavigate();
@@ -17,46 +18,47 @@ const ReferralTracking = () => {
 
   // Static dummy data
   const referrelData = [
-  {
-    srNo: 1,
-    userName: "Rahul Sharma",
-    totalCoinEarned: 1200,
-    action: "View",
-  },
-  {
-    srNo: 2,
-    userName: "Priya Verma",
-    totalCoinEarned: 980,
-    action: "View",
-  },
-  {
-    srNo: 3,
-    userName: "Amit Patil",
-    totalCoinEarned: 1500,
-    action: "View",
-  },
-  {
-    srNo: 4,
-    userName: "Sneha Kulkarni",
-    totalCoinEarned: 760,
-    action: "View",
-  },
-  {
-    srNo: 5,
-    userName: "Karan Gupta",
-    totalCoinEarned: 1870,
-    action: "View",
-  },
-  {
-    srNo: 6,
-    userName: "Meera Yadav",
-    totalCoinEarned: 640,
-    action: "View",
-  },
-  {
-    srNo: 7,
-    userName: "Sanjay Singh",
-    totalCoinEarned: 1340,}
+    {
+      srNo: 1,
+      userName: "Rahul Sharma",
+      totalCoinEarned: 1200,
+      action: "View",
+    },
+    {
+      srNo: 2,
+      userName: "Priya Verma",
+      totalCoinEarned: 980,
+      action: "View",
+    },
+    {
+      srNo: 3,
+      userName: "Amit Patil",
+      totalCoinEarned: 1500,
+      action: "View",
+    },
+    {
+      srNo: 4,
+      userName: "Sneha Kulkarni",
+      totalCoinEarned: 760,
+      action: "View",
+    },
+    {
+      srNo: 5,
+      userName: "Karan Gupta",
+      totalCoinEarned: 1870,
+      action: "View",
+    },
+    {
+      srNo: 6,
+      userName: "Meera Yadav",
+      totalCoinEarned: 640,
+      action: "View",
+    },
+    {
+      srNo: 7,
+      userName: "Sanjay Singh",
+      totalCoinEarned: 1340,
+    }
   ];
 
   const onPageChange = (newPage) => {
@@ -80,17 +82,17 @@ const ReferralTracking = () => {
     { header: "Total Coin Earned", field: "totalCoinEarned" },
     { header: "Action", field: "action" },
   ];
-   // View Table
+  // View Table
   const actions = [
-      {
-        icon: <FaEye className="text-yellow-600" />,
-        title: "View",
-        onClick: (row) => handleView(row),
-      },];
+    {
+      icon: <FaEye className="text-yellow-600" />,
+      title: "View",
+      onClick: ()=>navigate("/view-user-referral"),
+    },];
 
   return (
     <Box>
-      <BreadCrumb linkText={[{ text: "Refer & Earn" },{ text: "Referral Tracking" }]} />
+      <BreadCrumb linkText={[{ text: "Refer & Earn" }, { text: "Referral Tracking" }]} />
       <PagePath2
         title="Referral Tracking"
         // ShowSearch
@@ -100,12 +102,14 @@ const ReferralTracking = () => {
         // Show Select type
         showSelect
         selectPlaceHolder="User"
-      
+        options={["Select","User", "Staff"]}
         
+
+
         // ShowAddButton
         showAddButton
-        addButtonText="Referrel Discount Settings"
-        onClick={() => navigate("")}
+        addButtonText="Referral Discount Settings"
+        onClick={() => navigate("/referral-discount-setting")}
 
       />
       {(
@@ -136,4 +140,4 @@ const ReferralTracking = () => {
   )
 }
 
-export default ReferralTracking ;
+export default ReferralTracking;

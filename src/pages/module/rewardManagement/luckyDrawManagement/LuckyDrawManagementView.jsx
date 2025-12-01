@@ -1,126 +1,237 @@
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import DetailsField from "../../../../components/uiComponent/DetailsField";
-import { Calendar, Trophy, Award } from "lucide-react";
+import { Calendar, Trophy } from "lucide-react";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
-import Button from '../../../../components/uiComponent/Button';
+import Button from "../../../../components/uiComponent/Button";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+
+import useLuckyDrawManagement from "../../../../hooks/rewardManagement/useLuckyDrawManagement";
 
 export default function LuckyDrawManagementView() {
-    const navigate = useNavigate();
-    const location = useLocation();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-    
-    const luckyDrawData = {
-        eventName: "Event 1",
-        luckyDrawId: "G458",
-        status: "Completed",
-        startDate: "05/02/2025",
-        endDate: "05/03/2025",
-        rulesOfLuckyDraw: "1 Ticket Per Parker Pen\n1 Ticket Per Ball Pen",
-        ticketsPerQuantity: "1 Ticket Per Parker Pen, 1 Ticket Per Ball Pen",
-        noOfWinners: "4",
-        resultAnnouncementDate: "2nd Nov, 2025",
-        winners: [
-            { name: "Amit Jadhav" },
-            { name: "Tony Stark" },
-            { name: "John Deo" },
-            { name: "Jane Cooper" },
-        ]
-    };
+  const { loading, luckyDrawDetail, fetchLuckyDrawDetailById } =
+    useLuckyDrawManagement();
 
-    const handleBack = () => {
-        navigate(-1);
-    };
-    const handleAddWinner = () => {
-        navigate("/lucky-draw-management/add-winner");
+  useEffect(() => {
+    if (id) {
+      fetchLuckyDrawDetailById(id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
-    return (
-        <div className="">
-            <div className="max-w-6xl mx-auto">
-                {/* Breadcrumb */}
-                <BreadCrumb
-                    linkText={[
+  const formatDate = (iso) => {
+    if (!iso) return "-";
+    const d = new Date(iso);
 
-                        { text: "Lucky Draw Management", href: "/lucky-draw-management" },
-                        { text: "View Lucky Draw Event" },
-                    ]}
+    return d.toLocaleDateString("en-GB");
+  };
+
+  const formatDateVerbose = (iso) => {
+    if (!iso) return "-";
+    const d = new Date(iso);
+
+    return d.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const luckyDrawData = useMemo(() => {
+    if (!luckyDrawDetail) return null;
+
+    const {
+      eventName,
+      eventId,
+      status,
+      startDate,
+      endDate,
+      announcementDate,
+      ticketsPerQuantity,
+      numberOfWinners,
+      winners,
+    } = luckyDrawDetail;
+
+    const rulesArray = Array.isArray(ticketsPerQuantity)
+      ? ticketsPerQuantity
+      : [];
+
+    const normalizedWinners = Array.isArray(winners)
+      ? winners.map((w) => ({
+          name: w.name || w.fullName || w.userName || w.winnerName || "Winner",
+        }))
+      : [];
+
+    return {
+      eventName: eventName || "-",
+      luckyDrawId: eventId || "-",
+      status: status || "-",
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate),
+      rules: rulesArray,
+      noOfWinners: numberOfWinners ?? "-",
+      resultAnnouncementDate: formatDateVerbose(announcementDate),
+      winners: normalizedWinners,
+    };
+  }, [luckyDrawDetail]);
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const handleAddWinner = () => {
+    navigate(`/lucky-draw-management/add-winner/${id}`);
+  };
+
+  return (
+    <div className="">
+      <div className="max-w-6xl mx-auto">
+        {/* Breadcrumb */}
+        <BreadCrumb
+          linkText={[
+            { text: "Lucky Draw Management", href: "/lucky-draw-management" },
+            { text: "View Lucky Draw Event" },
+          ]}
+        />
+
+        {/* Page Title */}
+        <PagePath2 title="View Lucky Draw Event" />
+
+        {loading && !luckyDrawData ? (
+          <div className="flex w-full items-center justify-center py-10">
+            <LoaderSpinner />
+          </div>
+        ) : !luckyDrawData ? (
+          <div className="bg-white rounded-lg p-8 mb-8 shadow-sm border border-gray-200">
+            <p className="text-center text-gray-600">
+              Lucky Draw details not found.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Basic Information Card */}
+            <div className="bg-white rounded-lg p-8 mb-8 shadow-sm border border-gray-200">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <DetailsField
+                  label="Draw Name"
+                  value={luckyDrawData.eventName}
                 />
 
-                {/* Page Title */}
-                <PagePath2
-                    title="View Lucky Draw Event"
+                <DetailsField
+                  label="Lucky Draw ID"
+                  value={luckyDrawData.luckyDrawId}
                 />
 
-                {/* Basic Information Card */}
-                <div className="bg-white rounded-lg p-8 mb-8 shadow-sm border border-gray-200">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <DetailsField
-                            label="Draw Name"
-                            value={luckyDrawData.eventName}
-                        />
+                <DetailsField label="Status" value={luckyDrawData.status} />
+              </div>
+            </div>
 
-                        <DetailsField
-                            label="Lucky Draw ID"
-                            value={luckyDrawData.luckyDrawId}
-                        />
-
-                        <DetailsField
-                            label="Status"
-                            value={luckyDrawData.status}
-                        />
-                    </div>
+            {/* Lucky Draw Information Card */}
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+              <div className="bg-white px-6 py-4 border-b border-gray-300">
+                <div className="flex items-center gap-3">
+                  <Calendar className="w-5 h-5 text-gray-800" />
+                  <h3 className="text-lg font-bold text-gray-900">
+                    Lucky Draw Information
+                  </h3>
                 </div>
+              </div>
 
-                {/* Lucky Draw Information Card */}
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
-                    <div className="bg-white px-6 py-4 border-b border-gray-300">
-                        <div className="flex items-center gap-3">
-                            <Calendar className="w-5 h-5 text-gray-800" />
-                            <h3 className="text-lg font-bold text-gray-900">Lucky Draw Information</h3>
-                        </div>
-                    </div>
+              <div className="p-8 bg-white">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <DetailsField
+                    label="Start Date"
+                    value={luckyDrawData.startDate}
+                  />
 
-                    <div className="p-8 bg-white">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <DetailsField
-                                label="Start Date"
-                                value={luckyDrawData.startDate}
-                            />
+                  <DetailsField
+                    label="End Date"
+                    value={luckyDrawData.endDate}
+                  />
 
-                            <DetailsField
-                                label="End Date"
-                                value={luckyDrawData.endDate}
-                            />
+                  {/* 🔹 Render each product + tickets pair separately */}
+                  {luckyDrawData.rules.length === 0 ? (
+                    <DetailsField
+                      label="Products & Tickets"
+                      value="-"
+                      className="md:col-span-2"
+                    />
+                  ) : (
+                    luckyDrawData.rules.map((rule, index) => (
+                      <div
+                        key={index}
+                        className="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2 bg-gray-100 p-4 rounded"
+                      >
+                        <DetailsField
+                          label={`Product ${index + 1} Name`}
+                          value={rule.productName || "-"}
+                        />
+                        <DetailsField
+                          label={`Product ${index + 1} Tickets Per Quantity`}
+                          value={
+                            rule.ticketsPerQuantity !== undefined &&
+                            rule.ticketsPerQuantity !== null
+                              ? rule.ticketsPerQuantity
+                              : "-"
+                          }
+                        />
+                      </div>
+                    ))
+                  )}
 
-                            <DetailsField
-                                label="Rules Of Lucky Draw"
-                                value={luckyDrawData.rulesOfLuckyDraw}
-                                className="md:col-span-2"
-                            />
+                  <DetailsField
+                    label="No Of Winners"
+                    value={luckyDrawData.noOfWinners}
+                  />
 
-                            <DetailsField
-                                label="Tickets Per Quantity"
-                                value={luckyDrawData.ticketsPerQuantity}
-                            />
+                  <DetailsField
+                    label="Result Announcement Date"
+                    value={luckyDrawData.resultAnnouncementDate}
+                    className="md:col-span-2"
+                  />
 
-                            <DetailsField
-                                label="No Of Winners"
-                                value={luckyDrawData.noOfWinners}
-                            />
-
-                            <DetailsField
-                                label="Result Announcement Date"
-                                value={luckyDrawData.resultAnnouncementDate}
-                                className="md:col-span-2"
-                            />
-                        </div>
-                    </div>
+                  <DetailsField
+                    label="Rules Of Lucky Draw"
+                    value={""}
+                    className="md:col-span-2"
+                  />
                 </div>
+              </div>
+            </div>
 
-                {/* Winners Information Card */}
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 mt-8">
+            {/* Winners Information Card */}
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 mt-8">
+              <div className="bg-white px-6 py-4 border-b border-gray-300">
+                <div className="flex items-center gap-3">
+                  <Trophy className="w-5 h-5 text-gray-800" />
+                  <h3 className="text-lg font-bold text-gray-900">
+                    Winners Information
+                  </h3>
+                </div>
+              </div>
+
+              <div className="p-8 bg-white">
+                {luckyDrawData.winners.length === 0 ? (
+                  <p className="text-gray-500">No winners declared yet.</p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {luckyDrawData.winners.map((winner, index) => (
+                      <DetailsField
+                        key={index}
+                        label={`Winner ${index + 1} Name`}
+                        value={winner.name}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 
+               <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 mt-8">
                     <div className="bg-white px-6 py-4 border-b border-gray-300">
                         <div className="flex items-center gap-3">
                             <Trophy className="w-5 h-5 text-gray-800" />
@@ -138,26 +249,20 @@ export default function LuckyDrawManagementView() {
                                 />
                             ))}
                         </div>
-                    </div>
+                    </div> */}
 
-
-                    <div className="flex justify-center gap-8 mt-8 mb-8">
-                        <Button
-                            text="Back"
-                            variant={1}
-                            onClick={handleBack}
-                        />
-                        <Button
-                            text="Add Winner"
-                            variant={2}
-                            onClick={handleAddWinner}
-                        />
-                    </div>
-                </div>
-
-                {/* Action Buttons */}
-
+              <div className="flex justify-center gap-8 mt-8 mb-8">
+                <Button text="Back" variant={1} onClick={handleBack} />
+                <Button
+                  text="Add Winner"
+                  variant={2}
+                  onClick={handleAddWinner}
+                />
+              </div>
             </div>
-        </div>
-    );
+          </>
+        )}
+      </div>
+    </div>
+  );
 }
