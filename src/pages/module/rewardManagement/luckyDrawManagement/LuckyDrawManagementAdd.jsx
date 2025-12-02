@@ -273,7 +273,7 @@ const LuckyDrawManagementAdd = () => {
                 </div>
               </div>
 
-              {/* Product Images Section – UI only (not sent in API) */}
+            
               <div className="pt-4">
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">
                   Product Images (Min 3)
