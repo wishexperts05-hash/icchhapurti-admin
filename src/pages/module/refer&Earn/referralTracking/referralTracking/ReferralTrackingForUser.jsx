@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-
 import PagePath2 from "../../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../../components/uiComponent/DataTable";
 import { useNavigate } from "react-router-dom";
@@ -8,14 +7,12 @@ import useDebounce from "../../../../../hooks/debounce/useDebounce";
 import Pagination from "../../../../../components/uiComponent/Pagination";
 import { FaEye } from "react-icons/fa";
 import BreadCrumb from "../../../../../components/uiComponent/BreadCrumb";
-
 const ReferralTracking = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
-
   // Static dummy data
   const referrelData = [
     {
@@ -60,22 +57,18 @@ const ReferralTracking = () => {
       totalCoinEarned: 1340,
     }
   ];
-
   const onPageChange = (newPage) => {
     setPage(newPage);
   };
-
   const onItemsPerPageChange = (newLimit) => {
     setLimit(newLimit);
     setPage(1);
   };
-
   const onSearchChange = (e) => {
     const newSearchTerm = e.target.value;
     setSearch(newSearchTerm);
 
   };
-
   const columns = [
     { header: "Sr.No", field: "srNo" },
     { header: "User Name", field: "userName" },
@@ -87,15 +80,8 @@ const ReferralTracking = () => {
     {
       icon: <FaEye className="text-yellow-600" />,
       title: "View",
-      onClick: ()=>navigate("/refer-and-earn-user/view-user-referral"),
+      onClick: () => navigate("/refer-and-earn-user/view-user-referral"),
     },];
-  
-  
- // handle select
-  const handleSelect = (value) => {
-    if (value === "User") navigate("/refer-and-earn-user");
-    if (value === "Staff") navigate("/refer-and-earn-staff");
-  };
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Refer & Earn" }, { text: "Referral Tracking" }]} />
@@ -107,16 +93,12 @@ const ReferralTracking = () => {
         handleSearchTerm={onSearchChange}
         // Show Select type
         showSelect
-        selectPlaceHolder="Select"
+        selectPlaceHolder="Select User Type"
         options={["User", "Staff"]}
-        onChange={(value) => handleSelect(value)}
-
-
         // ShowAddButton
         showAddButton
         addButtonText="Referral Discount Settings"
         onClick={() => navigate("/refer-and-earn-user/referral-discount-setting")}
-
       />
       {(
         <>
@@ -127,10 +109,8 @@ const ReferralTracking = () => {
               actions={actions}
               currentPage={page}
               usersPerPage={limit}
-
             />
           </Box>
-
           <Pagination
             currentPage={1}
             totalPages={5}
@@ -139,7 +119,6 @@ const ReferralTracking = () => {
             onPageChange={onPageChange}
             onItemsPerPageChange={onItemsPerPageChange}
           />
-
         </>
       )}
     </Box>
