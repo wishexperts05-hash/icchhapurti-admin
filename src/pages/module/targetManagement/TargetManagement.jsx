@@ -92,18 +92,14 @@ const TargetManagement = () => {
   const onPageChange = (newPage) => {
     setPage(newPage);
   };
-
   const onItemsPerPageChange = (newLimit) => {
     setLimit(newLimit);
     setPage(1);
   };
-
   const onSearchChange = (e) => {
     const newSearchTerm = e.target.value;
     setSearch(newSearchTerm);
-
   };
-
   const columns = [
     { header: "Sr.No", field: "srNo" },
     { header: "Staff Name", field: "name" },
@@ -113,7 +109,6 @@ const TargetManagement = () => {
     { header: "Tickets Earned", field: "totalTicketsEarned" },
 
   ];
-
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Target Management" }]} />
@@ -127,7 +122,6 @@ const TargetManagement = () => {
         showAddButton
         addButtonText="Set Target"
         onClick={() => navigate("/target-management/setTarget-management")}
-
       />
   
       {(
@@ -144,10 +138,8 @@ const TargetManagement = () => {
               data={targetData}
               currentPage={page}
               usersPerPage={limit}
-
             />
           </Box>
-
           <Pagination
             currentPage={1}
             totalPages={5}

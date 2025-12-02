@@ -1,3 +1,5 @@
+// src/pages/.../EditSpinReward.jsx
+
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -27,8 +29,6 @@ const mapRewardTypeFromApi = (apiValue = "") => {
       return "grabTicket";
     case "Buy & Get":
       return "buy&Get";
-    case "Free Talk With Astrologer":
-      return "freeTalk";
     default:
       return "";
   }
@@ -44,8 +44,6 @@ const mapRewardTypeToApi = (formValue = "") => {
       return "Grab Ticket";
     case "buy&Get":
       return "Buy & Get";
-    case "freeTalk":
-      return "Free Talk With Astrologer";
     default:
       return "";
   }
@@ -53,12 +51,16 @@ const mapRewardTypeToApi = (formValue = "") => {
 
 const EditSpinReward = () => {
   const navigate = useNavigate();
-
   const { id } = useParams();
   const rewardId = id;
 
-  const { loading, fetchSpinRewardById, updateSpinReward } =
-    useSpinRewardManagement();
+  const {
+    loading,
+    fetchSpinRewardById,
+    updateSpinReward,
+    rewardTypes,       
+    fetchRewardTypes,   
+  } = useSpinRewardManagement();
 
   const {
     loading: dropdownLoading,
@@ -78,7 +80,6 @@ const EditSpinReward = () => {
     buyQuantity: "",
     getQuantity: "",
     ticketQuantity: "",
-    freeTalkTime: "",
   });
 
   useEffect(() => {
@@ -86,6 +87,7 @@ const EditSpinReward = () => {
       fetchUserType();
     }
     fetchProductDropdown();
+    fetchRewardTypes(); 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -100,6 +102,14 @@ const EditSpinReward = () => {
       value: item._id,
       label: item.name,
     })) || [];
+
+  
+  const rewardTypeOptions =
+    (rewardTypes || []).map((rt) => ({
+      value: mapRewardTypeFromApi(rt), 
+      label: rt,                       
+    })) || [];
+
 
   useEffect(() => {
     const loadReward = async () => {
@@ -125,7 +135,6 @@ const EditSpinReward = () => {
           buyQuantity: data.rewardDetails?.buyQuantity || "",
           getQuantity: data.rewardDetails?.getQuantity || "",
           ticketQuantity: data.rewardDetails?.ticketQuantity || "",
-          freeTalkTime: data.rewardDetails?.freeTalkTime || "",
         }));
       }
     };
@@ -167,12 +176,6 @@ const EditSpinReward = () => {
         };
         break;
 
-      case "freeTalk":
-        rewardDetails = {
-          freeTalkTime: values.freeTalkTime,
-        };
-        break;
-
       case "nothing":
       default:
         rewardDetails = undefined;
@@ -187,7 +190,7 @@ const EditSpinReward = () => {
     };
 
     const updated = await updateSpinReward(rewardId, payload);
-    if (updated) {
+    if (updated?.success) {
       navigate("/spin-reward-management");
     }
   };
@@ -196,7 +199,6 @@ const EditSpinReward = () => {
     navigate("/spin-reward-management");
   };
 
-  // ✅ UI
   return (
     <div className="bg-gray-50 min-h-screen">
       <BreadCrumb
@@ -222,7 +224,7 @@ const EditSpinReward = () => {
           >
             {({ values }) => (
               <Form className="space-y-6">
-                {/* User Type & Reward Title */}
+               
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     label="User Type"
@@ -245,41 +247,26 @@ const EditSpinReward = () => {
                   />
                 </div>
 
-                {/* Reward Type */}
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     label="Reward Type"
                     name="chooseReward"
                     fieldType="select"
-                    options={[
-                      { value: "", label: "Select Reward Type" },
-                      { value: "nothing", label: "Nothing" },
-                      { value: "buy&Get", label: "Buy & Get" },
-                      { value: "flatOff", label: "Flat Off" },
-                      { value: "grabTicket", label: "Grab Ticket" },
-                      {
-                        value: "freeTalk",
-                        label: "Free Talk With Astrologer",
-                      },
-                    ]}
+                    options={rewardTypeOptions}   
                   />
                 </div>
 
+             
                 {values.chooseReward === "buy&Get" && (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <FormField
                       label="Select Product"
                       name="product"
                       fieldType="select"
-                      options={[
-                        {
-                          value: "",
-                          label: dropdownLoading
-                            ? "Loading products..."
-                            : "Select Product",
-                        },
-                        ...productDrop,
-                      ]}
+                     options={productDrop}
+
+
                       loading={dropdownLoading}
                     />
                     <FormField
@@ -302,7 +289,7 @@ const EditSpinReward = () => {
                       name="purchaseOption"
                       fieldType="select"
                       options={[
-                        { value: "", label: "Select Purchase Option" },
+                       
                         { value: "Next Purchase", label: "Next Purchase" },
                         { value: "First Purchase", label: "First Purchase" },
                       ]}
@@ -311,15 +298,9 @@ const EditSpinReward = () => {
                       label="Select Product"
                       name="product"
                       fieldType="select"
-                      options={[
-                        {
-                          value: "",
-                          label: dropdownLoading
-                            ? "Loading products..."
-                            : "Select Product",
-                        },
-                        ...productDrop,
-                      ]}
+                      options={productDrop}
+
+
                       loading={dropdownLoading}
                     />
                     <FormField
@@ -337,29 +318,6 @@ const EditSpinReward = () => {
                       name="ticketQuantity"
                       placeholder="e.g. 1"
                     />
-                  </div>
-                )}
-
-                {values.chooseReward === "freeTalk" && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="flex flex-col gap-1">
-                      <label className="text-sm font-medium text-gray-700">
-                        Free Talk Time
-                      </label>
-                      <div className="relative">
-                        <Field
-                          name="freeTalkTime"
-                          type="time"
-                          className="w-full border rounded-md px-10 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                        />
-                        <Clock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-                      </div>
-                      <ErrorMessage
-                        name="freeTalkTime"
-                        component="div"
-                        className="text-xs text-red-500 mt-1"
-                      />
-                    </div>
                   </div>
                 )}
 

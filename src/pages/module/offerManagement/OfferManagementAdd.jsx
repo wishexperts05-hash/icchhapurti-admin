@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormField from "../../../components/uiComponent/FormField";
 import Button from "../../../components/uiComponent/Button";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
+import useOfferManagement from "../../../hooks/offerManagement/useOfferManagement";
 
 const validationSchema = Yup.object().shape({
     offerTitle: Yup.string().required("Offer title is required"),
@@ -31,10 +32,21 @@ const validationSchema = Yup.object().shape({
 });
 
 const OfferManagementAdd = () => {
+    const { loading, fetchOfferDetails, addOffer, updateOffer, offerDetail, resetOfferDetails } = useOfferManagement();
+    const { id } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
     const isEditMode = location.pathname.includes("editOffer");
     const offerData = location.state?.offerData || null;
+
+    useEffect(() => {
+        if (id && isEditMode) {
+            fetchOfferDetails(id);
+        }
+        return () => {
+            resetOfferDetails();
+        }
+    }, [id, isEditMode]);
 
     const initialValues = {
         offerTitle: offerData?.title || "",
@@ -64,7 +76,6 @@ const OfferManagementAdd = () => {
         <div className="bg-gray-50 min-h-screen">
             <BreadCrumb
                 linkText={[
-                    { text: "Dashboard" },
                     { text: "Offer Management", href: "/offer-management" },
                     { text: isEditMode ? "Edit Offer" : "Add New Offer" },
                 ]}
@@ -87,18 +98,18 @@ const OfferManagementAdd = () => {
                             <FormField label="Start Date" name="startDate" type="date" placeholder="Select start date" />
                             <FormField label="End Date" name="endDate" type="date" placeholder="Select end date" />
                             <FormField
-                                                                label="Offer Type"
-                                                                name="offerType"
-                                                                fieldType="select"  // Important: specify fieldType as "select"
-                                                                options={[
-                                                                    { value: "", label: "Choose Offer" },
-                                                                    { value: "discount", label: "Discount" },
-                                                                    { value: "buyget", label: "Buy & Get" },
-                                                                    { value: "freedelivery", label: "Free Delivery" },
-                                                                    { value: "productbundles", label: "Product Bundles" },
-                                                                ]}
-                                                            />
-                            
+                                label="Offer Type"
+                                name="offerType"
+                                fieldType="select"  // Important: specify fieldType as "select"
+                                options={[
+                                    { value: "", label: "Choose Offer" },
+                                    { value: "discount", label: "Discount" },
+                                    { value: "buyget", label: "Buy & Get" },
+                                    { value: "freedelivery", label: "Free Delivery" },
+                                    { value: "productbundles", label: "Product Bundles" },
+                                ]}
+                            />
+
                             <hr className="text-black col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4" />
                             <div className="col-span-1 sm:col-span-2 flex justify-center gap-4 mt-4">
                                 <Button text="Cancel" variant={2} type="button" onClick={handleCancel} />

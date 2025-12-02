@@ -4,7 +4,9 @@ import { toast } from "react-toastify";
 
 import useFetch from "../useFetch";
 import conf from "../../config";
-import { luckyDrawListAtom } from "../../state/rewardManagement/luckyDrawState";
+import { luckyDrawDetailsAtom, luckyDrawListAtom } from "../../state/rewardManagement/luckyDrawState";
+import { confirmAlert } from "../../utils/alertToast";
+import Swal from "sweetalert2";
 
 const useLuckyDrawManagement = () => {
   const [luckyDrawList, setLuckyDrawList] = useRecoilState(luckyDrawListAtom);
@@ -12,9 +14,9 @@ const useLuckyDrawManagement = () => {
   const [fetchData] = useFetch();
   const [distributedTickets, setDistributedTickets] = useState([]);
 
-  const [luckyDrawDetail, setLuckyDrawDetail] = useState(null);
+  const [luckyDrawDetail, setLuckyDrawDetail] = useState(luckyDrawDetailsAtom);
 
-  const fetchLuckyDrawList = async (page = 1, limit = 10, search) => {
+  const fetchLuckyDrawList = async (page, limit ,search) => {
     setLoading(true);
     try {
       let url = `${conf.apiBaseUrl}admin/luckyDraw/getAllLuckyDraws?page=${page}&limit=${limit}`;
@@ -169,6 +171,75 @@ const useLuckyDrawManagement = () => {
     }
   };
 
+ 
+  //   if (!luckyDrawId) return null;
+  //   setLoading(true);
+  //   try {
+  //     const res = await fetchData({
+  //       method: "DELETE",
+  //       url: `${conf.apiBaseUrl}admin/luckyDraw/deleteLuckyDraw/${luckyDrawId}`,
+  //     });
+
+  //     if (res?.success) {
+  //       toast.success(res?.message || "Lucky Draw deleted successfully");
+
+  //       // Optionally: remove from local list without refetch
+  //       setLuckyDrawList((prev) => {
+  //         if (!prev || !Array.isArray(prev.data)) return prev;
+  //         return {
+  //           ...prev,
+  //           data: prev.data.filter((item) => item._id !== luckyDrawId),
+  //         };
+  //       });
+  //     } else {
+  //       toast.error(res?.message || "Failed to delete Lucky Draw");
+  //     }
+
+  //     return res;
+  //   } catch (err) {
+  //     console.error("Error deleting lucky draw:", err);
+  //     toast.error("Error deleting Lucky Draw");
+  //     return null;
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+   const deleteLuckyDrawById = async (luckyDrawId) => {
+      const result = await confirmAlert(
+        "Do you really want to delete this Product?"
+      );
+      if (result.isConfirmed) {
+        try {
+          setLoading(true);
+          const res = await fetchData({
+            method: "DELETE",
+            url: `${conf.apiBaseUrl}admin/luckyDraw/deleteLuckyDraw/${luckyDrawId}`,
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          });
+  
+          if (res) {
+            Swal.fire({
+              title: "Deleted!",
+              text: res?.message,
+              icon: "success",
+              confirmButtonText: "OK",
+            });
+            setLoading(false);
+            return res;
+          }
+        } catch (err) {
+          console.error("Error deleting  product:", err);
+          setLoading(false);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+
   return {
     loading,
     luckyDrawList,
@@ -181,6 +252,7 @@ const useLuckyDrawManagement = () => {
     fetchLuckyDrawDetailById,
     updateLuckyDrawById,
     createLuckyDraw,
+    deleteLuckyDrawById
   };
 };
 

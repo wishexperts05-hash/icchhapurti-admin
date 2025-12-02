@@ -6,6 +6,7 @@ import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import { FiEye } from "react-icons/fi";
 import Pagination from "../../../../components/uiComponent/Pagination";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import useTermsAndConditions from "../../../../hooks/appManagement/useTermsAndConditions";
 
 function TermsAndConditions() {
@@ -141,7 +142,7 @@ function TermsAndConditions() {
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
         {loading ? (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B00]"></div>
+            <LoaderSpinner />
           </div>
         ) : tableData.length === 0 ? (
           <div className="flex flex-col justify-center items-center py-20 text-gray-500">

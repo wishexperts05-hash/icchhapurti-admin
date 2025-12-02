@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormField from "../../../../components/uiComponent/FormField";
 import Button from "../../../../components/uiComponent/Button";
@@ -8,13 +8,13 @@ import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import useSpinRewardManagement from "../../../../hooks/rewardManagement/useSpinRewardManagement";
 import useDropdown from "../../../../hooks/dropdown/useDropdown";
-import { Clock } from "lucide-react";
 
 const validationSchema = Yup.object().shape({
   userType: Yup.string().required("User type is required"),
   rewardTitle: Yup.string().required("Reward title is required"),
   chooseReward: Yup.string().required("Please select a reward type"),
 });
+
 
 const mapRewardTypeToApi = (formValue = "") => {
   switch (formValue) {
@@ -26,8 +26,22 @@ const mapRewardTypeToApi = (formValue = "") => {
       return "Grab Ticket";
     case "buy&Get":
       return "Buy & Get";
-    case "freeTalk":
-      return "Free Talk With Astrologer";
+    default:
+      return "";
+  }
+};
+
+
+const mapRewardTypeFromApi = (apiValue = "") => {
+  switch (apiValue) {
+    case "Nothing":
+      return "nothing";
+    case "Flat Off":
+      return "flatOff";
+    case "Grab Ticket":
+      return "grabTicket";
+    case "Buy & Get":
+      return "buy&Get";
     default:
       return "";
   }
@@ -36,7 +50,8 @@ const mapRewardTypeToApi = (formValue = "") => {
 const AddSpinReward = () => {
   const navigate = useNavigate();
 
-  const { addSpinReward } = useSpinRewardManagement();
+  const { addSpinReward, rewardTypes, fetchRewardTypes } =
+    useSpinRewardManagement();
 
   const {
     loading: dropdownLoading,
@@ -49,20 +64,36 @@ const AddSpinReward = () => {
   useEffect(() => {
     if (fetchUserType) fetchUserType();
     fetchProductDropdown();
+    fetchRewardTypes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  
   const dropdownOptions =
     userType?.map((item) => ({
       value: item,
       label: item,
     })) || [];
 
+  
   const productDrop =
     productDropdown?.map((item) => ({
       value: item._id,
       label: item.name,
     })) || [];
+
+
+  const rewardTypeOptions =
+    rewardTypes
+      ?.map((rt) => {
+        const internalValue = mapRewardTypeFromApi(rt); 
+        if (!internalValue) return null; 
+        return {
+          value: internalValue,
+          label: rt,
+        };
+      })
+      .filter(Boolean) || [];
 
   const initialValues = {
     userType: "",
@@ -74,7 +105,6 @@ const AddSpinReward = () => {
     buyQuantity: "",
     getQuantity: "",
     ticketQuantity: "",
-    freeTalkTime: "",
   };
 
   const handleSubmit = async (values, { resetForm }) => {
@@ -102,12 +132,6 @@ const AddSpinReward = () => {
       case "grabTicket":
         rewardDetails = {
           ticketQuantity: Number(values.ticketQuantity) || 0,
-        };
-        break;
-
-      case "freeTalk":
-        rewardDetails = {
-          freeTalkTime: values.freeTalkTime,
         };
         break;
 
@@ -154,7 +178,7 @@ const AddSpinReward = () => {
         >
           {({ values }) => (
             <Form className="space-y-6">
-              {/* User Type & Reward Title */}
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   label="User Type"
@@ -177,40 +201,25 @@ const AddSpinReward = () => {
                 />
               </div>
 
-              {/* Reward Type */}
+           
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   label="Reward Type"
                   name="chooseReward"
                   fieldType="select"
-                  options={[
-                    { value: "nothing", label: "Nothing" },
-                    { value: "buy&Get", label: "Buy & Get" },
-                    { value: "flatOff", label: "Flat Off" },
-                    { value: "grabTicket", label: "Grab Ticket" },
-                    {
-                      value: "freeTalk",
-                      label: "Free Talk With Astrologer",
-                    },
-                  ]}
+                  options={rewardTypeOptions}
+                  
                 />
               </div>
 
+              {/* Buy & Get */}
               {values.chooseReward === "buy&Get" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <FormField
-                    label="Select Product"
+                    label="Product"
                     name="product"
                     fieldType="select"
-                    options={[
-                      {
-                        value: "",
-                        label: dropdownLoading
-                          ? "Loading products..."
-                          : "Select Product",
-                      },
-                      ...productDrop,
-                    ]}
+                    options={productDrop}
                     loading={dropdownLoading}
                   />
                   <FormField
@@ -226,6 +235,7 @@ const AddSpinReward = () => {
                 </div>
               )}
 
+              {/* Flat Off */}
               {values.chooseReward === "flatOff" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <FormField
@@ -239,18 +249,10 @@ const AddSpinReward = () => {
                     ]}
                   />
                   <FormField
-                    label="Select Product"
+                    label="Product"
                     name="product"
                     fieldType="select"
-                    options={[
-                      {
-                        value: "",
-                        label: dropdownLoading
-                          ? "Loading products..."
-                          : "Select Product",
-                      },
-                      ...productDrop,
-                    ]}
+                    options={productDrop}
                     loading={dropdownLoading}
                   />
                   <FormField
@@ -261,6 +263,7 @@ const AddSpinReward = () => {
                 </div>
               )}
 
+              {/* Grab Ticket */}
               {values.chooseReward === "grabTicket" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <FormField
@@ -268,29 +271,6 @@ const AddSpinReward = () => {
                     name="ticketQuantity"
                     placeholder="e.g. 1"
                   />
-                </div>
-              )}
-
-              {values.chooseReward === "freeTalk" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-sm font-medium text-gray-700">
-                      Free Talk Time
-                    </label>
-                    <div className="relative">
-                      <Field
-                        name="freeTalkTime"
-                        type="time"
-                        className="w-full border rounded-md px-10 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                      />
-                      <Clock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
-                    </div>
-                    <ErrorMessage
-                      name="freeTalkTime"
-                      component="div"
-                      className="text-xs text-red-500 mt-1"
-                    />
-                  </div>
                 </div>
               )}
 

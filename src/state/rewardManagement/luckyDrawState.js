@@ -7,3 +7,9 @@ export const luckyDrawListAtom = atom({
   default: null,
   effects_UNSTABLE: [persistAtom],
 });
+
+export const luckyDrawDetailsAtom = atom({
+  key: "luckyDrawListAtomKey",
+  default: null,
+  effects_UNSTABLE: [persistAtom],
+});

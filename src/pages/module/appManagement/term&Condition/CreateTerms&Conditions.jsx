@@ -8,6 +8,8 @@ import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import Button from "../../../../components/uiComponent/Button";
 import FormField from "../../../../components/uiComponent/FormField";
 import useTermsAndConditions from "../../../../hooks/appManagement/useTermsAndConditions";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+import useDropdown from "../../../../hooks/dropdown/useDropdown";
 
 function CreateTermsAndConditions() {
   const navigate = useNavigate();
@@ -15,13 +17,20 @@ function CreateTermsAndConditions() {
   const editor = useRef(null);
 
   const {
-    loading,
+    loading: termsLoading,
     termsDetail,
     addTerms,
     updateTerms,
     fetchTermsDetailById,
     resetTermsDetails,
   } = useTermsAndConditions();
+
+  // Use dropdown hook for user types
+  const {
+    userType,
+    loadingUser,
+    fetchUserType,
+  } = useDropdown();
 
   // Fetch terms details if editing
   useEffect(() => {
@@ -35,13 +44,24 @@ function CreateTermsAndConditions() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // Role options for dropdown - Based on API documentation
-  const roleOptions = [
-    { label: "User", value: "User" },
-    { label: "Staff", value: "Staff" },
-    { label: "Promoter", value: "Promoter" },
-    { label: "Staff Vendor", value: "StaffVendor" },
-  ];
+  // Fetch user types on mount
+  useEffect(() => {
+    fetchUserType();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Convert userType from dropdown hook to options format with fallback
+  const roleOptions = Array.isArray(userType) 
+    ? userType.map((type) => ({
+        label: type.name || type.label || type,
+        value: type.value || type.name || type,
+      }))
+    : [
+        { label: "User", value: "User" },
+        { label: "Staff", value: "Staff" },
+        { label: "Promoter", value: "Promoter" },
+        { label: "Staff Vendor", value: "StaffVendor" },
+      ];
 
   // Validation schema
   const validationSchema = Yup.object({
@@ -114,7 +134,7 @@ function CreateTermsAndConditions() {
   };
 
   // Show loading state while fetching data for edit mode
-  if (id && loading && !termsDetail) {
+  if (id && termsLoading && !termsDetail) {
     return (
       <div className="bg-[#F9F9F9] min-h-screen">
         <BreadCrumb
@@ -130,7 +150,7 @@ function CreateTermsAndConditions() {
         <PagePath2 title="Edit Terms and Conditions" />
         <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B00]"></div>
+            <LoaderSpinner />
           </div>
         </div>
       </div>
@@ -194,6 +214,8 @@ function CreateTermsAndConditions() {
                   fieldType="select"
                   options={roleOptions}
                   placeholder="Select Role"
+                  loading={loadingUser}
+                  disabled={loadingUser}
                   required
                 />
               </div>
@@ -235,12 +257,12 @@ function CreateTermsAndConditions() {
                   onClick={() =>
                     navigate("/app-management/terms-and-conditions")
                   }
-                  disabled={loading || isSubmitting}
+                  disabled={termsLoading || isSubmitting}
                 />
                 <Button
                   variant={1}
                   text={
-                    loading || isSubmitting
+                    termsLoading || isSubmitting
                       ? id
                         ? "Updating..."
                         : "Creating..."
@@ -249,7 +271,7 @@ function CreateTermsAndConditions() {
                       : "Create"
                   }
                   type="submit"
-                  disabled={loading || isSubmitting}
+                  disabled={termsLoading || isSubmitting}
                 />
               </div>
             </Form>
