@@ -6,6 +6,8 @@ import DataTable from "../../../components/uiComponent/DataTable";
 import { useNavigate } from "react-router-dom";
 import useDebounce from "../../../hooks/debounce/useDebounce";
 import Pagination from "../../../components/uiComponent/Pagination";
+import useTargetManagement from "../../../hooks/targetManagment/useTargetManagment";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 
 const TargetManagement = () => {
   const navigate = useNavigate();
@@ -14,74 +16,78 @@ const TargetManagement = () => {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
 
+  
+  const { targetData, loading, error } = useTargetManagement(page, limit, debouncedSearch);
+
+  console.log(targetData)
   // Static dummy data
-  const targetData = [
-    {
-      srNo: 1,
-      staffName: "Rahul Sharma",
-      dailyTarget: 50,
-      weaklyTarget: 300,
-      targetAchievd: 280,
-      ticketEarned: 45,
-    },
-    {
-      srNo: 2,
-      staffName: "Priya Verma",
-      dailyTarget: 40,
-      weaklyTarget: 250,
-      targetAchievd: 260,
-      ticketEarned: 52,
-    },
-    {
-      srNo: 3,
-      staffName: "Amit Patil",
-      dailyTarget: 55,
-      weaklyTarget: 330,
-      targetAchievd: 310,
-      ticketEarned: 48,
-    },
-    {
-      srNo: 4,
-      staffName: "Sneha Kulkarni",
-      dailyTarget: 45,
-      weaklyTarget: 280,
-      targetAchievd: 275,
-      ticketEarned: 41,
-    },
-    {
-      srNo: 5,
-      staffName: "Karan Gupta",
-      dailyTarget: 60,
-      weaklyTarget: 360,
-      targetAchievd: 355,
-      ticketEarned: 60,
-    },
-    {
-      srNo: 6,
-      staffName: "Neha Singh",
-      dailyTarget: 48,
-      weaklyTarget: 290,
-      targetAchievd: 300,
-      ticketEarned: 54,
-    },
-    {
-      srNo: 7,
-      staffName: "Ram Singh",
-      dailyTarget: 48,
-      weaklyTarget: 290,
-      targetAchievd: 300,
-      ticketEarned: 54,
-    },
-    {
-      srNo: 8,
-      staffName: "Ritu Singh",
-      dailyTarget: 48,
-      weaklyTarget: 290,
-      targetAchievd: 300,
-      ticketEarned: 54,
-    },
+  // const targetData = [
+  //   {
+  //     srNo: 1,
+  //     staffName: "Rahul Sharma",
+  //     dailyTarget: 50,
+  //     weaklyTarget: 300,
+  //     targetAchievd: 280,
+  //     ticketEarned: 45,
+  //   },
+  //   {
+  //     srNo: 2,
+  //     staffName: "Priya Verma",
+  //     dailyTarget: 40,
+  //     weaklyTarget: 250,
+  //     targetAchievd: 260,
+  //     ticketEarned: 52,
+  //   },
+  //   {
+  //     srNo: 3,
+  //     staffName: "Amit Patil",
+  //     dailyTarget: 55,
+  //     weaklyTarget: 330,
+  //     targetAchievd: 310,
+  //     ticketEarned: 48,
+  //   },
+  //   {
+  //     srNo: 4,
+  //     staffName: "Sneha Kulkarni",
+  //     dailyTarget: 45,
+  //     weaklyTarget: 280,
+  //     targetAchievd: 275,
+  //     ticketEarned: 41,
+  //   },
+  //   {
+  //     srNo: 5,
+  //     staffName: "Karan Gupta",
+  //     dailyTarget: 60,
+  //     weaklyTarget: 360,
+  //     targetAchievd: 355,
+  //     ticketEarned: 60,
+  //   },
+  //   {
+  //     srNo: 6,
+  //     staffName: "Neha Singh",
+  //     dailyTarget: 48,
+  //     weaklyTarget: 290,
+  //     targetAchievd: 300,
+  //     ticketEarned: 54,
+  //   },
+  //   {
+  //     srNo: 7,
+  //     staffName: "Ram Singh",
+  //     dailyTarget: 48,
+  //     weaklyTarget: 290,
+  //     targetAchievd: 300,
+  //     ticketEarned: 54,
+  //   },
+  //   {
+  //     srNo: 8,
+  //     staffName: "Ritu Singh",
+  //     dailyTarget: 48,
+  //     weaklyTarget: 290,
+  //     targetAchievd: 300,
+  //     ticketEarned: 54,
+  //   },
     
-  ];
+  // ];
 
   const onPageChange = (newPage) => {
     setPage(newPage);
@@ -100,11 +106,11 @@ const TargetManagement = () => {
 
   const columns = [
     { header: "Sr.No", field: "srNo" },
-    { header: "Staff Name", field: "staffName" },
-    { header: "Daily Target", field: "dailyTarget" },
-    { header: "Weakly Target", field: "weaklyTarget" },
-    { header: "Target Achieved", field: "targetAchievd" },
-    { header: "Tickets Earned", field: "ticketEarned" },
+    { header: "Staff Name", field: "name" },
+    { header: "Daily Target", field: "dailyQuota" },
+    { header: "Weakly Target", field: "weeklyQuota" },
+    { header: "Target Achieved", field: "weeklyQuantitySold" },
+    { header: "Tickets Earned", field: "totalTicketsEarned" },
 
   ];
 
@@ -123,8 +129,15 @@ const TargetManagement = () => {
         onClick={() => navigate("/target-management/setTarget-management")}
 
       />
+  
       {(
         <>
+         {loading ? (
+        <div className="flex w-full items-center justify-center py-10">
+          <LoaderSpinner />
+        </div>
+      ) : (
+        <div className="mt-6 bg-white p-4 rounded shadow">
           <Box>
             <DataTable
               columns={columns}
@@ -138,15 +151,18 @@ const TargetManagement = () => {
           <Pagination
             currentPage={1}
             totalPages={5}
-            totalItems={11}
+            totalItems={10}
             itemsPerPage={8}
             onPageChange={onPageChange}
             onItemsPerPageChange={onItemsPerPageChange}
           />
-
+        </div>
+      )}
         </>
       )}
+      
     </Box>
+
   )
 }
 
