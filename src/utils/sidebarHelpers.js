@@ -219,7 +219,7 @@ export const allNavigationItems = [
   {
     id: 10,
     title: " Refer & Earn ",
-    url: "/feature-facilities",
+    url: "/refer-and-earn",
     icon: referandearnIcon,
     badge: null,
     color: "green",
@@ -228,7 +228,7 @@ export const allNavigationItems = [
       {
         id: 31,
         title: "Referral Tracking",
-        url: "/feature-facilities",
+        url: "/refer-and-earn-user",
         icon: refferralTrackingIcon,
         badge: null,
         color: "Pink",
@@ -236,7 +236,7 @@ export const allNavigationItems = [
       {
         id: 32,
         title: " Upload Video ",
-        url: "/pg-hostel-listing",
+        url: "/upload-video",
         icon: uploadVideoIcon,
         badge: null,
         color: "purple",
@@ -325,7 +325,7 @@ export const allNavigationItems = [
   {
     id: 13,
     title: "Target Management",
-    url: "/coupon",
+    url: "/target-management",
     icon: targetManagementIcon,
     badge: null,
     color: "pink",
@@ -338,14 +338,14 @@ export const allNavigationItems = [
     badge: null,
     color: "yellow",
   },
-  // {
-  //   id: 15,
-  //   title: "Product Managment",
-  //   url: "/productMangment",
-  //   icon: productManagementIcon,
-  //   badge: null,
-  //   color: "gray",
-  // },
+   {
+     id: 15,
+     title: "Notification Managment",
+     url: "/notification-management",
+     icon: productManagementIcon,
+     badge: null,
+     color: "gray",
+   },
   {
     id: 16,
     title: "Theme Customization",
@@ -431,6 +431,14 @@ export const allNavigationItems = [
         id: 65,
         title: "Other Settings",
         url: "/app-management/other-settings",
+        icon: otherSettingsIcon,
+        badge: null,
+        color: "yellow",
+      },
+       {
+        id: 66,
+        title: "Faq",
+        url: "/app-management/faq",
         icon: otherSettingsIcon,
         badge: null,
         color: "yellow",

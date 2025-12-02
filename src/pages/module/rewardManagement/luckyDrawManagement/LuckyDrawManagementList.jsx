@@ -1,19 +1,27 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Trash2 } from "lucide-react";
+import { FaRegEdit } from "react-icons/fa";
+
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import Pagination from "../../../../components/uiComponent/Pagination";
-import { FaRegEdit } from "react-icons/fa";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+import useLuckyDrawManagement from "../../../../hooks/rewardManagement/useLuckyDrawManagement";
+import useDebounce from "../../../../hooks/debounce/useDebounce";
 
-export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
+export default function LuckyDrawManagementList() {
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const debouncedSearch = useDebounce(searchTerm, 500);
+
+  const { luckyDrawList, loading, fetchLuckyDrawList, deleteLuckyDrawById} =
+    useLuckyDrawManagement();
 
   const handleSearchTerm = (e) => {
     setSearchTerm(e.target.value);
@@ -24,101 +32,55 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
     navigate("/lucky-draw-management/add-lucky-draw");
   };
 
-  const handleViewLuckyDraw = () => {
-    navigate("/lucky-draw-management/view-lucky-draw");
-  };
- 
-
-  const [luckyDraws, setLuckyDraws] = useState([
-    {
-      luckyDrawId: "G458",
-      eventName: "Diwali Dhamaka",
-      startEndDate: "20-25 Oct",
-      status: "ongoing",
-    },
-    {
-      luckyDrawId: "G459",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "upcoming",
-    },
-    {
-      luckyDrawId: "G460",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G461",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G462",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G463",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G464",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G465",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    {
-      luckyDrawId: "G466",
-      eventName: "Festival Bonanza",
-      startEndDate: "20-25 Oct",
-      status: "completed",
-    },
-    ...Array.from({ length: 21 }, (_, i) => ({
-      luckyDrawId: `G${467 + i}`,
-      eventName: i % 2 === 0 ? "Festival Bonanza" : "New Year Special",
-      startEndDate: "20-25 Oct",
-      status: i % 3 === 0 ? "completed" : i % 3 === 1 ? "ongoing" : "upcoming",
-    })),
-  ]);
-
-  const filteredData = useMemo(
-    () =>
-      luckyDraws.filter(
-        (item) =>
-          item.eventName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.luckyDrawId.toLowerCase().includes(searchTerm.toLowerCase())
-      ),
-    [luckyDraws, searchTerm]
-  );
-
-  
-  const totalItems = filteredData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = filteredData.slice(startIndex, endIndex);
-
-  const handleEdit = (draw) => {
-   
-    navigate(`/lucky-draw-management/edit-lucky-draw`);
+  const handleViewLuckyDraw = (row) => {
+    navigate(`/lucky-draw-management/view-lucky-draw/${row._id}`);
   };
 
-  const handleDelete = (draw) => {
-   
+  const handleEdit = (row) => {
+    navigate(`/lucky-draw-management/edit-lucky-draw/${row._id}`);
   };
 
-  
+  const handleDelete = async(row) => {
+    await deleteLuckyDrawById(row._id);
+    fetchLuckyDrawList(currentPage, itemsPerPage, debouncedSearch);
+  };
+
+  const formatDate = (iso) => {
+    if (!iso) return "-";
+    const d = new Date(iso);
+    return d.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  useEffect(() => {
+    fetchLuckyDrawList(currentPage, itemsPerPage, debouncedSearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, itemsPerPage, debouncedSearch]);
+
+  const pagination = luckyDrawList?.pagination || {};
+  const totalItems = pagination.totalRecords || 0;
+  const totalPages = pagination.totalPages || 1;
+  const currentApiPage = pagination.currentPage || currentPage;
+  const limitFromApi = pagination.limit || itemsPerPage;
+
+  const tableData = useMemo(() => {
+    const apiData = luckyDrawList?.data || [];
+
+    return apiData.map((item, index) => ({
+      ...item,
+      srNo: (currentApiPage - 1) * limitFromApi + index + 1,
+      luckyDrawId: item.eventId,
+      eventName: item.eventName,
+      startEndDate: `${formatDate(item.startDate)} - ${formatDate(
+        item.endDate
+      )}`,
+      status: item.status,
+    }));
+  }, [luckyDrawList, currentApiPage, limitFromApi]);
+
   const columns = [
     { header: "Sr. No.", field: "srNo" },
     { header: "Lucky Draw ID", field: "luckyDrawId" },
@@ -128,10 +90,9 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
     { header: "Action", field: "action" },
   ];
 
-
   const actions = [
     {
-      icon: (row) => (
+      icon: () => (
         <FaEye
           className="w-4 h-4 text-yellow-600 hover:text-blue-600 transition-colors duration-200 cursor-pointer"
           title="View"
@@ -140,7 +101,7 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
       onClick: handleViewLuckyDraw,
     },
     {
-      icon: (row) => (
+      icon: () => (
         <FaRegEdit
           className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer"
           title="Edit"
@@ -149,7 +110,7 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
       onClick: handleEdit,
     },
     {
-      icon: (row) => (
+      icon: () => (
         <Trash2
           className="w-5 h-5 text-yellow-600 hover:text-red-600 transition-colors duration-200 cursor-pointer"
           title="Delete"
@@ -171,36 +132,36 @@ export default function LuckyDrawManagementList({ activeItem, setActiveItem }) {
         searchTerm={searchTerm}
         handleSearchTerm={handleSearchTerm}
         showExtraButton={true}
-        extraButtonText="Add New Lucky Draw Events"
+        extraButtonText="Add Lucky Draw Event"
         onExtraClick={handleAddLuckyDraw}
       />
 
       {/* Data Table */}
-      <div className="mt-6 bg-white p-4 rounded shadow">
-        <DataTable
-          columns={columns}
-          data={currentItems.map((item, index) => ({
-            ...item,
-            srNo: startIndex + index + 1,
-            status: item.status === "ongoing" ? "Ongoing"
-              : item.status === "upcoming" ? "Upcoming"
-                : "Completed"
-          }))}
-          actions={actions}
-          currentPage={currentPage}
-          usersPerPage={itemsPerPage}
-        />
-      </div>
 
-      {/* Pagination */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-        onPageChange={setCurrentPage}
-        onItemsPerPageChange={setItemsPerPage}
-      />
+      {loading ? (
+        <div className="flex w-full items-center justify-center py-10">
+          <LoaderSpinner />
+        </div>
+      ) : (
+        <div className="mt-6 bg-white p-4 rounded shadow">
+          <DataTable
+            columns={columns}
+            data={tableData}
+            actions={actions}
+            currentPage={currentApiPage}
+            usersPerPage={limitFromApi}
+          />
+
+          <Pagination
+            currentPage={currentApiPage}
+            totalPages={totalPages}
+            totalItems={totalItems}
+            itemsPerPage={limitFromApi}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={setItemsPerPage}
+          />
+        </div>
+      )}
     </div>
   );
 }
