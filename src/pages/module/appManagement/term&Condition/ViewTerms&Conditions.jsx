@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import Button from "../../../../components/uiComponent/Button";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import useTermsAndConditions from "../../../../hooks/appManagement/useTermsAndConditions";
 
 const ViewTermsAndConditions = () => {
@@ -75,7 +76,7 @@ const ViewTermsAndConditions = () => {
         <PagePath2 title="Terms and Conditions Details" />
         <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B00]"></div>
+            <LoaderSpinner />
           </div>
         </div>
       </div>

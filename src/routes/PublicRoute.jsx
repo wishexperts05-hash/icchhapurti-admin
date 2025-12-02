@@ -716,7 +716,15 @@ function PublicRoute() {
           />
           <Route path="/set-review-display" element={<SetReviewDisplay />} />
           <Route path="/edit-review-display" element={<EditReviewDisplay />} />
-
+        {/* -------------------------- Notification Management -------------------------- */}
+          <Route
+            path="/notification-management"
+            element={<NotificationManagement />}  
+          />
+          <Route
+            path="/notification-management/send-notification"
+            element={<NotificationSend />}
+          />
           {/* --------------------------Faq Routes---------------------------------*/}
 
           <Route path="/app-management/faq" element={<FaqList />} />

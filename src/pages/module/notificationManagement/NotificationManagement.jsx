@@ -3,6 +3,7 @@ import { Calendar, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 import useNotificationManagement from "../../../hooks/notificationManagement/useNotificationManagement";
 
 function NotificationManagement() {
@@ -126,7 +127,7 @@ function NotificationManagement() {
         placeholder="Search by Title, Message or Audience"
         searchTerm={searchTerm}
         handleSearchTerm={(e) => setSearchTerm(e.target.value)}
-        addButtonText="Create New Notification"
+        addButtonText="Send Notification"
         onClick={handleCreateNotification}
       />
 
@@ -134,7 +135,7 @@ function NotificationManagement() {
         <div className="bg-white border border-gray-200 shadow-lg rounded-xl overflow-hidden">
           {loading ? (
             <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B00]"></div>
+              <LoaderSpinner />
             </div>
           ) : (
             <>
@@ -145,12 +146,7 @@ function NotificationManagement() {
                     return (
                       <div
                         key={notification._id || index}
-                        className={`${colorScheme.bgColor} ${colorScheme.borderColor} border-l-4 rounded-lg p-5 transition-all hover:shadow-md cursor-pointer`}
-                        onClick={() =>
-                          navigate(
-                            `/notification-management/view/${notification._id}`
-                          )
-                        }
+                        className={`${colorScheme.bgColor} ${colorScheme.borderColor} border-l-4 rounded-lg p-5 transition-all hover:shadow-md`}
                       >
                         <div className="flex items-center gap-4">
                           <div
