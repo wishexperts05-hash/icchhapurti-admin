@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 
-import PagePath2 from "../../../../components/uiComponent/PagePath2";
-import DataTable from "../../../../components/uiComponent/DataTable";
+import PagePath2 from "../../../../../components/uiComponent/PagePath2";
+import DataTable from "../../../../../components/uiComponent/DataTable";
 import { useNavigate } from "react-router-dom";
-import useDebounce from "../../../../hooks/debounce/useDebounce";
-import Pagination from "../../../../components/uiComponent/Pagination";
+import useDebounce from "../../../../../hooks/debounce/useDebounce";
+import Pagination from "../../../../../components/uiComponent/Pagination";
 import { FaEye } from "react-icons/fa";
-import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
+import BreadCrumb from "../../../../../components/uiComponent/BreadCrumb";
 
-const ReferralTracking = () => {
+const ReferralTrackingForStaff = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -87,9 +87,15 @@ const ReferralTracking = () => {
     {
       icon: <FaEye className="text-yellow-600" />,
       title: "View",
-      onClick: ()=>navigate("/view-user-referral"),
+      onClick: ()=>navigate("/refer-and-earn-user/view-user-referral"),
     },];
-
+  
+  
+ // handle select
+  const handleSelect = (value) => {
+    if (value === "User") console.log("Hii");
+    ;
+   
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Refer & Earn" }, { text: "Referral Tracking" }]} />
@@ -103,13 +109,13 @@ const ReferralTracking = () => {
         showSelect
         selectPlaceHolder="User"
         options={["Select","User", "Staff"]}
-        
+        onChange={handleSelect}
 
 
         // ShowAddButton
         showAddButton
         addButtonText="Referral Discount Settings"
-        onClick={() => navigate("/referral-discount-setting")}
+        onClick={() => navigate("/refer-and-earn-user/referral-discount-setting")}
 
       />
       {(
@@ -139,5 +145,7 @@ const ReferralTracking = () => {
     </Box>
   )
 }
+}
+export default ReferralTrackingForStaff;
 
-export default ReferralTracking;
+
