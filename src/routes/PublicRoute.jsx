@@ -711,7 +711,7 @@ function PublicRoute() {
 
           <Route path="/manage-comments" element={<ManageComments />} />
           <Route
-            path="/manage-comments/view-comment"
+            path="/manage-comments/view-comment/:reviewId/:reviewType"
             element={<ManageCommentsView />}
           />
           <Route path="/set-review-display" element={<SetReviewDisplay />} />
