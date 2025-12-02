@@ -55,6 +55,10 @@ const useOfferManagement = () => {
         }
     };
 
+    const resetOfferDetails = () => {
+        setOfferDetail(null);
+    }
+
     const addOffer = async (data) => {
         setLoading(true);
         try {
@@ -116,7 +120,6 @@ const useOfferManagement = () => {
                         icon: "success",
                         confirmButtonText: "OK",
                     });
-                    setOfferList(res);
                     setLoading(false);
                 }
             } catch (error) {
@@ -146,7 +149,6 @@ const useOfferManagement = () => {
                         icon: "success",
                         confirmButtonText: "OK",
                     });
-                    setOfferList(res);
                     setLoading(false);
                 }
             } catch (error) {
@@ -161,8 +163,7 @@ const useOfferManagement = () => {
 
     return {
         fetchOfferList, fetchOfferDetails, addOffer, updateOffer, deleteOffer, loading, offerList, offerDetail,
-        offerEnableDisable
-    }
+        offerEnableDisable, resetOfferDetails    }
 }
 
 export default useOfferManagement
