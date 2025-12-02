@@ -1,24 +1,19 @@
 import { Box } from "@mui/material";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
-import { useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Swal from "sweetalert2";
 import Button from "../../../../components/uiComponent/Button";
 
-
 const UploadVideo = () => {
-    const navigate = useNavigate();
     const [videoUrl, setVideoUrl] = useState(null);
-    const fileInputRef = useRef(null);
-
-
-
     const handleSave = () => {
-         Swal.fire("Saved!", "Your video has been Saved", "success");
+        Swal.fire("Saved!", "", "success");
     };
+    // handle cancel
+    const handleCancel=()=>{
 
-   
+    }
     const handleVideoUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -26,45 +21,49 @@ const UploadVideo = () => {
             setVideoUrl(url);
         }
     };
+
     return (
         <Box>
             <BreadCrumb linkText={[{ text: "Refer & Earn" }, { text: "Upload Video" }]} />
-            <PagePath2
-                title="Upload Video"
-
-            />
-            <div className="bg-white p-4 mb-4  shadow-md">
-
-                <div className="p-4">
-                    <div className="flex justify-center">
-
-                    <h2 className="text-lg font-semibold mb-3 mx-5">Upload & Preview Video : </h2>
-
-                    {/* File Input */}
-                    <input type="file" accept="video/*" onChange={handleVideoUpload} ref={fileInputRef} />
-
-                    </div>
-
+            <PagePath2 title="Upload Video" />
+            <div className="bg-white p-6 mb-6 rounded-2xl shadow-lg">
+                <div className="flex flex-col items-center">
+                    {/* Label + File Input */}
+                    <h2 className="text-xl font-semibold text-gray-700 mb-4">
+                        Upload & Preview Video
+                    </h2>
+                    <label className="cursor-pointer font-bold text-blue-700">
+                        Choose Video
+                        <input
+                            type="file"
+                            accept="video/*"
+                            onChange={handleVideoUpload}
+                            className="hidden"
+                        />
+                    </label>
                     {/* Preview Box */}
-                    <div className="border  w-[500px] h-[300px] mx-auto flex justify-center items-center">
-
+                    <div className="mt-5 border-2 border-dashed border-gray-300 rounded-xl 
+                      w-[500px] h-[300px] bg-gray-50 flex justify-center items-center overflow-hidden">
                         {videoUrl ? (
-                            <div className="flex justify-center">
-                                <video width="100%" controls src={videoUrl} />
-
-                            </div>
+                            <video
+                                className="w-full h-full object-cover rounded-lg"
+                                src={videoUrl}
+                                controls
+                            />
                         ) : (
-                            <div className="text-gray-500 ">No video selected</div>
+                            <span className="text-gray-400 text-lg">No video selected</span>
                         )}
-                    </div>
-                </div>
+                    </div >
+                    {/* Buttons */}
+                    <div className="flex justify-center gap-8">
 
-                {/* Buttons */}
-                <div className="flex flex-col sm:flex-row justify-center gap-4 ">
-                   
-                    {/* Action Buttons */}
-                    <div className="flex justify-center gap-8 mt-2 mb-8 ">
+                    <div className="flex justify-center gap-8 mt-6">
+                        <Button text="Cancel" variant={2} onClick={handleCancel} />
+                    </div>
+                    <div className="flex justify-center gap-8 mt-6">
                         <Button text="Save" variant={1} onClick={handleSave} />
+                    </div>
+
                     </div>
                 </div>
             </div>
