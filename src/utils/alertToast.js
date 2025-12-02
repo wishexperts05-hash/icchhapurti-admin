@@ -51,6 +51,19 @@ export const confirmDisable = (message) => {
   });
 };
 
+export const confirmEnable = (message) => {
+  return Swal.fire({
+    title: "Are you sure?",
+    text: message,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, Enable it!",
+    cancelButtonText: "Cancel",
+  });
+};
+
 export const confirmLogout = (message) => {
   return Swal.fire({
     title: "Do you want to logout?",

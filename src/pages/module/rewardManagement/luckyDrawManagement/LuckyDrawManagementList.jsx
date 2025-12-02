@@ -20,7 +20,7 @@ export default function LuckyDrawManagementList() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const debouncedSearch = useDebounce(searchTerm, 500);
 
-  const { luckyDrawList, loading, fetchLuckyDrawList } =
+  const { luckyDrawList, loading, fetchLuckyDrawList, deleteLuckyDrawById} =
     useLuckyDrawManagement();
 
   const handleSearchTerm = (e) => {
@@ -40,8 +40,9 @@ export default function LuckyDrawManagementList() {
     navigate(`/lucky-draw-management/edit-lucky-draw/${row._id}`);
   };
 
-  const handleDelete = (row) => {
-    console.log("Delete Lucky Draw:", row?._id);
+  const handleDelete = async(row) => {
+    await deleteLuckyDrawById(row._id);
+    fetchLuckyDrawList(currentPage, itemsPerPage, debouncedSearch);
   };
 
   const formatDate = (iso) => {
@@ -131,7 +132,7 @@ export default function LuckyDrawManagementList() {
         searchTerm={searchTerm}
         handleSearchTerm={handleSearchTerm}
         showExtraButton={true}
-        extraButtonText="Add New Lucky Draw Events"
+        extraButtonText="Add Lucky Draw Event"
         onExtraClick={handleAddLuckyDraw}
       />
 

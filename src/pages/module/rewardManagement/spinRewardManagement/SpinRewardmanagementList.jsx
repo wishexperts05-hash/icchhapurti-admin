@@ -96,10 +96,10 @@ export default function SpinRewardManagementList() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Breadcrumb */}
+     
       <BreadCrumb linkText={[{ text: "Spin Reward Management" }]} />
 
-      {/* Page Title & Search */}
+    
       <PagePath2
         title="Spin Reward Management"
         showSearch={true}

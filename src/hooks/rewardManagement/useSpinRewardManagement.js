@@ -13,9 +13,10 @@ const useSpinRewardManagement = () => {
   const [spinRewardList, setSpinRewardList] = useRecoilState(spinRewardListAtom);
   const [loading, setLoading] = useState(false);
   const [fetchData] = useFetch();
+   const [rewardTypes, setRewardTypes] = useState([]);
 
   // ------------------------ FETCH ALL ------------------------
-  const fetchSpinRewardList = async (page = 1, limit = 10, search) => {
+  const fetchSpinRewardList = async (page, limit, search) => {
     setLoading(true);
 
     try{
@@ -131,36 +132,7 @@ const useSpinRewardManagement = () => {
     }
   };
 
-//   const deleteSpinReward = async (id) => {
-//   if (!id) {
-//     toast.error("Reward ID missing");
-//     return false;
-//   }
 
-//   setLoading(true);
-//   try {
-//     const res = await fetchData({
-//       method: "DELETE",
-//       url: `${conf.apiBaseUrl}admin/spinReward/deleteReward/${id}`,
-//     });
-
-//     if (res?.success) {
-//       toast.success(res?.message || "Spin reward deleted successfully.");
-//       return true;
-//     } else {
-//       toast.error(res?.message || "Failed to delete spin reward");
-//       return false;
-//     }
-//   } catch (error) {
-//     console.error("Error deleting spin reward:", error);
-//     toast.error(
-//       error?.response?.data?.message || "An unexpected error occurred"
-//     );
-//     return false;
-//   } finally {
-//     setLoading(false);
-//   }
-// };
 
 
 const deleteSpinReward = async (id) => {
@@ -185,7 +157,7 @@ const deleteSpinReward = async (id) => {
     });
 
     if (res?.success) {
-      // ✅ 1. success toast / modal
+    
       Swal.fire({
         title: "Deleted!",
         text: res?.message || "Spin reward deleted successfully.",
@@ -193,7 +165,7 @@ const deleteSpinReward = async (id) => {
         confirmButtonText: "OK",
       });
 
-      // ✅ 2. Local state se bhi hata do
+      
       setSpinRewardList((prev) => prev.filter((item) => item._id !== id));
 
       return true;
@@ -241,7 +213,7 @@ const fetchSpinPrice = async () => {
 
 // ------------------------ SPIN PRICE: CREATE OR UPDATE ------------------------
 const createOrUpdateSpinPrice = async (payload) => {
-  // payload: { staffPricePerSpin: number, userPricePerSpin: number }
+  
   setLoading(true);
   try {
     const res = await fetchData({
@@ -268,6 +240,30 @@ const createOrUpdateSpinPrice = async (payload) => {
   }
 };
 
+const fetchRewardTypes = async () => {
+    try {
+      const res = await fetchData({
+        method: "GET",
+        url: `${conf.apiBaseUrl}admin/spinReward/getRewardTypes`,
+      });
+
+      // NOTE: sample response had success:false but valid data, so we trust rewardTypes
+      if (Array.isArray(res?.rewardTypes)) {
+        setRewardTypes(res.rewardTypes);
+      } else {
+        toast.error(res?.message || "Failed to fetch reward types");
+      }
+
+      return res;
+    } catch (error) {
+      console.error("Error fetching reward types:", error);
+      toast.error(
+        error?.response?.data?.message || "Failed to fetch reward types"
+      );
+      return null;
+    }
+  };
+
 
 
   return {
@@ -281,6 +277,8 @@ const createOrUpdateSpinPrice = async (payload) => {
     deleteSpinReward,
     fetchSpinPrice,         
     createOrUpdateSpinPrice, 
+    rewardTypes,  
+    fetchRewardTypes
   };
 };
 
