@@ -510,11 +510,11 @@ function PublicRoute() {
             element={<OfferManagementAdd />}
           />
           <Route
-            path="offer-management/edit-offer"
-            element={<OfferManagementEdit />}
+            path="offer-management/edit-offer/:id"
+            element={<OfferManagementAdd />}
           />
           <Route
-            path="offer-management/offer-details"
+            path="offer-management/offer-details/:id"
             element={<OfferManagementView />}
           />
 
