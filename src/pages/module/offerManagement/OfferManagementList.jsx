@@ -49,9 +49,30 @@ export default function OfferManagementList() {
     { header: "Sr.No.", field: "srNo" },
     { header: "Offer Title", field: "title" },
     { header: "Target Audience", field: "targetAudience" },
-    { header: "Product Name", field: "productName" },
+    { 
+      header: "Product Name", 
+      field: "productName",
+      render: (row) => (
+        <span className="text-sm text-gray-700">
+          {row.productName || "N/A"}
+        </span>
+      )
+    },
     { header: "Start Date", field: "startDate" },
     { header: "End Date", field: "endDate" },
+    { 
+      header: "Status", 
+      field: "isActive",
+      render: (row) => (
+        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+          row.isActive 
+            ? "bg-green-100 text-green-800" 
+            : "bg-red-100 text-red-800"
+        }`}>
+          {row.isActive ? "Enable" : "Disable"}
+        </span>
+      )
+    },
     { header: "Action", field: "action" },
   ];
 

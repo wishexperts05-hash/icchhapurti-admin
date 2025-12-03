@@ -341,7 +341,7 @@ function PublicRoute() {
         <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
-        {/* <Route element={<ProtectedRoute />}> */}
+        <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Layout />}>
           {/* Dashboard */}
           <Route
@@ -735,7 +735,7 @@ function PublicRoute() {
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Route>
-        {/* </Route> */}
+        </Route>
       </Routes>
     </Suspense>
   );
