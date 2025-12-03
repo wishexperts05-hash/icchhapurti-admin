@@ -39,7 +39,7 @@ const SendNotification = () => {
     { value: "Promoter", label: "Promoter" },
   ];
 
-  // Fetch countries on mount
+  
   useEffect(() => {
     fetchCountryDropdown();
     // eslint-disable-next-line react-hooks/exhaustive-deps
