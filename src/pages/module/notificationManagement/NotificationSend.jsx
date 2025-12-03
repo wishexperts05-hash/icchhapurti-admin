@@ -3,7 +3,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormField from "../../../components/uiComponent/FormField";
 import Button from "../../../components/uiComponent/Button";
-
+import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
@@ -12,9 +12,9 @@ import { ChevronDown, X } from "lucide-react";
 import useDropdown from "../../../hooks/dropdown/useDropdown";
 
 const SendNotification = () => {
- 
+  const navigate = useNavigate();
   const [targetAudience, setTargetAudience] = useState("selectUsers");
-  const [, setSelectedUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const formikRef = useRef(null);
@@ -184,7 +184,8 @@ const SendNotification = () => {
     <div className="bg-gray-50 min-h-screen">
       <BreadCrumb
         linkText={[
-        { text: "Send Notification" },
+        
+          { text: "Send Notification" },
         ]}
       />
 
