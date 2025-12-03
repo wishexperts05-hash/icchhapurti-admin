@@ -102,9 +102,7 @@ import EditInternationalShipingCost from "../pages/module/productManagment/EditI
 const OfferManagementAdd = lazy(() =>
   import("../pages/module/offerManagement/OfferManagementAdd")
 );
-const OfferManagementEdit = lazy(() =>
-  import("../pages/module/offerManagement/OfferManagementEdit")
-);
+
 const OfferManagementList = lazy(() =>
   import("../pages/module/offerManagement/OfferManagementList")
 );
