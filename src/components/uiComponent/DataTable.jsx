@@ -50,7 +50,8 @@ const DataTable = ({
                   }
 
                   /* ------------------- UPDATED STATUS BLOCK ------------------- */
-                  if (col.field === "status" || col.field === "isActive") {
+                  /* Skip built-in status rendering if col has a custom render */
+                  if ((col.field === "status" || col.field === "isActive") && !col.render) {
                     const displayValue =
                       value === true
                         ? "Active"

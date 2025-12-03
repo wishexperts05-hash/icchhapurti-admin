@@ -104,8 +104,8 @@ const useOfferManagement = () => {
     const offerEnableDisable = async (id, data) => {
         setLoading(true);
         const result = data.isActive === true
-            ? await confirmEnable("Are you sure you want to disable this offer?")
-            : await confirmDisable("Are you sure you want to enable this offer?");
+            ? await confirmEnable("Are you sure you want to enable this offer?")
+            : await confirmDisable("Are you sure you want to disable this offer?");
         if (result.isConfirmed) {
             try {
                 const res = await fetchData({
