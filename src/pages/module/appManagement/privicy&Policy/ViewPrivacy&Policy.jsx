@@ -11,7 +11,7 @@ const ViewPrivacyPolicy = () => {
   const { id } = useParams();
 
   const {
-    LoaderSpinner,
+    loading,
     privacyPolicyDetail,
     fetchPrivacyPolicyById,
     resetPrivacyPolicyDetails,
@@ -40,7 +40,7 @@ const ViewPrivacyPolicy = () => {
   };
 
   // Show loading spinner while fetching data
-  if (LoaderSpinner&& !privacyPolicyDetail) {
+  if (loading && !privacyPolicyDetail) {
     return (
       <div className="bg-[#F9F9F9] min-h-screen">
         <BreadCrumb
@@ -52,7 +52,7 @@ const ViewPrivacyPolicy = () => {
         <PagePath2 title="Privacy Policy Details" />
         <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B00]"></div>
+            <LoaderSpinner />
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@ const ViewPrivacyPolicy = () => {
   }
 
   // Show error message if no data found
-  if (!LoaderSpinner && !privacyPolicyDetail) {
+  if (!loading && !privacyPolicyDetail) {
     return (
       <div className="bg-[#F9F9F9] min-h-screen">
         <BreadCrumb

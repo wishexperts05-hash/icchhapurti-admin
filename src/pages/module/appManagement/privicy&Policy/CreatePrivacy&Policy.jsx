@@ -9,6 +9,7 @@ import Button from "../../../../components/uiComponent/Button";
 import FormField from "../../../../components/uiComponent/FormField";
 import usePrivacyPolicy from "../../../../hooks/appManagement/usePrivacyAndPolicy";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+import useDropdown from "../../../../hooks/dropdown/useDropdown";
 
 function CreatePrivacyPolicy() {
   const navigate = useNavigate();
@@ -16,13 +17,20 @@ function CreatePrivacyPolicy() {
   const editor = useRef(null);
 
   const {
-    LoaderSpinner,
+    loading: privacyLoading,
     privacyPolicyDetail,
     createPrivacyPolicy,
     updatePrivacyPolicy,
     fetchPrivacyPolicyById,
     resetPrivacyPolicyDetails,
   } = usePrivacyPolicy();
+
+  // Use dropdown hook for user types
+  const {
+    userType,
+    loadingUser,
+    fetchUserType,
+  } = useDropdown();
 
   // Fetch privacy policy details if editing
   useEffect(() => {
@@ -36,13 +44,24 @@ function CreatePrivacyPolicy() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // Role options for dropdown
-  const roleOptions = [
-    { label: "User", value: "User" },
-    { label: "Staff", value: "Staff" },
-    { label: "Promoter", value: "Promoter" },
-    { label: "Admin", value: "Admin" },
-  ];
+  // Fetch user types on mount
+  useEffect(() => {
+    fetchUserType();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Convert userType from dropdown hook to options format
+  const roleOptions = Array.isArray(userType) 
+    ? userType.map((type) => ({
+        label: type.name || type.label || type,
+        value: type.value || type.name || type,
+      }))
+    : [
+        { label: "User", value: "User" },
+        { label: "Staff", value: "Staff" },
+        { label: "Promoter", value: "Promoter" },
+        { label: "Admin", value: "Admin" },
+      ];
 
   // Validation schema
   const validationSchema = Yup.object({
@@ -114,7 +133,7 @@ function CreatePrivacyPolicy() {
   };
 
   // Show loading state while fetching data for edit mode
-  if (id && LoaderSpinner && !privacyPolicyDetail) {
+  if (id && privacyLoading && !privacyPolicyDetail) {
     return (
       <div className="bg-[#F9F9F9] min-h-screen">
         <BreadCrumb
@@ -127,7 +146,7 @@ function CreatePrivacyPolicy() {
         <PagePath2 title="Edit Privacy Policy" />
         <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B00]"></div>
+            <LoaderSpinner />
           </div>
         </div>
       </div>
@@ -180,6 +199,8 @@ function CreatePrivacyPolicy() {
                   fieldType="select"
                   options={roleOptions}
                   placeholder="Select Role"
+                  loading={loadingUser}
+                  disabled={loadingUser}
                   required
                 />
               </div>
@@ -218,12 +239,12 @@ function CreatePrivacyPolicy() {
                   variant={2}
                   text="Cancel"
                   onClick={() => navigate("/app-management/privacy-policy")}
-                  disabled={LoaderSpinner || isSubmitting}
+                  disabled={privacyLoading || isSubmitting}
                 />
                 <Button
                   variant={1}
                   text={
-                    LoaderSpinner || isSubmitting
+                    privacyLoading || isSubmitting
                       ? id
                         ? "Updating..."
                         : "Creating..."
@@ -232,7 +253,7 @@ function CreatePrivacyPolicy() {
                       : "Create"
                   }
                   type="submit"
-                  disabled={LoaderSpinner || isSubmitting}
+                  disabled={privacyLoading || isSubmitting}
                 />
               </div>
             </Form>

@@ -17,7 +17,7 @@ function PrivacyPolicy() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const {
-    LoaderSpinner,
+    loading,
     privacyPolicyList,
     fetchPrivacyPolicyList,
     deletePrivacyPolicyById,
@@ -66,9 +66,21 @@ function PrivacyPolicy() {
     }
   };
 
+  // Format date helper function
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    try {
+      return new Date(dateString).toLocaleDateString("en-GB");
+    } catch {
+      return "N/A";
+    }
+  };
+
   const columns = [
     { header: "Sr.No.", field: "srNo" },
     { header: "Role", field: "role" },
+    { header: "Created Date", field: "createdAt" },
+    { header: "Updated Date", field: "updatedAt" },
     { header: "Action", field: "action" },
   ];
 
@@ -96,10 +108,12 @@ function PrivacyPolicy() {
   const totalPages = privacyPolicyList?.totalPages || 1;
   const totalPolicies = privacyPolicyList?.totalPolicies || policies.length;
 
-  // Map policies to include serial number based on pagination
+  // Map policies to include serial number and formatted dates based on pagination
   const mappedPolicies = policies.map((policy, index) => ({
     ...policy,
     srNo: (currentPage - 1) * limit + index + 1,
+    createdAt: formatDate(policy.createdAt),
+    updatedAt: formatDate(policy.updatedAt),
   }));
 
   return (
@@ -123,9 +137,16 @@ function PrivacyPolicy() {
       />
 
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
-        {LoaderSpinner? (
+        {loading ? (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF6B00]"></div>
+            <LoaderSpinner />
+          </div>
+        ) : mappedPolicies.length === 0 ? (
+          <div className="flex flex-col justify-center items-center py-20 text-gray-500">
+            <p className="text-lg">No Privacy Policies found</p>
+            {searchTerm && (
+              <p className="text-sm mt-2">Try adjusting your search criteria</p>
+            )}
           </div>
         ) : (
           <div className="overflow-x-auto">

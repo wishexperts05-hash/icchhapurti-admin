@@ -8,10 +8,8 @@ import { toast } from "react-toastify";
 const useNotificationManagement = () => {
   const [notificationList, setNotificationList] = useRecoilState(notificationListAtom);
   const [notificationDetail, setNotificationDetail] = useState(null);
-  const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [countryLoading, setCountryLoading] = useState(false);
-  const [fetchData] = useFetch();
+   const [fetchData] = useFetch();
 
   // Fetch All Notifications - GET /api/admin/notifications/all
   const fetchNotificationList = useCallback(async () => {
@@ -49,27 +47,7 @@ const useNotificationManagement = () => {
     });
   }, [setNotificationList]);
 
-  // Fetch Country Dropdown - GET /api/admin/country/all/dropdown
-  const fetchCountryDropdown = useCallback(async () => {
-    setCountryLoading(true);
-    try {
-      const url = `${conf.apiBaseUrl}admin/country/all/dropdown`;
-
-      const res = await fetchData({
-        method: "GET",
-        url,
-      });
-
-      if (res) {
-        setCountries(res?.data || res || []);
-      }
-    } catch (error) {
-      console.error("Error fetching countries:", error);
-      toast.error("Failed to load countries");
-    } finally {
-      setCountryLoading(false);
-    }
-  }, [fetchData]);
+  
 
   // Create/Send Notification - POST /api/admin/notifications/add
   const sendNotification = useCallback(async (formdata) => {
@@ -128,9 +106,8 @@ const useNotificationManagement = () => {
     sendNotification,
     fetchNotificationById,
     resetNotificationDetails,
-    countries,
-    countryLoading,
-    fetchCountryDropdown,
+   
+    
   };
 };
 

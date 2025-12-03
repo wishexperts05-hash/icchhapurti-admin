@@ -6,8 +6,10 @@ import Button from "../../../components/uiComponent/Button";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 import useNotificationManagement from "../../../hooks/notificationManagement/useNotificationManagement";
 import { ChevronDown, X } from "lucide-react";
+import useDropdown from "../../../hooks/dropdown/useDropdown";
 
 const SendNotification = () => {
   const navigate = useNavigate();
@@ -18,11 +20,15 @@ const SendNotification = () => {
 
   const { 
     loading, 
-    sendNotification, 
+    sendNotification
+  } = useNotificationManagement();
+
+  // Use dropdown hook for countries
+  const { 
     countries, 
     countryLoading, 
     fetchCountryDropdown 
-  } = useNotificationManagement();
+  } = useDropdown();
 
   // User type options for multi-select
   const userTypeOptions = [
@@ -207,7 +213,7 @@ const SendNotification = () => {
               <FormField
                 label="Message"
                 name="message"
-                fieldType="textarea"
+                type="textarea"
                 placeholder="Enter notification message"
                 rows={5}
                 required
@@ -364,12 +370,8 @@ const SendNotification = () => {
                     ]}
                     required
                     disabled={countryLoading}
+                    loading={countryLoading}
                   />
-                  {countryLoading && (
-                    <div className="absolute right-3 top-10">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#FF6B00]"></div>
-                    </div>
-                  )}
 
                   {values.targetCountry && (
                     <div className="flex flex-wrap gap-2 mt-3">

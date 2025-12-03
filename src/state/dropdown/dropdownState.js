@@ -12,3 +12,5 @@ export const productCategoryAtom = atom(createPersistedAtom("productCategoryKey"
 export const orderStatusAtom = atom(createPersistedAtom("orderStatusKey", []));
 
 export const offerTypeAtom = atom(createPersistedAtom("offerTypeKey", []));
+
+export const countriesAtom = atom(createPersistedAtom("countriesAtomKey", []));

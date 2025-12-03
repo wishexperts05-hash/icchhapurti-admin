@@ -341,7 +341,7 @@ function PublicRoute() {
         <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
-        {/* <Route element={<ProtectedRoute />}> */}
+        <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Layout />}>
           {/* Dashboard */}
           <Route
@@ -711,12 +711,20 @@ function PublicRoute() {
 
           <Route path="/manage-comments" element={<ManageComments />} />
           <Route
-            path="/manage-comments/view-comment"
+            path="/manage-comments/view-comment/:reviewId/:reviewType"
             element={<ManageCommentsView />}
           />
           <Route path="/set-review-display" element={<SetReviewDisplay />} />
           <Route path="/edit-review-display" element={<EditReviewDisplay />} />
-
+        {/* -------------------------- Notification Management -------------------------- */}
+          <Route
+            path="/notification-management"
+            element={<NotificationManagement />}  
+          />
+          <Route
+            path="/notification-management/send-notification"
+            element={<NotificationSend />}
+          />
           {/* --------------------------Faq Routes---------------------------------*/}
 
           <Route path="/app-management/faq" element={<FaqList />} />
@@ -727,7 +735,7 @@ function PublicRoute() {
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Route>
-        {/* </Route> */}
+        </Route>
       </Routes>
     </Suspense>
   );

@@ -6,14 +6,12 @@ import DataTable from "../../../components/uiComponent/DataTable";
 import { useNavigate } from "react-router-dom";
 import useDebounce from "../../../hooks/debounce/useDebounce";
 import Pagination from "../../../components/uiComponent/Pagination";
-
 const TargetManagement = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
-
   // Static dummy data
   const targetData = [
     {
@@ -82,22 +80,17 @@ const TargetManagement = () => {
     },
     
   ];
-
   const onPageChange = (newPage) => {
     setPage(newPage);
   };
-
   const onItemsPerPageChange = (newLimit) => {
     setLimit(newLimit);
     setPage(1);
   };
-
   const onSearchChange = (e) => {
     const newSearchTerm = e.target.value;
     setSearch(newSearchTerm);
-
   };
-
   const columns = [
     { header: "Sr.No", field: "srNo" },
     { header: "Staff Name", field: "staffName" },
@@ -105,9 +98,7 @@ const TargetManagement = () => {
     { header: "Weakly Target", field: "weaklyTarget" },
     { header: "Target Achieved", field: "targetAchievd" },
     { header: "Tickets Earned", field: "ticketEarned" },
-
   ];
-
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Target Management" }]} />
@@ -121,7 +112,6 @@ const TargetManagement = () => {
         showAddButton
         addButtonText="Set Target"
         onClick={() => navigate("/target-management/setTarget-management")}
-
       />
       {(
         <>
@@ -131,10 +121,8 @@ const TargetManagement = () => {
               data={targetData}
               currentPage={page}
               usersPerPage={limit}
-
             />
           </Box>
-
           <Pagination
             currentPage={1}
             totalPages={5}
@@ -143,7 +131,6 @@ const TargetManagement = () => {
             onPageChange={onPageChange}
             onItemsPerPageChange={onItemsPerPageChange}
           />
-
         </>
       )}
     </Box>
