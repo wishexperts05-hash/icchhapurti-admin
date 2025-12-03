@@ -340,7 +340,7 @@ export const allNavigationItems = [
   },
    {
      id: 15,
-     title: "Notification Managment",
+     title: "Send Notification ",
      url: "/notification-management/send-notification",
      icon: productManagementIcon,
      badge: null,

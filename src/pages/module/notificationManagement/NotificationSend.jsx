@@ -184,11 +184,7 @@ const SendNotification = () => {
     <div className="bg-gray-50 min-h-screen">
       <BreadCrumb
         linkText={[
-          {
-            text: "Notification Management",
-           
-          },
-          { text: "Send Notification" },
+        { text: "Send Notification" },
         ]}
       />
 
