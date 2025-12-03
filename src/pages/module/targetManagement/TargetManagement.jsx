@@ -106,11 +106,11 @@ const TargetManagement = () => {
   };
   const columns = [
     { header: "Sr.No", field: "srNo" },
-    { header: "Staff Name", field: "name" },
-    { header: "Daily Target", field: "dailyQuota" },
-    { header: "Weakly Target", field: "weeklyQuota" },
-    { header: "Target Achieved", field: "weeklyQuantitySold" },
-    { header: "Tickets Earned", field: "totalTicketsEarned" },
+    { header: "Staff Name", field: "staffName" },
+    { header: "Daily Target", field: "dailyTarget" },
+    { header: "Weakly Target", field: "weeklyTargeta" },
+    { header: "Target Achieved", field: "targetAchieved" },
+    { header: "Tickets Earned", field: "ticketsEarned" },
   ];
   return (
     <Box>
