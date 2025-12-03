@@ -170,10 +170,10 @@ const EditBanner = lazy(() =>
 );
 // ---------------------------- Faq section ----------------------------
 const FaqList = lazy(() => import("../pages/module/appManagement/faq/FaqList"));
-const FaqAdd = lazy(() => import("../pages/module/appManagement/faq/FaqAdd"));
-const FaqEdit = lazy(() => import("../pages/module/appManagement/faq/FaqEdit"));
+
 const FaqView = lazy(() => import("../pages/module/appManagement/faq/FaqView"));
 
+const FaqAddEdit = lazy(() => import("../pages/module/appManagement/faq/FaqAddEdit"));
 // ---------------------------- Help & Support Number ----------------------------
 
 const HelpSupport = lazy(() =>
@@ -723,8 +723,8 @@ function PublicRoute() {
           {/* --------------------------Faq Routes---------------------------------*/}
 
           <Route path="/app-management/faq" element={<FaqList />} />
-          <Route path="/app-management/faq/add" element={<FaqAdd />} />
-          <Route path="/app-management/faq/edit/:id" element={<FaqEdit />} />
+          <Route path="/app-management/faq/add" element={<FaqAddEdit />} />
+          <Route path="/app-management/faq/edit/:id" element={<FaqAddEdit />} />
           <Route path="/app-management/faq/view/:id" element={<FaqView />} />
 
           {/* 404 Not Found */}
