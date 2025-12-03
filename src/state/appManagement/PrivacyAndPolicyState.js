@@ -6,7 +6,7 @@ const { persistAtom } = recoilPersist();
 export const privacyPolicyListAtom = atom({
   key: "privacyPolicyListKey",
   default: {
-    data: [], // Array of privacy policy objects
+    data: [], 
     currentPage: 1,
     totalPages: 1,
     totalPolicies: 0,
