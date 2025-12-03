@@ -250,13 +250,6 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-7xl mx-auto">
-            
-            <BreadCrumb
-                linkText={[
-                    
-                    { text: "Dashboard" },
-                ]}
-            />
       
             {/* Header Bar */}
             <PagePath2

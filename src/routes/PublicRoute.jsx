@@ -102,9 +102,7 @@ import EditInternationalShipingCost from "../pages/module/productManagment/EditI
 const OfferManagementAdd = lazy(() =>
   import("../pages/module/offerManagement/OfferManagementAdd")
 );
-const OfferManagementEdit = lazy(() =>
-  import("../pages/module/offerManagement/OfferManagementEdit")
-);
+
 const OfferManagementList = lazy(() =>
   import("../pages/module/offerManagement/OfferManagementList")
 );
@@ -174,6 +172,14 @@ const FaqList = lazy(() => import("../pages/module/appManagement/faq/FaqList"));
 const FaqView = lazy(() => import("../pages/module/appManagement/faq/FaqView"));
 
 const FaqAddEdit = lazy(() => import("../pages/module/appManagement/faq/FaqAddEdit"));
+// ---------------------------- About Us section ----------------------------
+const AboutUs = lazy(() =>
+  import("../pages/module/appManagement/aboutus/AboutUs")
+);
+const AboutusEdit = lazy(() =>
+  import("../pages/module/appManagement/aboutus/AboutusEdit")
+);
+
 // ---------------------------- Help & Support Number ----------------------------
 
 const HelpSupport = lazy(() =>
@@ -727,6 +733,10 @@ function PublicRoute() {
           <Route path="/app-management/faq/edit/:id" element={<FaqAddEdit />} />
           <Route path="/app-management/faq/view/:id" element={<FaqView />} />
 
+          {/*----------------------------About Us---------------------------------- */}
+
+          <Route path="/app-management/aboutus" element={<AboutUs/>} />
+          <Route path="/app-management/aboutus/edit" element={<AboutusEdit />} />
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Route>
