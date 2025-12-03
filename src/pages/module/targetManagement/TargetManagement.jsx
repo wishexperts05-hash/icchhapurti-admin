@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { Box } from "@mui/material";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
@@ -16,10 +16,14 @@ const TargetManagement = () => {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
 
-  
-  const { targetData, loading, error } = useTargetManagement(page, limit, debouncedSearch);
+  const { targetData, loading, total, error } = useTargetManagement(
+    page,
+    limit,
+    debouncedSearch
+  );
 
-  console.log(targetData)
+  const totalPages = Math.ceil(total / limit);
+  console.log(targetData);
   // Static dummy data
   // const targetData = [
   //   {
@@ -86,7 +90,7 @@ const TargetManagement = () => {
   //     targetAchievd: 300,
   //     ticketEarned: 54,
   //   },
-    
+
   // ];
 
   const onPageChange = (newPage) => {
@@ -107,7 +111,6 @@ const TargetManagement = () => {
     { header: "Weakly Target", field: "weeklyQuota" },
     { header: "Target Achieved", field: "weeklyQuantitySold" },
     { header: "Tickets Earned", field: "totalTicketsEarned" },
-
   ];
   return (
     <Box>
@@ -123,39 +126,37 @@ const TargetManagement = () => {
         addButtonText="Set Target"
         onClick={() => navigate("/target-management/setTarget-management")}
       />
-  
-      {(
+
+      {
         <>
-         {loading ? (
-        <div className="flex w-full items-center justify-center py-10">
-          <LoaderSpinner />
-        </div>
-      ) : (
-        <div className="mt-6 bg-white p-4 rounded shadow">
-          <Box>
-            <DataTable
-              columns={columns}
-              data={targetData}
-              currentPage={page}
-              usersPerPage={limit}
-            />
-          </Box>
-          <Pagination
-            currentPage={1}
-            totalPages={5}
-            totalItems={10}
-            itemsPerPage={8}
-            onPageChange={onPageChange}
-            onItemsPerPageChange={onItemsPerPageChange}
-          />
-        </div>
-      )}
+          {loading ? (
+            <div className="flex w-full items-center justify-center py-10">
+              <LoaderSpinner />
+            </div>
+          ) : (
+            <div className="mt-6 bg-white p-4 rounded shadow">
+              <Box>
+                <DataTable
+                  columns={columns}
+                  data={targetData}
+                  currentPage={page}
+                  usersPerPage={limit}
+                />
+              </Box>
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                totalItems={total}
+                itemsPerPage={limit}
+                onPageChange={onPageChange}
+                onItemsPerPageChange={onItemsPerPageChange}
+              />
+            </div>
+          )}
         </>
-      )}
-      
+      }
     </Box>
+  );
+};
 
-  )
-}
-
-export default TargetManagement
+export default TargetManagement;

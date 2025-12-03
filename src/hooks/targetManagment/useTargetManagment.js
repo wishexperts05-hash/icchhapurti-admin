@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import useFetch from "../../hooks/useFetch"; // Assuming you have a custom fetch hook
-import conf from "../../config"; // Assuming your config file contains the base URL
+import useFetch from "../../hooks/useFetch";
+import conf from "../../config";
 
 const useTargetManagement = (page, limit, debouncedSearch) => {
   const [fetchData] = useFetch();
   const [targetData, setTargetData] = useState([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -13,36 +14,36 @@ const useTargetManagement = (page, limit, debouncedSearch) => {
       setLoading(true);
       try {
         const params = new URLSearchParams();
-        params.append('page', page);
-        params.append('limit', limit);
-        if (debouncedSearch) {
-          params.append('search', debouncedSearch);
-        }
+        params.append("page", page);
+        params.append("limit", limit);
+        if (debouncedSearch) params.append("search", debouncedSearch);
 
         const url = `${conf.apiBaseUrl}admin/target-management/targets?${params.toString()}`;
+
         const res = await fetchData({
-          method: 'GET',
+          method: "GET",
           url,
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`, // Make sure JWT token is stored correctly
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         });
 
         if (res) {
-          setTargetData(res.data); // Assuming the response has a 'data' field
+          setTargetData(res.data);  // array
+          setTotal(res.total);      // ✔ from API total=23
         }
-      } catch (error) {
-        setError(error);
-        console.error("Error fetching target data:", error);
+      } catch (err) {
+        console.error("Error fetching target data:", err);
+        setError(err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchTargets();
-  }, [page, limit, debouncedSearch, fetchData]);
+  }, [page, limit, debouncedSearch]);
 
-  return { targetData, loading, error };
+  return { targetData, total, loading, error };
 };
 
 export default useTargetManagement;
