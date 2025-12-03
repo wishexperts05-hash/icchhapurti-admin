@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import useFetch from '../useFetch';
 import conf from "../../config/index";
-import { orderStatusAtom, productCategoryAtom, productDropdownAtom, salesTypeAtom, userTypeAtom } from '../../state/dropdown/dropdownState';
+import { offerTypeAtom, orderStatusAtom, productCategoryAtom, productDropdownAtom, salesTypeAtom, userTypeAtom } from '../../state/dropdown/dropdownState';
 import { useRecoilState } from 'recoil';
 
 const useDropdown = () => {
@@ -10,11 +10,14 @@ const useDropdown = () => {
     const [loadingUser, setLoadingUser] = useState(false);
     const [loadingProduct, setLoadingProduct] = useState(false);
     const [loadingOrderStatus, setLoadingOrderStatus] = useState(false);
+    const [loadingOfferType, setLoadingOfferType] = useState(false);
+
     const [salesType, setSalesType] = useRecoilState(salesTypeAtom);
     const [userType, setUserType] = useRecoilState(userTypeAtom);
     const [productDropdown, setProductDropdown] = useRecoilState(productDropdownAtom);
     const [productCategory, setProductCategory] = useRecoilState(productCategoryAtom);
     const [orderStatus, setOrderStatus] = useRecoilState(orderStatusAtom);
+    const [offerType, setOfferType] = useRecoilState(offerTypeAtom);
 
     const fetchSalesType = async () => {
         setLoadingSales(true);
@@ -117,10 +120,29 @@ const useDropdown = () => {
         }
     };
 
+    const fetchOfferType = async () => {
+        setLoadingOfferType(true);
+        try {
+            const res = await fetchData({
+                method: "GET",
+                url: `${conf.apiBaseUrl}admin/offers/dropdown/offer-types`,
+            });
+            if (res) {
+                setOfferType(res?.data);
+                setLoadingOfferType(false);
+            }
+        } catch (error) {
+            console.error("Error fetching product dropdown:", error);
+            setLoadingOfferType(false);
+        } finally {
+            setLoadingOfferType(false);
+        }
+    };
+
     const loading = loadingSales || loadingUser || loadingProduct || loadingOrderStatus;
     return { loading, loadingSales, loadingUser, loadingProduct, loadingOrderStatus, fetchSalesType, 
         fetchProductCategory, fetchOrderStatus, fetchUserType, fetchProductDropdown, salesType, userType, productDropdown, 
-        productCategory, orderStatus, resetUserType }
+        productCategory, orderStatus, resetUserType, fetchOfferType, loadingOfferType, offerType, fetchProducts: fetchProductDropdown, products: productDropdown, loadingProducts: loadingProduct}
 }
 
 export default useDropdown
