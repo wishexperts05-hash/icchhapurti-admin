@@ -187,15 +187,12 @@ const useFAQ = () => {
 
   return {
     loading,
-    
     faqList,
     faqDetail,
-  
     fetchFaqList,
     resetFaqList,
     fetchFaqById,
     resetFaqDetail,
-    
     createFaq,
     updateFaq,
     deleteFaqById,
