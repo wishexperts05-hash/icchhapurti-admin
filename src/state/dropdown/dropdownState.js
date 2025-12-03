@@ -16,3 +16,6 @@ export const faqCategoriesDropdownAtom = atom(createPersistedAtom("faqCategories
 export const offerTypeAtom = atom(createPersistedAtom("offerTypeKey", []));
 
 export const countriesAtom = atom(createPersistedAtom("countriesAtomKey", []));
+
+
+
