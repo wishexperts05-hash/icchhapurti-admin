@@ -7,131 +7,148 @@ import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import Pagination from "../../../../components/uiComponent/Pagination";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
-
+import useFAQ from "../../../../hooks/appManagement/useFAQ";
+import useDropdown from "../../../../hooks/dropdown/useDropdown";
 
 const FaqList = () => {
   const navigate = useNavigate();
-  const [faqs, setFaqs] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const {
+    loading: faqLoading,
+    faqList,
+    fetchFaqList,
+    deleteFaqById,
+  } = useFAQ();
+
+  const {
+    faqCategories,
+    loadingFaqCategories,
+    fetchFaqCategories,
+  } = useDropdown();
+  console.log("FAQ Categories in FaqList:", faqCategories);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [totalEntries, setTotalEntries] = useState(0);
 
-  const categoryOptions = [
-    { value: "", label: "All Categories" },
-    { value: "General", label: "General" },
-    { value: "Shop", label: "Shop" },
-    { value: "Account", label: "Account" },
-    { value: "Support", label: "Support" },
-  ];
-
-  const dummyFaqData = [
-    {
-      _id: "1",
-      srNo: 1,
-      category: "General",
-      question: "How to redeem my coins?",
-      answer: "Lorem ipsum dolor sit amet consectetur. Etis epsum...",
-    },
-    {
-      _id: "2",
-      srNo: 2,
-      category: "Shop",
-      question: "How to redeem my coins?",
-      answer: "Lorem ipsum dolor sit amet consectetur. Etis epsum...",
-    },
-    {
-      _id: "3",
-      srNo: 3,
-      category: "Account",
-      question: "How to redeem my coins?",
-      answer: "Lorem ipsum dolor sit amet consectetur. Etis epsum...",
-    },
-    {
-      _id: "4",
-      srNo: 4,
-      category: "Support",
-      question: "How to redeem my coins?",
-      answer: "Lorem ipsum dolor sit amet consectetur. Etis epsum...",
-    },
-    {
-      _id: "5",
-      srNo: 5,
-      category: "General",
-      question: "How to redeem my coins?",
-      answer: "Lorem ipsum dolor sit amet consectetur. Etis epsum...",
-    },
-  ];
-
-  const fetchFaqs = async () => {
+  
+  useEffect(() => {
+    console.log("Fetching FAQ categories...");
     try {
-      setLoading(true);
-
-      let filteredData = [...dummyFaqData];
-
-      if (category) {
-        filteredData = filteredData.filter(
-          (faq) => faq.category === category
-        );
-      }
-
-      if (searchTerm) {
-        filteredData = filteredData.filter(
-          (faq) =>
-            faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      }
-
-      setTotalEntries(filteredData.length);
-
-      const startIndex = (page - 1) * limit;
-      const endIndex = startIndex + limit;
-      const paginatedData = filteredData.slice(startIndex, endIndex);
-
-      setFaqs(paginatedData);
+      fetchFaqCategories();
     } catch (error) {
-      console.error("Error fetching FAQs:", error);
-    } finally {
-      setLoading(false);
+      console.error("Error in fetchFaqCategories effect:", error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  
+  useEffect(() => {
+    console.log("FAQ Categories updated:", faqCategories);
+    console.log("Is array?", Array.isArray(faqCategories));
+    console.log("Length:", faqCategories?.length);
+  }, [faqCategories]);
+
+  
+  useEffect(() => {
+    console.log("Fetching FAQ list with params:", { page, limit, searchTerm });
+    fetchFaqList(page, limit, searchTerm);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, limit, searchTerm]);
+
+  
+  useEffect(() => {
+    console.log("FAQ List updated:", faqList);
+  }, [faqList]);
+  
+
+
+  const onPageChange = (data) => {
+    try {
+      setPage(data);
+    } catch (error) {
+      console.error("Error changing page:", error);
     }
   };
 
-  useEffect(() => {
-    fetchFaqs();
-  }, [page, limit, category, searchTerm]);
-
-  const onPageChange = (data) => setPage(data);
-
   const onItemsPerPageChange = (data) => {
-    setLimit(data);
-    setPage(1);
+    try {
+      setLimit(data);
+      setPage(1);
+    } catch (error) {
+      console.error("Error changing items per page:", error);
+    }
   };
 
   const onSearchChange = (e) => {
-    const newSearchTerm = e.target.value;
-    setSearchTerm(newSearchTerm);
-    setPage(1);
+    try {
+      const newSearchTerm = e?.target?.value || "";
+      setSearchTerm(newSearchTerm);
+      setPage(1);
+    } catch (error) {
+      console.error("Error changing search term:", error);
+    }
   };
 
   const onChangeSelectFunc = (selected) => {
-    const categoryValue = selected?.value || "";
-    setCategory(categoryValue);
-    setPage(1);
+    try {
+      console.log("Category selected:", selected);
+      
+      
+      if (selected === null || selected === undefined) {
+        setCategory("");
+      } else if (selected && typeof selected === 'object' && selected.value !== undefined) {
+        
+        setCategory(selected.value);
+      } else {
+        
+        setCategory("");
+      }
+      
+      setPage(1);
+    } catch (error) {
+      console.error("Error changing category:", error);
+      setCategory("");
+    }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this FAQ?")) return;
-
-    try {
-      console.log("Delete FAQ with id:", id);
-      fetchFaqs();
-    } catch (error) {
-      console.error("Error deleting FAQ:", error);
+    const result = await deleteFaqById(id);
+    if (result && result.success) {
+      fetchFaqList(page, limit, searchTerm);
     }
   };
+
+  
+  const faqsWithSerialNumbers = React.useMemo(() => {
+    const data = faqList?.data || [];
+    
+    
+    if (data.length > 0 && !data[0]?._id) {
+      console.error("FAQ data missing _id field:", data[0]);
+    }
+    
+    return data.map((faq, index) => ({
+      ...faq,
+      srNo: (page - 1) * limit + index + 1,
+    }));
+  }, [faqList?.data, page, limit]);
+
+  
+  const filteredFaqs = React.useMemo(() => {
+    try {
+      if (!category || category === "") {
+        return faqsWithSerialNumbers;
+      }
+      return faqsWithSerialNumbers.filter((faq) => {
+        
+        return faq?.category && faq.category === category;
+      });
+    } catch (error) {
+      console.error("Error filtering FAQs:", error);
+      return faqsWithSerialNumbers;
+    }
+  }, [faqsWithSerialNumbers, category]);
 
   const columns = [
     { header: "Sr.No.", field: "srNo" },
@@ -145,22 +162,42 @@ const FaqList = () => {
     {
       icon: <FiEye className="w-5 h-5 text-[#cca547]" />,
       title: "View",
-      onClick: (row) => navigate(`/app-management/faq/view/${row._id}`),
+      onClick: (row) => {
+        if (row?._id) {
+          navigate(`/app-management/faq/view/${row._id}`);
+        } else {
+          console.error("FAQ ID is missing:", row);
+        }
+      },
     },
     {
       icon: <FaRegEdit className="w-5 h-5 text-[#cca547]" />,
       title: "Edit",
-      onClick: (row) => navigate(`/app-management/faq/edit/${row._id}`),
+      onClick: (row) => {
+        if (row?._id) {
+          navigate(`/app-management/faq/edit/${row._id}`);
+        } else {
+          console.error("FAQ ID is missing:", row);
+        }
+      },
     },
     {
       icon: <FiTrash2 className="w-5 h-5 text-[#cca547]" />,
       title: "Delete",
-      onClick: (row) => handleDelete(row._id),
+      onClick: (row) => {
+        if (row?._id) {
+          handleDelete(row._id);
+        } else {
+          console.error("FAQ ID is missing:", row);
+        }
+      },
     },
   ];
 
-  const totalPages = Math.ceil(totalEntries / limit);
+  const totalPages = faqList?.pagination?.totalPages || 1;
+  const totalEntries = faqList?.pagination?.totalRecords || 0;
 
+  
   return (
     <div className="bg-[#F9F9F9] min-h-screen pb-6">
       <BreadCrumb linkText={[{ text: "App Management" }, { text: "FAQ" }]} />
@@ -175,27 +212,27 @@ const FaqList = () => {
         addButtonText="Add FAQ"
         onClick={() => navigate("/app-management/faq/add")}
         showSelect
-        options={categoryOptions}
+        options={faqCategories}
         selectPlaceHolder="Select Category"
-        optionsLoading={loading}
+        optionsLoading={loadingFaqCategories}
         onChangeSelectFunc={onChangeSelectFunc}
-      />
+        />
 
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
         <div className="overflow-x-auto">
           <div className="border border-gray-300 rounded-t-xl shadow-sm overflow-hidden">
-            {loading ? (
+            {faqLoading ? (
               <div className="flex justify-center items-center py-10">
                 <LoaderSpinner />
               </div>
-            ) : faqs.length === 0 ? (
+            ) : filteredFaqs.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 No FAQs found
               </div>
             ) : (
               <DataTable
                 columns={columns}
-                data={faqs}
+                data={filteredFaqs}
                 currentPage={page}
                 usersPerPage={limit}
                 actions={actions}
@@ -203,7 +240,7 @@ const FaqList = () => {
             )}
           </div>
 
-          {!loading && faqs.length > 0 && (
+          {!faqLoading && filteredFaqs.length > 0 && (
             <Pagination
               currentPage={page}
               totalPages={totalPages}

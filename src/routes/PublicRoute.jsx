@@ -102,9 +102,7 @@ import EditInternationalShipingCost from "../pages/module/productManagment/EditI
 const OfferManagementAdd = lazy(() =>
   import("../pages/module/offerManagement/OfferManagementAdd")
 );
-const OfferManagementEdit = lazy(() =>
-  import("../pages/module/offerManagement/OfferManagementEdit")
-);
+
 const OfferManagementList = lazy(() =>
   import("../pages/module/offerManagement/OfferManagementList")
 );
@@ -170,9 +168,17 @@ const EditBanner = lazy(() =>
 );
 // ---------------------------- Faq section ----------------------------
 const FaqList = lazy(() => import("../pages/module/appManagement/faq/FaqList"));
-const FaqAdd = lazy(() => import("../pages/module/appManagement/faq/FaqAdd"));
-const FaqEdit = lazy(() => import("../pages/module/appManagement/faq/FaqEdit"));
+
 const FaqView = lazy(() => import("../pages/module/appManagement/faq/FaqView"));
+
+const FaqAddEdit = lazy(() => import("../pages/module/appManagement/faq/FaqAddEdit"));
+// ---------------------------- About Us section ----------------------------
+const AboutUs = lazy(() =>
+  import("../pages/module/appManagement/aboutus/AboutUs")
+);
+const AboutusEdit = lazy(() =>
+  import("../pages/module/appManagement/aboutus/AboutusEdit")
+);
 
 // ---------------------------- Help & Support Number ----------------------------
 
@@ -284,9 +290,7 @@ const EditReviewDisplay = lazy(() =>
   import("../pages/module/commentsandreviews/EditReviewDisplay")
 );
 // ---------------------------- Notification Management ----------------------------
-const NotificationManagement = lazy(() =>
-  import("../pages/module/notificationManagement/NotificationManagement")
-);
+
 const NotificationSend = lazy(() =>
   import("../pages/module/notificationManagement/NotificationSend")
 );
@@ -717,10 +721,7 @@ function PublicRoute() {
           <Route path="/set-review-display" element={<SetReviewDisplay />} />
           <Route path="/edit-review-display" element={<EditReviewDisplay />} />
         {/* -------------------------- Notification Management -------------------------- */}
-          <Route
-            path="/notification-management"
-            element={<NotificationManagement />}  
-          />
+          
           <Route
             path="/notification-management/send-notification"
             element={<NotificationSend />}
@@ -728,10 +729,14 @@ function PublicRoute() {
           {/* --------------------------Faq Routes---------------------------------*/}
 
           <Route path="/app-management/faq" element={<FaqList />} />
-          <Route path="/app-management/faq/add" element={<FaqAdd />} />
-          <Route path="/app-management/faq/edit/:id" element={<FaqEdit />} />
+          <Route path="/app-management/faq/add" element={<FaqAddEdit />} />
+          <Route path="/app-management/faq/edit/:id" element={<FaqAddEdit />} />
           <Route path="/app-management/faq/view/:id" element={<FaqView />} />
 
+          {/*----------------------------About Us---------------------------------- */}
+
+          <Route path="/app-management/aboutus" element={<AboutUs/>} />
+          <Route path="/app-management/aboutus/edit" element={<AboutusEdit />} />
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Route>

@@ -17,6 +17,7 @@ const SendNotification = () => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const formikRef = useRef(null);
 
   const { 
     loading, 
@@ -64,8 +65,17 @@ const SendNotification = () => {
     label: country.name,
   })) : [];
 
+  const resetForm = () => {
+    if (formikRef.current) {
+      formikRef.current.resetForm();
+      setTargetAudience("selectUsers");
+      setSelectedUsers([]);
+      setIsDropdownOpen(false);
+    }
+  };
+
   const handleCancel = () => {
-    navigate("/notification-management");
+    resetForm();
   };
 
   const validationSchema = Yup.object({
@@ -163,7 +173,7 @@ const SendNotification = () => {
     try {
       const result = await sendNotification(payload);
       if (result) {
-        navigate("/notification-management");
+        resetForm();
       }
     } catch (error) {
       console.error("Error submitting notification:", error);
@@ -174,10 +184,7 @@ const SendNotification = () => {
     <div className="bg-gray-50 min-h-screen">
       <BreadCrumb
         linkText={[
-          {
-            text: "Notification Management",
-            href: "/notification-management",
-          },
+        
           { text: "Send Notification" },
         ]}
       />
@@ -189,6 +196,7 @@ const SendNotification = () => {
 
       <div className="bg-white rounded-lg shadow-md p-6 mt-4 min-h-[600px]">
         <Formik
+          innerRef={formikRef}
           initialValues={{
             title: "",
             message: "",
