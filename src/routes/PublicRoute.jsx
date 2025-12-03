@@ -172,6 +172,14 @@ const FaqAdd = lazy(() => import("../pages/module/appManagement/faq/FaqAdd"));
 const FaqEdit = lazy(() => import("../pages/module/appManagement/faq/FaqEdit"));
 const FaqView = lazy(() => import("../pages/module/appManagement/faq/FaqView"));
 
+// ---------------------------- About Us section ----------------------------
+const AboutUs = lazy(() =>
+  import("../pages/module/appManagement/aboutus/AboutUs")
+);
+const AboutusEdit = lazy(() =>
+  import("../pages/module/appManagement/aboutus/AboutusEdit")
+);
+
 // ---------------------------- Help & Support Number ----------------------------
 
 const HelpSupport = lazy(() =>
@@ -725,6 +733,10 @@ function PublicRoute() {
           <Route path="/app-management/faq/edit/:id" element={<FaqEdit />} />
           <Route path="/app-management/faq/view/:id" element={<FaqView />} />
 
+          {/*----------------------------About Us---------------------------------- */}
+
+          <Route path="/app-management/aboutus" element={<AboutUs/>} />
+          <Route path="/app-management/aboutus/edit" element={<AboutusEdit />} />
           {/* 404 Not Found */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Route>

@@ -62,7 +62,7 @@ import {
   userCommissionIcon,
   userManagementIcon,
 } from "../assets/sidebaricon/sidebaricon";
-
+import { FiInfo } from "react-icons/fi";
 export const hasSubAdminAccess = (subAdminAccess, moduleName) => {
   if (!subAdminAccess || !Array.isArray(subAdminAccess)) return false;
 
@@ -432,6 +432,14 @@ export const allNavigationItems = [
         title: "Faq",
         url: "/app-management/faq",
         icon: otherSettingsIcon,
+        badge: null,
+        color: "yellow",
+      },
+      {
+        id: 67,
+        title: "About Us",
+        url: "/app-management/aboutus",
+        icon: FiInfo ,
         badge: null,
         color: "yellow",
       },
