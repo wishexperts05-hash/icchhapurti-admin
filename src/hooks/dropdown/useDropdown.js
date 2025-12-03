@@ -19,6 +19,8 @@ const useDropdown = () => {
     const [loadingUser, setLoadingUser] = useState(false);
     const [loadingProduct, setLoadingProduct] = useState(false);
     const [loadingOrderStatus, setLoadingOrderStatus] = useState(false);
+    const [loadingOfferType, setLoadingOfferType] = useState(false);
+
     const [countryLoading, setCountryLoading] = useState(false); 
     const [loadingFaqCategories, setLoadingFaqCategories] = useState(false);
     
@@ -27,6 +29,7 @@ const useDropdown = () => {
     const [productDropdown, setProductDropdown] = useRecoilState(productDropdownAtom);
     const [productCategory, setProductCategory] = useRecoilState(productCategoryAtom);
     const [orderStatus, setOrderStatus] = useRecoilState(orderStatusAtom);
+    const [offerType, setOfferType] = useRecoilState(offerTypeAtom);
     const [countries, setCountries] = useRecoilState(countriesAtom); 
     const [faqCategories, setFaqCategories] = useRecoilState(faqCategoriesDropdownAtom);
 
