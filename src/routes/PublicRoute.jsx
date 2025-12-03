@@ -510,11 +510,11 @@ function PublicRoute() {
             element={<OfferManagementAdd />}
           />
           <Route
-            path="offer-management/edit-offer"
-            element={<OfferManagementEdit />}
+            path="offer-management/edit-offer/:id"
+            element={<OfferManagementAdd />}
           />
           <Route
-            path="offer-management/offer-details"
+            path="offer-management/offer-details/:id"
             element={<OfferManagementView />}
           />
 
@@ -716,7 +716,15 @@ function PublicRoute() {
           />
           <Route path="/set-review-display" element={<SetReviewDisplay />} />
           <Route path="/edit-review-display" element={<EditReviewDisplay />} />
-
+        {/* -------------------------- Notification Management -------------------------- */}
+          <Route
+            path="/notification-management"
+            element={<NotificationManagement />}  
+          />
+          <Route
+            path="/notification-management/send-notification"
+            element={<NotificationSend />}
+          />
           {/* --------------------------Faq Routes---------------------------------*/}
 
           <Route path="/app-management/faq" element={<FaqList />} />

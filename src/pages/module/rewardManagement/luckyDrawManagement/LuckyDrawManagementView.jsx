@@ -153,7 +153,7 @@ export default function LuckyDrawManagementView() {
                     value={luckyDrawData.endDate}
                   />
 
-                  {/* 🔹 Render each product + tickets pair separately */}
+                 
                   {luckyDrawData.rules.length === 0 ? (
                     <DetailsField
                       label="Products & Tickets"
@@ -196,7 +196,7 @@ export default function LuckyDrawManagementView() {
 
                   <DetailsField
                     label="Rules Of Lucky Draw"
-                    value={""}
+                    value={" "}
                     className="md:col-span-2"
                   />
                 </div>

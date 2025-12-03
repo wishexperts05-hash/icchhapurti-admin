@@ -6,7 +6,9 @@ import { User } from "lucide-react";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import Button from "../../../components/uiComponent/Button";
 import useGetCommentById from "../../../hooks/CommentandReviews/useGetCommentById";
+import useChangeStatus from "../../../hooks/CommentandReviews/useChangeStatus";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
+import { toast } from "react-toastify";
 
 export default function ManageCommentsView() {
   const navigate = useNavigate();
@@ -14,18 +16,7 @@ export default function ManageCommentsView() {
   const { reviewId, reviewType } = useParams();
 
   const { loading, commentById, fetchComment } = useGetCommentById();
-
-  // Sample comment data
-  // const commentData = {
-  //     name: "vaishnavi Shobhane",
-  //     location: "Maharashtra, India",
-  //     mobileNumber: "+91 9876543210",
-  //     email: "janecooper01@gmail.com",
-  //     profileImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
-  //     rating: 4,
-  //     status: "Show",
-  //     comment: "Lorem ipsum dolor sit amet consectetur. Etiam ut arcu arcu mattis praesent vel iaculis id eu. Porttitor nulla feugiat ligula auctor euismod eu eget consequat. Vitae non pretium non molestie. Egestas nisl arcu elit nisl amet nec tortor."
-  // };
+  const { loading: statusLoading, changeStatus } = useChangeStatus();
 
   //fetch call for api data
   useEffect(() => {
@@ -39,9 +30,15 @@ export default function ManageCommentsView() {
     navigate(-1);
   };
 
-  const handleHide = () => {
-    // Toggle hide/show status
-    console.log("Hide/Show comment");
+  //Handled Hide and Show
+  const handleHide = async () => {
+    if (!commentById?._id) return;
+
+    const newStatus = commentById.status === "show" ? "hide" : "show";
+
+    await changeStatus(commentById._id, commentById.reviewType, newStatus);
+
+    toast.success("Status has been changed");
   };
 
   const renderStars = (rating) => {
@@ -89,7 +86,7 @@ export default function ManageCommentsView() {
         {/* Page Title */}
         <PagePath2 title="View Comment" />
 
-        {loading || !commentData ? (
+        {loading || statusLoading || !commentData ? (
           <div className="flex justify-center py-16">
             <LoaderSpinner />
           </div>
@@ -191,10 +188,23 @@ export default function ManageCommentsView() {
             <div className="flex justify-center gap-8 mt-8 mb-8">
               <Button text="Back" variant={1} onClick={handleBack} />
               <Button
-                text={commentData.status === "show" ? "Hide" : "Show"}
+                text={
+                  statusLoading
+                    ? "Updating..." // text while loading
+                    : commentData.status?.toLowerCase() === "show"
+                    ? "Hide"
+                    : "Show"
+                }
                 variant={2}
                 onClick={handleHide}
-              />
+                disabled={statusLoading}
+              >
+                {statusLoading && (
+                  <span className="ml-2">
+                    <LoaderSpinner />
+                  </span>
+                )}
+              </Button>
             </div>
           </>
         )}
