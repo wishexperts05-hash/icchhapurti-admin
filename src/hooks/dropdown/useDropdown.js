@@ -1,9 +1,17 @@
 import React, { useState } from 'react'
 import useFetch from '../useFetch';
 import conf from "../../config/index";
-import { orderStatusAtom, productCategoryAtom, productDropdownAtom, salesTypeAtom, userTypeAtom, countriesAtom } from '../../state/dropdown/dropdownState';
+import { 
+    orderStatusAtom, 
+    productCategoryAtom, 
+    productDropdownAtom, 
+    salesTypeAtom, 
+    userTypeAtom, 
+    countriesAtom,
+    faqCategoriesDropdownAtom 
+} from '../../state/dropdown/dropdownState';
 import { useRecoilState } from 'recoil';
-import { toast } from 'react-toastify'; // Add this import
+import { toast } from 'react-toastify';
 
 const useDropdown = () => {
     const [fetchData] = useFetch();
@@ -12,12 +20,15 @@ const useDropdown = () => {
     const [loadingProduct, setLoadingProduct] = useState(false);
     const [loadingOrderStatus, setLoadingOrderStatus] = useState(false);
     const [countryLoading, setCountryLoading] = useState(false); 
+    const [loadingFaqCategories, setLoadingFaqCategories] = useState(false);
+    
     const [salesType, setSalesType] = useRecoilState(salesTypeAtom);
     const [userType, setUserType] = useRecoilState(userTypeAtom);
     const [productDropdown, setProductDropdown] = useRecoilState(productDropdownAtom);
     const [productCategory, setProductCategory] = useRecoilState(productCategoryAtom);
     const [orderStatus, setOrderStatus] = useRecoilState(orderStatusAtom);
     const [countries, setCountries] = useRecoilState(countriesAtom); 
+    const [faqCategories, setFaqCategories] = useRecoilState(faqCategoriesDropdownAtom);
 
     const fetchSalesType = async () => {
         setLoadingSales(true);
@@ -140,8 +151,33 @@ const useDropdown = () => {
             setLoadingOrderStatus(false);
         }
     };
+
+   
+    const fetchFaqCategories = async () => {
+        setLoadingFaqCategories(true);
+        try {
+            const res = await fetchData({
+                method: "GET",
+                url: `${conf.apiBaseUrl}admin/faq/categories`,
+            });
+
+            if (res && res.success) {
+                setFaqCategories(res.data || []);
+            }
+        } catch (error) {
+            console.error("Error fetching FAQ categories:", error);
+            toast.error("Failed to load FAQ categories");
+            setFaqCategories([]);
+        } finally {
+            setLoadingFaqCategories(false);
+        }
+    };
+
+    const resetFaqCategories = () => {
+        setFaqCategories([]);
+    };
     
-    const loading = loadingSales || loadingUser || loadingProduct || loadingOrderStatus || countryLoading;
+    const loading = loadingSales || loadingUser || loadingProduct || loadingOrderStatus || countryLoading || loadingFaqCategories;
     
     return { 
         loading, 
@@ -150,19 +186,23 @@ const useDropdown = () => {
         loadingProduct, 
         loadingOrderStatus,
         countryLoading,
+        loadingFaqCategories,
         fetchSalesType, 
         fetchProductCategory, 
         fetchOrderStatus, 
         fetchUserType, 
         fetchProductDropdown,
         fetchCountryDropdown,
+        fetchFaqCategories,
         salesType, 
         userType, 
         productDropdown, 
         productCategory, 
         orderStatus,
         countries,
-        resetUserType 
+        faqCategories,
+        resetUserType,
+        resetFaqCategories 
     }
 }
 
