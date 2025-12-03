@@ -26,20 +26,12 @@ const FaqList = () => {
   } = useDropdown();
   console.log("FAQ Categories in FaqList:", faqCategories);
 
-  const [Faq, setFaq] = useState("");
-
-
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  const onChangeSelectFunc = (option) => {
-    const selected = option ? option.value : "";
-    setFaq(selected);
-    setPage(1);
-  };
-
+  
   useEffect(() => {
     console.log("Fetching FAQ categories...");
     try {
@@ -60,9 +52,9 @@ const FaqList = () => {
   
   useEffect(() => {
     console.log("Fetching FAQ list with params:", { page, limit, searchTerm });
-    fetchFaqList(page,Faq, limit, searchTerm);
+    fetchFaqList(page, limit, searchTerm);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, limit,Faq, searchTerm]);
+  }, [page, limit, searchTerm]);
 
   
   useEffect(() => {
