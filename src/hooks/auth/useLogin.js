@@ -41,8 +41,9 @@ const useLogin = () => {
       console.log("OTP", res?.data?.otp);
       if (res) {
         setLoading(false);
-        toast.success(res?.message);
-        toast.success(res?.data?.otp);
+        const otp = res?.data?.otp;
+        const msg = otp ? `${res?.message} OTP: ${otp}` : res?.message;
+        toast.success(msg);
         setAdminResponse(res);
         sessionStorage.setItem("email", res?.data?.email);
         return true;
@@ -68,7 +69,9 @@ const useLogin = () => {
       console.log("OTP", res?.data?.otp);
       if (res) {
         setLoading(false);
-        toast.success(res?.message);
+        const otp = res?.data?.otp;
+        const msg = otp ? `${res?.message} OTP: ${otp}` : res?.message;
+        toast.success(msg);
         setSubAdminResponse(res);
         sessionStorage.setItem("email", res?.data?.email);
         return true;
@@ -136,7 +139,10 @@ const useLogin = () => {
       });
       if (res) {
         setLoading(false);
-        toast.success(res?.message || "OTP Resent Successfully!");
+        const otp = res?.data?.otp;
+        const baseMsg = res?.message || "OTP Resent Successfully!";
+        const msg = otp ? `${baseMsg} OTP: ${otp}` : baseMsg;
+        toast.success(msg);
         return true;
       }
     } catch (error) {
@@ -160,7 +166,9 @@ const useLogin = () => {
       console.log("OTP", res?.data?.otp);
       if (res) {
         setLoading(false);
-        toast.success(res?.message);
+        const otp = res?.data?.otp;
+        const msg = otp ? `${res?.message} OTP: ${otp}` : res?.message;
+        toast.success(msg);
         setPassword(res?.data);
         sessionStorage.setItem("email", res?.data?.email);
         return true;
