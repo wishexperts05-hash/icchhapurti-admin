@@ -28,7 +28,6 @@ import {
 import {
   adminRoleManagementIcon,
   appManagementIcon,
-  blockedUserandStaffsIcon,
   blogManagementIcon,
   chatSupportSystemIcon,
   coinSettingIcon,
@@ -59,7 +58,6 @@ import {
   termAndConditionsIcon,
   themecustomizationIcon,
   uploadVideoIcon,
-  userCommissionIcon,
   userManagementIcon,
 } from "../assets/sidebaricon/sidebaricon";
 

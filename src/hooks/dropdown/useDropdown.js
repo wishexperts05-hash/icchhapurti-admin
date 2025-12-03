@@ -57,7 +57,7 @@ const useDropdown = () => {
             });
             // Debug: log requested URL and response
             // (helps detect whether API respects the salesType query)
-            // eslint-disable-next-line no-console
+            
             console.log("fetchUserType -> url:", url, "res:", res);
             if (res) {
                 setUserType(res?.data);
