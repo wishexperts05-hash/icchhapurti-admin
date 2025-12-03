@@ -284,9 +284,7 @@ const EditReviewDisplay = lazy(() =>
   import("../pages/module/commentsandreviews/EditReviewDisplay")
 );
 // ---------------------------- Notification Management ----------------------------
-const NotificationManagement = lazy(() =>
-  import("../pages/module/notificationManagement/NotificationManagement")
-);
+
 const NotificationSend = lazy(() =>
   import("../pages/module/notificationManagement/NotificationSend")
 );
