@@ -119,10 +119,6 @@ const AddBlog = lazy(() =>
   import("../pages/module/blogManagement/addBlog/AddBlog")
 );
 
-const EditBlog = lazy(() =>
-  import("../pages/module/blogManagement/addBlog/EditBlog")
-);
-
 const ViewBlog = lazy(() =>
   import("../pages/module/blogManagement/addBlog/ViewBlog")
 );
@@ -527,7 +523,7 @@ function PublicRoute() {
           <Route path="/blog-management/add-blogs" element={<AddBlog />} />
           <Route
             path="/blog-management/edit-blogs/:id"
-            element={<EditBlog />}
+            element={<AddBlog />}
           />
           <Route
             path="/blog-management/view-blogs/:id"
