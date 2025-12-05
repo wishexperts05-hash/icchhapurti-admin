@@ -1,46 +1,89 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormField from "../../../../components/uiComponent/FormField";
 import Button from "../../../../components/uiComponent/Button";
-import { useNavigate } from "react-router-dom";
-import JoditEditor from "jodit-pro-react"; 
+import { useNavigate, useParams } from "react-router-dom";
+import JoditEditor from "jodit-pro-react";
+import useBlogManagement from "../../../../hooks/blogManagement/useBlogManagement";
 
 const AddBlog = () => {
+  const { createBlog, loading, updateBlog, fetchBlogDetails, blogDetail, resetBlogDetails } = useBlogManagement();
   const navigate = useNavigate();
   const editor = useRef(null);
+  const { id } = useParams();
+  const [previewImage, setPreviewImage] = useState(null);
 
-  // Validation schema
+  useEffect(() => {
+    if (id) {
+      fetchBlogDetails(id);
+    }
+    return () => {
+      resetBlogDetails();
+    };
+  }, [id]);
+
+  console.log("blogDetail in AddBlog:", blogDetail);
+
   const validationSchema = Yup.object().shape({
     title: Yup.string().trim().required("Blog title is required"),
     body: Yup.string().trim().required("Blog content cannot be empty"),
   });
 
+  useEffect(() => {
+    if (blogDetail && blogDetail.imageUrl) {
+      setPreviewImage(blogDetail.imageUrl);
+    }
+  }, [blogDetail]);
+
+  const handleCancel = () => {
+    navigate("/blog-management");
+  };
+  
   return (
     <div className="">
       {/* Breadcrumb Navigation */}
       <BreadCrumb
         linkText={[
           { text: "Blog Management", href: "/blog-management" },
-          { text: "Add Blog" },
+          { text: id ? "Edit Blog" : "Add Blog" },
         ]}
       />
 
       {/* Page Header */}
-      <PagePath2 title="Add Blog" showAddButton={false} showSearch={false} />
+      <PagePath2 title={id ? "Edit Blog" : "Add Blog"} />
 
       {/* Formik Form */}
       <Formik
+        enableReinitialize
         initialValues={{
-          title: "",
-          body: "",
+          title: blogDetail?.title || "",
+          body: blogDetail?.body || "",
+          image: null,
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { resetForm }) => {
-          console.log("Blog Data Submitted:", values);
-          resetForm();
+        onSubmit={async (values, { resetForm }) => {
+          try {
+            const formData = new FormData();
+            formData.append("title", values.title);
+            formData.append("body", values.body);
+            // If a new file is chosen, values.image will be a File
+            if (values.image) {
+              formData.append("image", values.image);
+            }
+            if (id) {
+              await updateBlog(id, formData);
+            } else {
+              await createBlog(formData);
+            }
+            resetForm();
+            navigate("/blog-management");
+          } catch (err) {
+            // errors handled in hook
+            console.error(err);
+          }
         }}
       >
         {({ values, setFieldValue, errors, touched }) => (
@@ -62,7 +105,7 @@ const AddBlog = () => {
               ref={editor}
               value={values.body}
               onBlur={(newContent) => setFieldValue("body", newContent)}
-             
+
             />
 
             {/* Validation Error */}
@@ -71,19 +114,48 @@ const AddBlog = () => {
             )}
 
             {/* Buttons */}
+            {/* Image upload + preview */}
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-[#004AAD] mb-2">
+                Feature Image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.currentTarget.files && e.currentTarget.files[0];
+                  setFieldValue("image", file || null);
+                  if (file) {
+                    const url = URL.createObjectURL(file);
+                    setPreviewImage(url);
+                  } else if (blogDetail?.imageUrl) {
+                    setPreviewImage(blogDetail.imageUrl);
+                  } else {
+                    setPreviewImage(null);
+                  }
+                }}
+                className="w-full"
+              />
+
+              {previewImage && (
+                <div className="mt-3">
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    className="w-48 h-48 object-cover rounded-md border"
+                  />
+                </div>
+              )}
+            </div>
+
             <div className="flex justify-center gap-4 mt-6">
               <Button
-                type="reset"
+                type="button"
                 text="Cancel"
                 variant={2}
-                onClick={() => navigate("/blog-management")}
+                onClick={handleCancel}
               />
-              <Button
-                type="submit"
-                text="Save"
-                variant={1}
-                onClick={() => navigate("/blog-management")}
-              />
+              <Button type="submit" text="Save" variant={1} />
             </div>
           </Form>
         )}
