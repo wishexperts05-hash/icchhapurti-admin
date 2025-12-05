@@ -16,12 +16,12 @@ const StatCard = ({ title, value, change, icon, bgColor, textColor }) => {
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p
-            className={` font-medium text-gray-500 text-2xl ${textColor} mb-2`}
+            className={`font-medium text-gray-500 text-sm ${textColor} mb-2`}
           >
             {title}
           </p>
-          <p className={`text-4xl font-bold ${textColor} mb-2`}>{value}</p>
-          <p className="text-sm font-medium text-green-600">{change}</p>
+          <p className={`text-2xl font-bold ${textColor} mb-2`}>{value}</p>
+          <p className="text-xs font-medium text-green-600">{change}</p>
         </div>
         <div>
           <img src={icon} alt="icon" className="w-20 h-20 object-contain" />
