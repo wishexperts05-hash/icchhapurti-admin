@@ -25,6 +25,7 @@
     "date-fns": "^4.1.0",
     "dompurify": "^3.2.7",
     "formik": "^2.4.6",
+    "framer-motion": "^12.23.25",
     "i": "^0.3.7",
     "jodit": "^4.7.9",
     "jodit-pro-react": "^5.2.37",
