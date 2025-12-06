@@ -7,56 +7,29 @@ import useDebounce from "../../../../../hooks/debounce/useDebounce";
 import Pagination from "../../../../../components/uiComponent/Pagination";
 import { FaEye } from "react-icons/fa";
 import BreadCrumb from "../../../../../components/uiComponent/BreadCrumb";
+import useReferAndEarn from "../../../../../hooks/referAndEarn/useReferAndEarn";
+import useDropdown from "../../../../../hooks/dropdown/useDropdown";
+
 const ReferralTracking = () => {
+  const { loading, referralTracking, fetchReferralTracking } = useReferAndEarn();
+  const { fetchUserType, userType: userTypeOptions, loadingUser } = useDropdown();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
+  const [userType, setUserType] = useState("");
   const debouncedSearch = useDebounce(search, 500);
-  // Static dummy data
-  const referrelData = [
-    {
-      srNo: 1,
-      userName: "Rahul Sharma",
-      totalCoinEarned: 1200,
-      action: "View",
-    },
-    {
-      srNo: 2,
-      userName: "Priya Verma",
-      totalCoinEarned: 980,
-      action: "View",
-    },
-    {
-      srNo: 3,
-      userName: "Amit Patil",
-      totalCoinEarned: 1500,
-      action: "View",
-    },
-    {
-      srNo: 4,
-      userName: "Sneha Kulkarni",
-      totalCoinEarned: 760,
-      action: "View",
-    },
-    {
-      srNo: 5,
-      userName: "Karan Gupta",
-      totalCoinEarned: 1870,
-      action: "View",
-    },
-    {
-      srNo: 6,
-      userName: "Meera Yadav",
-      totalCoinEarned: 640,
-      action: "View",
-    },
-    {
-      srNo: 7,
-      userName: "Sanjay Singh",
-      totalCoinEarned: 1340,
-    }
-  ];
+
+  useEffect(() => {
+    fetchReferralTracking(page, limit, debouncedSearch, userType);
+  }, [page, limit, debouncedSearch, userType]);
+
+  useEffect(() => {
+    fetchUserType();
+  }, []);
+
+  console.log("referralTracking:", referralTracking);
+
   const onPageChange = (newPage) => {
     setPage(newPage);
   };
@@ -67,21 +40,33 @@ const ReferralTracking = () => {
   const onSearchChange = (e) => {
     const newSearchTerm = e.target.value;
     setSearch(newSearchTerm);
-
   };
+
+  const onChangeUserRole = (option) => {
+    setUserType(option ? option.value : "");
+    setPage(1);
+  };
+
+  const handleView = (row) => {
+    navigate(`/refer-and-earn-user/view-user-referral/${row._id}`);
+  };
+
   const columns = [
     { header: "Sr.No", field: "srNo" },
-    { header: "User Name", field: "userName" },
-    { header: "Total Coin Earned", field: "totalCoinEarned" },
+    { header: "User Type", field: "userType" },
+    { header: "User Name", field: "name" },
+    { header: "Total Coin Earned", field: "totalCoinEarned" || "-" },
+    { header: "Total Cash Earned", field: "moneyEarned" || "-" },
     { header: "Action", field: "action" },
   ];
-  // View Table
+
   const actions = [
     {
       icon: <FaEye className="text-yellow-600" />,
       title: "View",
-      onClick: () => navigate("/refer-and-earn-user/view-user-referral"),
+      onClick: handleView,
     },];
+
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Refer & Earn" }, { text: "Referral Tracking" }]} />
@@ -94,7 +79,9 @@ const ReferralTracking = () => {
         // Show Select type
         showSelect
         selectPlaceHolder="Select User Type"
-        options={["User", "Staff"]}
+        options={userTypeOptions}
+        optionsLoading={loadingUser}
+        onChangeSelectFunc={onChangeUserRole}
         // ShowAddButton
         showAddButton
         addButtonText="Referral Discount Settings"
@@ -105,17 +92,17 @@ const ReferralTracking = () => {
           <Box>
             <DataTable
               columns={columns}
-              data={referrelData}
+              data={referralTracking?.data || []}
               actions={actions}
               currentPage={page}
               usersPerPage={limit}
             />
           </Box>
           <Pagination
-            currentPage={1}
-            totalPages={5}
-            totalItems={11}
-            itemsPerPage={8}
+            currentPage={referralTracking?.pagination?.currentPage}
+            totalPages={referralTracking?.pagination?.totalPages}
+            totalItems={referralTracking?.pagination?.totalRecords}
+            itemsPerPage={referralTracking?.pagination?.limit}
             onPageChange={onPageChange}
             onItemsPerPageChange={onItemsPerPageChange}
           />

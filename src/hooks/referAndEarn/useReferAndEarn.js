@@ -33,12 +33,15 @@ const useReferAndEarn = () => {
         }
     };
 
-    const fetchReferralTracking = async (page, limit, debouncedSearch) => {
+    const fetchReferralTracking = async (page, limit, debouncedSearch, userType) => {
         setLoading(true);
         try {
             let url = `${conf.apiBaseUrl}admin/referralTracking/getAllReferralTracking?page=${page}&limit=${limit}`;
             if (debouncedSearch) {
                 url += `&search=${encodeURIComponent(debouncedSearch.trim())}`;
+            }
+            if (userType) {
+                url += `&userType=${encodeURIComponent(userType)}`;
             }
             const res = await fetchData({
                 method: "GET",
@@ -56,15 +59,15 @@ const useReferAndEarn = () => {
         }
     };
 
-    const fetchReferralTrackingById = async (id) => {
+    const fetchReferralTrackingById = async (id, page, limit) => {
         setLoading(true);
         try {
             const res = await fetchData({
                 method: "GET",
-                url: `${conf.apiBaseUrl}admin/referralTracking/getAllReferralTracking/${id}`,
+                url: `${conf.apiBaseUrl}admin/referralTracking/getAllReferralTracking/${id}?page=${page}&limit=${limit}`,
             });
             if (res) {
-                setReferralTrackingById(res?.data);
+                setReferralTrackingById(res);
                 setLoading(false);
             }
         } catch (error) {
@@ -83,7 +86,7 @@ const useReferAndEarn = () => {
                 url: `${conf.apiBaseUrl}admin/referralDiscounts/all`,
             });
             if (res) {
-                setRefferalDisSetting(res?.data);
+                setRefferalDisSetting(res);
                 setLoading(false);
             }
         } catch (error) {
@@ -102,7 +105,7 @@ const useReferAndEarn = () => {
                 url: `${conf.apiBaseUrl}admin/referralDiscounts/get-id/${id}`,
             });
             if (res) {
-                setRefferalDisSettingById(res?.data);
+                setRefferalDisSettingById(res?.referral);
                 setLoading(false);
             }
         } catch (error) {
@@ -111,6 +114,10 @@ const useReferAndEarn = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const resetRefferalDisSettingById = () => {
+        setRefferalDisSettingById(null);
     };
 
     const updateRefferalDisSetting = async (id, data) => {
@@ -162,7 +169,7 @@ const useReferAndEarn = () => {
 
     return {loading, referralVideo, referralTracking, referralTrackingById, refferalDisSetting, refferalDisSettingById, 
         fetchReferralVideo, fetchReferralTracking, fetchReferralTrackingById, fetchRefferalDisSetting, fetchRefferalDisSettingById,
-        updateRefferalDisSetting, updateRefferalVideo
+        updateRefferalDisSetting, updateRefferalVideo, resetRefferalDisSettingById
     };
 }
 

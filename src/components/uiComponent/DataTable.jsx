@@ -242,9 +242,9 @@ const DataTable = ({
                   <p className="text-lg sm:text-sm font-medium">
                     No data found
                   </p>
-                  <p className="text-sm">
+                  {/* <p className="text-sm">
                     Try adjusting your search or filters
-                  </p>
+                  </p> */}
                 </div>
               </td>
             </tr>

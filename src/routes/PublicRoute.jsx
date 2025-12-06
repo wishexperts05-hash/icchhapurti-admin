@@ -699,7 +699,7 @@ function PublicRoute() {
           <Route path="/refer-and-earn-user" element={<ReferralTrackingForUser/>}/>
           <Route path="/refer-and-earn-staff" element={<ReferralTrackingForStaff/>}/>
           <Route path="/refer-and-earn-user/referral-discount-setting" element={<RefferalDiscountSetting/>}/>
-          <Route path="/refer-and-earn-user/view-user-referral" element={<ViewUserReferral/>}/>
+          <Route path="/refer-and-earn-user/view-user-referral/:id" element={<ViewUserReferral/>}/>
           <Route path="/refer-and-earn-user/referral-discount-setting/edit-referral-tracking" element={<EditReferralTracking/>}/>
 
            {/* -------------------------- Upload Video -------------------------- */}
