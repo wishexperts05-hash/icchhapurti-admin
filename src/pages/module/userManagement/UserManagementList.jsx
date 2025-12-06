@@ -8,6 +8,7 @@ import PagePath2 from "../../../components/uiComponent/PagePath2";
 import Pagination from "../../../components/uiComponent/Pagination";
 import useUserManagement from "../../../hooks/userManagement/useUserManagement";
 import useDebounce from "../../../hooks/debounce/useDebounce";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 
 export default function UserManagement() {
   const navigate = useNavigate();
@@ -87,33 +88,37 @@ export default function UserManagement() {
         }}
       />
 
-      {/* Data Table */}
-      <div class="mt-6 bg-white p-4 rounded shadow">
-        <DataTable
-          columns={columns}
-          data={userList?.userList || []}
-          currentPage={userList?.currentPage}
-          usersPerPage={limit}
-          actions={actions.map((action) => ({
-            ...action,
-            label:
-              typeof action.label === "function"
-                ? undefined
-                : action.label,
-            onClick: action.onClick,
-          }))}
-        />
-      </div>
-
-      {/* Pagination */}
-      <Pagination
-        currentPage={userList?.currentPage}
-        totalPages={userList?.totalPages}
-        totalItems={userList?.totalUser}
-        itemsPerPage={limit}
-        onPageChange={onPageChange}
-        onItemsPerPageChange={onItemsPerPageChange}
-      />
+      {loading ? (
+        <div className="flex w-full items-center justify-center py-10">
+          <LoaderSpinner />
+        </div>
+      ) : (
+        <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
+          <DataTable
+            columns={columns}
+            data={userList?.userList || []}
+            currentPage={userList?.currentPage}
+            usersPerPage={limit}
+            actions={actions.map((action) => ({
+              ...action,
+              label:
+                typeof action.label === "function"
+                  ? undefined
+                  : action.label,
+              onClick: action.onClick,
+            }))}
+          />
+          {/* Pagination */}
+          <Pagination
+            currentPage={userList?.currentPage}
+            totalPages={userList?.totalPages}
+            totalItems={userList?.totalUser}
+            itemsPerPage={limit}
+            onPageChange={onPageChange}
+            onItemsPerPageChange={onItemsPerPageChange}
+          />
+        </div>
+      )}
     </div>
 
   );
