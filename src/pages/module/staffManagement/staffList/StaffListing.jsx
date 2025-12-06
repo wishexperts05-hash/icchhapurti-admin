@@ -9,6 +9,7 @@ import Pagination from "../../../../components/uiComponent/Pagination";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import useStaffManagement from "../../../../hooks/staffManagement/useStaffManagement";
 import useDebounce from "../../../../hooks/debounce/useDebounce";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 
 const StaffManagement = () => {
     const { loading, staffList, fetchStaffList, updateStatus } = useStaffManagement();
@@ -113,11 +114,7 @@ const StaffManagement = () => {
 
     return (
         <div className="bg-gray-50 min-h-screen shadow-2xl">
-            <BreadCrumb
-                linkText={[
-                    { text: "Staff Management" },
-                ]}
-            />
+            <BreadCrumb linkText={[{ text: "Staff Management" },]} />
 
             <PagePath2
                 title="Staff Management"
@@ -127,47 +124,54 @@ const StaffManagement = () => {
                 showAddButton={true}
                 addButtonText="Add New Staff"
                 onClick={handleAddStaff}
+                // Attendence
+                showExtraButton={true}
+                extraButtonText="Attendance"
+                onExtraClick={handleAttendence}
+                // Sales
+                showThirdButton={true}
+                thirdButtonText="Sales"
+                onThirdClick={handleSales}
             />
-            <PagePath2
-                showAddButton
-                showExtraButton
-                extraButtonText="Sale"
-                addButtonText="Attendence"
-                onClick={handleAttendence}
-                onExtraClick={handleSales}
-            />
+            {loading ? (
+                <div className="flex items-center justify-center py-12">
+                    <LoaderSpinner />
+                </div>
+            ) : (
+                <>
+                    <DataTable
+                        columns={columns}
+                        data={staffList?.staffList || []}
+                        actions={actions.map((a) =>
+                            a.icon
+                                ? {
+                                    ...a,
+                                    render: (row) => (
+                                        <button
+                                            onClick={() => a.onClick(row)}
+                                            className="p-2 rounded-full hover:bg-gray-100 transition"
+                                            title={a.title}
+                                            disabled={a.disableCondition?.(row)}
+                                        >
+                                            {typeof a.icon === "function" ? a.icon(row) : a.icon}
+                                        </button>
+                                    ),
+                                }
+                                : a
+                        )}
+                    />
 
-            <DataTable
-                columns={columns}
-                data={staffList?.staffList || []}
-                actions={actions.map((a) =>
-                    a.icon
-                        ? {
-                            ...a,
-                            render: (row) => (
-                                <button
-                                    onClick={() => a.onClick(row)}
-                                    className="p-2 rounded-full hover:bg-gray-100 transition"
-                                    title={a.title}
-                                    disabled={a.disableCondition?.(row)}
-                                >
-                                    {typeof a.icon === "function" ? a.icon(row) : a.icon}
-                                </button>
-                            ),
-                        }
-                        : a
-                )}
-            />
-
-            {/* Pagination */}
-            <Pagination
-                currentPage={staffList?.currentPage}
-                totalPages={staffList?.totalPages}
-                totalItems={staffList?.totalStaff}
-                itemsPerPage={limit}
-                onPageChange={onPageChange}
-                onItemsPerPageChange={onItemsPerPageChange}
-            />
+                    {/* Pagination */}
+                    <Pagination
+                        currentPage={staffList?.currentPage}
+                        totalPages={staffList?.totalPages}
+                        totalItems={staffList?.totalStaff}
+                        itemsPerPage={limit}
+                        onPageChange={onPageChange}
+                        onItemsPerPageChange={onItemsPerPageChange}
+                    />
+                </>
+            )}
         </div>
     );
 };

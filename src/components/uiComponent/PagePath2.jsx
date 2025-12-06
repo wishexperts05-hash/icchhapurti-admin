@@ -2,34 +2,54 @@ import { IoSearchOutline } from "react-icons/io5";
 import Select from "react-select";
 
 const PagePath2 = ({
+  // Title
   title,
+
+  // Search
+  showSearch,
   searchTerm,
   handleSearchTerm,
-  showSearch,
+  placeholder = "Search Here",
+  inputType = "text",
+
+  // Add Button
   showAddButton,
   addButtonText,
+  onClick,
+
+  // Extra Button
   showExtraButton,
   extraButtonText,
-  optionsLoading = false,
-  onClick,
   onExtraClick,
-  inputType = "text",
-  placeholder = "Search Here",
+
+  // 3rd Button
+  showThirdButton,
+  thirdButtonText,
+  onThirdClick,
+
+  // Select
   showSelect,
   options = ["Pending", "Approved", "Rejected"],
   selectPlaceHolder = "Select Status",
   onChangeSelectFunc,
-  disabled = false,
+  optionsLoading = false,
+
+  // Second Select
   showSecondSelect,
   secondSelectOptions = [],
   secondSelectPlaceholder = "Select Option",
   onChangeSecondSelect,
   secondSelectLoading = false,
+
+  disabled = false,
+
+  // Date Range
   showDateRange = false,
   startDate = "",
   endDate = "",
   onStartDateChange = () => { },
   onEndDateChange = () => { },
+
 }) => {
   return (
     <div className="bg-white p-4 mb-4 border-b rounded-2xl shadow-xl">
@@ -192,6 +212,23 @@ const PagePath2 = ({
               title={disabled ? "No permission to create" : "Create"}
             >
               {extraButtonText}
+            </button>
+          )}
+          {showThirdButton && thirdButtonText && (
+            <button
+              className={`bg-[#CCA547] text-white px-6 py-[8.8px] rounded-xl 
+              flex justify-center items-center gap-2 cursor-pointer 
+              font-medium shadow-md 
+              transition duration-300
+              ${disabled
+                  ? "bg-gray-400 cursor-not-allowed opacity-60"
+                  : "hover:bg-[#CCA547]/90 hover:shadow-lg"
+                }`}
+              onClick={disabled ? undefined : onThirdClick}
+              disabled={disabled}
+              title={disabled ? "No permission to create" : "Create"}
+            >
+              {thirdButtonText}
             </button>
           )}
         </div>

@@ -90,7 +90,7 @@ const StaffSales = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="bg-[#F9F9F9] min-h-screen">
       {/* Breadcrumb */}
       <BreadCrumb
         linkText={[
@@ -134,7 +134,7 @@ const StaffSales = () => {
       </div>
 
       {/* Indirect Sales Section */}
-      <div className="bg-white rounded-2xl border border-gray-200">
+      <div className="bg-white rounded-2xl border border-gray-200 mt-4">
         <div className="flex items-center p-4 justify-between border-b border-gray-200">
           <h3 className="text-lg font-semibold">Indirect Sales</h3>
           <select
