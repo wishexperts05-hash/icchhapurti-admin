@@ -196,7 +196,7 @@ const AddStaff = () => {
 
       <PagePath2 title={"Add New Staff"} />
 
-      <div className="min-h-screen w-full bg-white p-8">
+      <div className="min-h-screen w-full rounded-2xl bg-white p-8">
         <form onSubmit={handleSubmit} className="w-full max-w-[1200px]">
           {/* Profile Image Upload */}
           <div className="mb-8 flex justify-center">

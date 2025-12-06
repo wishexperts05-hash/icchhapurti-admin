@@ -29,7 +29,6 @@ const StaffMapPage = () => {
       {/* Breadcrumb */}
       <BreadCrumb
         linkText={[
-          { text: "Dashboard" },
           { text: "Staff Management", href: "/staff-management" },
           { text: "Attendance List", href: "/staff-management/attendanceListing" },
           { text: "Map View" },
