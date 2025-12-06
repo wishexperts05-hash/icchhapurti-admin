@@ -114,25 +114,29 @@ const BlogManagement = () => {
                 onClick={handleAddBlog}
             />
 
-            {/* Data Table */}
-            <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
-                <DataTable
-                    columns={columns}
-                    data={blogList?.data || []}
-                    actions={actions}
-                    currentPage={page}
-                    usersPerPage={limit}
-                />
-            </div>
-
-            <Pagination
-                currentPage={blogList?.page}
-                totalPages={blogList?.page}
-                totalItems={blogList?.total}
-                itemsPerPage={blogList?.limit}
-                onPageChange={onPageChange}
-                onItemsPerPageChange={onItemsPerPageChange}
-            />
+            {loading ? (
+                <div className="flex w-full items-center justify-center py-10">
+                    <LoaderSpinner />
+                </div>
+            ) : (
+                <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
+                    <DataTable
+                        columns={columns}
+                        data={blogList?.data || []}
+                        actions={actions}
+                        currentPage={page}
+                        usersPerPage={limit}
+                    />
+                    <Pagination
+                        currentPage={blogList?.page}
+                        totalPages={blogList?.page}
+                        totalItems={blogList?.total}
+                        itemsPerPage={blogList?.limit}
+                        onPageChange={onPageChange}
+                        onItemsPerPageChange={onItemsPerPageChange}
+                    />
+                </div>
+            )}
         </div>
     );
 };
