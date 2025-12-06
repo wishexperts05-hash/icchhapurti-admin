@@ -56,7 +56,7 @@ const Layout = () => {
         {/* Main Content Area */}
         <main
           className={`flex-1 overflow-y-auto bg-gray-50 transition-all duration-300 ease-in-out ${
-            isMobile ? "pt-[72px]" : "pt-[80px]"
+            isMobile ? "pt-[72px]" : "pt-[70px]"
           }`}
         >
           <div
