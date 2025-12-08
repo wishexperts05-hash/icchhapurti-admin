@@ -322,6 +322,29 @@ const UploadVideo=lazy(
   ()=>import("../pages/module/refer&Earn/uploadVideo/UploadVideo")
 )
 
+// ---------------------------- Sub-admin Management ----------------------------
+const Roles = lazy(() => import("../pages/module/subAdminAccess/roles/Roles"));
+const CreateUpdateRole = lazy(() =>
+  import("../pages/module/subAdminAccess/roles/CreateUpdateRole")
+);
+const Users = lazy(() => import("../pages/module/subAdminAccess/users/Users"));
+const ViewUserDetail = lazy(() =>
+  import("../pages/module/subAdminAccess/users/ViewUserDetail")
+);
+const AddEditUser = lazy(() =>
+  import("../pages/module/subAdminAccess/users/AddEditUser")
+);
+const UsersPermission = lazy(() =>
+  import("../pages/module/subAdminAccess/userPermission/UsersPermission")
+);
+const AddEditSubAdmin = lazy(() =>
+  import("../pages/module/subAdminAccess/userPermission/AddEditUserPermssion")
+);
+const ViewUsersPermission = lazy(() =>
+  import("../pages/module/subAdminAccess/userPermission/ViewUsersPermission")
+);
+// ----------------------------------------------------------------------------------
+
 function PublicRoute() {
   const [activeItem, setActiveItem] = useState("/dashboard");
 
@@ -343,6 +366,52 @@ function PublicRoute() {
         {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
         <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Layout />}>
+
+        {/* ----------------------------- Sub-admin Management ---------------------------- */}
+          <Route path="/sub-admin/roles" element={<Roles activeItem={activeItem} setActiveItem={setActiveItem} />} />
+          <Route
+            path="/sub-admin/roles/create"
+            element={<CreateUpdateRole activeItem={activeItem} setActiveItem={setActiveItem} />}
+          />
+          <Route
+            path="/sub-admin/roles/edit/:id"
+            element={<CreateUpdateRole activeItem={activeItem} setActiveItem={setActiveItem} />}
+          />
+          {/* ------------------------------- */}
+
+          <Route path="/sub-admin/users" element={<Users activeItem={activeItem} setActiveItem={setActiveItem}/>} />
+          <Route
+            path="/sub-admin/users/create"
+            element={<AddEditUser activeItem={activeItem} setActiveItem={setActiveItem}/>}
+          />
+          <Route
+            path="/sub-admin/users/edit/:id"
+            element={<AddEditUser activeItem={activeItem} setActiveItem={setActiveItem}/>}
+          />
+          <Route
+            path="/sub-admin/users/view/:id"
+            element={<ViewUserDetail activeItem={activeItem} setActiveItem={setActiveItem}/>}
+          />
+          {/* ------------------------------ */}
+
+          <Route
+            path="/sub-admin/user-permissions"
+            element={<UsersPermission activeItem={activeItem} setActiveItem={setActiveItem}/>}
+          />
+          <Route
+            path="/sub-admin/user-permissions/create"
+            element={<AddEditSubAdmin activeItem={activeItem} setActiveItem={setActiveItem}/>}
+          />
+          <Route
+            path="/sub-admin/user-permissions/edit/:id"
+            element={<AddEditSubAdmin activeItem={activeItem} setActiveItem={setActiveItem}/>}
+          />
+          <Route
+            path="/sub-admin/user-permissions/view/:id"
+            element={<ViewUsersPermission activeItem={activeItem} setActiveItem={setActiveItem}/>}
+          />
+          {/* ------------------------------ */}
+          
           {/* Dashboard */}
           <Route
             path="dashboard"
