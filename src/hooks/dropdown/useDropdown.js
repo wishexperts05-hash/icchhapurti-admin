@@ -13,6 +13,7 @@ const useDropdown = () => {
     const [loadingProduct, setLoadingProduct] = useState(false);
     const [loadingOrderStatus, setLoadingOrderStatus] = useState(false);
     const [loadingOfferType, setLoadingOfferType] = useState(false);
+    const [loadingFaqCategories, setLoadingFaqCategories] = useState(false);
 
     const [countryLoading, setCountryLoading] = useState(false); 
     const [salesType, setSalesType] = useRecoilState(salesTypeAtom);
@@ -22,6 +23,7 @@ const useDropdown = () => {
     const [orderStatus, setOrderStatus] = useRecoilState(orderStatusAtom);
     const [offerType, setOfferType] = useRecoilState(offerTypeAtom);
     const [countries, setCountries] = useRecoilState(countriesAtom); 
+    const [faqCategories , setFaqCategories] = useState([]);
 
     const fetchSalesType = async () => {
         setLoadingSales(true);
@@ -163,6 +165,29 @@ const useDropdown = () => {
             setLoadingOfferType(false);
         }
     };
+
+        const fetchFaqCategories = async () => {
+        setLoadingOfferType(true);
+        try {
+            const res = await fetchData({
+                method: "GET",
+                url: `${conf.apiBaseUrl}admin/faq/categories`,
+                  headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+            });
+            if (res) {
+                setFaqCategories(res?.data);
+                setLoadingFaqCategories(false);
+            }
+        } catch (error) {
+            console.error("Error fetching product dropdown:", error);
+            setLoadingFaqCategories(false);
+        } finally {
+            setLoadingFaqCategories(false);
+        }
+    };
+
     
     const loading = loadingSales || loadingUser || loadingProduct || loadingOrderStatus || countryLoading;
     
@@ -186,6 +211,9 @@ const useDropdown = () => {
         orderStatus,
         countries,
         resetUserType,
+        fetchFaqCategories,
+        faqCategories,
+        loadingFaqCategories,
         fetchOfferType, loadingOfferType, offerType, fetchProducts: fetchProductDropdown, products: productDropdown, loadingProducts: loadingProduct 
     }
 }
