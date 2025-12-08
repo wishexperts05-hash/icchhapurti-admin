@@ -1,94 +1,96 @@
-import React, { useState, useMemo } from "react";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Trash2 } from "lucide-react";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import Pagination from "../../../../components/uiComponent/Pagination";
 import { useNavigate } from "react-router-dom";
-import { FaRegEdit } from "react-icons/fa";
+import { FaEye, FaRegEdit } from "react-icons/fa";
+import useBlogManagement from "../../../../hooks/blogManagement/useBlogManagement";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+import useDebounce from "../../../../hooks/debounce/useDebounce";
+
 const BlogManagement = () => {
-    // Dummy Data
-    const initialBlogs = Array.from({ length: 10 }, (_, i) => ({
-        id: i + 1,
-        blogTitle: `Evolution of The Pen ${i + 1}`,
-        description: "Known for their smoothness, reliability, and consistency.",
-    }));
-
-    const [searchTerm, setSearchTerm] = useState("");
-    const [blogs, setBlogs] = useState(initialBlogs);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const { blogList, loading, fetchBlogList, deleteBlog } = useBlogManagement();
     const navigate = useNavigate();
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+    const [search, setSearch] = useState("");
+    const debouncedSearch = useDebounce(search, 500);
 
-    // Search filtering
-    const filteredBlogs = useMemo(() => {
-        return blogs.filter((item) =>
-            item.blogTitle.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }, [blogs, searchTerm]);
+    useEffect(() => {
+        fetchBlogList(page, limit, debouncedSearch);
+    }, [page, limit, debouncedSearch]);
 
-    // Pagination logic
-    const totalItems = filteredBlogs.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    const indexOfLast = currentPage * itemsPerPage;
-    const indexOfFirst = indexOfLast - itemsPerPage;
-    const currentBlogs = filteredBlogs.slice(indexOfFirst, indexOfLast);
+    console.log("blogList:", blogList);
 
-    // Table Columns
+    const onPageChange = (newPage) => {
+        setPage(newPage);
+    };
+
+    const onItemsPerPageChange = (newLimit) => {
+        setLimit(newLimit);
+        setPage(1);
+    };
+
+    const onSearchChange = (e) => {
+        const newSearchTerm = e.target.value;
+        setSearch(newSearchTerm);
+        setPage(1);
+    };
+
+    const handleAddBlog = () => {
+        navigate("/blog-management/add-blogs");
+    };
+
+    const handleView = (row) => {
+        navigate(`/blog-management/view-blogs/${row._id}`);
+    };
+
+    const handleEdit = (row) => {
+        navigate(`/blog-management/edit-blogs/${row._id}`);
+    };
+
+
+    const handleDelete = async (row) => {
+        await deleteBlog(row._id);
+        fetchBlogList(page, limit, debouncedSearch);
+    }
+
     const columns = [
         { header: "Sr.No", field: "srNo" },
         {
             header: "Blog Title",
-            field: "blogTitle",
+            field: "title",
             render: (row) => (
                 <span className="block text-gray-900 font-medium break-words whitespace-normal max-w-[850px]">
-                    {row.blogTitle}
+                    {row.title}
                 </span>
             ),
         },
-
-        // { header: "Description", field: "description" }, 
         { header: "Action", field: "action" },
     ];
 
 
     const actions = [
         {
-            icon: (row) => (
-                <Eye
-                    size={22}
-                    className="text-[#CCA547] hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
-                    title="View Blog"
-                />
-            ),
-            onClick: (row) => navigate(`/blog-management/view-blogs/${row.id}`),
+            icon: <FaEye className="text-yellow-600" />,
+            title: "View",
+            onClick: handleView,
         },
         {
             icon: (row) => (
                 <FaRegEdit
-                    size={22}
-                    className="text-[#CCA547] hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
-                    title="Edit Blog"
+                    className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer"
+                    title="Edit"
                 />
             ),
-            onClick: (row) => navigate(`/blog-management/edit-blogs/${row.id}`),
+            onClick: handleEdit,
         },
         {
-            icon: (row) => (
-                <Trash2
-                    size={22}
-                    className="text-[#CCA547] hover:text-red-600 transition-colors duration-200 cursor-pointer"
-                    title="Delete Blog"
-                    onClick={(e) => e.stopPropagation()} 
-                />
-            ),
-            onClick: (row) => {
-                if (
-                    window.confirm(`Are you sure you want to delete "${row.blogTitle}"?`)
-                ) {
-                    setBlogs((prev) => prev.filter((b) => b.id !== row.id));
-                }
-            },
+            icon: <Trash2 className="w-5 h-5 text-red-600" />,
+            onClick: handleDelete,
+            title: "Delete",
         },
     ];
 
@@ -97,7 +99,6 @@ const BlogManagement = () => {
             {/* Breadcrumb */}
             <BreadCrumb
                 linkText={[
-                    { text: "Dashboard", href: "/dashboard" },
                     { text: "Blog Management" },
                 ]}
             />
@@ -105,37 +106,37 @@ const BlogManagement = () => {
             {/* Page Header */}
             <PagePath2
                 title="Blog Management"
-                searchTerm={searchTerm}
-                handleSearchTerm={(e) => {
-                    setSearchTerm(e.target.value);
-                    setCurrentPage(1);
-                }}
+                searchTerm={search}
+                handleSearchTerm={onSearchChange}
                 showSearch={true}
                 showAddButton={true}
                 addButtonText="Add Blog"
-                onClick={() => navigate("/blog-management/add-blogs")}
+                onClick={handleAddBlog}
             />
 
-            {/* Data Table */}
-            <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
-                <DataTable
-                    columns={columns}
-                    data={currentBlogs}
-                    actions={actions}
-                    currentPage={currentPage}
-                    usersPerPage={itemsPerPage}
-                />
-            </div>
-
-            {/* Pagination */}
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={totalItems}
-                itemsPerPage={itemsPerPage}
-                onPageChange={setCurrentPage}
-                onItemsPerPageChange={setItemsPerPage}
-            />
+            {loading ? (
+                <div className="flex w-full items-center justify-center py-10">
+                    <LoaderSpinner />
+                </div>
+            ) : (
+                <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
+                    <DataTable
+                        columns={columns}
+                        data={blogList?.data || []}
+                        actions={actions}
+                        currentPage={page}
+                        usersPerPage={limit}
+                    />
+                    <Pagination
+                        currentPage={blogList?.page}
+                        totalPages={blogList?.page}
+                        totalItems={blogList?.total}
+                        itemsPerPage={blogList?.limit}
+                        onPageChange={onPageChange}
+                        onItemsPerPageChange={onItemsPerPageChange}
+                    />
+                </div>
+            )}
         </div>
     );
 };

@@ -119,10 +119,6 @@ const AddBlog = lazy(() =>
   import("../pages/module/blogManagement/addBlog/AddBlog")
 );
 
-const EditBlog = lazy(() =>
-  import("../pages/module/blogManagement/addBlog/EditBlog")
-);
-
 const ViewBlog = lazy(() =>
   import("../pages/module/blogManagement/addBlog/ViewBlog")
 );
@@ -527,7 +523,7 @@ function PublicRoute() {
           <Route path="/blog-management/add-blogs" element={<AddBlog />} />
           <Route
             path="/blog-management/edit-blogs/:id"
-            element={<EditBlog />}
+            element={<AddBlog />}
           />
           <Route
             path="/blog-management/view-blogs/:id"
@@ -703,7 +699,7 @@ function PublicRoute() {
           <Route path="/refer-and-earn-user" element={<ReferralTrackingForUser/>}/>
           <Route path="/refer-and-earn-staff" element={<ReferralTrackingForStaff/>}/>
           <Route path="/refer-and-earn-user/referral-discount-setting" element={<RefferalDiscountSetting/>}/>
-          <Route path="/refer-and-earn-user/view-user-referral" element={<ViewUserReferral/>}/>
+          <Route path="/refer-and-earn-user/view-user-referral/:id" element={<ViewUserReferral/>}/>
           <Route path="/refer-and-earn-user/referral-discount-setting/edit-referral-tracking" element={<EditReferralTracking/>}/>
 
            {/* -------------------------- Upload Video -------------------------- */}

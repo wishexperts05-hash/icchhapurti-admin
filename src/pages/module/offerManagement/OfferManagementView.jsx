@@ -36,7 +36,7 @@ export default function OfferManagementView() {
     };
 
     const handleEdit = () => {
-        navigate(`/offer-management/edit/${id}`);
+        navigate(`/offer-management/edit-offer/${id}`);
     };
 
     // Format date for display

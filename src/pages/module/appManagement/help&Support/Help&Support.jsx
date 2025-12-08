@@ -1,18 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import Button from "../../../../components/uiComponent/Button";
 import FormField from "../../../../components/uiComponent/FormField";
+import useHelpSupport from "../../../../hooks/appManagement/useHelpAndSupport";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 
 function HelpSupport() {
   const [isEditing, setIsEditing] = useState(false);
-  
-  // Use useState to store the contact number so it persists after saving
-  const [supportData, setSupportData] = useState({
-    contactNumber: "(480) 555-0102",
-  });
+  const {
+    loading,
+    contactNumber,
+    getHelpSupportContact,
+    updateHelpSupportContact,
+  } = useHelpSupport();
+
+  // Fetch contact number on component mount
+  useEffect(() => {
+    getHelpSupportContact();
+  }, []);
 
   const validationSchema = Yup.object({
     contactNumber: Yup.string()
@@ -20,19 +28,35 @@ function HelpSupport() {
       .matches(/^[\d\s\-\(\)\+]+$/, "Invalid phone number format"),
   });
 
-  const handleSubmit = (values) => {
-    console.log("Form submitted:", values);
-    // Update the stored data with new values
-    setSupportData({
-      contactNumber: values.contactNumber,
-    });
-    setIsEditing(false);
+  const handleSubmit = async (values) => {
+    const result = await updateHelpSupportContact(values.contactNumber);
+    if (result && result.success) {
+      setIsEditing(false);
+    }
   };
 
   const handleCancel = (resetForm) => {
     setIsEditing(false);
     resetForm();
   };
+
+  // Show loader while fetching initial data
+  if (loading && !contactNumber) {
+    return (
+      <div className="bg-[#F9F9F9] min-h-screen">
+        <BreadCrumb
+          linkText={[
+            { text: "App Management" },
+            { text: "Help & Support Number" },
+          ]}
+        />
+        <PagePath2 title="Help & Support Number" />
+        <div className="flex items-center justify-center min-h-[400px]">
+          <LoaderSpinner />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#F9F9F9] min-h-screen">
@@ -49,7 +73,7 @@ function HelpSupport() {
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
         <Formik
           initialValues={{
-            contactNumber: supportData.contactNumber,
+            contactNumber: contactNumber || "",
           }}
           validationSchema={validationSchema}
           enableReinitialize
@@ -77,11 +101,13 @@ function HelpSupport() {
                       text="Cancel"
                       type="button"
                       onClick={() => handleCancel(resetForm)}
+                      disabled={loading}
                     />
                     <Button
                       variant={1}
-                      text="Save"
+                      text={loading ? "Saving..." : "Save"}
                       type="submit"
+                      disabled={loading}
                     />
                   </>
                 ) : (
@@ -90,6 +116,7 @@ function HelpSupport() {
                     text="Edit"
                     type="button"
                     onClick={() => setIsEditing(true)}
+                    disabled={loading}
                   />
                 )}
               </div>

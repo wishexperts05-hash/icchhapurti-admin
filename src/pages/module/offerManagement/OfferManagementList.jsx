@@ -10,6 +10,7 @@ import Pagination from "../../../components/uiComponent/Pagination";
 import { FaRegEdit } from "react-icons/fa";
 import useOfferManagement from "../../../hooks/offerManagement/useOfferManagement";
 import useDebounce from "../../../hooks/debounce/useDebounce";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 
 export default function OfferManagementList() {
   const { loading, offerEnableDisable, deleteOffer, offerList, fetchOfferList } = useOfferManagement();
@@ -49,8 +50,8 @@ export default function OfferManagementList() {
     { header: "Sr.No.", field: "srNo" },
     { header: "Offer Title", field: "title" },
     { header: "Target Audience", field: "targetAudience" },
-    { 
-      header: "Product Name", 
+    {
+      header: "Product Name",
       field: "productName",
       render: (row) => (
         <span className="text-sm text-gray-700">
@@ -60,15 +61,14 @@ export default function OfferManagementList() {
     },
     { header: "Start Date", field: "startDate" },
     { header: "End Date", field: "endDate" },
-    { 
-      header: "Status", 
+    {
+      header: "Status",
       field: "isActive",
       render: (row) => (
-        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-          row.isActive 
-            ? "bg-green-100 text-green-800" 
-            : "bg-red-100 text-red-800"
-        }`}>
+        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${row.isActive
+          ? "bg-green-100 text-green-800"
+          : "bg-red-100 text-red-800"
+          }`}>
           {row.isActive ? "Enable" : "Disable"}
         </span>
       )
@@ -83,7 +83,6 @@ export default function OfferManagementList() {
   const handleEdit = (row) => {
     navigate(`/offer-management/edit-offer/${row._id}`);
   };
-
 
   const handleDelete = async (row) => {
     await deleteOffer(row._id);
@@ -148,27 +147,30 @@ export default function OfferManagementList() {
         onClick={handleAddStaff}
 
       />
-
-      {/* Data Table */}
-      <div className="mt-6 bg-white p-4 rounded shadow">
-        <DataTable
-          columns={columns}
-          data={offerList?.data || []}
-          currentPage={page}
-          usersPerPage={limit}
-          actions={actions}
-        />
-      </div>
-
-      {/* Pagination */}
-      <Pagination
-        currentPage={offerList?.pagination?.currentPage}
-        totalPages={offerList?.pagination?.totalPages}
-        totalItems={offerList?.pagination?.totalRecords}
-        itemsPerPage={offerList?.pagination?.limit}
-        onPageChange={onPageChange}
-        onItemsPerPageChange={onItemsPerPageChange}
-      />
+      {loading ? (
+        <div className="flex w-full items-center justify-center py-10">
+          <LoaderSpinner />
+        </div>
+      ) : (
+        <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
+          <DataTable
+            columns={columns}
+            data={offerList?.data || []}
+            currentPage={page}
+            usersPerPage={limit}
+            actions={actions}
+          />
+          {/* Pagination */}
+          <Pagination
+            currentPage={offerList?.pagination?.currentPage}
+            totalPages={offerList?.pagination?.totalPages}
+            totalItems={offerList?.pagination?.totalRecords}
+            itemsPerPage={offerList?.pagination?.limit}
+            onPageChange={onPageChange}
+            onItemsPerPageChange={onItemsPerPageChange}
+          />
+        </div>
+      )}
     </div>
   );
 }

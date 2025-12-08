@@ -9,6 +9,7 @@ import Pagination from "../../../components/uiComponent/Pagination";
 import useDebounce from "../../../hooks/debounce/useDebounce";
 import useOrderManagement from "../../../hooks/orderManagement/useOrderManagement";
 import useDropdown from "../../../hooks/dropdown/useDropdown";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 
 const OrderManagement = () => {
   const { loading, orderList, fetchOrderList, } = useOrderManagement();
@@ -86,7 +87,7 @@ const OrderManagement = () => {
     setStatus(selected);
     setPage(1);
   }
- const onStartDateChange = (e) => {
+  const onStartDateChange = (e) => {
     setStartDate(e.target.value);
     setPage(1);
   };
@@ -96,7 +97,7 @@ const OrderManagement = () => {
     setPage(1);
   };
   return (
-    <Box>
+    <div className="max-w-7xl mx-auto">
       <BreadCrumb linkText={[{ text: "Order Management" }]} />
       <PagePath2 title="Order Management"
         // ShowSearch
@@ -122,25 +123,30 @@ const OrderManagement = () => {
         secondSelectLoading={loadingOrderStatus}
         onChangeSecondSelect={onChangeOrderStatus}
       />
-
-      <Box>
-        <DataTable
-          columns={columns}
-          data={orderList?.data}
-          currentPage={page}
-          usersPerPage={limit}
-          actions={actions}
-        />
-      </Box>
-      <Pagination
-        currentPage={orderList?.pagination?.currentPage}
-        totalPages={orderList?.pagination?.totalPages}
-        totalItems={orderList?.pagination?.totalRecords}
-        itemsPerPage={orderList?.pagination?.limit}
-        onPageChange={onPageChange}
-        onItemsPerPageChange={onItemsPerPageChange}
-      />
-    </Box>
+      {loading ? (
+        <div className="flex w-full items-center justify-center py-10">
+          <LoaderSpinner />
+        </div>
+      ) : (
+        <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
+          <DataTable
+            columns={columns}
+            data={orderList?.data}
+            currentPage={page}
+            usersPerPage={limit}
+            actions={actions}
+          />
+          <Pagination
+            currentPage={orderList?.pagination?.currentPage}
+            totalPages={orderList?.pagination?.totalPages}
+            totalItems={orderList?.pagination?.totalRecords}
+            itemsPerPage={orderList?.pagination?.limit}
+            onPageChange={onPageChange}
+            onItemsPerPageChange={onItemsPerPageChange}
+          />
+        </div>
+      )}
+    </div>
   );
 };
 

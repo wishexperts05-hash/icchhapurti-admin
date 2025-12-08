@@ -1,31 +1,59 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import Button from "../../../../components/uiComponent/Button";
+import useOtherSettings from "../../../../hooks/appManagement/useOtherSettings";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 
 function OtherSettings() {
   const navigate = useNavigate();
+  const {
+    loading,
+    otherSettings,
+    fetchOtherSettings,
+    updateOtherSettings,
+    resetOtherSettings,
+  } = useOtherSettings();
 
-  // Static data for settings
-  const settingsData = {
-    showTrustedUsersStaff: true,
-    showTrustedUsersUser: true,
-    showRatingStaff: true,
-    showRatingUser: true,
-    ticketEarnStaff: true,
-    ticketEarnUser: true,
-  };
+  useEffect(() => {
+    fetchOtherSettings();
 
-  const handleSubmit = (values) => {
-    console.log("Form submitted:", values);
-    navigate("/app-management/other-settings");
+    return () => {
+      resetOtherSettings();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSubmit = async (values) => {
+    const settingsData = {
+      showTrustedUsersOnStaffApp: values.showTrustedUsersStaff,
+      showTrustedUsersOnUserApp: values.showTrustedUsersUser,
+      showRatingAndBestSellerOnStaffApp: values.showRatingStaff,
+      showRatingAndBestSellerOnUserApp: values.showRatingUser,
+      ticketEarnForStaff: values.ticketEarnStaff,
+      ticketEarnForUser: values.ticketEarnUser,
+    };
+
+    const result = await updateOtherSettings(settingsData);
+    if (result) {
+      // Optionally refetch to get updated data
+      await fetchOtherSettings();
+    }
   };
 
   const handleCancel = (resetForm) => {
     resetForm();
   };
+
+  if (loading && !otherSettings) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoaderSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#F9F9F9] min-h-screen">
@@ -42,12 +70,16 @@ function OtherSettings() {
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
         <Formik
           initialValues={{
-            showTrustedUsersStaff: settingsData.showTrustedUsersStaff,
-            showTrustedUsersUser: settingsData.showTrustedUsersUser,
-            showRatingStaff: settingsData.showRatingStaff,
-            showRatingUser: settingsData.showRatingUser,
-            ticketEarnStaff: settingsData.ticketEarnStaff,
-            ticketEarnUser: settingsData.ticketEarnUser,
+            showTrustedUsersStaff:
+              otherSettings?.showTrustedUsersOnStaffApp ?? false,
+            showTrustedUsersUser:
+              otherSettings?.showTrustedUsersOnUserApp ?? false,
+            showRatingStaff:
+              otherSettings?.showRatingAndBestSellerOnStaffApp ?? false,
+            showRatingUser:
+              otherSettings?.showRatingAndBestSellerOnUserApp ?? false,
+            ticketEarnStaff: otherSettings?.ticketEarnForStaff ?? false,
+            ticketEarnUser: otherSettings?.ticketEarnForUser ?? false,
           }}
           enableReinitialize
           onSubmit={handleSubmit}
@@ -69,9 +101,13 @@ function OtherSettings() {
                         type="checkbox"
                         checked={values.showTrustedUsersStaff}
                         onChange={(e) =>
-                          setFieldValue("showTrustedUsersStaff", e.target.checked)
+                          setFieldValue(
+                            "showTrustedUsersStaff",
+                            e.target.checked
+                          )
                         }
                         className="sr-only peer"
+                        disabled={loading}
                       />
                       <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                     </label>
@@ -86,9 +122,13 @@ function OtherSettings() {
                         type="checkbox"
                         checked={values.showTrustedUsersUser}
                         onChange={(e) =>
-                          setFieldValue("showTrustedUsersUser", e.target.checked)
+                          setFieldValue(
+                            "showTrustedUsersUser",
+                            e.target.checked
+                          )
                         }
                         className="sr-only peer"
+                        disabled={loading}
                       />
                       <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                     </label>
@@ -114,6 +154,7 @@ function OtherSettings() {
                           setFieldValue("showRatingStaff", e.target.checked)
                         }
                         className="sr-only peer"
+                        disabled={loading}
                       />
                       <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                     </label>
@@ -131,6 +172,7 @@ function OtherSettings() {
                           setFieldValue("showRatingUser", e.target.checked)
                         }
                         className="sr-only peer"
+                        disabled={loading}
                       />
                       <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                     </label>
@@ -156,6 +198,7 @@ function OtherSettings() {
                           setFieldValue("ticketEarnStaff", e.target.checked)
                         }
                         className="sr-only peer"
+                        disabled={loading}
                       />
                       <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                     </label>
@@ -173,6 +216,7 @@ function OtherSettings() {
                           setFieldValue("ticketEarnUser", e.target.checked)
                         }
                         className="sr-only peer"
+                        disabled={loading}
                       />
                       <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                     </label>
@@ -186,11 +230,13 @@ function OtherSettings() {
                   variant={2}
                   text="Cancel"
                   onClick={() => handleCancel(resetForm)}
+                  disabled={loading}
                 />
-                <Button 
-                  variant={1} 
-                  text="Save" 
+                <Button
+                  variant={1}
+                  text={loading ? "Saving..." : "Save"}
                   type="submit"
+                  disabled={loading}
                 />
               </div>
             </Form>
