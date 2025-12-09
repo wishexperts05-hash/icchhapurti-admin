@@ -1,13 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { LayoutDashboard, ChevronRight, TrendingUp } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
-} from "recharts";
 
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
@@ -168,57 +159,6 @@ const StaffPerformance = () => {
     { header: "Total Indirect Sales Amount", field: "indirectSalesAmount" },
     { header: "Total Revenue", field: "totalRevenue" },
   ];
-
-  // const [tableData] = useState([
-  //   {
-  //     srNo: 1,
-  //     staffName: "Arlene McCoy",
-  //     totalSalesAmount: 1202,
-  //     totalIndirectSalesAmount: 500,
-  //     type: "direct",
-  //     date: "02/11/2025",
-  //   },
-  //   {
-  //     srNo: 2,
-  //     staffName: "Wade Warren",
-  //     totalSalesAmount: 1202,
-  //     totalIndirectSalesAmount: 600,
-  //     type: "indirect",
-  //     date: "02/12/2025",
-  //   },
-  //   {
-  //     srNo: 3,
-  //     staffName: "Ralph Edwards",
-  //     totalSalesAmount: 1202,
-  //     totalIndirectSalesAmount: 400,
-  //     type: "direct",
-  //     date: "02/10/2025",
-  //   },
-  //   {
-  //     srNo: 4,
-  //     staffName: "Jane Cooper",
-  //     totalSalesAmount: 1202,
-  //     totalIndirectSalesAmount: 700,
-  //     type: "indirect",
-  //     date: "02/04/2025",
-  //   },
-  //   {
-  //     srNo: 5,
-  //     staffName: "Robert Fox",
-  //     totalSalesAmount: 1202,
-  //     totalIndirectSalesAmount: 300,
-  //     type: "direct",
-  //     date: "02/03/2025",
-  //   },
-  //   {
-  //     srNo: 6,
-  //     staffName: "Kathryn Murphy",
-  //     totalSalesAmount: 1202,
-  //     totalIndirectSalesAmount: 800,
-  //     type: "indirect",
-  //     date: "02/08/2025",
-  //   },
-  // ]);
 
   // Filtered data with type and date
   const filteredData = tableData.filter((item) => {
