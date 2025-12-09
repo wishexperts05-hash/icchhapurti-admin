@@ -7,36 +7,6 @@ const useReportAndAnalytics = () => {
   const [reportList, setReportList] = useRecoilState(reportAndAnalyticsListAtom);
   const [loading, setLoading] = React.useState(false);
 
-  // const fetchReport = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await fetch(
-  //       `${conf.apiBaseUrl}admin/reports/getReports`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-  //         },
-  //       }
-  //     );
-
-  //     if (!res.ok) throw new Error(`Failed to fetch: ${res.statusText}`);
-
-  //     const data = await res.json();
-  //     if (data.success) {
-  //       return data; // return full response
-  //     } else {
-  //       console.error(data.message || "Failed to fetch reports");
-  //       return null;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching reports:", error);
-  //     return null;
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
     const fetchDataReport = async () => {
     setLoading(true);
     try {
@@ -96,8 +66,6 @@ const useReportAndAnalytics = () => {
       setLoading(false);
     }
   };
-
-
 
   const fetchSalesSegmentation = async ({ country, state, city, region, productName, date, page, limit }) => {
   setLoading(true);
