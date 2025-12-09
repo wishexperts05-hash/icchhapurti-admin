@@ -9,7 +9,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
@@ -22,21 +21,38 @@ import { IoCalendarClearOutline } from "react-icons/io5";
 import { MdCancel } from "react-icons/md";
 import CustomSelect from "../../../../components/uiComponent/CustomSelect";
 
-
+import useReportAndAnalytics from "../../../../hooks/reportAndAnalytics/useReportAndAnalytics";
 
 const HighestSales = () => {
-  const [selectedYear, setSelectedYear] = useState("thisyear");
-  const data = [
-    { name: "Arlene McCoy", value: 900, max: 1000 },
-    { name: "Wade Warren", value: 800, max: 1000 },
-    { name: "Ralph Edwards", value: 720, max: 1000 },
-  ];
+  const { fetchStaffPerformance, loading } = useReportAndAnalytics();
+  const [selectedYear, setSelectedYear] = useState("thisWeek");
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const getAchievers = async () => {
+      const res = await fetchStaffPerformance(selectedYear);
+      if (res?.success) {
+        const achievers = res.data?.achievers || [];
+        const maxValue = Math.max(...achievers.map((a) => a.totalRevenue), 0);
+
+        const formatted = achievers.map((a) => ({
+          name: a.staffName,
+          value: a.totalRevenue,
+          max: maxValue,
+        }));
+
+        setData(formatted);
+      }
+    };
+
+    getAchievers();
+  }, [selectedYear]);
 
   const dropdownData = [
+    { value: "today", label: "Today" },
+    { value: "thisWeek", label: "This Week" },
     { value: "thisMonth", label: "This Month" },
-    { value: "thisyear", label: "This Year" },
-    { value: "lastYear", label: "Last Year" },
-    { value: "allTime", label: "All Time" },
+    { value: "thisYear", label: "This Year" },
   ];
   return (
     <div style={{ width: "100%", maxWidth: "100%" }}>
@@ -59,132 +75,156 @@ const HighestSales = () => {
         />
       </div>
 
-      {data.map((item, i) => (
-        <div key={i} style={{ marginBottom: "25px" }}>
-          {/* Name and Amount */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "4px",
-              fontSize: "14px",
-              fontWeight: 500,
-            }}
-          >
-            <span>{item.name}</span>
+      {loading && <p>Loading...</p>}
+
+      {!loading && data.length === 0 && <p>No achievers found</p>}
+
+      {!loading &&
+        data.map((item, i) => (
+          <div key={i} style={{ marginBottom: "25px" }}>
+            {/* Name and Amount */}
             <div
               style={{
-                width: "85%",
-                height: "7px",
-                background: "#eaeaea",
-                borderRadius: "10px",
-                overflow: "hidden",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "4px",
+                fontSize: "14px",
+                fontWeight: 500,
               }}
             >
-              {/* Filled Portion */}
+              <span>{item.name}</span>
               <div
                 style={{
-                  width: `${(item.value / item.max) * 100}%`,
-                  height: "100%",
-                  background: "#d4a017",
+                  width: "85%",
+                  height: "7px",
+                  background: "#eaeaea",
                   borderRadius: "10px",
+                  overflow: "hidden",
                 }}
-              ></div>
+              >
+                {/* Filled Portion */}
+                <div
+                  style={{
+                    width: `${(item.value / item.max) * 100}%`,
+                    height: "100%",
+                    background: "#d4a017",
+                    borderRadius: "10px",
+                  }}
+                ></div>
+              </div>
+              <span style={{ color: "#d4a017", fontWeight: 600 }}>
+                ₹{item.value}k
+              </span>
             </div>
-            <span style={{ color: "#d4a017", fontWeight: 600 }}>
-              ₹{item.value}k
-            </span>
+            {/* Progress Bar Background */}
           </div>
-
-          {/* Progress Bar Background */}
-        </div>
-      ))}
+        ))}
     </div>
   );
 };
 
 // Main Dashboard Component
 const StaffPerformance = () => {
-
-  
+  const { fetchTopStaffByRevenue, loading } = useReportAndAnalytics();
+  const [tableData, setTableData] = useState([]);
+  const [pagination, setPagination] = useState(null);
 
   const [type, setType] = useState("");
+  const [value, setValue] = useState(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  const [value, setValue] = useState(null);
-  const types = [
-    { value: "direct", label: "Direct" },
-    { value: "indirect", label: "Indirect" },
+  const periodTypeOptions = [
+    { value: "today", label: "Today" },
+    { value: "weekly", label: "Weekly" },
+    { value: "yearly", label: "Yearly" },
   ];
+
+  const fetchData = async () => {
+    const payload = {
+      date: value ? value.toISOString().split("T")[0] : undefined,
+      periodType: type || undefined,
+      page: currentPage,
+      limit: itemsPerPage,
+    };
+
+    const res = await fetchTopStaffByRevenue(payload);
+
+    if (res?.success) {
+      setTableData(res.data || []);
+      setPagination(res.pagination || null);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [type, value, currentPage, itemsPerPage]);
 
   const columns = [
     { header: "Sr.No.", field: "srNo" },
     { header: "Staff Name", field: "staffName" },
-    { header: "Total Direct Sales Amount", field: "totalSalesAmount" },
-    {
-      header: "Total Indirect Sales Amount",
-      field: "totalIndirectSalesAmount",
-    },
+    { header: "Total Direct Sales Amount", field: "directSalesAmount" },
+    { header: "Total Indirect Sales Amount", field: "indirectSalesAmount" },
+    { header: "Total Revenue", field: "totalRevenue" },
   ];
 
-  const [tableData] = useState([
-    {
-      srNo: 1,
-      staffName: "Arlene McCoy",
-      totalSalesAmount: 1202,
-      totalIndirectSalesAmount: 500,
-      type: "direct",
-      date: "02/11/2025",
-    },
-    {
-      srNo: 2,
-      staffName: "Wade Warren",
-      totalSalesAmount: 1202,
-      totalIndirectSalesAmount: 600,
-      type: "indirect",
-      date: "02/12/2025",
-    },
-    {
-      srNo: 3,
-      staffName: "Ralph Edwards",
-      totalSalesAmount: 1202,
-      totalIndirectSalesAmount: 400,
-      type: "direct",
-      date: "02/10/2025",
-    },
-    {
-      srNo: 4,
-      staffName: "Jane Cooper",
-      totalSalesAmount: 1202,
-      totalIndirectSalesAmount: 700,
-      type: "indirect",
-      date: "02/04/2025",
-    },
-    {
-      srNo: 5,
-      staffName: "Robert Fox",
-      totalSalesAmount: 1202,
-      totalIndirectSalesAmount: 300,
-      type: "direct",
-      date: "02/03/2025",
-    },
-    {
-      srNo: 6,
-      staffName: "Kathryn Murphy",
-      totalSalesAmount: 1202,
-      totalIndirectSalesAmount: 800,
-      type: "indirect",
-      date: "02/08/2025",
-    },
-  ]);
+  // const [tableData] = useState([
+  //   {
+  //     srNo: 1,
+  //     staffName: "Arlene McCoy",
+  //     totalSalesAmount: 1202,
+  //     totalIndirectSalesAmount: 500,
+  //     type: "direct",
+  //     date: "02/11/2025",
+  //   },
+  //   {
+  //     srNo: 2,
+  //     staffName: "Wade Warren",
+  //     totalSalesAmount: 1202,
+  //     totalIndirectSalesAmount: 600,
+  //     type: "indirect",
+  //     date: "02/12/2025",
+  //   },
+  //   {
+  //     srNo: 3,
+  //     staffName: "Ralph Edwards",
+  //     totalSalesAmount: 1202,
+  //     totalIndirectSalesAmount: 400,
+  //     type: "direct",
+  //     date: "02/10/2025",
+  //   },
+  //   {
+  //     srNo: 4,
+  //     staffName: "Jane Cooper",
+  //     totalSalesAmount: 1202,
+  //     totalIndirectSalesAmount: 700,
+  //     type: "indirect",
+  //     date: "02/04/2025",
+  //   },
+  //   {
+  //     srNo: 5,
+  //     staffName: "Robert Fox",
+  //     totalSalesAmount: 1202,
+  //     totalIndirectSalesAmount: 300,
+  //     type: "direct",
+  //     date: "02/03/2025",
+  //   },
+  //   {
+  //     srNo: 6,
+  //     staffName: "Kathryn Murphy",
+  //     totalSalesAmount: 1202,
+  //     totalIndirectSalesAmount: 800,
+  //     type: "indirect",
+  //     date: "02/08/2025",
+  //   },
+  // ]);
 
   // Filtered data with type and date
   const filteredData = tableData.filter((item) => {
-    const matchesType = type
-      ? item.type.toLowerCase() === type.toLowerCase()
-      : true;
+    const matchesType = type;
+    // ? item.type.toLowerCase() === type.toLowerCase()
+    // : true;
 
     const matchesDate = value
       ? (() => {
@@ -220,7 +260,6 @@ const StaffPerformance = () => {
           { text: "Staff Performance" },
         ]}
       />
-
       {/* Header Bar */}
       <PagePath2 title="Staff Performance" />
 
@@ -233,13 +272,12 @@ const StaffPerformance = () => {
 
             <div className="flex items-center justify-between mt-14">
               <div></div>
-
               <div className="flex gap-4">
                 <CustomSelect
-                  label="type"
+                  label="periodType"
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  options={types}
+                  options={periodTypeOptions}
                 />
 
                 <DatePicker
@@ -263,8 +301,12 @@ const StaffPerformance = () => {
               </div>
             </div>
             <div className="mt-4 rounded-2xl overflow-hidden shadow-lg border border-gray-200">
-              <DataTable columns={columns} data={currentItems} currentPage={currentPage}
-               usersPerPage={itemsPerPage} />
+              <DataTable
+                columns={columns}
+                data={currentItems}
+                currentPage={currentPage}
+                usersPerPage={itemsPerPage}
+              />
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
