@@ -1,31 +1,4 @@
 import {
-  BarChart3,
-  Users,
-  Star,
-  Home,
-  User,
-  Settings,
-  FileText,
-  MessageSquare,
-  Calendar,
-  Activity,
-  PieChart,
-  Award,
-  Clock,
-  CreditCard,
-  BanknoteArrowUp,
-  Users2Icon,
-  SplitSquareHorizontalIcon,
-  HelpCircle,
-} from "lucide-react";
-
-import {
-  RiCoupon2Line,
-  RiListSettingsFill,
-  RiProductHuntFill,
-  RiUserSettingsFill,
-} from "react-icons/ri";
-import {
   adminRoleManagementIcon,
   appManagementIcon,
   blockedUserandStaffsIcon,
@@ -338,14 +311,6 @@ export const allNavigationItems = [
      badge: null,
      color: "gray",
    },
-  // {
-  //   id: 16,
-  //   title: "Theme Customization",
-  //   url: "/analytics",
-  //   icon: themecustomizationIcon,
-  //   badge: null,
-  //   color: "gray",
-  // },
   {
     id: 17,
     title: "Manage Redeem Request",
@@ -364,11 +329,38 @@ export const allNavigationItems = [
   },
   {
     id: 19,
-    title: "Admin Role Management",
-    url: "/analytics",
+    title: "Sub Admin Management",
+    url: "/sub-admin/roles",
     icon: adminRoleManagementIcon,
     badge: null,
     color: "gray",
+    hasSubmenu: true,
+    subItems: [
+      {
+        id: 71,
+        title: "Role",
+        url: "/sub-admin/roles",
+        icon: adminRoleManagementIcon,
+        badge: null,
+        color: "blue",
+      },
+      {
+        id: 72,
+        title: "Users",
+        url: "/sub-admin/users",
+        icon: adminRoleManagementIcon,
+        badge: null,
+        color: "purple",
+      },
+      {
+        id: 73,
+        title: "Sub-Admin Permission",
+        url: "/sub-admin/user-permissions",
+        icon: adminRoleManagementIcon,
+        badge: null,
+        color: "yellow",
+      },
+    ],
   },
   {
     id: 20,
