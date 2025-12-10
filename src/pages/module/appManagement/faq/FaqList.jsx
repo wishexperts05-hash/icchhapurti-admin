@@ -20,11 +20,11 @@ const FaqList = () => {
   } = useFAQ();
 
   const {
-    faqCategories,
-    loadingFaqCategories,
     fetchFaqCategories,
+        faqCategories,
+        loadingFaqCategories,
   } = useDropdown();
-  console.log("FAQ Categories in FaqList:", faqCategories);
+  console.log("FAQ Categories", faqCategories);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
@@ -43,11 +43,11 @@ const FaqList = () => {
   }, []);
 
   
-  useEffect(() => {
-    console.log("FAQ Categories updated:", faqCategories);
-    console.log("Is array?", Array.isArray(faqCategories));
-    console.log("Length:", faqCategories?.length);
-  }, [faqCategories]);
+  // useEffect(() => {
+  //   console.log("FAQ Categories updated:", faqCategories);
+  //   console.log("Is array?", Array.isArray(faqCategories));
+  //   console.log("Length:", faqCategories?.length);
+  // }, [faqCategories]);
 
   
   useEffect(() => {
@@ -93,8 +93,6 @@ const FaqList = () => {
   const onChangeSelectFunc = (selected) => {
     try {
       console.log("Category selected:", selected);
-      
-      
       if (selected === null || selected === undefined) {
         setCategory("");
       } else if (selected && typeof selected === 'object' && selected.value !== undefined) {
