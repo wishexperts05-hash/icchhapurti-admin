@@ -67,7 +67,7 @@ const useReportAndAnalytics = () => {
     }
   };
 
-  const fetchSalesSegmentation = async ({ country, state, city, region, productName, date, page, limit }) => {
+  const fetchSalesSegmentation = async ({ country, state, city, region, productName, date, page, limit ,periodType}) => {
   setLoading(true);
   try {
     const queryParams = new URLSearchParams();
@@ -78,6 +78,7 @@ const useReportAndAnalytics = () => {
     if (region) queryParams.append("region", region);
     if (productName) queryParams.append("productName", productName);
     if (date) queryParams.append("date", date); // format "YYYY-MM-DD"
+    if (periodType) queryParams.append("periodType", periodType);
 
     queryParams.append("page", page || 1);
     queryParams.append("limit", limit || 10);
@@ -169,8 +170,6 @@ const useReportAndAnalytics = () => {
     setLoading(false);
   }
 };
-
-
     const fetchAnalytics = async () => {
     setLoading(true);
     try {
