@@ -29,7 +29,7 @@ const useUsers = () => {
       });
       const res = await fetchData({
         method: "GET",
-        url: `${conf.apiBaseUrl}admin/users/getAllAdminUsers?${params}`,
+        url: `${conf.apiBaseUrl}admin/adminUsers/getAllAdminUsers?${params}`,
       });
       if (res) {
         setUsers(res);
@@ -50,7 +50,7 @@ const useUsers = () => {
     try {
       const res = await fetchData({
         method: "GET",
-        url: `${conf.apiBaseUrl}admin/users/getAdminUserById/${id}`,
+        url: `${conf.apiBaseUrl}admin/adminUsers/getAdminUserById/${id}`,
       });
       if (res) {
         setUsersDetail(res?.data);
@@ -70,7 +70,7 @@ const useUsers = () => {
     try {
       const res = await fetchData({
         method: "POST",
-        url: `${conf.apiBaseUrl}admin/users/createAdminUser`,
+        url: `${conf.apiBaseUrl}admin/adminUsers/createAdminUser`,
         data: data,
       });
       if (res) {
@@ -93,7 +93,7 @@ const useUsers = () => {
     try {
       const res = await fetchData({
         method: "PUT",
-        url: `${conf.apiBaseUrl}admin/users/updateAdminUser/${id}`,
+        url: `${conf.apiBaseUrl}admin/adminUsers/updateAdminUser/${id}`,
         data: data,
       });
       if (res) {
@@ -120,7 +120,7 @@ const useUsers = () => {
         setLoading(true);
         const res = await fetchData({
           method: "DELETE",
-          url: `${conf.apiBaseUrl}admin/users/deleteAdminUser/${id}`,
+          url: `${conf.apiBaseUrl}admin/adminUsers/deleteAdminUser/${id}`,
         });
         if (res) {
           Swal.fire({
@@ -147,7 +147,7 @@ const useUsers = () => {
     try {
       const res = await fetchData({
         method: "GET",
-        url: `${conf.apiBaseUrl}admin/users/getRoleNames`,
+        url: `${conf.apiBaseUrl}admin/adminUsers/getRoleNames`,
       });
       if (res) {
         setRoleNameList(res?.data);
@@ -172,7 +172,7 @@ const useUsers = () => {
     try {
       const res = await fetchData({
         method: "PUT",
-        url: `${conf.apiBaseUrl}admin/users/changeActiveStatus/${id}`,
+        url: `${conf.apiBaseUrl}admin/adminUsers/changeActiveStatus/${id}`,
       });
       if (res) {
         toast.success(res?.message);

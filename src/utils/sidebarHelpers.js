@@ -148,7 +148,7 @@ export const allNavigationItems = [
   },
   {
     id: 7,
-    title:"Offer Management",
+    title: "Offer Management",
     url: "/offer-management",
     icon: offerManagementIcon,
     badge: null,
@@ -192,7 +192,7 @@ export const allNavigationItems = [
   {
     id: 10,
     title: " Refer & Earn ",
-    url: "/refer-and-earn",
+    url: "/refer-and-earn-user",
     icon: referandearnIcon,
     badge: null,
     color: "green",
@@ -208,7 +208,7 @@ export const allNavigationItems = [
       },
       {
         id: 32,
-        title: " Upload Video ",
+        title: "Upload Video",
         url: "/upload-video",
         icon: uploadVideoIcon,
         badge: null,
@@ -249,7 +249,7 @@ export const allNavigationItems = [
         badge: null,
         color: "yellow",
       },
-   
+
     ],
   },
   {
@@ -303,14 +303,14 @@ export const allNavigationItems = [
     badge: null,
     color: "yellow",
   },
-   {
-     id: 15,
-     title: "Send Notification ",
-     url: "/notification-management/send-notification",
-     icon: productManagementIcon,
-     badge: null,
-     color: "gray",
-   },
+  {
+    id: 15,
+    title: "Send Notification ",
+    url: "/notification-management/send-notification",
+    icon: productManagementIcon,
+    badge: null,
+    color: "gray",
+  },
   {
     id: 17,
     title: "Manage Redeem Request",
@@ -381,6 +381,14 @@ export const allNavigationItems = [
     subItems: [
       {
         id: 61,
+        title: "About Us",
+        url: "/app-management/aboutus",
+        icon: FiInfo,
+        badge: null,
+        color: "yellow",
+      },
+      {
+        id: 62,
         title: "Terms & Conditions",
         url: "/app-management/terms-and-conditions",
         icon: termAndConditionsIcon,
@@ -388,7 +396,7 @@ export const allNavigationItems = [
         color: "blue",
       },
       {
-        id: 62,
+        id: 63,
         title: "Privicy Policy",
         url: "/app-management/privacy-policy",
         icon: privicyPolicyIcon,
@@ -396,7 +404,7 @@ export const allNavigationItems = [
         color: "purple",
       },
       {
-        id: 63,
+        id: 64,
         title: "Manage Banner",
         url: "/app-management/manage-banner",
         icon: manageBannerIcon,
@@ -404,7 +412,7 @@ export const allNavigationItems = [
         color: "yellow",
       },
       {
-        id: 64,
+        id: 65,
         title: "Help & Support",
         url: "/app-management/help-and-support",
         icon: helpAndSupportIcon,
@@ -412,26 +420,18 @@ export const allNavigationItems = [
         color: "yellow",
       },
       {
-        id: 65,
+        id: 66,
         title: "Other Settings",
         url: "/app-management/other-settings",
         icon: otherSettingsIcon,
         badge: null,
         color: "yellow",
       },
-       {
-        id: 66,
+      {
+        id: 67,
         title: "Faq",
         url: "/app-management/faq",
         icon: otherSettingsIcon,
-        badge: null,
-        color: "yellow",
-      },
-      {
-        id: 67,
-        title: "About Us",
-        url: "/app-management/aboutus",
-        icon: FiInfo ,
         badge: null,
         color: "yellow",
       },

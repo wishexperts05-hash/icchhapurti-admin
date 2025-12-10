@@ -107,17 +107,17 @@ const UsersPermission = () => {
               usersPerPage={limit}
               actions={[
                 {
-                  icon: <FiEye className="w-5 h-5 text-[#FF6B00]" />,
+                  icon: <FiEye className="w-5 h-5 text-yellow-600" />,
                   title: "View",
                   onClick: (row) => handleView(row.id),
                 },
                 {
-                  icon: <FaRegEdit className="w-5 h-5 text-[#FF6B00]" />,
+                  icon: <FaRegEdit className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer" />,
                   title: "Edit",
                   onClick: (row) => handleEdit(row.id),
                 },
                 {
-                  icon: <FiTrash2 className="w-5 h-5 text-[#FF6B00]" />,
+                  icon: <FiTrash2 className="w-5 h-5 text-red-600" />,
                   title: "Delete",
                   onClick: (row) => handleDelete(row?.id),
                 },
