@@ -1,21 +1,46 @@
 import { atom } from "recoil";
-import { createPersistedAtom } from "../recoilConfig";
 
-export const salesTypeAtom = atom(createPersistedAtom("salesTypeKey", []));
+export const offerTypeAtom = atom({
+  key: "offerType",
+  default: [],
+});
 
-export const userTypeAtom = atom(createPersistedAtom("userTypeKey", []));
+export const orderStatusAtom = atom({
+  key: "orderStatus",
+  default: [],
+});
 
-export const productDropdownAtom = atom(createPersistedAtom("productDropdownKey", []));
+export const productCategoryAtom = atom({
+  key: "productCategory",
+  default: [],
+});
 
-export const productCategoryAtom = atom(createPersistedAtom("productCategoryKey", []));
+export const productDropdownAtom = atom({
+  key: "productDropdown",
+  default: [],
+});
 
-export const orderStatusAtom = atom(createPersistedAtom("orderStatusKey", []));
+export const salesTypeAtom = atom({
+  key: "salesType",
+  default: [],
+});
 
-export const faqCategoriesDropdownAtom = atom(createPersistedAtom("faqCategoriesDropdownKey", []));
+export const userTypeAtom = atom({
+  key: "userType",
+  default: [],
+});
 
-export const offerTypeAtom = atom(createPersistedAtom("offerTypeKey", []));
+export const countriesAtom = atom({
+  key: "countries",
+  default: [],
+});
 
-export const countriesAtom = atom(createPersistedAtom("countriesAtomKey", []));
+export const appTypesAtom = atom({
+  key: "appTypesAtom",
+  default: [],
+});
 
-
-
+export const bannerTypesAtom = atom({
+  key: "bannerTypesAtom",
+  default: [],
+});
