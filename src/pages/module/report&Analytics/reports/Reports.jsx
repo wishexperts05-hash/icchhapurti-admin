@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { LayoutDashboard, ChevronRight, TrendingUp } from "lucide-react";
 import useReportAndAnalytics from "../../../../hooks/reportAndAnalytics/useReportAndAnalytics";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+import useDropdown from "../../../../hooks/dropdown/useDropdown";
 
 import {
   BarChart,
@@ -114,6 +115,8 @@ const Reports = () => {
     fetchDataReport,
     fetchRevenueChart,
   } = useReportAndAnalytics();
+
+  const { fetchCountryDropdown, countries } = useDropdown();
   const [reportData, setReportData] = useState(null);
   const [revenueChart, setRevenueChart] = useState(null);
   const [country, setCountry] = useState("");
@@ -127,11 +130,17 @@ const Reports = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
   const [salesData, setSalesData] = useState([]);
+  const [periodType, setPeriodType] = useState("");
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
     totalRecords: 0,
   });
+  useEffect(() => {
+    fetchCountryDropdown();
+  }, []);
+
+  console.log("COuntries", countries);
 
   const loadSalesSegmentation = async () => {
     const response = await fetchSalesSegmentation({
@@ -141,6 +150,7 @@ const Reports = () => {
       region,
       productName: product,
       date: value ? value.toISOString().split("T")[0] : "",
+      periodType,
       page: currentPage,
       limit: itemsPerPage,
     });
@@ -152,7 +162,16 @@ const Reports = () => {
   };
   useEffect(() => {
     loadSalesSegmentation();
-  }, [country, city, region, product, value, currentPage, itemsPerPage]);
+  }, [
+    country,
+    city,
+    region,
+    product,
+    value,
+    periodType,
+    currentPage,
+    itemsPerPage,
+  ]);
 
   const formattedTableData = salesData.map((item, index) => ({
     srNo: (currentPage - 1) * itemsPerPage + index + 1,
@@ -185,14 +204,6 @@ const Reports = () => {
     loadReport();
   }, []);
 
-  // useEffect(() => {
-  //   const loadReport = async () => {
-  //     const res = await fetchReport();
-  //     setReportData(res?.data || null);
-  //   };
-  //   loadReport();
-  // }, []);
-
   const handleMouseDown = (e) => {
     setIsDragging(true);
     setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
@@ -215,11 +226,11 @@ const Reports = () => {
     setIsDragging(false);
   };
 
-  const countryList = [
-    { value: "india", label: "India" },
-    { value: "usa", label: "USA" },
-    { value: "uk", label: "UK" },
-  ];
+  const countryList =
+    countries?.map((country) => ({
+      value: country.name.toLowerCase(),
+      label: country.name,
+    })) || [];
 
   const cityList = [
     { value: "mumbai", label: "Mumbai" },
@@ -362,6 +373,13 @@ const Reports = () => {
     },
   ]);
 
+  const periodTypeOptions = [
+    { value: "today", label: "Today" },
+    { value: "weekly", label: "Weekly" },
+    { value: "monthly", label: "Monthly" },
+    { value: "yearly", label: "Yearly" },
+  ];
+
   const filteredData = tableData.filter((item) => {
     return (
       (country ? item.country.toLowerCase() === country.toLowerCase() : true) &&
@@ -372,13 +390,6 @@ const Reports = () => {
         : true)
     );
   });
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    const res = await fetchDataReport();
-    setReportData(res?.data || null);
-    setRefreshing(false);
-  };
 
   const totalItems = filteredData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -395,22 +406,8 @@ const Reports = () => {
       <BreadCrumb
         linkText={[{ text: "Reports & Analytics" }, { text: "Reports" }]}
       />
-
       {/* Header Bar */}
       <PagePath2 title="Reports" />
-
-      <div className="mb-4 flex justify-end">
-        <button
-          onClick={handleRefresh}
-          disabled={refreshing}
-          className={`border bg-slate-500 text-white px-4 py-2 rounded ${
-            refreshing ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-        >
-          {refreshing ? "Refreshing..." : "Refresh Data"}
-        </button>
-      </div>
-
       <div className=" flex flex-col ">
         {/* Scrollable Stat Cards */}
         {loadingData ? (
@@ -570,8 +567,17 @@ const Reports = () => {
                   )}
                 </div>
 
+                <div className="relative">
+                  <CustomSelect
+                    label="periodType"
+                    value={periodType}
+                    onChange={(e) => setPeriodType(e.target.value)}
+                    options={periodTypeOptions}
+                  />
+                </div>
+
                 {/* DatePicker */}
-                <div className="relative z-50">
+                <div className="relative">
                   <DatePicker
                     onChange={setValue}
                     value={value}
