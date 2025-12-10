@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import useUsers from "../../../../hooks/subAdminAccess/useUsers";
@@ -11,7 +11,8 @@ import {
   CheckCircle,
   XCircle,
   Edit,
-  UserCheck,
+  ArrowLeft,
+  Check,
 } from "lucide-react";
 
 const ViewUserDetail = () => {
@@ -19,17 +20,20 @@ const ViewUserDetail = () => {
   const navigate = useNavigate();
   const { loading, fetchUserDetails, usersDetail, updateUserStatus } =
     useUsers();
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     fetchUserDetails(id);
   }, [id]);
 
-  const handleCancel = () => {
-    navigate("/sub-admin/users");
-  };
-
-  const handleToggleStatus = () => {
-    updateUserStatus(id);
+  const handleToggleStatus = async () => {
+    setIsUpdating(true);
+    try {
+      await updateUserStatus(id);
+      setTimeout(() => setIsUpdating(false), 500);
+    } catch (error) {
+      setIsUpdating(false);
+    }
   };
 
   const handleEdit = () => {
@@ -37,7 +41,7 @@ const ViewUserDetail = () => {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <BreadCrumb
         linkText={[
           { text: "Sub Admin Access" },
@@ -47,93 +51,126 @@ const ViewUserDetail = () => {
       />
       <PagePath2 title="View User Details" />
 
-      <div className="container mx-auto  rounded-3xl shadow-2xl">
+      <div className=" mx-auto">
         {loading ? (
-          <div className="flex justify-center items-center py-20 text-gray-400 text-lg">
+          <div className="flex flex-col items-center justify-center">
             <LoaderSpinner />
+            <p className="mt-4 text-gray-600">Loading user details...</p>
           </div>
         ) : (
-          <div className="bg-white border border-sky-200 p-9  w-full rounded-xl"> 
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {/* User Header */}
-            <div className="flex flex-col items-center justify-center text-center bg-gradient-to-r from-orange-500 to-orange-400 p-10 rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-500 relative">
-              {/* <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-30 rounded-xl"></div> */}
-              <div className="relative z-10">
-                <img
-                  src={usersDetail?.photo || "/default-avatar.png"}
-                  alt="User"
-                  className="w-48 h-48 rounded-full object-cover border-4 border-white shadow-lg transition-all duration-500 transform hover:scale-110"
-                />
-                <div className="absolute bottom-0 left-0 p-2 bg-indigo-600 text-white text-xs font-semibold rounded-tl-lg">
-                  Status: {usersDetail?.isActive ? "Active" : "Blocked"}
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+            {/* Header Section */}
+            <div className="bg-gradient-to-r from-indigo-400 to-purple-300 p-3 md:p-4">
+              <div className="flex flex-col md:flex-row items-center md:items-end gap-6">
+                {/* Profile Image */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full blur-lg opacity-40"></div>
+                  <img
+                    src={usersDetail?.photo || "/default-avatar.png"}
+                    alt="User"
+                    className="relative w-14 h-14 md:w-32 md:h-32 rounded-full object-cover border-4 border-white shadow-2xl"
+                  />
                 </div>
-              </div>
-              <h2 className="mt-4 text-4xl font-bold text-white tracking-wider">
-                {usersDetail?.firstName} {usersDetail?.lastName}
-              </h2>
-            </div>
 
-            {/* User Details Grid */}
-            <div className="col-span-1 lg:col-span-2 flex flex-col gap-12 text-white">
-              {/* Role */}
-              <div className="flex justify-between items-center bg-gradient-to-r from-orange-400 to-orange-300 p-8 rounded-lg shadow-2xl transform hover:scale-105 transition-all duration-300 relative">
-                <UserCheck className="text-slate-100 text-3xl" />
-                <div>
-                  <p className="text-xs  text-slate-100">Role</p>
-                  <p className="text-xl  text-slate-100 font-semibold">{usersDetail?.role}</p>
-                </div>
-              </div>
-
-              {/* Email */}
-              <div className="flex justify-between items-center bg-gradient-to-r from-orange-400 to-orange-300 p-8 rounded-lg shadow-2xl transform hover:scale-105 transition-all duration-300 relative">
-                <Mail className="text-slate-100 text-3xl" />
-                <div>
-                  <p className="text-xs ext-slate-100">Email</p>
-                  <p className="text-xl font-semibold">{usersDetail?.email}</p>
-                </div>
-              </div>
-
-              {/* Phone */}
-              <div className="flex justify-between items-center bg-gradient-to-r from-orange-400 to-orange-300 p-8 rounded-lg shadow-2xl transform hover:scale-105 transition-all duration-300 relative">
-                <Phone className="text-slate-100 text-3xl" />
-                <div>
-                  <p className="text-xs text-slate-100">Phone Number</p>
-                  <p className="text-xl font-semibold">
-                    {usersDetail?.phoneNumber}
-                  </p>
+                {/* User Info */}
+                <div className="text-center md:text-left text-white">
+                  <h1 className="text-2xl md:text-4xl font-bold mb-2">
+                    {usersDetail?.firstName} {usersDetail?.lastName}
+                  </h1>
+                  <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                    <div className={`px-3 py-1 rounded-full font-medium ${usersDetail?.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                      {usersDetail?.isActive ? 'Active' : 'Blocked'}
+                    </div>
+                    <div className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full font-medium">
+                     {/* <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                     <p className="text-sm text-gray-600 mb-1">Role</p> */}
+                      {usersDetail?.role}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="col-span-1 lg:col-span-3 flex justify-center gap-4 sm:gap-6 md:gap-8 flex-wrap">
-              <Button
-                type="button"
-                text="Cancel"
-                variant={2}
-                onClick={handleCancel}
-                className="transition-transform transform hover:scale-110 bg-gray-600 text-white rounded-xl py-3 px-6 shadow-xl hover:bg-gray-700 focus:ring-4 focus:ring-gray-500"
-              />
-              <Button
-                type="button"
-                text={usersDetail?.isActive ? "Block" : "Activate"}
-                variant={usersDetail?.isActive ? 4 : 3}
-                onClick={handleToggleStatus}
-                className="transition-transform transform hover:scale-110 bg-indigo-600 text-white rounded-xl py-3 px-6 shadow-xl hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-500"
-              />
-              <Button
-                type="button"
-                text="Edit"
-                variant={1}
-                onClick={handleEdit}
-                icon={<Edit size={18} />}
-                className="transition-transform transform hover:scale-110 bg-blue-600 text-white rounded-xl py-3 px-6 shadow-xl flex items-center space-x-2 hover:bg-blue-700 focus:ring-4 focus:ring-blue-500"
-              />
+            {/* Main Content */}
+            <div className="p-4 md:p-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Left Column - Personal Details */}
+                <div className="space-y-6">
+
+                  {/* Email Card */}
+                  <div className="bg-gradient-to-r from-emerald-50 to-green-50 p-5 rounded-xl border border-emerald-100 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-gradient-to-r from-emerald-500 to-green-500 rounded-lg">
+                        <Mail className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm text-gray-600 mb-1">Email</p>
+                        <p className="text-lg font-semibold text-gray-900 truncate">{usersDetail?.email}</p>
+                        <div className="mt-2">
+                          <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${usersDetail?.isEmailVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                            {usersDetail?.isEmailVerified ? (
+                              <>
+                                <Check className="w-3 h-3" />
+                                Verified
+                              </>
+                            ) : (
+                              "Pending Verification"
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column - Contact & Timeline */}
+                <div className="space-y-6">
+                  {/* Phone Card */}
+                  <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-5 rounded-xl border border-amber-100 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg">
+                        <Phone className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 mb-1">Phone Number</p>
+                        <p className="text-lg font-semibold text-gray-900">{usersDetail?.phoneNumber}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                  <Button
+                    type="button"
+                    text="Back"
+                    variant={2}
+                    onClick={() => navigate(-1)}
+                    className="px-5 py-2.5 rounded-lg transition-all hover:shadow-md"
+                  />
+                  <Button
+                    type="button"
+                    text={usersDetail?.isActive ? "Block User" : "Activate User"}
+                    variant={usersDetail?.isActive ? 4 : 3}
+                    onClick={handleToggleStatus}
+                    disabled={isUpdating}
+                    icon={isUpdating ? null : usersDetail?.isActive ? <XCircle size={18} /> : <CheckCircle size={18} />}
+                    className="px-5 py-2.5 rounded-lg transition-all hover:shadow-md"
+                  />
+                  <Button
+                    type="button"
+                    text="Edit User"
+                    variant={1}
+                    onClick={handleEdit}
+                    // icon={<Edit size={18} />}
+                    className="px-5 py-2.5 rounded-lg transition-all hover:shadow-md"
+                  />
+                </div>
+              </div>
             </div>
-            
           </div>
-          </div>
-         
         )}
       </div>
     </div>

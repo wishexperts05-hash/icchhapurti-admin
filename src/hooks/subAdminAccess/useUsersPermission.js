@@ -32,7 +32,7 @@ const useUsersPermission = () => {
       });
       const res = await fetchData({
         method: "GET",
-        url: `${conf.apiBaseUrl}admin/user-access/getAllAdminUserAccess?${params}`,
+        url: `${conf.apiBaseUrl}admin/adminUserAccess/getAllAdminUserAccess?${params}`,
       });
       if (res) {
         setUsersPermission(res);
@@ -53,7 +53,7 @@ const useUsersPermission = () => {
     try {
       const res = await fetchData({
         method: "GET",
-        url: `${conf.apiBaseUrl}admin/user-access/getAdminUserAccessById/${id}`,
+        url: `${conf.apiBaseUrl}admin/adminUserAccess/getAdminUserAccessById/${id}`,
       });
       if (res) {
         setUsersPermissionDetail(res?.adminUserAccess);
@@ -73,7 +73,7 @@ const useUsersPermission = () => {
     try {
       const res = await fetchData({
         method: "POST",
-        url: `${conf.apiBaseUrl}admin/user-access/createAdminUserAccess`,
+        url: `${conf.apiBaseUrl}admin/adminUserAccess/createAdminUserAccess`,
         data: data,
       });
       if (res) {
@@ -96,7 +96,7 @@ const useUsersPermission = () => {
     try {
       const res = await fetchData({
         method: "PUT",
-        url: `${conf.apiBaseUrl}admin/user-access/updateAdminUserAccess/${id}`,
+        url: `${conf.apiBaseUrl}admin/adminUserAccess/updateAdminUserAccess/${id}`,
         data: data,
       });
       if (res) {
@@ -123,7 +123,7 @@ const useUsersPermission = () => {
         setLoading(true);
         const res = await fetchData({
           method: "DELETE",
-          url: `${conf.apiBaseUrl}admin/user-access/deleteAdminUserAccess/${id}`,
+          url: `${conf.apiBaseUrl}admin/adminUserAccess/deleteAdminUserAccess/${id}`,
         });
         if (res) {
           Swal.fire({
@@ -151,7 +151,7 @@ const useUsersPermission = () => {
     try {
       const res = await fetchData({
         method: "GET",
-        url: `${conf.apiBaseUrl}admin/user-access/getAllAdminUserNames`,
+        url: `${conf.apiBaseUrl}admin/adminUserAccess/getAllAdminUserNames`,
       });
       if (res) {
         setUsersDropList(res?.data);
