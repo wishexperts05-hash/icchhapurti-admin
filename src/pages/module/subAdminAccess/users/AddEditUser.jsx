@@ -42,8 +42,8 @@ const AddEditUser = () => {
     password: id
       ? Yup.string().min(8, "Password must be at least 8 characters")
       : Yup.string()
-          .required("Password is required")
-          .min(8, "Password must be at least 8 characters"),
+        .required("Password is required")
+        .min(8, "Password must be at least 8 characters"),
     phoneNumber: Yup.string()
       .matches(/^[0-9]+$/, "Phone number must contain only digits")
       .min(10, "Phone number must be at least 10 digits")
@@ -160,7 +160,7 @@ const AddEditUser = () => {
   };
 
   const roleOptions = [
-    { value: "", label: "Select role" },
+    // { value: "", label: "Select role" },
     ...(roleNameList?.map((role) => ({
       value: role.roleName,
       label: role.roleName,
@@ -321,17 +321,19 @@ const AddEditUser = () => {
                       )}
                     </p>
                   </div>
-                  <div className="px-10">
-                    {usersDetail?.isActive ? (
-                      <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xl font-semibold">
-                        Active
-                      </span>
-                    ) : (
-                      <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-xl font-semibold">
-                        Block
-                      </span>
-                    )}
-                  </div>
+                  {id && (
+                    <div className="px-10">
+                      {usersDetail?.isActive ? (
+                        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xl font-semibold">
+                          Active
+                        </span>
+                      ) : (
+                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-xl font-semibold">
+                          Block
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 

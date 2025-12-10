@@ -1,227 +1,271 @@
+import { FiInfo } from "react-icons/fi";
 import {
-  BarChart3,
-  TrendingUp,
-  Users,
-  Star,
-  Home,
-  User,
-  Settings,
-  FileText,
-  MessageSquare,
-  Calendar,
-  ChevronLeft,
-  ChevronRight,
-  Activity,
-  PieChart,
-  LineChart,
-  Target,
-  Award,
-  Clock,
-  Plus,
-  CreditCard,
-  ChevronDown,
-  BanknoteArrowUp,
-  ChevronRight as ChevronRightIcon,
-  DollarSign,
-  DollarSignIcon,
-} from "lucide-react";
+  adminRoleManagementIcon,
+  appManagementIcon,
+  blockedUserandStaffsIcon,
+  blogManagementIcon,
+  chatSupportSystemIcon,
+  coinSettingIcon,
+  commentandReviewIcon,
+  commissionsettingsIcon,
+  countryManagementIcon,
+  dashboardIcon,
+  helpAndSupportIcon,
+  luckyDrawAnalysisIcon,
+  luckyDrawManagementIcon,
+  manageBannerIcon,
+  manageReddemRequestIcon,
+  offerManagementIcon,
+  orderManagementIcon,
+  otherSettingsIcon,
+  privicyPolicyIcon,
+  productManagementIcon,
+  referandearnIcon,
+  refferralTrackingIcon,
+  reportandanalyticsIcon,
+  reportsIcon,
+  rewardManagementIcon,
+  spinRewardManagementIcon,
+  staffCommissionIcon,
+  staffManagementIcon,
+  staffPerformanceIcon,
+  targetManagementIcon,
+  termAndConditionsIcon,
+  themecustomizationIcon,
+  uploadVideoIcon,
+  userCommissionIcon,
+  userManagementIcon,
+} from "../../../../assets/sidebaricon/sidebaricon";
 
 export const AdminOperation = [
     {
         label: 'User Management',
-        url: '',
-        icon: Users,
-        permissionTypes: ['access'],
-        children: [
-            {
-                label: 'Customer',
-                url: '/customers',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'User Management',
-                icon: User
-            },
-            {
-                label: 'PG/Hostel Owner',
-                url: '/pg-hostel-owner',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'User Management',
-                icon: Home
-            },
-            {
-                label: 'Tiffin/Restaurant Provider',
-                url: '/tiffin-restaurant-provider',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'User Management',
-                icon: Star
-            },
-        ]
-    },
-    {
-        label: 'Listing Management',
-        url: '',
-        permissionTypes: ['access'],
-        icon: FileText,
-        children: [
-            {
-                label: 'Feature&Facilities',
-                url: '/feature-facilities',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Listing Management',
-                icon: Award
-            },
-            {
-                label: 'PG/Hostel Listing',
-                url: '/pg-hostel-listing',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Listing Management',
-                icon: Home
-            },
-            {
-                label: 'Tiffin/Restaurant Listing',
-                url: '/restaurant-listing',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Listing Management',
-                icon: Star
-            }
-        ]
-    },
-    {
-        label: 'Booking & Order',
-        url: '',
-        permissionTypes: ['access'],
-        icon: Calendar,
-        children: [
-            {
-                label: 'PG/Hostel Booking',
-                url: '/pg-hostel-bookings',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Booking & Order',
-                icon: Home
-            },
-            {
-                label: 'Tiffin/Restaurant Orders',
-                url: '/restaurant-orders',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Booking & Order',
-                icon: Star
-            }
-        ]
-    },
-    {
-        label: 'Payment & Wallet',
-        url: '',
-        permissionTypes: ['access'],
-        icon: BarChart3,
-        children: [
-            {
-                label: 'Payment Overview',
-                url: '/payments-overview',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Payment & Wallet',
-                icon: BarChart3
-            },
-            {
-                label: 'Wallet Transactions',
-                url: '/wallet-transactions',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Payment & Wallet',
-                icon: Activity
-            },
-            {
-                label: 'Deposit Transactions',
-                url: '/deposit-transactions',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Payment & Wallet',
-                icon: BanknoteArrowUp
-            },
-            {
-                label: 'Deposit Refund Request',
-                url: '/deposit-refund-requests',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Payment & Wallet',
-                icon: CreditCard
-            },
-            {
-                label: 'Payout History',
-                url: '/payout-history',
-                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Payment & Wallet',
-                icon: Clock
-            }
-        ]
-    },
-    {
-        label: 'Coupon',
-        url: '/coupon',
+        url: '/user-management',
         permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-        icon: Star,
+        icon: userManagementIcon,
     },
     {
-        label: 'Rating & Reviews',
-        url: '/reviews',
+        label: 'Staff Management',
+        url: '/staff-management',
         permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-        icon: Star
+        icon: staffManagementIcon,
+    },
+    {
+        label: 'Product Management',
+        url: '/product-management',
+        permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+        icon: productManagementIcon,
+    },
+    {
+        label: 'Order Management',
+        url: '/order-management',
+        permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+        icon: orderManagementIcon,
+    },
+    {
+        label: 'Offer Management',
+        url: '/offer-management',
+        permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+        icon: offerManagementIcon,
+    },
+    {
+        label: 'Blog Management',
+        url: '/blog-management',
+        permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+        icon: blogManagementIcon,
+    },
+    {
+        label: 'Reward Management',
+        url: '',
+        permissionTypes: ['access'],
+        icon: rewardManagementIcon,
+        children: [
+            {
+                label: 'Lucky Draw Management',
+                url: '/lucky-draw-management',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'Reward Management',
+                icon: luckyDrawManagementIcon
+            },
+            {
+                label: 'Spin Reward Management',
+                url: '/spin-reward-management',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'Reward Management',
+                icon: spinRewardManagementIcon
+            },
+        ]
+    },
+    {
+        label: 'Refer & Earn',
+        url: '',
+        permissionTypes: ['access'],
+        icon: referandearnIcon,
+        children: [
+            {
+                label: 'Referral Tracking',
+                url: '/refer-and-earn-user',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'Refer & Earn',
+                icon: refferralTrackingIcon
+            },
+            {
+                label: 'Upload Video',
+                url: '/upload-video',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'Refer & Earn',
+                icon: uploadVideoIcon
+            }
+        ]
     },
     {
         label: 'Report & Analytics',
-        url: '/analytics',
-        permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-        icon: PieChart
-    },
-    {
-        label: 'CMS',
         url: '',
         permissionTypes: ['access'],
-        icon: Settings,
+        icon: reportandanalyticsIcon,
         children: [
             {
-                label: 'Banner',
-                url: '/cms/banner',
+                label: 'Reports',
+                url: '/reports',
                 permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'CMS',
-                icon: FileText
+                parent: 'Report & Analytics',
+                icon: reportsIcon
             },
             {
-                label: 'Static Page',
-                url: '/cms/static-page',
+                label: 'Staff Performance"',
+                url: '/staff-performance',
                 permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'CMS',
-                icon: Settings
+                parent: 'Report & Analytics',
+                icon: staffPerformanceIcon
             },
             {
-                label: 'Notification Management',
-                url: '/cms/notification-management',
+                label: 'Lucky Draw Analysis',
+                url: '/lucky-draw-analysis',
                 permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'CMS',
-                icon: MessageSquare
+                parent: 'Report & Analytics',
+                icon: luckyDrawAnalysisIcon
+            },
+        ]
+    },
+    {
+        label: 'Monetary Settings',
+        url: '',
+        permissionTypes: ['access'],
+        icon: commissionsettingsIcon,
+        children: [
+            {
+                label: 'Commission Settings',
+                url: '/commission-settings',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'Monetary Settings',
+                icon: staffCommissionIcon
+            },
+            {
+                label: 'Coin Settings',
+                url: '/coin-settings',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'Monetary Settings',
+                icon: coinSettingIcon
+            },
+            {
+                label: 'Withdraw Settings',
+                url: '/withdraw-settings',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'Monetary Settings',
+                icon: productManagementIcon
             }
         ]
     },
     {
-        label: 'Chat List',
-        url: '/chats',
+        label: 'Target Management',
+        url: '/target-management',
         permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-        icon: MessageSquare
+        icon: targetManagementIcon
     },
     {
-        label: 'Settings',
+        label: 'Country Management',
+        url: '/country-management',
+        permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+        icon: countryManagementIcon
+    },
+    {
+        label: 'Send Notification',
+        url: '/notification-management/send-notification',
+        permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+        icon: productManagementIcon
+    },
+    {
+        label: 'Manage Redeem Request',
+        url: '/manage-redeem-request',
+        permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+        icon: manageReddemRequestIcon
+    },
+    {
+        label: 'Chat Support System',
+        url: '/chat-support-system',
+        permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+        icon: chatSupportSystemIcon
+    },
+    {
+        label: 'Comment & Reviews',
+        url: '/manage-comments',
+        permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+        icon: commentandReviewIcon
+    },
+    {
+        label: 'App Management',
         url: '',
         permissionTypes: ['access'],
-        icon: Settings,
+        icon: appManagementIcon,
         children: [
             {
-                label: 'Commission',
-                url: '/settings/commission',
+                label: 'About Us',
+                url: '/app-management/about-us',
                 permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Settings',
-                icon: DollarSign
+                parent: 'App Management',
+                icon: FiInfo
             },
             {
-                label: 'Charges & Benefit',
-                url: '/settings/cashback',
+                label: 'Terms & Conditions',
+                url: '/app-management/terms-and-conditions',
                 permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
-                parent: 'Settings',
-                icon: DollarSignIcon
+                parent: 'App Management',
+                icon: termAndConditionsIcon
+            },
+            {
+                label: 'Privacy Policy',
+                url: '/app-management/privacy-policy',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'App Management',
+                icon: privicyPolicyIcon
+            },
+            {
+                label: 'Manage Banner',
+                url: '/app-management/manage-banner',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'App Management',
+                icon: manageBannerIcon
+            },
+            {
+                label: 'Help & Support',
+                url: '/app-management/help-and-support',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'App Management',
+                icon: helpAndSupportIcon
+            },
+            {
+                label: 'Other Settings',
+                url: '/app-management/other-settings',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'App Management',
+                icon: otherSettingsIcon
+            },
+            {
+                label: 'FAQ',
+                url: '/app-management/faq',
+                permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
+                parent: 'App Management',
+                icon: otherSettingsIcon
             }
         ]
     },

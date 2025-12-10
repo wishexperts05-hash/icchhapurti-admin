@@ -131,9 +131,9 @@ const useLogin = () => {
   const resendOtp = async (email) => {
     setLoading(true);
     try {
-      const url = new URL(`${conf.apiBaseUrl}admin/forgotPassword`);
+      const url = new URL(`${conf.apiBaseUrl}admin/auth/forgot-password`);
       const res = await fetchData({
-        method: "POST",
+        method: "PUT",
         url: url.toString(),
         data: { email },
       });
