@@ -103,19 +103,19 @@ const Users = () => {
               usersPerPage={limit}
               actions={[
                 {
-                  icon: <FiEye className="w-5 h-5 text-[#FF6B00]" />,
+                  icon: <FiEye className="w-5 h-5 text-yellow-600" />,
                   title: "View",
                   onClick: (row) =>
                     navigate(`/sub-admin/users/view/${row._id}`),
                 },
                 {
-                  icon: <FaRegEdit className="w-5 h-5 text-[#FF6B00]" />,
+                  icon: <FaRegEdit className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer" />,
                   title: "Edit",
                   onClick: (row) =>
                     navigate(`/sub-admin/users/edit/${row._id}`),
                 },
                 {
-                  icon: <FiTrash2 className="w-5 h-5 text-[#FF6B00]" />,
+                  icon: <FiTrash2 className="w-5 h-5 text-red-600" />,
                   title: "Delete",
                   onClick: (row) => handleDelete(row?._id),
                 },
