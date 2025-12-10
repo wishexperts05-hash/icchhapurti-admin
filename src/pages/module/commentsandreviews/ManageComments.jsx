@@ -21,7 +21,7 @@ export default function ManageComments({ activeItem, setActiveItem }) {
   useEffect(() => {
     fetchCommentsList(currentPage, itemsPerPage, searchTerm);
   }, [currentPage, itemsPerPage, searchTerm, fetchCommentsList]);
-
+  console.log(commentAndReviews)
   const handleSearchTerm = (e) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1);
@@ -125,12 +125,7 @@ export default function ManageComments({ activeItem, setActiveItem }) {
           data={currentItems.map((item, index) => ({
             ...item,
             srNo: startIndex + index + 1,
-            status:
-              item.status === "show" ? (
-                <span className="text-green-600 font-medium">Shown</span>
-              ) : (
-                <span className="text-red-600 font-medium">Hidden</span>
-              ),
+            status: item.status === "show" ? "Shown" : "Hidden",
             review: renderStars(item.stars || 0),
           }))}
           actions={actions}
