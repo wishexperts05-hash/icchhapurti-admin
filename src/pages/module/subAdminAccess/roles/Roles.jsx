@@ -79,13 +79,13 @@ const Roles = () => {
               usersPerPage={limit}
               actions={[
                 {
-                  icon: <FaRegEdit className="w-5 h-5 text-[#FF6B00]" />,
+                  icon: <FaRegEdit className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer" />,
                   title: "Edit",
                   onClick: (row) =>
                     navigate(`/sub-admin/roles/edit/${row._id}`),
                 },
                 {
-                  icon: <FiTrash2 className="w-5 h-5 text-[#FF6B00]" />,
+                  icon: <FiTrash2 className="w-5 h-5 text-red-600" />,
                   title: "Delete",
                   onClick: (row) => handleDelete(row?._id),
                 },

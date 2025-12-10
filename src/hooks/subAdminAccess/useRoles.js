@@ -24,7 +24,7 @@ const useRoles = () => {
             });
             const res = await fetchData({
                 method: "GET",
-                url: `${conf.apiBaseUrl}admin/role/getAllRoles?${params}`,
+                url: `${conf.apiBaseUrl}admin/roles/getAllRoles?${params}`,
             });
             if (res) {
                 setRoles(res);
@@ -45,7 +45,7 @@ const useRoles = () => {
         try {
             const res = await fetchData({
                 method: "GET",
-                url: `${conf.apiBaseUrl}admin/role/getRoleById/${id}`,
+                url: `${conf.apiBaseUrl}admin/roles/getRoleById/${id}`,
             });
             if (res) {
                 setRoleDetails(res?.data);
@@ -65,7 +65,7 @@ const useRoles = () => {
         try {
             const res = await fetchData({
                 method: "POST",
-                url: `${conf.apiBaseUrl}admin/role/createRole`,
+                url: `${conf.apiBaseUrl}admin/roles/createRole`,
                 data: data
             });
             if (res) {
@@ -88,7 +88,7 @@ const useRoles = () => {
         try {
             const res = await fetchData({
                 method: "PUT",
-                url: `${conf.apiBaseUrl}admin/role/updateRole/${id}`,
+                url: `${conf.apiBaseUrl}admin/roles/updateRole/${id}`,
                 data: data
             });
             if (res) {
@@ -115,7 +115,7 @@ const useRoles = () => {
                 setLoading(true);
                 const res = await fetchData({
                     method: "DELETE",
-                    url: `${conf.apiBaseUrl}admin/role/deleteRole/${id}`,
+                    url: `${conf.apiBaseUrl}admin/roles/deleteRole/${id}`,
                 });
                 if (res) {
                     Swal.fire({
