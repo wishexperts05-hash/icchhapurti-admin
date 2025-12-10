@@ -63,7 +63,7 @@ const useLogin = () => {
     try {
       const res = await fetchData({
         method: "POST",
-        url: `${conf.apiBaseUrl}admin/users/loginAdminUser`,
+        url: `${conf.apiBaseUrl}admin/adminUsers/loginAdminUser`,
         data,
       });
       console.log("OTP", res?.data?.otp);
