@@ -36,6 +36,7 @@ import {
   userManagementIcon,
 } from "../assets/sidebaricon/sidebaricon";
 import { FiInfo } from "react-icons/fi";
+
 export const hasSubAdminAccess = (subAdminAccess, moduleName) => {
   if (!subAdminAccess || !Array.isArray(subAdminAccess)) return false;
 
@@ -191,7 +192,7 @@ export const allNavigationItems = [
   },
   {
     id: 10,
-    title: " Refer & Earn ",
+    title: "Refer & Earn ",
     url: "/refer-and-earn-user",
     icon: referandearnIcon,
     badge: null,
@@ -249,7 +250,6 @@ export const allNavigationItems = [
         badge: null,
         color: "yellow",
       },
-
     ],
   },
   {
@@ -305,7 +305,7 @@ export const allNavigationItems = [
   },
   {
     id: 15,
-    title: "Send Notification ",
+    title: "Send Notification",
     url: "/notification-management/send-notification",
     icon: productManagementIcon,
     badge: null,
@@ -338,7 +338,7 @@ export const allNavigationItems = [
     subItems: [
       {
         id: 71,
-        title: "Role",
+        title: "Roles",
         url: "/sub-admin/roles",
         icon: adminRoleManagementIcon,
         badge: null,
