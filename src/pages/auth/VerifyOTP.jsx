@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import useLogin from "../../hooks/auth/useLogin";
 import verify from "../../assets/verify.png";
-// import { allNavigationItems } from "../../utils/sidebarHelpers";
+import { allNavigationItems } from "../../utils/sidebarHelpers";
 
 const VerifyOtp = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
@@ -26,23 +26,23 @@ const VerifyOtp = () => {
     }
   }, [timer]);
 
-  // useEffect(() => {
-  //   if (verified && subAdminAccess) {
-  //     const isAdminLoggedIn = sessionStorage.getItem("isAdminLoggedIn") === "true";
-  //     const isSubAdminLoggedIn = sessionStorage.getItem("isSubAdminLoggedIn") === "true";
+  useEffect(() => {
+    if (verified && subAdminAccess) {
+      const isAdminLoggedIn = sessionStorage.getItem("isAdminLoggedIn") === "true";
+      const isSubAdminLoggedIn = sessionStorage.getItem("isSubAdminLoggedIn") === "true";
 
-  //     if (isSubAdminLoggedIn) {
-  //       if (subAdminAccess.length > 0) {
-  //         const firstAccessibleRoute = getFirstAccessibleRoute(subAdminAccess);
-  //         navigate(firstAccessibleRoute);
-  //         setVerified(false);
-  //       }
-  //     } else if (isAdminLoggedIn) {
-  //       navigate("/dashboard");
-  //       setVerified(false);
-  //     }
-  //   }
-  // }, [verified, subAdminAccess, navigate]);
+      if (isSubAdminLoggedIn) {
+        if (subAdminAccess.length > 0) {
+          const firstAccessibleRoute = getFirstAccessibleRoute(subAdminAccess);
+          navigate(firstAccessibleRoute);
+          setVerified(false);
+        }
+      } else if (isAdminLoggedIn) {
+        navigate("/dashboard");
+        setVerified(false);
+      }
+    }
+  }, [verified, subAdminAccess, navigate]);
 
   const handleInputChange = (e, index) => {
     if (/^[0-9]$/.test(e.target.value) || e.target.value === "") {
@@ -61,91 +61,94 @@ const VerifyOtp = () => {
     }
   };
 
-  // const hasSubAdminAccess = (accessData, moduleName) => {
-  //   if (!accessData || !Array.isArray(accessData)) return false;
+  const hasSubAdminAccess = (accessData, moduleName) => {
+    if (!accessData || !Array.isArray(accessData)) return false;
 
-  //   const module = accessData.find(item =>
-  //     item.moduleName === moduleName ||
-  //     (item.parentModuleName && item.parentModuleName === moduleName)
-  //   );
+    const module = accessData.find(item =>
+      item.moduleName === moduleName ||
+      (item.parentModuleName && item.parentModuleName === moduleName)
+    );
 
-  //   return module && module.accessTypes && module.accessTypes.length > 0;
-  // };
+    return module && module.accessTypes && module.accessTypes.length > 0;
+  };
 
-  // const getFirstAccessibleRoute = (accessData) => {
-  //   if (!accessData || !Array.isArray(accessData)) {
-  //     return "/dashboard";
-  //   }
+  const getFirstAccessibleRoute = (accessData) => {
+    if (!accessData || !Array.isArray(accessData)) {
+      return "/dashboard";
+    }
 
-  //   const accessibleRoutes = [];
-  // allNavigationItems.forEach(item => {
-  //   if (item.hasSubmenu && item.subItems) {
-  //     const accessibleSubItems = item.subItems.filter(subItem =>
-  //       hasSubAdminAccess(accessData, subItem.title)
-  //     );
+    const accessibleRoutes = [];
+    allNavigationItems.forEach(item => {
+      if (item.hasSubmenu && item.subItems) {
+        const accessibleSubItems = item.subItems.filter(subItem =>
+          hasSubAdminAccess(accessData, subItem.title)
+        );
 
-  //     if (accessibleSubItems.length > 0) {
-  //       const firstSubItem = accessibleSubItems[0];
-  //       accessibleRoutes.push({
-  //         url: firstSubItem.url,
-  //         title: firstSubItem.title,
-  //         priority: getRoutePriority(firstSubItem.url)
-  //       });
-  //     }
-  //   }
-  //   else if (!item.hasSubmenu) {
-  //     const hasAccess = hasSubAdminAccess(accessData, item.title);
-  //     if (hasAccess && item.url && item.url !== "") {
-  //       accessibleRoutes.push({
-  //         url: item.url,
-  //         title: item.title,
-  //         priority: getRoutePriority(item.url)
-  //       });
-  //     }
-  //   }
-  // });
+        if (accessibleSubItems.length > 0) {
+          const firstSubItem = accessibleSubItems[0];
+          accessibleRoutes.push({
+            url: firstSubItem.url,
+            title: firstSubItem.title,
+            priority: getRoutePriority(firstSubItem.url)
+          });
+        }
+      }
+      else if (!item.hasSubmenu) {
+        const hasAccess = hasSubAdminAccess(accessData, item.title);
+        if (hasAccess && item.url && item.url !== "") {
+          accessibleRoutes.push({
+            url: item.url,
+            title: item.title,
+            priority: getRoutePriority(item.url)
+          });
+        }
+      }
+    });
 
-  //   if (accessibleRoutes.length === 0) {
-  //     return "/dashboard";
-  //   }
+    if (accessibleRoutes.length === 0) {
+      return "/dashboard";
+    }
 
-  //   accessibleRoutes.sort((a, b) => a.priority - b.priority);
-  //   const firstRoute = accessibleRoutes[0];
-  //   return firstRoute.url;
-  // };
+    accessibleRoutes.sort((a, b) => a.priority - b.priority);
+    const firstRoute = accessibleRoutes[0];
+    return firstRoute.url;
+  };
 
-  // const getRoutePriority = (url) => {
-  //   const priorityMap = {
-  //     "/dashboard": 1,
-  //     "/customers": 2,
-  //     "/pg-hostel-owner": 3,
-  //     "/tiffin-restaurant-provider": 4,
-  //     "/feature-facilities": 5,
-  //     "/pg-hostel-listing": 6,
-  //     "/restaurant-listing": 7,
-  //     "/pg-hostel-bookings": 8,
-  //     "/restaurant-orders": 9,
-  //     "/payments-overview": 10,
-  //     "/wallet-transactions": 11,
-  //     "/deposit-transactions": 12,
-  //     "/deposit-refund-requests": 13,
-  //     "/payout-history": 14,
-  //     "/coupon": 15,
-  //     "/reviews": 16,
-  //     "/analytics": 17,
-  //     "/cms/banner": 18,
-  //     "/cms/static-page": 19,
-  //     "/cms/notification-management": 20,
-  //     "/chats": 21,
-  //     "/settings/commission": 22,
-  //     "/settings/cashback": 23,
-  //     "/sub-admin/roles": 24,
-  //     "/sub-admin/users": 25,
-  //     "/sub-admin/user-permissions": 26
-  //   };
+  const getRoutePriority = (url) => {
+    const priorityMap = {
+      "/dashboard": 1,
+      "/user-management": 2,
+      "/staff-management": 3,
+      "/product-management": 4,
+      "/order-management": 5,
+      "/offer-management": 6,
+      "/blog-management": 7,
+      "/lucky-draw-management": 8,
+      "/spin-reward-management": 9,
+      "/refer-and-earn-user": 10,
+      "/upload-video": 11,
+      "/reports": 12,
+      "/staff-performance": 13,
+      "/lucky-draw-analysis": 14,
+      "/commission-settings": 15,
+      "/coin-settings": 16,
+      "/withdraw-settings": 17,
+      "/target-management": 18,
+      "/country-management": 19,
+      "/notification-management/send-notification": 20,
+      "/manage-redeem-request": 21,
+      "/chat-support-system": 22,
+      "/manage-comments": 23,
+      "/app-management/aboutus": 24,
+      "/app-management/terms-and-conditions": 25,
+      "/app-management/privacy-policy": 26,
+      "/app-management/manage-banner": 27,
+      "/app-management/other-settings": 28,
+      "/app-management/faq": 29,
+    };
 
-  //   return priorityMap[url] || 999;
-  // };
+    return priorityMap[url] || 999;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -210,7 +213,6 @@ const VerifyOtp = () => {
               Please enter OTP received on your email id {email}
             </p>
           </div>
-
 
           <form onSubmit={handleSubmit} className="space-y-5 w-full max-w-md">
             <div className="flex justify-center py-2 gap-4 ">

@@ -99,18 +99,18 @@ const useLogin = () => {
         setLoading(false);
         toast.success(res?.message);
         sessionStorage.setItem("token", res?.data?.token);
-        sessionStorage.setItem("adminId", res?.data?.admin?._id);
-        sessionStorage.setItem("adminName", res?.data?.admin?.name);
-        sessionStorage.setItem("adminProfile", res?.data?.admin?.profileImage);
-        sessionStorage.setItem("isAdminLoggedIn", res?.isAdminLoggedIn);
-        sessionStorage.setItem("isSubAdminLoggedIn", res?.isSubAdminLoggedIn);
+        sessionStorage.setItem("adminId", res?.data?.user?._id);
+        sessionStorage.setItem("adminName", res?.data?.user?.name);
+        sessionStorage.setItem("adminProfile", res?.data?.user?.profileImage);
+        sessionStorage.setItem("isAdminLoggedIn", res?.data?.isAdminLoggedIn);
+        sessionStorage.setItem("isSubAdminLoggedIn", res?.data?.isSubAdminLoggedIn);
 
-        if (res?.user?.userAccess) {
+        if (res?.data?.user?.accessPermissions) {
           sessionStorage.setItem(
-            "userAccess",
-            JSON.stringify(res.user.userAccess)
+            "accessPermissions",
+            JSON.stringify(res?.data?.user?.accessPermissions)
           );
-          setSubAdminAccess(res.user.userAccess);
+          setSubAdminAccess(res?.data?.user?.accessPermissions);
         }
         setUserInfo({
           isAuthenticated: true,

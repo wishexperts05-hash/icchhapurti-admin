@@ -186,6 +186,8 @@ import {
   ManageRedeemRequest,
   ViewRedeemRequest,
 } from "../pages/module/ManageRedeemRequest/index";
+import SubAdminProtectedRoute from "./SubAdminProtectedRoute.jsx";
+import NotFound from "../pages/module/NotFound.jsx";
 // import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
 // import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
 
@@ -311,15 +313,15 @@ const RefferalDiscountSetting = lazy(
   () => import("../pages/module/refer&Earn/referralTracking/ReferralDiscountSetting")
 );
 
-const ViewUserReferral=lazy(
-  ()=>import("../pages/module/refer&Earn/referralTracking/ViewUserReferral")
+const ViewUserReferral = lazy(
+  () => import("../pages/module/refer&Earn/referralTracking/ViewUserReferral")
 )
-const EditReferralTracking=lazy(
-  ()=>import("../pages/module/refer&Earn/referralTracking/EditReferralTracking.jsx")
+const EditReferralTracking = lazy(
+  () => import("../pages/module/refer&Earn/referralTracking/EditReferralTracking.jsx")
 )
 // ----------------------------  Upload Video ----------------------------
-const UploadVideo=lazy(
-  ()=>import("../pages/module/refer&Earn/uploadVideo/UploadVideo")
+const UploadVideo = lazy(
+  () => import("../pages/module/refer&Earn/uploadVideo/UploadVideo")
 )
 
 // ---------------------------- Sub-admin Management ----------------------------
@@ -365,446 +367,447 @@ function PublicRoute() {
 
         {/* ---------------------------- Protected Routes with Layout ---------------------------- */}
         <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<Layout />}>
+          <Route path="/" element={<Layout />}>
+            <Route element={<SubAdminProtectedRoute />}>
 
-        {/* ----------------------------- Sub-admin Management ---------------------------- */}
-          <Route path="/sub-admin/roles" element={<Roles activeItem={activeItem} setActiveItem={setActiveItem} />} />
-          <Route
-            path="/sub-admin/roles/create"
-            element={<CreateUpdateRole activeItem={activeItem} setActiveItem={setActiveItem} />}
-          />
-          <Route
-            path="/sub-admin/roles/edit/:id"
-            element={<CreateUpdateRole activeItem={activeItem} setActiveItem={setActiveItem} />}
-          />
-          {/* ------------------------------- */}
+              {/* ----------------------------- Sub-admin Management ---------------------------- */}
+              <Route path="/sub-admin/roles" element={<Roles activeItem={activeItem} setActiveItem={setActiveItem} />} />
+              <Route
+                path="/sub-admin/roles/create"
+                element={<CreateUpdateRole activeItem={activeItem} setActiveItem={setActiveItem} />}
+              />
+              <Route
+                path="/sub-admin/roles/edit/:id"
+                element={<CreateUpdateRole activeItem={activeItem} setActiveItem={setActiveItem} />}
+              />
+              {/* ------------------------------- */}
 
-          <Route path="/sub-admin/users" element={<Users activeItem={activeItem} setActiveItem={setActiveItem}/>} />
-          <Route
-            path="/sub-admin/users/create"
-            element={<AddEditUser activeItem={activeItem} setActiveItem={setActiveItem}/>}
-          />
-          <Route
-            path="/sub-admin/users/edit/:id"
-            element={<AddEditUser activeItem={activeItem} setActiveItem={setActiveItem}/>}
-          />
-          <Route
-            path="/sub-admin/users/view/:id"
-            element={<ViewUserDetail activeItem={activeItem} setActiveItem={setActiveItem}/>}
-          />
-          {/* ------------------------------ */}
+              <Route path="/sub-admin/users" element={<Users activeItem={activeItem} setActiveItem={setActiveItem} />} />
+              <Route
+                path="/sub-admin/users/create"
+                element={<AddEditUser activeItem={activeItem} setActiveItem={setActiveItem} />}
+              />
+              <Route
+                path="/sub-admin/users/edit/:id"
+                element={<AddEditUser activeItem={activeItem} setActiveItem={setActiveItem} />}
+              />
+              <Route
+                path="/sub-admin/users/view/:id"
+                element={<ViewUserDetail activeItem={activeItem} setActiveItem={setActiveItem} />}
+              />
+              {/* ------------------------------ */}
 
-          <Route
-            path="/sub-admin/user-permissions"
-            element={<UsersPermission activeItem={activeItem} setActiveItem={setActiveItem}/>}
-          />
-          <Route
-            path="/sub-admin/user-permissions/create"
-            element={<AddEditSubAdmin activeItem={activeItem} setActiveItem={setActiveItem}/>}
-          />
-          <Route
-            path="/sub-admin/user-permissions/edit/:id"
-            element={<AddEditSubAdmin activeItem={activeItem} setActiveItem={setActiveItem}/>}
-          />
-          <Route
-            path="/sub-admin/user-permissions/view/:id"
-            element={<ViewUsersPermission activeItem={activeItem} setActiveItem={setActiveItem}/>}
-          />
-          {/* ------------------------------ */}
-          
-          {/* Dashboard */}
-          <Route
-            path="dashboard"
-            element={
-              <Dashboard
+              <Route
+                path="/sub-admin/user-permissions"
+                element={<UsersPermission activeItem={activeItem} setActiveItem={setActiveItem} />}
+              />
+              <Route
+                path="/sub-admin/user-permissions/create"
+                element={<AddEditSubAdmin activeItem={activeItem} setActiveItem={setActiveItem} />}
+              />
+              <Route
+                path="/sub-admin/user-permissions/edit/:id"
+                element={<AddEditSubAdmin activeItem={activeItem} setActiveItem={setActiveItem} />}
+              />
+              <Route
+                path="/sub-admin/user-permissions/view/:id"
+                element={<ViewUsersPermission activeItem={activeItem} setActiveItem={setActiveItem} />}
+              />
+              {/* ------------------------------ */}
+
+              {/* Dashboard */}
+              <Route
+                path="dashboard"
+                element={
+                  <Dashboard
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+
+              {/* ---------------------------- Admin Profile ---------------------------- */}
+              <Route path="adminProfile" element={<AdminProfile />} />
+              <Route path="adminProfile/editProfile" element={<EditProfile />} />
+
+              {/* ---------------------------- Promoter Management ---------------------------- */}
+              <Route path="promoter-management" element={<PromoterManagement />} />
+              <Route
+                path="/promoter-management/promoter-managementedit"
+                element={<PromoterManagementEdit />}
+              />
+              <Route
+                path="/promoter-management/promoter-managementadd"
+                element={<PromoterManagementAdd />}
+              />
+              <Route
+                path="/promoter-management/promoter-details"
+                element={<PromoterDetails />}
+              />
+
+              {/* -------------------------- Order Management -------------------------- */}
+              <Route
+                path="order-management"
+                element={
+                  <OrderManagement
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="order-management/order-details/:userType/:orderId"
+                element={
+                  <OrderDetails
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="order-management/edit-order-details"
+                element={
+                  <EditOrderDetails
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+
+              {/* -------------------------- User Management -------------------------- */}
+              <Route path="user-management" element={<UserManagement />} />
+              <Route
+                path="user-management/user-details/:id"
+                element={<UserDetails />}
+              />
+
+              {/* -------------------------- Staff Management -------------------------- */}
+              <Route
+                path="staff-management"
+                element={
+                  <StaffManagement
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="/staff-management/addStaff"
+                element={
+                  <AddStaffForm
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="/staff-management/staff-details/:id"
+                element={<ViewStaff />}
                 activeItem={activeItem}
                 setActiveItem={setActiveItem}
               />
-            }
-          />
-
-          {/* ---------------------------- Admin Profile ---------------------------- */}
-          <Route path="adminProfile" element={<AdminProfile />} />
-          <Route path="adminProfile/editProfile" element={<EditProfile />} />
-
-          {/* ---------------------------- Promoter Management ---------------------------- */}
-          <Route path="promoter-management" element={<PromoterManagement />} />
-          <Route
-            path="/promoter-management/promoter-managementedit"
-            element={<PromoterManagementEdit />}
-          />
-          <Route
-            path="/promoter-management/promoter-managementadd"
-            element={<PromoterManagementAdd />}
-          />
-          <Route
-            path="/promoter-management/promoter-details"
-            element={<PromoterDetails />}
-          />
-
-          {/* -------------------------- Order Management -------------------------- */}
-          <Route
-            path="order-management"
-            element={
-              <OrderManagement
+              <Route
+                path="/staff-management/editStaff/:id"
+                element={<EditStaff />}
                 activeItem={activeItem}
                 setActiveItem={setActiveItem}
               />
-            }
-          />
-          <Route
-            path="order-management/order-details/:userType/:orderId"
-            element={
-              <OrderDetails
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
+              <Route
+                path="/staff-management/attendanceListing"
+                element={
+                  <AttendanceListing
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
-            }
-          />
-          <Route
-            path="order-management/edit-order-details"
-            element={
-              <EditOrderDetails
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
+              <Route
+                path="/staff-management/salesListing"
+                element={
+                  <StaffSales
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
-            }
-          />
-
-          {/* -------------------------- User Management -------------------------- */}
-          <Route path="user-management" element={<UserManagement />} />
-          <Route
-            path="user-management/user-details/:id"
-            element={<UserDetails />}
-          />
-
-          {/* -------------------------- Staff Management -------------------------- */}
-          <Route
-            path="staff-management"
-            element={
-              <StaffManagement
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
+              <Route
+                path="/staff-management/staff-map/:id"
+                element={
+                  <StaffMapPage
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
-            }
-          />
-          <Route
-            path="/staff-management/addStaff"
-            element={
-              <AddStaffForm
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
+
+              {/* -------------------------- Product Management -------------------------- */}
+              <Route path="product-management" element={<ProductManagment />} />
+              <Route
+                path="/product-management/add-product"
+                element={<AddProduct />}
               />
-            }
-          />
-          <Route
-            path="/staff-management/staff-details/:id"
-            element={<ViewStaff />}
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
-          />
-          <Route
-            path="/staff-management/editStaff/:id"
-            element={<EditStaff />}
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
-          />
-          <Route
-            path="/staff-management/attendanceListing"
-            element={
-              <AttendanceListing
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
+              <Route
+                path="/product-management/product-edit/:id"
+                element={<EditProduct />}
               />
-            }
-          />
-          <Route
-            path="/staff-management/salesListing"
-            element={
-              <StaffSales
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
+              <Route
+                path="/product-management/product-view/:id"
+                element={<ViewProduct />}
               />
-            }
-          />
-          <Route
-            path="/staff-management/staff-map/:id"
-            element={
-              <StaffMapPage
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
+              <Route
+                path="/product-management/shipping-cost/"
+                element={<ManageShippingCost />}
               />
-            }
-          />
+              <Route
+                path="/product-management/shipping-cost/add-shipping-cost/domestic"
+                element={<AddShippingCostDomestic />}
+              />
+              <Route
+                path="/product-management/shipping-cost/add-shipping-cost/international"
+                element={<AddShippingCostInternational />}
+              />
+              <Route
+                path="/product-management/shipping-cost/edit-shipping-cost/domestic/:id"
+                element={<EditDomasticShipingCost />}
+              />
+              <Route
+                path="/product-management/shipping-cost/edit-shipping-cost/international/:id"
+                element={<EditInternationalShipingCost />}
+              />
 
-          {/* -------------------------- Product Management -------------------------- */}
-          <Route path="product-management" element={<ProductManagment />} />
-          <Route
-            path="/product-management/add-product"
-            element={<AddProduct />}
-          />
-          <Route
-            path="/product-management/product-edit/:id"
-            element={<EditProduct />}
-          />
-          <Route
-            path="/product-management/product-view/:id"
-            element={<ViewProduct />}
-          />
-          <Route
-            path="/product-management/shipping-cost/"
-            element={<ManageShippingCost />}
-          />
-          <Route
-            path="/product-management/shipping-cost/add-shipping-cost/domestic"
-            element={<AddShippingCostDomestic />}
-          />
-          <Route
-            path="/product-management/shipping-cost/add-shipping-cost/international"
-            element={<AddShippingCostInternational />}
-          />
-          <Route
-            path="/product-management/shipping-cost/edit-shipping-cost/domestic/:id"
-            element={<EditDomasticShipingCost />}
-          />
-          <Route
-            path="/product-management/shipping-cost/edit-shipping-cost/international/:id"
-            element={<EditInternationalShipingCost />}
-          />
+              {/* -------------------------- Offer Management -------------------------- */}
+              <Route path="offer-management" element={<OfferManagementList />} />
+              <Route
+                path="offer-management/add-offer"
+                element={<OfferManagementAdd />}
+              />
+              <Route
+                path="offer-management/edit-offer/:id"
+                element={<OfferManagementAdd />}
+              />
+              <Route
+                path="offer-management/offer-details/:id"
+                element={<OfferManagementView />}
+              />
 
-          {/* -------------------------- Offer Management -------------------------- */}
-          <Route path="offer-management" element={<OfferManagementList />} />
-          <Route
-            path="offer-management/add-offer"
-            element={<OfferManagementAdd />}
-          />
-          <Route
-            path="offer-management/edit-offer/:id"
-            element={<OfferManagementAdd />}
-          />
-          <Route
-            path="offer-management/offer-details/:id"
-            element={<OfferManagementView />}
-          />
+              {/* -------------------------- Blog Management -------------------------- */}
+              <Route path="blog-management" element={<BlogManagement />} />
+              <Route path="/blog-management/add-blogs" element={<AddBlog />} />
+              <Route
+                path="/blog-management/edit-blogs/:id"
+                element={<AddBlog />}
+              />
+              <Route
+                path="/blog-management/view-blogs/:id"
+                element={<ViewBlog />}
+              />
 
-          {/* -------------------------- Blog Management -------------------------- */}
-          <Route path="blog-management" element={<BlogManagement />} />
-          <Route path="/blog-management/add-blogs" element={<AddBlog />} />
-          <Route
-            path="/blog-management/edit-blogs/:id"
-            element={<AddBlog />}
-          />
-          <Route
-            path="/blog-management/view-blogs/:id"
-            element={<ViewBlog />}
-          />
+              {/* App Management */}
+              <Route path="/app-management" element={<TermsAndConditions />} />
+              <Route
+                path="/app-management/terms-and-conditions"
+                element={<TermsAndConditions />}
+              />
+              <Route
+                path="/app-management/create-terms-and-conditions"
+                element={<CreateTermsAndConditions />}
+              />
+              <Route
+                path="/app-management/edit-terms-and-conditions/:id"
+                element={<CreateTermsAndConditions />}
+              />
+              <Route
+                path="/app-management/terms-and-conditions/view/:id"
+                element={<ViewTermsAndConditions />}
+              />
+              <Route
+                path="/app-management/privacy-policy"
+                element={<PrivacyPolicy />}
+              />
+              <Route
+                path="/app-management/create-privacy-policy"
+                element={<CreatePrivacyPolicy />}
+              />
+              <Route
+                path="/app-management/edit-privacy-policy/:id"
+                element={<CreatePrivacyPolicy />}
+              />
+              <Route
+                path="/app-management/privacy-policy/view/:id"
+                element={<ViewPrivacyPolicy />}
+              />
 
-          {/* App Management */}
-          <Route path="/app-management" element={<TermsAndConditions />} />
-          <Route
-            path="/app-management/terms-and-conditions"
-            element={<TermsAndConditions />}
-          />
-          <Route
-            path="/app-management/create-terms-and-conditions"
-            element={<CreateTermsAndConditions />}
-          />
-          <Route
-            path="/app-management/edit-terms-and-conditions/:id"
-            element={<CreateTermsAndConditions />}
-          />
-          <Route
-            path="/app-management/terms-and-conditions/view/:id"
-            element={<ViewTermsAndConditions />}
-          />
-          <Route
-            path="/app-management/privacy-policy"
-            element={<PrivacyPolicy />}
-          />
-          <Route
-            path="/app-management/create-privacy-policy"
-            element={<CreatePrivacyPolicy />}
-          />
-          <Route
-            path="/app-management/edit-privacy-policy/:id"
-            element={<CreatePrivacyPolicy />}
-          />
-          <Route
-            path="/app-management/privacy-policy/view/:id"
-            element={<ViewPrivacyPolicy />}
-          />
+              <Route path="/app-management/manage-banner" element={<Banner />} />
+              <Route
+                path="/app-management/manage-banner/banner-details/:id"
+                element={<BannerDetails />}
+              />
+              <Route
+                path="/app-management/manage-banner/create-banner"
+                element={<CreateBanner />}
+              />
+              <Route
+                path="/app-management/manage-banner/edit-banner/:id"
+                element={<EditBanner />}
+              />
+              <Route
+                path="/app-management/manage-banner/update-banner/:id"
+                element={<UpdateBanner />}
+              />
+              <Route
+                path="/app-management/help-and-support"
+                element={<HelpSupport />}
+              />
+              <Route
+                path="/app-management/other-settings"
+                element={<OtherSettings />}
+              />
 
-          <Route path="/app-management/manage-banner" element={<Banner />} />
-          <Route
-            path="/app-management/manage-banner/banner-details/:id"
-            element={<BannerDetails />}
-          />
-          <Route
-            path="/app-management/manage-banner/create-banner"
-            element={<CreateBanner />}
-          />
-          <Route
-            path="/app-management/manage-banner/edit-banner/:id"
-            element={<EditBanner />}
-          />
-          <Route
-            path="/app-management/manage-banner/update-banner/:id"
-            element={<UpdateBanner />}
-          />
-          <Route
-            path="/app-management/help-and-support"
-            element={<HelpSupport />}
-          />
-          <Route
-            path="/app-management/other-settings"
-            element={<OtherSettings />}
-          />
+              {/* -------------------------- Country Management -------------------------- */}
+              <Route
+                path="country-management"
+                element={<CountryManagementList />}
+              />
+              <Route
+                path="country-management/add-country"
+                element={<CountryManagementAdd />}
+              />
+              <Route
+                path="country-management/edit-country/:id"
+                element={<CountryManagementAdd />}
+              />
 
-          {/* -------------------------- Country Management -------------------------- */}
-          <Route
-            path="country-management"
-            element={<CountryManagementList />}
-          />
-          <Route
-            path="country-management/add-country"
-            element={<CountryManagementAdd />}
-          />
-          <Route
-            path="country-management/edit-country/:id"
-            element={<CountryManagementAdd />}
-          />
+              {/* -------------------------- Reward Management -------------------------- */}
+              <Route
+                path="/lucky-draw-management"
+                element={<LuckyDrawManagementList />}
+              />
+              <Route
+                path="/lucky-draw-management/view-lucky-draw/:id"
+                element={<LuckyDrawManagementView />}
+              />
+              <Route
+                path="/lucky-draw-management/add-lucky-draw"
+                element={<LuckyDrawManagementAdd />}
+              />
+              <Route
+                path="/lucky-draw-management/edit-lucky-draw/:id"
+                element={<LuckyDrawManagementEdit />}
+              />
 
-          {/* -------------------------- Reward Management -------------------------- */}
-          <Route
-            path="/lucky-draw-management"
-            element={<LuckyDrawManagementList />}
-          />
-          <Route
-            path="/lucky-draw-management/view-lucky-draw/:id"
-            element={<LuckyDrawManagementView />}
-          />
-          <Route
-            path="/lucky-draw-management/add-lucky-draw"
-            element={<LuckyDrawManagementAdd />}
-          />
-          <Route
-            path="/lucky-draw-management/edit-lucky-draw/:id"
-            element={<LuckyDrawManagementEdit />}
-          />
+              <Route
+                path="/lucky-draw-management/select-winner"
+                element={<LuckyDrawManagementSelectWinner />}
+              />
+              <Route
+                path="/lucky-draw-management/add-winner/:id"
+                element={<AddWinner />}
+              />
+              <Route
+                path="spin-reward-management"
+                element={<SpinRewardManagementList />}
+              />
+              <Route
+                path="spin-reward-management/add-spin-reward"
+                element={<AddSpinReward />}
+              />
+              <Route
+                path="spin-reward-management/edit-spin-reward/:id"
+                element={<EditSpinReward />}
+              />
 
-          <Route
-            path="/lucky-draw-management/select-winner"
-            element={<LuckyDrawManagementSelectWinner />}
-          />
-          <Route
-            path="/lucky-draw-management/add-winner/:id"
-            element={<AddWinner />}
-          />
-          <Route
-            path="spin-reward-management"
-            element={<SpinRewardManagementList />}
-          />
-          <Route
-            path="spin-reward-management/add-spin-reward"
-            element={<AddSpinReward />}
-          />
-          <Route
-            path="spin-reward-management/edit-spin-reward/:id"
-            element={<EditSpinReward />}
-          />
+              <Route
+                path="spin-reward-management/set-spin-price"
+                element={<SetSpinPrice />}
+              />
 
-          <Route
-            path="spin-reward-management/set-spin-price"
-            element={<SetSpinPrice />}
-          />
+              {/* -------------------------- Manage Redeem Request -------------------------- */}
+              <Route
+                path="manage-redeem-request"
+                element={<ManageRedeemRequest />}
+              />
+              <Route
+                path="manage-redeem-request/view-redeem-request/:id"
+                element={<ViewRedeemRequest />}
+              />
 
-          {/* -------------------------- Manage Redeem Request -------------------------- */}
-          <Route
-            path="manage-redeem-request"
-            element={<ManageRedeemRequest />}
-          />
-          <Route
-            path="manage-redeem-request/view-redeem-request/:id"
-            element={<ViewRedeemRequest />}
-          />
+              {/* -------------------------- Chat Support System -------------------------- */}
+              <Route path="chat-support-system" element={<ChatSupportSystem />} />
+              <Route
+                path="chat-support-system/chatbox/:conversationId"
+                element={<ChatBox />}
+              />
 
-          {/* -------------------------- Chat Support System -------------------------- */}
-          <Route path="chat-support-system" element={<ChatSupportSystem />} />
-          <Route
-            path="chat-support-system/chatbox/:conversationId"
-            element={<ChatBox />}
-          />
+              {/* -------------------------------------Monetary Setting ------------------------------------------- */}
+              <Route path="/commission-settings" element={<CommissionSetting />} />
+              <Route
+                path="/commission-settings/add-commission"
+                element={<SetCommissionSetting />}
+              />
+              <Route
+                path="/commission-settings/edit-commission/:id"
+                element={<SetCommissionSetting />}
+              />
+              <Route path="/coin-settings" element={<CoinSettings />} />
+              <Route path="/withdraw-settings" element={<WithDrawSettings />} />
 
-          {/* -------------------------------------Monetary Setting ------------------------------------------- */}
-          <Route path="/commission-settings" element={<CommissionSetting />} />
-          <Route
-            path="/commission-settings/add-commission"
-            element={<SetCommissionSetting />}
-          />
-          <Route
-            path="/commission-settings/edit-commission/:id"
-            element={<SetCommissionSetting />}
-          />
-          <Route path="/coin-settings" element={<CoinSettings />} />
-          <Route path="/withdraw-settings" element={<WithDrawSettings />} />
+              {/* -------------------------------------Reports & Analytics------------------------------------------- */}
 
-          {/* -------------------------------------Reports & Analytics------------------------------------------- */}
+              <Route path="/reports" element={<Reports />} />
+              <Route path="/staff-performance" element={<StaffPerformance />} />
 
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/staff-performance" element={<StaffPerformance />} />
+              <Route path="/lucky-draw-analysis" element={<LuckyDrawAnalysis />} />
 
-          <Route path="/lucky-draw-analysis" element={<LuckyDrawAnalysis />} />
+              {/* -------------------------- Target Management -------------------------- */}
 
-          {/* -------------------------- Target Management -------------------------- */}
+              <Route path="/target-management" element={<TargetManagement />} />
 
-          <Route path="/target-management" element={<TargetManagement />} />
+              <Route
+                path="/target-management/setTarget-management"
+                element={<SetTargetManagement />}
+              />
+              {/* -------------------------- Refer & Earn -------------------------- */}
 
-          <Route
-            path="/target-management/setTarget-management"
-            element={<SetTargetManagement />}
-          />
-          {/* -------------------------- Refer & Earn -------------------------- */}
+              <Route path="/refer-and-earn-user" element={<ReferralTrackingForUser />} />
+              <Route path="/refer-and-earn-staff" element={<ReferralTrackingForStaff />} />
+              <Route path="/refer-and-earn-user/referral-discount-setting" element={<RefferalDiscountSetting />} />
+              <Route path="/refer-and-earn-user/view-user-referral/:id" element={<ViewUserReferral />} />
+              <Route path="/refer-and-earn-user/referral-discount-setting/edit-referral-tracking" element={<EditReferralTracking />} />
 
-          <Route path="/refer-and-earn-user" element={<ReferralTrackingForUser/>}/>
-          <Route path="/refer-and-earn-staff" element={<ReferralTrackingForStaff/>}/>
-          <Route path="/refer-and-earn-user/referral-discount-setting" element={<RefferalDiscountSetting/>}/>
-          <Route path="/refer-and-earn-user/view-user-referral/:id" element={<ViewUserReferral/>}/>
-          <Route path="/refer-and-earn-user/referral-discount-setting/edit-referral-tracking" element={<EditReferralTracking/>}/>
+              {/* -------------------------- Upload Video -------------------------- */}
+              <Route path="/upload-video" element={<UploadVideo />} />
 
-           {/* -------------------------- Upload Video -------------------------- */}
-          <Route path="/upload-video" element={<UploadVideo/>}/>
-          
-          
+              {/* -------------------------- Comments and Reviews -------------------------- */}
 
-          {/* -------------------------- Comments and Reviews -------------------------- */}
+              <Route path="/manage-comments" element={<ManageComments />} />
+              <Route
+                path="/manage-comments/view-comment/:reviewId/:reviewType"
+                element={<ManageCommentsView />}
+              />
+              <Route path="/set-review-display" element={<SetReviewDisplay />} />
+              <Route path="/edit-review-display" element={<EditReviewDisplay />} />
+              {/* -------------------------- Notification Management -------------------------- */}
 
-          <Route path="/manage-comments" element={<ManageComments />} />
-          <Route
-            path="/manage-comments/view-comment/:reviewId/:reviewType"
-            element={<ManageCommentsView />}
-          />
-          <Route path="/set-review-display" element={<SetReviewDisplay />} />
-          <Route path="/edit-review-display" element={<EditReviewDisplay />} />
-        {/* -------------------------- Notification Management -------------------------- */}
-          
-          <Route
-            path="/notification-management/send-notification"
-            element={<NotificationSend />}
-          />
-          {/* --------------------------Faq Routes---------------------------------*/}
+              <Route
+                path="/notification-management/send-notification"
+                element={<NotificationSend />}
+              />
+              {/* --------------------------Faq Routes---------------------------------*/}
 
-          <Route path="/app-management/faq" element={<FaqList />} />
-          <Route path="/app-management/faq/add" element={<FaqAddEdit />} />
-          <Route path="/app-management/faq/edit/:id" element={<FaqAddEdit />} />
-          <Route path="/app-management/faq/view/:id" element={<FaqView />} />
+              <Route path="/app-management/faq" element={<FaqList />} />
+              <Route path="/app-management/faq/add" element={<FaqAddEdit />} />
+              <Route path="/app-management/faq/edit/:id" element={<FaqAddEdit />} />
+              <Route path="/app-management/faq/view/:id" element={<FaqView />} />
 
-          {/*----------------------------About Us---------------------------------- */}
+              {/*----------------------------About Us---------------------------------- */}
 
-          <Route path="/app-management/aboutus" element={<AboutUs/>} />
-          <Route path="/app-management/aboutus/edit" element={<AboutusEdit />} />
-          {/* 404 Not Found */}
-          {/* <Route path="*" element={<NotFound />} /> */}
-        </Route>
+              <Route path="/app-management/aboutus" element={<AboutUs />} />
+              <Route path="/app-management/aboutus/edit" element={<AboutusEdit />} />
+              {/* 404 Not Found */}
+              {/* <Route path="*" element={<NotFound />} /> */}
+            </Route>
+             <Route path="/no-access" element={<NotFound />} />
+          </Route>
         </Route>
       </Routes>
     </Suspense>
