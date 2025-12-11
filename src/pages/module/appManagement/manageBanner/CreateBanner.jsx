@@ -1,57 +1,147 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Formik, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { IoMdClose } from "react-icons/io";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import Button from "../../../../components/uiComponent/Button";
+import * as Yup from "yup";
 import FormField from "../../../../components/uiComponent/FormField";
+import { Formik, Form, ErrorMessage } from "formik";
+import useDropdown from "../../../../hooks/dropdown/useDropdown";
+import useBanner from "../../../../hooks/appManagement/useManageBanner";
+import { IoMdClose } from "react-icons/io";
+import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 
 function CreateBanner() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // Static dropdown options
-  const bannerTypes = [
-    { label: "Refer", value: "Refer" },
-    { label: "Offer", value: "Offer" },
-    { label: "Information Banner", value: "Information Banner" },
-    { label: "Refer Banner", value: "Refer Banner" },
-  ];
+  const {
+    fetchBannerTypesDropdown,
+    bannerTypes,
+    fetchAppTypesDropdown,
+    appTypes,
+    loadingAppTypes,
+  } = useDropdown();
 
-  const serviceTypes = [
-    { label: "Staff", value: "Staff" },
-    { label: "User", value: "User" },
-  ];
+  const {
+    createBanner,
+    loading: bannerLoading,
+    fetchBannerById,
+    bannerDetail,
+    updateBanner,
+  } = useBanner();
+// Load app types on mount
+useEffect(() => {
+  fetchAppTypesDropdown();
+}, []);
 
-  // Static data for edit mode
-  const bannerDetails = id
-    ? {
-        bannerType: "Refer",
-        serviceType: "Staff",
-        bannerMedia: [
-          { type: "image", url: "https://via.placeholder.com/150x150" },
-        ],
-      }
-    : null;
+// Fetch banner detail if editing
+useEffect(() => {
+  if (id) fetchBannerById(id);
+}, [id]);
 
+// Fetch banner types after detail loads
+useEffect(() => {
+  const appTypeFromDetail = bannerDetail?.data?.appType;
+  if (appTypeFromDetail) {
+    fetchBannerTypesDropdown(appTypeFromDetail);
+  }
+}, [bannerDetail?.data?.appType]);
+
+
+  // ---------- validation ----------
   const validationSchema = Yup.object({
-    bannerType: Yup.string().required("Banner type is required"),
-    serviceType: Yup.string().required("Service type is required"),
+    appType: Yup.string().required("Service Type is required"),
+    bannerType: Yup.string().required("Banner Type is required"),
     bannerMedia: Yup.array().min(1, "At least one image or video is required"),
   });
 
-  const handleSubmit = (values) => {
-    console.log("Form submitted:", values);
-    navigate("/app-management/manage-banner");
+  // ---------- initial values (supports edit) ----------
+  const getInitialValues = () => {
+    if (id && bannerDetail?.data) {
+      const data = bannerDetail.data;
+      const existingMedia = (data.mediaUrls || []).map((url) => ({
+        url,
+        type: url.match(/\.(mp4|webm|ogg|mov)$/i) ? "video" : "image",
+      }));
+
+      return {
+        appType: data.appType || "",
+        bannerType: data.bannerType || "",
+        bannerMedia: existingMedia,
+      };
+    }
+
+    return {
+      appType: "",
+      bannerType: "",
+      bannerMedia: [],
+    };
   };
 
-  const getMediaType = (file) => {
-    if (file instanceof File) {
-      return file.type.startsWith("video/") ? "video" : "image";
+  // ---------- helper to extract value from different onChange shapes ----------
+  const extractValue = (input) => {
+    if (input == null) return "";
+    // react-select or similar passes option object
+    if (typeof input === "object" && !input.target) {
+      // option object or array (handle multi-case if needed)
+      if (Array.isArray(input)) {
+        // multi-select -> return array of values
+        return input.map((it) => (typeof it === "object" ? it.value ?? it.label ?? it : it));
+      }
+      return input.value ?? input.label ?? "";
     }
-    return file.type || "image";
+    // native event
+    if (input.target) return input.target.value;
+    // plain string/number
+    return input;
+  };
+
+  // ---------- format backend options to { label, value } ----------
+  const formatOptions = (options) => {
+    if (!options) return [];
+    if (!Array.isArray(options)) return [];
+
+    if (options.length === 0) return [];
+
+    // backend returns ["User","Staff"]
+    if (typeof options[0] === "string") {
+      return options.map((v) => ({ label: v, value: v }));
+    }
+
+    // backend returns array of objects — map common keys
+    if (typeof options[0] === "object") {
+      return options.map((o) => ({
+        label: o.label ?? o.name ?? o.title ?? o.bannerType ?? JSON.stringify(o),
+        value: o.value ?? o.id ?? o.bannerType ?? o.name ?? o.title ?? JSON.stringify(o),
+      }));
+    }
+
+    return [];
+  };
+
+  // ---------- submit ----------
+  const handleSubmit = async (values, formikHelpers) => {
+    try {
+      const formData = new FormData();
+      formData.append("appType", values.appType);
+      formData.append("bannerType", values.bannerType);
+
+      const newFiles = values.bannerMedia.filter((m) => m.file);
+      const existingUrls = values.bannerMedia.filter((m) => m.url && !m.file);
+
+      newFiles.forEach((media) => formData.append("banners", media.file));
+      existingUrls.forEach((m) => formData.append("existingMediaUrls", m.url));
+
+      if (id) await updateBanner(id, formData);
+      else await createBanner(formData);
+
+      formikHelpers.setSubmitting(false);
+      navigate("/app-management/manage-banner");
+    } catch (error) {
+      console.error("Error submitting banner:", error);
+      formikHelpers.setSubmitting(false);
+    }
   };
 
   return (
@@ -60,7 +150,10 @@ function CreateBanner() {
         <BreadCrumb
           linkText={[
             { text: "Banner", href: "/app-management/manage-banner" },
-            { text: "Banner Details", href: `/app-management/manage-banner/banner-details/${id}` },
+            {
+              text: "Banner Details",
+              href: `/app-management/manage-banner/banner-details/${id}`,
+            },
             { text: "Update Banner" },
           ]}
         />
@@ -75,150 +168,142 @@ function CreateBanner() {
 
       <PagePath2 title={id ? "Update Banner" : "Create Banner"} />
 
-      {/* Form Card */}
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
-        <Formik
-          initialValues={{
-            bannerType: bannerDetails?.bannerType || "",
-            serviceType: bannerDetails?.serviceType || "",
-            bannerMedia: bannerDetails?.bannerMedia || [],
-          }}
-          validationSchema={validationSchema}
-          enableReinitialize
-          onSubmit={handleSubmit}
-        >
-          {({ setFieldValue, values }) => (
-            <Form className="flex flex-col gap-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-6">
-                <FormField
-                  label="Banner Type"
-                  name="bannerType"
-                  fieldType="select"
-                  options={bannerTypes}
-                  placeholder="Select Banner Type"
-                />
-                <FormField
-                  label="Service Type"
-                  name="serviceType"
-                  fieldType="select"
-                  options={serviceTypes}
-                  placeholder="Select Service Type"
-                />
-              </div>
+        {loadingAppTypes ? (
+          <div className="flex justify-center py-20">
+            <LoaderSpinner />
+          </div>
+        ) : (
+          <Formik
+            enableReinitialize
+            initialValues={getInitialValues()}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ setFieldValue, values, isSubmitting }) => {
+              // local handlers that work for react-select or native select
+              const onAppTypeChange = (input) => {
+                const value = extractValue(input);
+                setFieldValue("appType", value);
+                // reset dependent field
+                setFieldValue("bannerType", "");
+                // fetch banner types only when we have a value
+                if (value) fetchBannerTypesDropdown(value);
+              };
 
-              {/* Media Upload */}
-              <div className="flex flex-col gap-3">
-                <label className="text-sm font-medium">
-                  Upload Banner Media (Images/Videos)
-                </label>
+              const onBannerTypeChange = (input) => {
+                const value = extractValue(input);
+                setFieldValue("bannerType", value);
+              };
 
-                {/* Upload Button */}
-                <label
-                  htmlFor="banner-upload"
-                  className="bg-[#e65d00] text-white px-6 py-2 rounded-lg 
-                    inline-flex items-center justify-center gap-2 cursor-pointer 
-                    font-medium shadow hover:bg-[#d45400] hover:shadow-md 
-                    transition duration-200 w-fit"
-                >
-                  Add Images/Videos
-                </label>
+              return (
+                <Form className="flex flex-col gap-6">
+                  {/* DROPDOWNS */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* SERVICE TYPE */}
+                    <FormField
+                      label="Service Type"
+                      name="appType"
+                      fieldType="select"
+                      options={formatOptions(appTypes)}
+                      placeholder="Select Service Type"
+                      value={values.appType}
+                      onChange={onAppTypeChange}
+                    />
 
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center gap-3">
-                  <input
-                    type="file"
-                    accept="image/*,video/*"
-                    multiple
-                    className="hidden"
-                    id="banner-upload"
-                    onChange={(e) => {
-                      const files = Array.from(e.target.files);
-                      const newMedia = files.map((file) => ({
-                        file,
-                        type: file.type.startsWith("video/") ? "video" : "image",
-                      }));
-                      setFieldValue("bannerMedia", [
-                        ...values.bannerMedia,
-                        ...newMedia,
-                      ]);
-                    }}
-                  />
+                    {/* BANNER TYPE */}
+                    <FormField
+                      label="Banner Type"
+                      name="bannerType"
+                      fieldType="select"
+                      options={formatOptions(bannerTypes)}
+                      placeholder={
+                        values.appType ? "Select Banner Type" : "Select Service Type First"
+                      }
+                      disabled={!values.appType}
+                      value={values.bannerType}
+                      onChange={onBannerTypeChange}
+                    />
+                  </div>
 
-                  {values.bannerMedia.length > 0 ? (
-                    <div className="flex flex-wrap gap-4 justify-center">
-                      {values.bannerMedia.map((media, idx) => {
-                        const mediaType = media.file
-                          ? media.type
-                          : media.type || "image";
-                        const src = media.file
-                          ? URL.createObjectURL(media.file)
-                          : media.url;
+                  {/* MEDIA UPLOAD */}
+                  <div className="flex flex-col gap-3">
+                    <label className="text-sm font-medium">Upload Banner Media</label>
 
-                        return (
-                          <div key={idx} className="relative group">
-                            {mediaType === "video" ? (
-                              <video
-                                src={src}
-                                className="h-24 w-24 rounded-lg object-cover border shadow-sm"
-                                controls={false}
-                              />
-                            ) : (
-                              <img
-                                src={src}
-                                alt="Preview"
-                                className="h-24 w-24 rounded-lg object-cover border shadow-sm"
-                              />
-                            )}
-                            <div className="absolute top-1 left-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
-                              {mediaType}
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const updatedMedia = values.bannerMedia.filter(
-                                  (_, i) => i !== idx
-                                );
-                                setFieldValue("bannerMedia", updatedMedia);
-                              }}
-                              className="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 
-                                rounded-full text-white p-1 shadow-md opacity-90 
-                                group-hover:opacity-100 transition"
-                            >
-                              <IoMdClose className="w-4 h-4" />
-                            </button>
-                          </div>
-                        );
-                      })}
+                    <label
+                      htmlFor="banner-upload"
+                      className="bg-[#e65d00] text-white px-6 py-2 rounded-lg cursor-pointer inline-flex items-center gap-2"
+                    >
+                      Add Images/Videos
+                    </label>
+
+                    <input
+                      type="file"
+                      id="banner-upload"
+                      className="hidden"
+                      multiple
+                      accept="image/*,video/*"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files || []);
+                        const newMedia = files.map((file) => ({
+                          file,
+                          type: file.type.startsWith("video/") ? "video" : "image",
+                        }));
+                        setFieldValue("bannerMedia", [...values.bannerMedia, ...newMedia]);
+                      }}
+                    />
+
+                    {/* PREVIEW */}
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                      {values.bannerMedia?.length > 0 ? (
+                        <div className="flex flex-wrap gap-4 justify-center">
+                          {values.bannerMedia.map((media, idx) => {
+                            const src = media.file ? URL.createObjectURL(media.file) : media.url;
+
+                            return (
+                              <div key={idx} className="relative group">
+                                {media.type === "video" ? (
+                                  <video src={src} className="h-24 w-24 rounded-lg object-cover border shadow-sm" />
+                                ) : (
+                                  <img src={src} className="h-24 w-24 rounded-lg object-cover border shadow-sm" />
+                                )}
+
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const updated = values.bannerMedia.filter((_, i) => i !== idx);
+                                    setFieldValue("bannerMedia", updated);
+                                  }}
+                                  className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1"
+                                >
+                                  <IoMdClose />
+                                </button>
+
+                                <div className="absolute top-1 left-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
+                                  {media.type}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <p className="text-gray-400 text-sm text-center">No Images or Videos Selected</p>
+                      )}
                     </div>
-                  ) : (
-                    <div className="text-gray-400 text-sm">
-                      No Images or Videos Selected
-                    </div>
-                  )}
-                </div>
 
-                <ErrorMessage
-                  name="bannerMedia"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
+                    <ErrorMessage name="bannerMedia" component="div" className="text-red-500 text-sm" />
+                  </div>
 
-              {/* Action Buttons */}
-              <div className="flex items-center justify-center mt-5 gap-6">
-                <Button
-                  variant={2}
-                  text="Cancel"
-                  onClick={() => navigate("/app-management/manage-banner")}
-                />
-                <Button
-                  variant={1}
-                  text={id ? "Update" : "Create"}
-                  type="submit"
-                />
-              </div>
-            </Form>
-          )}
-        </Formik>
+                  {/* BUTTONS */}
+                  <div className="flex justify-center gap-6 mt-5">
+                    <Button variant={2} text="Cancel" onClick={() => navigate("/app-management/manage-banner")} disabled={bannerLoading || isSubmitting} />
+                    <Button variant={1} text={bannerLoading || isSubmitting ? "Processing..." : id ? "Update" : "Create"} type="submit" disabled={bannerLoading || isSubmitting} />
+                  </div>
+                </Form>
+              );
+            }}
+          </Formik>
+        )}
       </div>
     </div>
   );
