@@ -801,8 +801,8 @@ function PublicRoute() {
 
               {/*----------------------------About Us---------------------------------- */}
 
-              <Route path="/app-management/aboutus" element={<AboutUs />} />
-              <Route path="/app-management/aboutus/edit" element={<AboutusEdit />} />
+              <Route path="/app-management/about-us" element={<AboutUs />} />
+              <Route path="/app-management/about-us/edit" element={<AboutusEdit />} />
               {/* 404 Not Found */}
               {/* <Route path="*" element={<NotFound />} /> */}
             </Route>

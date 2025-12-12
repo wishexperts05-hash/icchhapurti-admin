@@ -31,7 +31,7 @@ const routeModuleMap = {
 
   "/chat-support-system": "Chat Support System",
   "/manage-comments": "Comment & Reviews",
-  "/app-management/aboutus": "About Us",
+  "/app-management/about-us": "About Us",
 
   "/app-management/terms-and-conditions": "Terms & Conditions",
 

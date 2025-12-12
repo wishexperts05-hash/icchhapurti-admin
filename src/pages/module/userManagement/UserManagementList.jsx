@@ -9,6 +9,8 @@ import Pagination from "../../../components/uiComponent/Pagination";
 import useUserManagement from "../../../hooks/userManagement/useUserManagement";
 import useDebounce from "../../../hooks/debounce/useDebounce";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
+import usePermissions from "../../../hooks/auth/usePermissions";
+import useLogin from "../../../hooks/auth/useLogin";
 
 export default function UserManagement() {
   const navigate = useNavigate();
@@ -17,6 +19,12 @@ export default function UserManagement() {
   const [limit, setLimit] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 500);
+
+  const { subAdminAccess } = useLogin();
+  const { canRead, canUpdate } = usePermissions(
+    subAdminAccess,
+    "User Management"
+  );
 
   console.log("userList:", userList);
 
@@ -58,6 +66,7 @@ export default function UserManagement() {
       icon: <FaEye className="text-yellow-600" />,
       title: "View",
       onClick: handleView,
+      disableCondition: () => !canRead,
     },
     {
       icon: (row) => (
@@ -68,6 +77,7 @@ export default function UserManagement() {
       ),
       onClick: handleBlock,
       title: "Toggle Status",
+      disableCondition: () => !canUpdate,
     },
   ];
 

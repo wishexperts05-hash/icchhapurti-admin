@@ -382,7 +382,7 @@ export const allNavigationItems = [
       {
         id: 61,
         title: "About Us",
-        url: "/app-management/aboutus",
+        url: "/app-management/about-us",
         icon: FiInfo,
         badge: null,
         color: "yellow",

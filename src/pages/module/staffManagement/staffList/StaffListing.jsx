@@ -10,6 +10,8 @@ import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import useStaffManagement from "../../../../hooks/staffManagement/useStaffManagement";
 import useDebounce from "../../../../hooks/debounce/useDebounce";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+import useLogin from "../../../../hooks/auth/useLogin";
+import usePermissions from "../../../../hooks/auth/usePermissions";
 
 const StaffManagement = () => {
     const { loading, staffList, fetchStaffList, updateStatus } = useStaffManagement();
@@ -18,6 +20,11 @@ const StaffManagement = () => {
     const [limit, setLimit] = useState(10);
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebounce(searchTerm, 500);
+    const { subAdminAccess } = useLogin();
+    const { canCreate, canRead, canUpdate, canDelete } = usePermissions(
+        subAdminAccess,
+        "Staff Management"
+    );
 
     console.log("staffList:", staffList);
     const onPageChange = (data) => {
@@ -84,6 +91,7 @@ const StaffManagement = () => {
             icon: <FaEye className="text-yellow-600" />,
             onClick: handleView,
             title: "View",
+            disableCondition: () => !canRead,
         },
         {
             icon: (row) => (
@@ -94,11 +102,13 @@ const StaffManagement = () => {
             ),
             onClick: handleEdit,
             title: "Edit",
+            disableCondition: () => !canUpdate,
         },
         {
             icon: <Trash2 className="w-5 h-5 text-red-600" />,
             onClick: handleDelete,
             title: "Delete",
+            disableCondition: () => !canDelete,
         },
         {
             icon: (row) => (
@@ -109,6 +119,7 @@ const StaffManagement = () => {
             ),
             onClick: handleBlock,
             title: "Toggle Status",
+            disableCondition: () => !canUpdate,
         },
     ];
 
