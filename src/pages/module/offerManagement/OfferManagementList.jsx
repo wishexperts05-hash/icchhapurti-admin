@@ -11,6 +11,8 @@ import { FaRegEdit } from "react-icons/fa";
 import useOfferManagement from "../../../hooks/offerManagement/useOfferManagement";
 import useDebounce from "../../../hooks/debounce/useDebounce";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
+import usePermissions from "../../../hooks/auth/usePermissions";
+import useLogin from "../../../hooks/auth/useLogin";
 
 export default function OfferManagementList() {
   const { loading, offerEnableDisable, deleteOffer, offerList, fetchOfferList } = useOfferManagement();
@@ -19,6 +21,11 @@ export default function OfferManagementList() {
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
+  const { subAdminAccess } = useLogin();
+  const { canCreate, canRead, canUpdate, canDelete } = usePermissions(
+    subAdminAccess,
+    "Offer Management"
+  );
 
   useEffect(() => {
     fetchOfferList(page, limit, debouncedSearch);
@@ -104,11 +111,13 @@ export default function OfferManagementList() {
       ),
       onClick: handleDisableEnable,
       title: "Toggle Status",
+      disableCondition: () => !canUpdate,
     },
     {
       icon: <FaEye className="text-yellow-600" />,
       title: "View",
       onClick: handleView,
+      disableCondition: () => !canRead,
     },
     {
       icon: (row) => (
@@ -118,11 +127,13 @@ export default function OfferManagementList() {
         />
       ),
       onClick: handleEdit,
+      disableCondition: () => !canUpdate,
     },
     {
       icon: <Trash2 className="w-5 h-5 text-red-600" />,
       onClick: handleDelete,
       title: "Delete",
+      disableCondition: () => !canDelete,
     },
 
   ];
@@ -144,8 +155,8 @@ export default function OfferManagementList() {
         handleSearchTerm={onSearchChange}
         showAddButton={true}
         addButtonText="Add New Offer"
-        onClick={handleAddStaff}
-
+        onClick={canCreate ? handleAddStaff : undefined}
+        canCreate={canCreate}
       />
       {loading ? (
         <div className="flex w-full items-center justify-center py-10">

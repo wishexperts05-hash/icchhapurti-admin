@@ -21,7 +21,7 @@ export default function UserManagement() {
   const debouncedSearch = useDebounce(searchTerm, 500);
 
   const { subAdminAccess } = useLogin();
-  const { canRead, canUpdate } = usePermissions(
+  const { canCreate, canRead, canUpdate, canDelete } = usePermissions(
     subAdminAccess,
     "User Management"
   );
@@ -96,6 +96,10 @@ export default function UserManagement() {
           setSearchTerm(e.target.value);
           if (!error) setPage(1);
         }}
+        showAddButton={true}
+        addButtonText="Add New User"
+        onClick={canCreate ? () => navigate('/user-management/add-user') : undefined}
+        canCreate={canCreate}
       />
 
       {loading ? (

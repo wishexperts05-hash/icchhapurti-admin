@@ -134,7 +134,8 @@ const StaffManagement = () => {
                 handleSearchTerm={handleSearchTerm}
                 showAddButton={true}
                 addButtonText="Add New Staff"
-                onClick={handleAddStaff}
+                onClick={canCreate ? handleAddStaff : undefined}
+                canCreate={canCreate}
                 // Attendence
                 showExtraButton={true}
                 extraButtonText="Attendance"
