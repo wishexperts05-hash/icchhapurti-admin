@@ -174,12 +174,12 @@ function AboutusEdit() {
     const res = await updateAboutUs(formData);
     if (res) {
       Swal.fire("Saved!", "About Us updated successfully", "success");
-      navigate("/app-management/aboutus");
+      navigate("/app-management/about-us");
     }
   };
 
   const handleCancel = () => {
-    navigate("/app-management/aboutus");
+    navigate("/app-management/about-us");
   };
 
   // Show loading spinner while fetching data
@@ -196,7 +196,7 @@ function AboutusEdit() {
       <BreadCrumb
         linkText={[
           { text: "App Management" },
-          { text: "About Us", href: "/app-management/aboutus" },
+          { text: "About Us", href: "/app-management/about-us" },
           { text: "Edit Information" },
         ]}
       />

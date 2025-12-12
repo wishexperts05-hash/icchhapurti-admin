@@ -21,7 +21,7 @@ const AboutUS = () => {
   }, []);
 
   const handleEdit = () => {
-    navigate("/app-management/aboutus/edit");
+    navigate("/app-management/about-us/edit");
   };
 
   if (loading && !aboutUs) {

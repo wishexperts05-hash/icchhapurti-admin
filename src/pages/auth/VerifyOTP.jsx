@@ -139,7 +139,7 @@ const VerifyOtp = () => {
       "/manage-redeem-request": 21,
       "/chat-support-system": 22,
       "/manage-comments": 23,
-      "/app-management/aboutus": 24,
+      "/app-management/about-us": 24,
       "/app-management/terms-and-conditions": 25,
       "/app-management/privacy-policy": 26,
       "/app-management/manage-banner": 27,
