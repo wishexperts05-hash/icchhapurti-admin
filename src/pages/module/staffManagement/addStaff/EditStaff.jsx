@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormField from "../../../../components/uiComponent/FormField";
 import Button from "../../../../components/uiComponent/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
+import useStaffManagement from "../../../../hooks/staffManagement/useStaffManagement";
 
 const validationSchema = Yup.object().shape({
   staffName: Yup.string().required("Staff name is required"),
@@ -14,7 +15,7 @@ const validationSchema = Yup.object().shape({
     .required("Phone number is required"),
   dob: Yup.date().required("Date of birth is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
-  location: Yup.string().required("Location is required"),
+  // location: Yup.string().required("Location is required"),
   referralCode: Yup.string().required("Referral code is required"),
 
   // Bank validation
@@ -26,30 +27,78 @@ const validationSchema = Yup.object().shape({
 
 const EditStaff = () => {
   const navigate = useNavigate();
+    const {
+      loading,
+      fetchStaffDetails,
+      staffDetail, updateStaff,
+    } = useStaffManagement();
+     const { id } = useParams();
   const [preview, setPreview] = useState(null);
 
+  
+    useEffect(() => {
+      if (id) {
+        fetchStaffDetails(id);
+      }
+    }, [id]);
+
+    console.log("staffDetail:", staffDetail);
+  
+
   const initialValues = {
-    staffName: "",
-    phoneNumber: "",
-    dob: "",
-    email: "",
-    location: "",
-    referralCode: "",
-    profileImage: null,
-    accountNumber: "",
-    ifscCode: "",
-    accountType: "",
-    accountHolderName: "",
+    staffName: staffDetail?.staff?.name || "",
+    phoneNumber:staffDetail?.staff?.phoneNumber || "",
+    dob: staffDetail?.staff?.dob || "",
+    email: staffDetail?.staff?.email || "",
+    country: staffDetail?.staff?.country || "",
+    state: staffDetail?.staff?.state || "",
+    city: staffDetail?.staff?.city || "",
+   
+    referralCode: staffDetail?.staff?.referralCode || "",
+    profileImage: staffDetail?.staff?.profileImage || "",
+    accountNumber: staffDetail?.staff?.bankDetails?.accountNumber || "",
+    ifscCode: staffDetail?.staff?.bankDetails?.ifscCode || "",
+    accountType: staffDetail?.staff?.bankDetails?.accountType || "",
+    accountHolderName: staffDetail?.staff?.bankDetails?.accountNumber || "",
     passbookOrChequeImage: null,
     passbookOrChequePreview: null,
   };
+console.log("Initial Values:", initialValues);
+  const handleSubmit = async (values) => {
 
-  const handleSubmit = (values, { resetForm }) => {
-    console.log("Staff Added:", values);
-    alert("Staff added successfully!");
-    resetForm();
-    navigate("/staff-management");
-  };
+  const fd = new FormData();
+
+  fd.append("name", values.staffName);
+  fd.append("email", values.email);
+  fd.append("phoneNumber", values.phoneNumber);
+  fd.append("dob", values.dob);
+  fd.append("country", values.country);
+  fd.append("state", values.state);
+  fd.append("city", values.city);
+  fd.append("referralCode", values.referralCode);
+
+  fd.append(
+    "bankDetails",
+    JSON.stringify({
+      accountNumber: values.accountNumber,
+      ifscCode: values.ifscCode,
+      accountHolderName: values.accountHolderName,
+      accountType: values.accountType,
+    })
+  );
+
+  if (values.profileImage) {
+    fd.append("profileImage", values.profileImage);
+  }
+
+  if (values.passbookOrChequeImage) {
+    fd.append("bankProof", values.passbookOrChequeImage);
+  }
+
+  await updateStaff(id, fd);
+
+  navigate("/staff-management");
+};
 
   const handleCancel = () => {
     navigate("/staff-management");
@@ -74,6 +123,7 @@ const EditStaff = () => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
+          enableReinitialize={true}
         >
           {({ setFieldValue, values }) => (
             <Form className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -177,9 +227,19 @@ const EditStaff = () => {
               />
 
               <FormField
-                label="Staff Location"
-                name="location"
-                placeholder="Enter staff location"
+                label="Country"
+                name="country"
+                placeholder="Enter staff Country"
+              />
+              <FormField
+                label="State"
+                name="state"
+                placeholder="Enter staff State"
+              />
+              <FormField
+                label="City"
+                name="city"
+                placeholder="Enter staff City"
               />
 
               <FormField

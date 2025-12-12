@@ -3,6 +3,7 @@ import { Camera } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
+import useStaffManagement from "../../../../hooks/staffManagement/useStaffManagement";
 
 const CalendarIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
@@ -106,7 +107,7 @@ const AddStaff = () => {
   const navigate = useNavigate();
   const [profileImage, setProfileImage] = useState(null);
   const [bankProofImage, setBankProofImage] = useState(null);
-  
+  const { addStaff } = useStaffManagement();
   const [formData, setFormData] = useState({
     staffName: "",
     countryCode: "+91",
@@ -129,34 +130,48 @@ const AddStaff = () => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleProfileImageUpload = (e) => {
+const handleProfileImageUpload = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+    if (file) setProfileImage(file);
+};
 
-  const handleBankProofUpload = (e) => {
+const handleBankProofUpload = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setBankProofImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+    if (file) setBankProofImage(file);
+};  
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Adding new staff:", formData);
-    alert("Staff added successfully!");
-    navigate("/staff-management");
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const fd = new FormData();
+  fd.append("name", formData.staffName);
+  fd.append("email", formData.email);
+  fd.append("countryCode", formData.countryCode);
+  fd.append("phoneNumber", formData.phoneNumber);
+  fd.append("city", formData.city);
+  fd.append("state", formData.state);
+  fd.append("country", formData.country);
+  fd.append("dob", formData.dob);
+
+  fd.append(
+    "bankDetails",
+    JSON.stringify({
+      bankName: formData.bankName,
+      ifscCode: formData.ifsc,
+      accountNumber: Number(formData.accountNumber),
+      accountHolderName: formData.accountHolderName,
+      accountType: formData.accountType,
+    })
+  );
+
+  if (profileImage) fd.append("profileImage", profileImage);
+
+  console.log("sending data", ...fd);
+
+  await addStaff(fd);
+
+  navigate("/staff-management");
+};
 
   const handleCancel = () => {
     navigate("/staff-management");

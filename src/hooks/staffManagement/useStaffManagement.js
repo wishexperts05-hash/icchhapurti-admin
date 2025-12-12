@@ -124,35 +124,34 @@ const useStaffManagement = () => {
     };
 
 
-
-
-    const addStaff = async (data) => {
-        setLoading(true);
-        try {
-            const res = await fetchData({
-                method: "POST",
-                url: `${conf.apiBaseUrl}admin/staff/add-staff`,
-                data: data,
-            });
-            if (res) {
-                toast.success(res?.message);
-                setLoading(false);
-            }
-        } catch (error) {
-            console.error("Error adding staff:", error);
-            toast.error(error?.response?.data?.message);
-            setLoading(false);
-        } finally {
-            setLoading(false);
+const addStaff = async (data) => {
+    setLoading(true);
+    try {
+        const res = await fetchData({
+            method: "POST",
+            url: `${conf.apiBaseUrl}admin/staff/add`,   // <-- FIXED
+            data: data,
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        if (res) {
+            toast.success(res?.message);
         }
-    };
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+    } finally {
+        setLoading(false);
+    }
+};
 
-    const updateStaff = async (id, data) => {
+  const updateStaff = async (id, data) => {
         setLoading(true);
         try {
             const res = await fetchData({
                 method: "PUT",
-                url: `${conf.apiBaseUrl}admin/staff/update-staff/${id}`,
+                url: `${conf.apiBaseUrl}admin/staff/edit/${id}`,
                 data: data,
             });
             if (res) {
