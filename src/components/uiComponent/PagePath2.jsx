@@ -16,7 +16,7 @@ const PagePath2 = ({
   showAddButton,
   addButtonText,
   onClick,
-  canCreate = true, 
+  canCreate = true,
 
   // Extra Button
   showExtraButton,
@@ -191,23 +191,17 @@ const PagePath2 = ({
               {addButtonText}
             </button>
           )}
+
           {showExtraButton && extraButtonText && (
             <button
-              className={`bg-[#CCA547] text-white px-6 py-[8.8px] rounded-xl 
-              flex justify-center items-center gap-2 cursor-pointer 
-              font-medium shadow-md 
-              transition duration-300
-              ${disabled
-                  ? "bg-gray-400 cursor-not-allowed opacity-60"
-                  : "hover:bg-[#CCA547]/90 hover:shadow-lg"
-                }`}
-              onClick={disabled ? undefined : onExtraClick}
-              disabled={disabled}
-              title={disabled ? "No permission to create" : "Create"}
+              onClick={onClick}
+              disabled={!canCreate}
+              className={`px-4 py-2 rounded-lg bg-yellow-600 text-white hover:bg-yellow-700 transition-colors duration-200 flex items-center gap-2 ${!canCreate ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {extraButtonText}
             </button>
           )}
+
           {showThirdButton && thirdButtonText && (
             <button
               className={`bg-[#CCA547] text-white px-6 py-[8.8px] rounded-xl 

@@ -9,6 +9,8 @@ import { FaEye } from "react-icons/fa";
 import BreadCrumb from "../../../../../components/uiComponent/BreadCrumb";
 import useReferAndEarn from "../../../../../hooks/referAndEarn/useReferAndEarn";
 import useDropdown from "../../../../../hooks/dropdown/useDropdown";
+import useLogin from "../../../../../hooks/auth/useLogin";
+import usePermissions from "../../../../../hooks/auth/usePermissions";
 
 const ReferralTracking = () => {
   const { loading, referralTracking, fetchReferralTracking } = useReferAndEarn();
@@ -19,6 +21,11 @@ const ReferralTracking = () => {
   const [search, setSearch] = useState("");
   const [userType, setUserType] = useState("");
   const debouncedSearch = useDebounce(search, 500);
+  const { subAdminAccess } = useLogin();
+  const { canCreate, canRead } = usePermissions(
+    subAdminAccess,
+    "Referral Tracking"
+  );
 
   useEffect(() => {
     fetchReferralTracking(page, limit, debouncedSearch, userType);
@@ -65,7 +72,12 @@ const ReferralTracking = () => {
       icon: <FaEye className="text-yellow-600" />,
       title: "View",
       onClick: handleView,
+      disableCondition: () => !canRead,
     },];
+
+  const handleRefferalDiscountSetting = () => {
+    navigate("/refer-and-earn-user/referral-discount-setting");
+  };
 
   return (
     <Box>
@@ -85,7 +97,8 @@ const ReferralTracking = () => {
         // ShowAddButton
         showAddButton
         addButtonText="Referral Discount Settings"
-        onClick={() => navigate("/refer-and-earn-user/referral-discount-setting")}
+        onClick={canCreate ? handleRefferalDiscountSetting : undefined}
+        canCreate={canCreate}
       />
       {(
         <>

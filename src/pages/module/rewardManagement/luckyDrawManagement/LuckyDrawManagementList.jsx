@@ -11,21 +11,26 @@ import Pagination from "../../../../components/uiComponent/Pagination";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import useLuckyDrawManagement from "../../../../hooks/rewardManagement/useLuckyDrawManagement";
 import useDebounce from "../../../../hooks/debounce/useDebounce";
+import usePermissions from "../../../../hooks/auth/usePermissions";
+import useLogin from "../../../../hooks/auth/useLogin";
 
 export default function LuckyDrawManagementList() {
   const navigate = useNavigate();
-
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const debouncedSearch = useDebounce(searchTerm, 500);
+  const { luckyDrawList, loading, fetchLuckyDrawList, deleteLuckyDrawById } = useLuckyDrawManagement();
 
-  const { luckyDrawList, loading, fetchLuckyDrawList, deleteLuckyDrawById} =
-    useLuckyDrawManagement();
+  const { subAdminAccess } = useLogin();
+  const { canCreate, canRead, canUpdate, canDelete } = usePermissions(
+    subAdminAccess,
+    "Lucky Draw Management"
+  );
 
   const handleSearchTerm = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1);
+    setPage(1);
   };
 
   const handleAddLuckyDraw = () => {
@@ -40,52 +45,38 @@ export default function LuckyDrawManagementList() {
     navigate(`/lucky-draw-management/edit-lucky-draw/${row._id}`);
   };
 
-  const handleDelete = async(row) => {
+  const handleDelete = async (row) => {
     await deleteLuckyDrawById(row._id);
-    fetchLuckyDrawList(currentPage, itemsPerPage, debouncedSearch);
+    fetchLuckyDrawList(page, limit, debouncedSearch);
   };
 
-  const formatDate = (iso) => {
-    if (!iso) return "-";
-    const d = new Date(iso);
-    return d.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+  const onPageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const onItemsPerPageChange = (newLimit) => {
+    setLimit(newLimit);
+    setPage(1);
   };
 
   useEffect(() => {
-    fetchLuckyDrawList(currentPage, itemsPerPage, debouncedSearch);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, itemsPerPage, debouncedSearch]);
+    fetchLuckyDrawList(page, limit, debouncedSearch);
+  }, [page, limit, debouncedSearch]);
 
-  const pagination = luckyDrawList?.pagination || {};
-  const totalItems = pagination.totalRecords || 0;
-  const totalPages = pagination.totalPages || 1;
-  const currentApiPage = pagination.currentPage || currentPage;
-  const limitFromApi = pagination.limit || itemsPerPage;
-
-  const tableData = useMemo(() => {
-    const apiData = luckyDrawList?.data || [];
-
-    return apiData.map((item, index) => ({
-      ...item,
-      srNo: (currentApiPage - 1) * limitFromApi + index + 1,
-      luckyDrawId: item.eventId,
-      eventName: item.eventName,
-      startEndDate: `${formatDate(item.startDate)} - ${formatDate(
-        item.endDate
-      )}`,
-      status: item.status,
-    }));
-  }, [luckyDrawList, currentApiPage, limitFromApi]);
+  const formatDate = (dateString) => {
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+  };
 
   const columns = [
     { header: "Sr. No.", field: "srNo" },
-    { header: "Lucky Draw ID", field: "luckyDrawId" },
+    { header: "Lucky Draw ID", field: "eventId" },
     { header: "Draw Name", field: "eventName" },
-    { header: "Start - End Date", field: "startEndDate" },
+    {
+      header: "Start - End Date",
+      field: "dateRange",
+      render: (row) => `${formatDate(row.startDate)} - ${formatDate(row.endDate)}`
+    },
     { header: "Status", field: "status" },
     { header: "Action", field: "action" },
   ];
@@ -99,6 +90,7 @@ export default function LuckyDrawManagementList() {
         />
       ),
       onClick: handleViewLuckyDraw,
+      disableCondition: () => !canRead,
     },
     {
       icon: () => (
@@ -108,15 +100,13 @@ export default function LuckyDrawManagementList() {
         />
       ),
       onClick: handleEdit,
+      disableCondition: () => !canUpdate,
     },
     {
-      icon: () => (
-        <Trash2
-          className="w-5 h-5 text-yellow-600 hover:text-red-600 transition-colors duration-200 cursor-pointer"
-          title="Delete"
-        />
-      ),
+      icon: <Trash2 className="w-5 h-5 text-red-600" />,
       onClick: handleDelete,
+      title: "Delete",
+      disableCondition: () => !canDelete,
     },
   ];
 
@@ -131,9 +121,10 @@ export default function LuckyDrawManagementList() {
         showSearch={true}
         searchTerm={searchTerm}
         handleSearchTerm={handleSearchTerm}
-        showExtraButton={true}
-        extraButtonText="Add Lucky Draw Event"
-        onExtraClick={handleAddLuckyDraw}
+        showAddButton={true}
+        addButtonText="Add Lucky Draw Event"
+        onClick={canCreate ? handleAddLuckyDraw : undefined}
+        canCreate={canCreate}
       />
 
       {/* Data Table */}
@@ -143,22 +134,22 @@ export default function LuckyDrawManagementList() {
           <LoaderSpinner />
         </div>
       ) : (
-        <div className="mt-6 bg-white p-4 rounded shadow">
+        <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
           <DataTable
             columns={columns}
-            data={tableData}
+            data={luckyDrawList?.data || []}
+            currentPage={page}
+            usersPerPage={limit}
             actions={actions}
-            currentPage={currentApiPage}
-            usersPerPage={limitFromApi}
           />
 
           <Pagination
-            currentPage={currentApiPage}
-            totalPages={totalPages}
-            totalItems={totalItems}
-            itemsPerPage={limitFromApi}
-            onPageChange={setCurrentPage}
-            onItemsPerPageChange={setItemsPerPage}
+            currentPage={luckyDrawList?.pagination?.currentPage}
+            totalPages={luckyDrawList?.pagination?.totalPages}
+            totalItems={luckyDrawList?.pagination?.totalRecords}
+            itemsPerPage={limit}
+            onPageChange={onPageChange}
+            onItemsPerPageChange={onItemsPerPageChange}
           />
         </div>
       )}

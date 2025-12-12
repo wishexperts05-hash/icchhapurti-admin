@@ -306,9 +306,6 @@ const SetTargetManagement = lazy(() =>
 const ReferralTrackingForUser = lazy(
   () => import("../pages/module/refer&Earn/referralTracking/referralTracking/ReferralTrackingForUser.jsx")
 );
-const ReferralTrackingForStaff = lazy(
-  () => import("../pages/module/refer&Earn/referralTracking/referralTracking/ReferralTrackingForStaff.jsx")
-);
 const RefferalDiscountSetting = lazy(
   () => import("../pages/module/refer&Earn/referralTracking/ReferralDiscountSetting")
 );
@@ -769,7 +766,6 @@ function PublicRoute() {
               {/* -------------------------- Refer & Earn -------------------------- */}
 
               <Route path="/refer-and-earn-user" element={<ReferralTrackingForUser />} />
-              <Route path="/refer-and-earn-staff" element={<ReferralTrackingForStaff />} />
               <Route path="/refer-and-earn-user/referral-discount-setting" element={<RefferalDiscountSetting />} />
               <Route path="/refer-and-earn-user/view-user-referral/:id" element={<ViewUserReferral />} />
               <Route path="/refer-and-earn-user/referral-discount-setting/edit-referral-tracking" element={<EditReferralTracking />} />
