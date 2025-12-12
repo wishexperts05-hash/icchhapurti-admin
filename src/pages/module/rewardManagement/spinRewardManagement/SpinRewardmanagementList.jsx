@@ -6,37 +6,32 @@ import DataTable from "../../../../components/uiComponent/DataTable";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import Pagination from "../../../../components/uiComponent/Pagination";
 import { FaRegEdit } from "react-icons/fa";
-import Button from "../../../../components/uiComponent/Button";
 
 import useSpinRewardManagement from "../../../../hooks/rewardManagement/useSpinRewardManagement";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import useDebounce from "../../../../hooks/debounce/useDebounce";
+import useLogin from "../../../../hooks/auth/useLogin";
+import usePermissions from "../../../../hooks/auth/usePermissions";
 
 export default function SpinRewardManagementList() {
   const navigate = useNavigate();
-
   const { loading, spinRewardList, fetchSpinRewardList, deleteSpinReward } =
     useSpinRewardManagement();
-
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const debouncedSearch = useDebounce(searchTerm, 500);
+    const { subAdminAccess } = useLogin();
+  const { canCreate, canRead, canUpdate, canDelete } = usePermissions(
+    subAdminAccess,
+    "Spin Reward Management"
+  );
 
+  console.log("spinRewardList", spinRewardList);
   useEffect(() => {
-    fetchSpinRewardList(currentPage, itemsPerPage, debouncedSearch);
+    fetchSpinRewardList(page, limit, debouncedSearch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, itemsPerPage, debouncedSearch]);
-
-  const filteredRewards = (spinRewardList || []).filter((item) => {
-    if (!searchTerm.trim()) return true;
-    const q = searchTerm.toLowerCase();
-    return (
-      item?.title?.toLowerCase().includes(q) ||
-      item?.rewardType?.toLowerCase().includes(q) ||
-      item?.userType?.toLowerCase().includes(q)
-    );
-  });
+  }, [page, limit, debouncedSearch]);
 
   const handleSearchTerm = (e) => {
     setSearchTerm(e.target.value);
@@ -50,12 +45,6 @@ export default function SpinRewardManagementList() {
   const handleSetSpinPrice = () => {
     navigate("/spin-reward-management/set-spin-price");
   };
-
-  const totalItems = filteredRewards.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = filteredRewards.slice(startIndex, endIndex);
 
   const handleEdit = (reward) => {
     navigate(`/spin-reward-management/edit-spin-reward/${reward._id}`);
@@ -82,6 +71,7 @@ export default function SpinRewardManagementList() {
         />
       ),
       onClick: handleEdit,
+      disableCondition: () => !canUpdate,
     },
     {
       icon: () => (
@@ -91,15 +81,23 @@ export default function SpinRewardManagementList() {
         />
       ),
       onClick: (row) => handleDelete(row?._id),
+      disableCondition: () => !canDelete,
     },
   ];
 
+  const onPageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const onItemsPerPageChange = (newLimit) => {
+    setLimit(newLimit);
+    setPage(1);
+  };
+
   return (
     <div className="max-w-7xl mx-auto">
-     
       <BreadCrumb linkText={[{ text: "Spin Reward Management" }]} />
 
-    
       <PagePath2
         title="Spin Reward Management"
         showSearch={true}
@@ -107,10 +105,11 @@ export default function SpinRewardManagementList() {
         handleSearchTerm={handleSearchTerm}
         showAddButton={true}
         addButtonText="Set Spin Price"
-        onClick={handleSetSpinPrice}
+        onClick={canCreate ? handleSetSpinPrice : undefined}
         showExtraButton={true}
         extraButtonText="Add New Reward"
-        onExtraClick={handleAddReward}
+        onExtraClick={canCreate ? handleAddReward : undefined}
+        canCreate={canCreate}
       />
 
       {loading ? (
@@ -118,16 +117,16 @@ export default function SpinRewardManagementList() {
           <LoaderSpinner />
         </div>
       ) : (
-        <div className="mt-6 bg-white p-4 rounded shadow">
-          <DataTable columns={columns} data={currentItems} actions={actions} />
+        <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
+          <DataTable columns={columns} data={spinRewardList?.data || []} actions={actions} />
 
           <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            totalItems={totalItems}
-            itemsPerPage={itemsPerPage}
-            onPageChange={setCurrentPage}
-            onItemsPerPageChange={setItemsPerPage}
+            currentPage={page}
+            totalPages={spinRewardList?.pagination?.totalPages}
+            totalItems={spinRewardList?.pagination?.totalRecords}
+            itemsPerPage={limit}
+            onPageChange={onPageChange}
+            onItemsPerPageChange={onItemsPerPageChange}
           />
         </div>
       )}

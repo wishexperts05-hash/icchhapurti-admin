@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 import Button from "../../../../components/uiComponent/Button";
 import useReferAndEarn from "../../../../hooks/referAndEarn/useReferAndEarn";
 import { motion } from "framer-motion";
-import { CheckCircle, UploadCloud, Video} from "lucide-react";
+import { CheckCircle, UploadCloud, Video } from "lucide-react";
+import useLogin from "../../../../hooks/auth/useLogin";
+import usePermissions from "../../../../hooks/auth/usePermissions";
 
 const UploadVideo = () => {
     const { updateRefferalVideo, referralVideo, loading, fetchReferralVideo } = useReferAndEarn();
@@ -14,6 +16,11 @@ const UploadVideo = () => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [dragOver, setDragOver] = useState(false);
     const [error, setError] = useState(null);
+    const { subAdminAccess } = useLogin();
+    const { canRead, canUpdate } = usePermissions(
+        subAdminAccess,
+        "Upload Video"
+    );
 
     useEffect(() => {
         fetchReferralVideo();
@@ -150,8 +157,8 @@ const UploadVideo = () => {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             className={`cursor-pointer block p-8 border-3 border-dashed rounded-2xl transition-all duration-200 ${dragOver
-                                    ? 'border-blue-500 bg-blue-50'
-                                    : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50'
+                                ? 'border-blue-500 bg-blue-50'
+                                : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50'
                                 }`}
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}

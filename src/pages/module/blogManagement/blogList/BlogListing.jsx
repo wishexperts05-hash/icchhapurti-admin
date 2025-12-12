@@ -9,6 +9,8 @@ import { FaEye, FaRegEdit } from "react-icons/fa";
 import useBlogManagement from "../../../../hooks/blogManagement/useBlogManagement";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import useDebounce from "../../../../hooks/debounce/useDebounce";
+import useLogin from "../../../../hooks/auth/useLogin";
+import usePermissions from "../../../../hooks/auth/usePermissions";
 
 const BlogManagement = () => {
     const { blogList, loading, fetchBlogList, deleteBlog } = useBlogManagement();
@@ -17,6 +19,12 @@ const BlogManagement = () => {
     const [limit, setLimit] = useState(10);
     const [search, setSearch] = useState("");
     const debouncedSearch = useDebounce(search, 500);
+    
+    const { subAdminAccess } = useLogin();
+    const { canCreate, canRead, canUpdate, canDelete: canDeletePermission } = usePermissions(
+        subAdminAccess,
+        "Blog Management"
+    );
 
     useEffect(() => {
         fetchBlogList(page, limit, debouncedSearch);
@@ -75,22 +83,26 @@ const BlogManagement = () => {
     const actions = [
         {
             icon: <FaEye className="text-yellow-600" />,
-            title: "View",
             onClick: handleView,
+            title: "View",
+            disableCondition: () => !canRead
         },
         {
             icon: (row) => (
                 <FaRegEdit
-                    className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer"
+                    className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
                     title="Edit"
                 />
             ),
             onClick: handleEdit,
+            title: "Edit",
+            disableCondition: () => !canUpdate
         },
         {
             icon: <Trash2 className="w-5 h-5 text-red-600" />,
             onClick: handleDelete,
             title: "Delete",
+            disableCondition: () => !canDeletePermission
         },
     ];
 
@@ -106,12 +118,13 @@ const BlogManagement = () => {
             {/* Page Header */}
             <PagePath2
                 title="Blog Management"
+                showSearch={true}
                 searchTerm={search}
                 handleSearchTerm={onSearchChange}
-                showSearch={true}
                 showAddButton={true}
-                addButtonText="Add Blog"
-                onClick={handleAddBlog}
+                addButtonText="Add New Blog"
+                onClick={canCreate ? handleAddBlog : undefined}
+                canCreate={canCreate}
             />
 
             {loading ? (

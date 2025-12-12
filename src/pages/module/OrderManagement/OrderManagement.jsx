@@ -10,6 +10,8 @@ import useDebounce from "../../../hooks/debounce/useDebounce";
 import useOrderManagement from "../../../hooks/orderManagement/useOrderManagement";
 import useDropdown from "../../../hooks/dropdown/useDropdown";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
+import useLogin from "../../../hooks/auth/useLogin";
+import usePermissions from "../../../hooks/auth/usePermissions";
 
 const OrderManagement = () => {
   const { loading, orderList, fetchOrderList, } = useOrderManagement();
@@ -23,6 +25,11 @@ const OrderManagement = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const debouncedSearch = useDebounce(search, 500);
+  const { subAdminAccess } = useLogin();
+  const { canRead } = usePermissions(
+    subAdminAccess,
+    "Order Management"
+  );
 
   useEffect(() => {
     fetchOrderList(page, limit, debouncedSearch, status, userType, startDate, endDate);
@@ -67,6 +74,7 @@ const OrderManagement = () => {
       ),
       onClick: handleView,
       title: "View",
+      disableCondition: () => !canRead,
     },
   ];
 
