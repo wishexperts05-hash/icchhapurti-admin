@@ -194,7 +194,7 @@ const SendNotification = () => {
         description="Create a new notification and choose your target audience"
       />
 
-      <div className="bg-white rounded-lg shadow-md p-6 mt-4 min-h-[600px]">
+      <div className="bg-white rounded-2xl shadow-md p-6 mt-4 min-h-[600px]">
         <Formik
           innerRef={formikRef}
           initialValues={{
