@@ -18,10 +18,6 @@ export default function CoinSettings() {
     fetchCoinSetting();
   }, []);
 
-  //   const { subAdminAccess } = useLogin();
-  // const { canCreate, canRead, canUpdate, canDelete } = usePermissions(subAdminAccess, "Chargers & Benefit");
-  // console.log("Chargers & Benefit Permissions:", { canCreate, canRead, canUpdate, canDelete });
-
   const handleEdit = () => {
     if (canUpdate) {
       setCurrentPage("edit");
@@ -29,7 +25,6 @@ export default function CoinSettings() {
   };
 
   const handleUpdate = async (values) => {
-    // Format data to match API requirement
     const formattedData = {
       setCoinValue: {
         coin: values.setCoinValue?.coin || 0,
@@ -38,7 +33,6 @@ export default function CoinSettings() {
       minimumCoinsToConvert: values.minimumCoinsToConvert || 0,
     };
     await updateCoinSetting(formattedData);
-    // Refetch updated data
     await fetchCoinSetting();
     handleBack();
   };
@@ -101,7 +95,6 @@ function CoinSetting({ onEdit, coinSettingData, canUpdate }) {
           />
         </Section>
 
-        {/* Set Coin Value */}
         <Section title="Set Coin Value">
           <FieldView
             label="Coin"
@@ -205,7 +198,7 @@ function EditCoinSetting({ initialData, onBack, onUpdate, loading }) {
 // Reusable section wrapper
 function Section({ title, children }) {
   const isCoinValueRow =
-    Array.isArray(children) && children.length === 3; // Quantity, "=", Rate
+    Array.isArray(children) && children.length === 3;
 
   return (
     <div className="mx-6 mb-6 p-6 bg-gray-50 rounded-lg border border-gray-200">
@@ -231,8 +224,6 @@ function Section({ title, children }) {
   );
 }
 
-
-// Read-only field box
 function FieldView({ label, value }) {
   return (
     <div className="space-y-2">

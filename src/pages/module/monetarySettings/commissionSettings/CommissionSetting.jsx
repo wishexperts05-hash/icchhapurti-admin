@@ -11,6 +11,8 @@ import { Trash2 } from "lucide-react";
 import useCommissionSetting from "../../../../hooks/monetarySettings/useCommissionSetting";
 import useDropdown from "../../../../hooks/dropdown/useDropdown";
 import useDebounce from "../../../../hooks/debounce/useDebounce";
+import useLogin from "../../../../hooks/auth/useLogin";
+import usePermissions from "../../../../hooks/auth/usePermissions";
 
 const CommissionSetting = () => {
   const navigate = useNavigate();
@@ -22,6 +24,11 @@ const CommissionSetting = () => {
   const debouncedSearch = useDebounce(search, 500);
   const [userType, setUserType] = useState("");
   const [salesType, setSalesType] = useState("");
+  const { subAdminAccess } = useLogin();
+  const { canCreate, canRead, canUpdate, canDelete } = usePermissions(
+    subAdminAccess,
+    "Commission Settings"
+  );
 
   useEffect(() => {
     fetchCommissionSettingsList(page, limit, debouncedSearch, userType, salesType);
@@ -92,18 +99,23 @@ const CommissionSetting = () => {
       ),
       onClick: handleEdit,
       title: "Edit",
+      disableCondition: () => !canUpdate,
     },
     {
       icon: <Trash2 className="w-5 h-5 text-red-600" />,
       onClick: handleDelete,
       title: "Delete",
+      disableCondition: () => !canDelete,
     },
   ];
 
+  const handleSetCommission = () => {
+    navigate("/commission-settings/add-commission")
+  }
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Monetary Settings" }, { text: "Commission Settings" }]} />
-        <PagePath2
+      <PagePath2
         title="Commission Settings"
         // ShowSearch
         showSearch
@@ -124,7 +136,8 @@ const CommissionSetting = () => {
         // ShowAddButton
         showAddButton
         addButtonText="Set Commission"
-        onClick={() => navigate("/commission-settings/add-commission")}
+        onClick={canCreate ? handleSetCommission : undefined }
+        canCreate={canCreate}
       />
       {loading ? (
         <Box
