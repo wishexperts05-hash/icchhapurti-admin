@@ -78,7 +78,7 @@ const TargetManagement = () => {
               <LoaderSpinner />
             </div>
           ) : (
-            <div className="mt-6 bg-white p-4 rounded shadow">
+            <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
               <Box>
                 <DataTable
                   columns={columns}
