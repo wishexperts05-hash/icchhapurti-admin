@@ -198,9 +198,6 @@ const CountryManagementList = lazy(() =>
 const CountryManagementAdd = lazy(() =>
   import("../pages/module/countryManagement/CountryManagementAdd")
 );
-const CountryManagementEdit = lazy(() =>
-  import("../pages/module/countryManagement/CountryManagementEdit")
-);
 
 // ---------------------------- Reward Management ----------------------------
 const LuckyDrawManagementList = lazy(() =>

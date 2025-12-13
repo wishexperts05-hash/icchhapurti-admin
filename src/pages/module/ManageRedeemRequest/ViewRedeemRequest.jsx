@@ -22,7 +22,6 @@ import { ClassNames } from "@emotion/react";
 const RejectRequestModal = ({ open, onClose, onSave }) => {
   const [reason, setReason] = React.useState("");
 
-
   return (
     <Dialog
       open={open}
@@ -86,19 +85,18 @@ const RejectRequestModal = ({ open, onClose, onSave }) => {
 const ViewRedeemRequest = () => {
   const { id } = useParams();
   const [openReject, setOpenReject] = useState(false);
-  const navigate=useNavigate(); //
+  const navigate = useNavigate(); //
 
-  const { loading, fetchRedeemRequestDetails, redeemRequestsDetails } =
+  const { loading, fetchRedeemRequestDetails, redeemRequestsDetails, updateRedeemRequestStatus} =
     useManageRedeemRequest();
-  const { updateRedeemRequestStatus } = useManageRedeemRequest();
 
   useEffect(() => {
     fetchRedeemRequestDetails(id);
   }, [id]);
 
-const handleBack = () => {
-        navigate(-1); //
-    };
+  const handleBack = () => {
+    navigate(-1); //
+  };
 
   const handleRejectReject = (status, reason) => {
     updateRedeemRequestStatus(id, status, reason);
@@ -121,7 +119,7 @@ const handleBack = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-           
+
           }}
         >
           <LoaderSpinner />
@@ -133,10 +131,10 @@ const handleBack = () => {
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: 1,
-              background: "#ffffff", 
-              border:"1px solid #E0E0E0",
-              borderRadius: "4px"
+              gap: 2,
+              background: "#ffffff",
+              border: "1px solid #E0E0E0",
+              borderRadius: "16px"
             }}
           >
             <Box
@@ -160,48 +158,46 @@ const handleBack = () => {
               }}
             >
               <DetailsField
-                                label="Name :"
-                                value={redeemRequestsDetails.name || "-"}   
-                            />
+                label="Name :"
+                value={redeemRequestsDetails.name || "-"}
+              />
               <DetailsField
-                                label="Role :"
-                                value={redeemRequestsDetails.role || "-" }   
-                            />
+                label="Role :"
+                value={redeemRequestsDetails.role || "-"}
+              />
               <DetailsField
-                                label="Balance :"
-                                value={redeemRequestsDetails.walletBalance || "-" }   
-                            />
-               <DetailsField
-                                label="Redeem Request Amount :"
-                                value={redeemRequestsDetails.redeemRequestAmount || "-" }   
-                            />
+                label="Balance :"
+                value={redeemRequestsDetails.walletBalance || "-"}
+              />
               <DetailsField
-                                label="Bank Name :"
-                                value={redeemRequestsDetails.bankName || "-" }   
-                            />
+                label="Redeem Request Amount :"
+                value={redeemRequestsDetails.redeemRequestAmount || "-"}
+              />
               <DetailsField
-                                label="Bank Account Number :"
-                                value={redeemRequestsDetails.bankAccountNumber || "-" }   
-                            />
+                label="Bank Name :"
+                value={redeemRequestsDetails.bankName || "-"}
+              />
               <DetailsField
-                                label="IFSC Code :"
-                                value={redeemRequestsDetails.ifscCode || "-" }   
-                            />
-              
-
+                label="Bank Account Number :"
+                value={redeemRequestsDetails.bankAccountNumber || "-"}
+              />
               <DetailsField
-                                label="Account Holder Name :"
-                                value={redeemRequestsDetails.accountHolderName || "-" }   
-                            />
-               <DetailsField
+                label="IFSC Code :"
+                value={redeemRequestsDetails.ifscCode || "-"}
+              />
+              <DetailsField
+                label="Account Holder Name :"
+                value={redeemRequestsDetails.accountHolderName || "-"}
+              />
+              <DetailsField
                 label="Status by SubAdmin :"
                 color={
-                redeemRequestsDetails.statusBySubAdmin === "Approved"
-               ? "green"
-                : "red"
-                  }
-                value={redeemRequestsDetails.statusBySubAdmin || "-" }   
-                            />
+                  redeemRequestsDetails.statusBySubAdmin === "Approved"
+                    ? "green"
+                    : "red"
+                }
+                value={redeemRequestsDetails.statusBySubAdmin || "-"}
+              />
             </Box>
           </Box>
           <Box
@@ -214,10 +210,10 @@ const handleBack = () => {
               margin: 3,
             }}
           >
-             <Button text="Back" 
-             variant={1} 
-             onClick={handleBack}  
-             />
+            <Button text="Back"
+              variant={2}
+              onClick={handleBack}
+            />
             <Button
               variant={4}
               text="Reject"
@@ -230,9 +226,7 @@ const handleBack = () => {
                 handleRejectReject("Approved");
               }}
             />
-            
           </Box>
-          
         </>
       )}
       <RejectRequestModal
