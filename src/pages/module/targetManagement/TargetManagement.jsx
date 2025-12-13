@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
@@ -8,6 +8,8 @@ import useDebounce from "../../../hooks/debounce/useDebounce";
 import Pagination from "../../../components/uiComponent/Pagination";
 import useTargetManagement from "../../../hooks/targetManagment/useTargetManagment";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
+import usePermissions from "../../../hooks/auth/usePermissions";
+import useLogin from "../../../hooks/auth/useLogin";
 
 const TargetManagement = () => {
   const navigate = useNavigate();
@@ -15,103 +17,44 @@ const TargetManagement = () => {
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
-
-  const { targetData, loading, total, error } = useTargetManagement(
-    page,
-    limit,
-    debouncedSearch
+  const { subAdminAccess } = useLogin();
+  const { canCreate } = usePermissions(
+    subAdminAccess,
+    "Target Management"
   );
+  const { targetList, loading, fetchTargetList } = useTargetManagement();
 
-  const totalPages = Math.ceil(total / limit);
-  console.log(targetData);
-  // Static dummy data
-  // const targetData = [
-  //   {
-  //     srNo: 1,
-  //     staffName: "Rahul Sharma",
-  //     dailyTarget: 50,
-  //     weaklyTarget: 300,
-  //     targetAchievd: 280,
-  //     ticketEarned: 45,
-  //   },
-  //   {
-  //     srNo: 2,
-  //     staffName: "Priya Verma",
-  //     dailyTarget: 40,
-  //     weaklyTarget: 250,
-  //     targetAchievd: 260,
-  //     ticketEarned: 52,
-  //   },
-  //   {
-  //     srNo: 3,
-  //     staffName: "Amit Patil",
-  //     dailyTarget: 55,
-  //     weaklyTarget: 330,
-  //     targetAchievd: 310,
-  //     ticketEarned: 48,
-  //   },
-  //   {
-  //     srNo: 4,
-  //     staffName: "Sneha Kulkarni",
-  //     dailyTarget: 45,
-  //     weaklyTarget: 280,
-  //     targetAchievd: 275,
-  //     ticketEarned: 41,
-  //   },
-  //   {
-  //     srNo: 5,
-  //     staffName: "Karan Gupta",
-  //     dailyTarget: 60,
-  //     weaklyTarget: 360,
-  //     targetAchievd: 355,
-  //     ticketEarned: 60,
-  //   },
-  //   {
-  //     srNo: 6,
-  //     staffName: "Neha Singh",
-  //     dailyTarget: 48,
-  //     weaklyTarget: 290,
-  //     targetAchievd: 300,
-  //     ticketEarned: 54,
-  //   },
-  //   {
-  //     srNo: 7,
-  //     staffName: "Ram Singh",
-  //     dailyTarget: 48,
-  //     weaklyTarget: 290,
-  //     targetAchievd: 300,
-  //     ticketEarned: 54,
-  //   },
-  //   {
-  //     srNo: 8,
-  //     staffName: "Ritu Singh",
-  //     dailyTarget: 48,
-  //     weaklyTarget: 290,
-  //     targetAchievd: 300,
-  //     ticketEarned: 54,
-  //   },
-
-  // ];
+  useEffect(() => {
+    fetchTargetList(page, limit, debouncedSearch)
+  }, [page, limit, debouncedSearch])
 
   const onPageChange = (newPage) => {
     setPage(newPage);
   };
+
   const onItemsPerPageChange = (newLimit) => {
     setLimit(newLimit);
     setPage(1);
   };
+
   const onSearchChange = (e) => {
     const newSearchTerm = e.target.value;
     setSearch(newSearchTerm);
   };
+
   const columns = [
     { header: "Sr.No", field: "srNo" },
     { header: "Staff Name", field: "staffName" },
     { header: "Daily Target", field: "dailyTarget" },
-    { header: "Weakly Target", field: "weeklyTargeta" },
+    { header: "Weakly Target", field: "weeklyTarget" },
     { header: "Target Achieved", field: "targetAchieved" },
     { header: "Tickets Earned", field: "ticketsEarned" },
   ];
+
+  const handleSetTarget = () => {
+    navigate("/target-management/setTarget-management");
+  }
+
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Target Management" }]} />
@@ -124,7 +67,8 @@ const TargetManagement = () => {
         // ShowAddButton
         showAddButton
         addButtonText="Set Target"
-        onClick={() => navigate("/target-management/setTarget-management")}
+        onClick={canCreate ? handleSetTarget : undefined}
+        canCreate={canCreate}
       />
 
       {
@@ -138,16 +82,16 @@ const TargetManagement = () => {
               <Box>
                 <DataTable
                   columns={columns}
-                  data={targetData}
+                  data={targetList?.data || []}
                   currentPage={page}
                   usersPerPage={limit}
                 />
               </Box>
               <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                totalItems={total}
-                itemsPerPage={limit}
+                currentPage={targetList?.page}
+                totalPages={targetList?.limit}
+                totalItems={targetList?.total}
+                itemsPerPage={targetList?.limit}
                 onPageChange={onPageChange}
                 onItemsPerPageChange={onItemsPerPageChange}
               />
