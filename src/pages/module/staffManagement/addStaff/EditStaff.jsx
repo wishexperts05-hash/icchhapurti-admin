@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import useStaffManagement from "../../../../hooks/staffManagement/useStaffManagement";
+import useDropdown from "../../../../hooks/dropdown/useDropdown";
 
 const validationSchema = Yup.object().shape({
   staffName: Yup.string().required("Staff name is required"),
@@ -16,7 +17,7 @@ const validationSchema = Yup.object().shape({
   dob: Yup.date().required("Date of birth is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   // location: Yup.string().required("Location is required"),
-  referralCode: Yup.string().required("Referral code is required"),
+  // referralCode: Yup.string().required("Referral code is required"),
 
   // Bank validation
   accountNumber: Yup.string().required("Account Number is required"),
@@ -27,78 +28,124 @@ const validationSchema = Yup.object().shape({
 
 const EditStaff = () => {
   const navigate = useNavigate();
-    const {
-      loading,
-      fetchStaffDetails,
-      staffDetail, updateStaff,
-    } = useStaffManagement();
-     const { id } = useParams();
+  const { loading, fetchStaffDetails, staffDetail, updateStaff } =
+    useStaffManagement();
+  const { id } = useParams();
   const [preview, setPreview] = useState(null);
 
-  
-    useEffect(() => {
-      if (id) {
-        fetchStaffDetails(id);
-      }
-    }, [id]);
+  const {
+    fetchBanklist,
+    banklist,
+    fetchCountryDropdown,
+    fetchStatesByCountry,
+    countries,
+    states,
+    loadingStates,
+    fetchCitiesByState,
+    cities,
+    loadingCities,
+  } = useDropdown();
 
-    console.log("staffDetail:", staffDetail);
-  
+  useEffect(() => {
+    fetchCountryDropdown();
+    fetchBanklist();
+  }, []);
+
+  useEffect(() => {
+    if (staffDetail?.staff?.country) {
+      fetchStatesByCountry(staffDetail.staff.country);
+    }
+  }, [staffDetail?.staff?.country]);
+
+  useEffect(() => {
+    if (staffDetail?.staff?.profileImage) {
+      setPreview(staffDetail.staff.profileImage);
+    }
+  }, [staffDetail]);
+
+  useEffect(() => {
+    if (staffDetail?.staff?.country && staffDetail?.staff?.state) {
+      fetchCitiesByState(staffDetail.staff.country, staffDetail.staff.state);
+    }
+  }, [staffDetail?.staff?.state]);
+
+  const countryOptions = (countries || []).map((c) => ({
+    value: c.name,
+    label: c.name,
+  }));
+
+  const stateOptions = (states || []).map((s) => ({
+    value: s,
+    label: s,
+  }));
+
+  const cityOptions = (cities || []).map((c) => ({
+    value: c,
+    label: c,
+  }));
+
+  const bankOptions = (banklist || []).map((b) => ({
+    value: b,
+    label: b,
+  }));
+
+  useEffect(() => {
+    if (id) {
+      fetchStaffDetails(id);
+    }
+  }, [id]);
+
+  console.log("staffDetail:", staffDetail);
 
   const initialValues = {
     staffName: staffDetail?.staff?.name || "",
-    phoneNumber:staffDetail?.staff?.phoneNumber || "",
+    phoneNumber: staffDetail?.staff?.phoneNumber || "",
     dob: staffDetail?.staff?.dob || "",
     email: staffDetail?.staff?.email || "",
     country: staffDetail?.staff?.country || "",
     state: staffDetail?.staff?.state || "",
     city: staffDetail?.staff?.city || "",
-   
+    address: staffDetail?.staff?.address || "",
+
     referralCode: staffDetail?.staff?.referralCode || "",
     profileImage: staffDetail?.staff?.profileImage || "",
     accountNumber: staffDetail?.staff?.bankDetails?.accountNumber || "",
     ifscCode: staffDetail?.staff?.bankDetails?.ifscCode || "",
     accountType: staffDetail?.staff?.bankDetails?.accountType || "",
     accountHolderName: staffDetail?.staff?.bankDetails?.accountNumber || "",
-    passbookOrChequeImage: null,
-    passbookOrChequePreview: null,
   };
-console.log("Initial Values:", initialValues);
+  console.log("Initial Values:", initialValues);
   const handleSubmit = async (values) => {
+    const fd = new FormData();
 
-  const fd = new FormData();
+    fd.append("name", values.staffName);
+    fd.append("email", values.email);
+    fd.append("phoneNumber", values.phoneNumber);
+    fd.append("dob", values.dob);
+    fd.append("country", values.country);
+    fd.append("state", values.state);
+    fd.append("city", values.city);
+    fd.append("referralCode", values.referralCode);
+    fd.append("bankName", values.bankName);
 
-  fd.append("name", values.staffName);
-  fd.append("email", values.email);
-  fd.append("phoneNumber", values.phoneNumber);
-  fd.append("dob", values.dob);
-  fd.append("country", values.country);
-  fd.append("state", values.state);
-  fd.append("city", values.city);
-  fd.append("referralCode", values.referralCode);
+    fd.append(
+      "bankDetails",
+      JSON.stringify({
+        accountNumber: values.accountNumber,
+        ifscCode: values.ifscCode,
+        accountHolderName: values.accountHolderName,
+        accountType: values.accountType,
+      })
+    );
 
-  fd.append(
-    "bankDetails",
-    JSON.stringify({
-      accountNumber: values.accountNumber,
-      ifscCode: values.ifscCode,
-      accountHolderName: values.accountHolderName,
-      accountType: values.accountType,
-    })
-  );
+    if (values.profileImage) {
+      fd.append("profileImage", values.profileImage);
+    }
 
-  if (values.profileImage) {
-    fd.append("profileImage", values.profileImage);
-  }
+    await updateStaff(id, fd);
 
-  if (values.passbookOrChequeImage) {
-    fd.append("bankProof", values.passbookOrChequeImage);
-  }
-
-  await updateStaff(id, fd);
-
-  navigate("/staff-management");
-};
+    navigate("/staff-management");
+  };
 
   const handleCancel = () => {
     navigate("/staff-management");
@@ -149,13 +196,14 @@ console.log("Initial Values:", initialValues);
                     <img
                       src={preview}
                       alt="Profile Preview"
-                      className="w-32 h-32 rounded-full object-cover border-4 border-primary-200 shadow-md transition-transform group-hover:scale-105"
+                      className="w-32 h-32 rounded-full object-cover border-4 border-primary-200 shadow-md"
                     />
                   ) : (
                     <div className="w-32 h-32 rounded-full border-4 border-primary-200 flex items-center justify-center text-gray-500 bg-gray-100">
                       No Image
                     </div>
                   )}
+
                   {/* Upload Button */}
                   <label
                     htmlFor="profileImage"
@@ -227,19 +275,43 @@ console.log("Initial Values:", initialValues);
               />
 
               <FormField
-                label="Country"
+                fieldType="select"
                 name="country"
-                placeholder="Enter staff Country"
+                label="Country"
+                options={countryOptions}
+                onChange={(e) => {
+                  setFieldValue("country", e.target.value);
+                  setFieldValue("state", "");
+                  setFieldValue("city", "");
+                  fetchStatesByCountry(e.target.value);
+                }}
               />
+
               <FormField
-                label="State"
+                fieldType="select"
                 name="state"
-                placeholder="Enter staff State"
+                label="State"
+                options={stateOptions}
+                disabled={!values.country || loadingStates}
+                onChange={(e) => {
+                  setFieldValue("state", e.target.value);
+                  setFieldValue("city", "");
+                  fetchCitiesByState(values.country, e.target.value);
+                }}
               />
+
               <FormField
-                label="City"
+                fieldType="select"
                 name="city"
-                placeholder="Enter staff City"
+                label="City"
+                options={cityOptions}
+                disabled={!values.state || loadingCities}
+              />
+
+              <FormField
+                label="Address"
+                name="address"
+                placeholder="Enter staff address"
               />
 
               <FormField
@@ -273,6 +345,13 @@ console.log("Initial Values:", initialValues);
                 {/* Basic Bank Info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
+                    fieldType="select"
+                    name="bankName"
+                    label="Bank Name"
+                    options={bankOptions}
+                  />
+
+                  <FormField
                     label="Account Number"
                     name="accountNumber"
                     type="text"
@@ -296,72 +375,6 @@ console.log("Initial Values:", initialValues);
                     type="text"
                     placeholder="Enter Account Holder Name"
                   />
-                </div>
-
-                {/* Bank Proof Upload */}
-                <div className="mt-8">
-                  <div className="text-gray-800 text-xl font-semibold mb-4">
-                    Upload Bank Proof
-                  </div>
-                  <p className="text-gray-500 text-sm mb-4">
-                    Upload either your <b>Bank Passbook</b> or a{" "}
-                    <b>Cancelled Cheque</b> image.
-                  </p>
-
-                  <div className="flex flex-col items-center">
-                    <div className="relative group">
-                      <img
-                        src={values.passbookOrChequePreview || " "}
-                        alt="Bank Proof"
-                        className="w-60 h-40 rounded-lg object-cover border border-gray-300 shadow-sm group-hover:shadow-md transition-all"
-                      />
-
-                      {/* Upload Button */}
-                      <label
-                        htmlFor="passbookOrChequeImage"
-                        className="absolute bottom-2 right-2 bg-primary-600 text-black text-xs rounded-full p-2 cursor-pointer shadow-md hover:bg-primary-700 transition"
-                      >
-                        +
-                      </label>
-
-                      {/* File Input */}
-                      <input
-                        id="passbookOrChequeImage"
-                        type="file"
-                        accept="image/*,application/pdf"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files[0];
-                          if (file) {
-                            setFieldValue("passbookOrChequeImage", file);
-
-                            const reader = new FileReader();
-                            reader.onloadend = () =>
-                              setFieldValue(
-                                "passbookOrChequePreview",
-                                reader.result
-                              );
-
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                      />
-
-                      {/* Remove */}
-                      {values.passbookOrChequePreview && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setFieldValue("passbookOrChequeImage", null);
-                            setFieldValue("passbookOrChequePreview", null);
-                          }}
-                          className="absolute top-2 right-2 bg-red-600 text-white text-xs rounded-full p-1 shadow-md hover:bg-red-700"
-                        >
-                          ✕
-                        </button>
-                      )}
-                    </div>
-                  </div>
                 </div>
               </div>
 

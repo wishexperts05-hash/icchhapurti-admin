@@ -28,6 +28,12 @@ const useDropdown = () => {
   const [countryLoading, setCountryLoading] = useState(false);
   const [loadingBannerTypes, setLoadingBannerTypes] = useState(false);
   const [loadingAppTypes, setLoadingAppTypes] = useState(false);
+  const [loadingBankList,setLoadingBankList] =useState (false);
+  const [cities, setCities] = useState([]);
+
+
+const [loadingCities, setLoadingCities] = useState(false);
+
 
   const [salesType, setSalesType] = useRecoilState(salesTypeAtom);
   const [userType, setUserType] = useRecoilState(userTypeAtom);
@@ -38,6 +44,10 @@ const useDropdown = () => {
   const [countries, setCountries] = useRecoilState(countriesAtom);
   const [bannerTypes, setBannerTypes] = useRecoilState(bannerTypesAtom);
   const [appTypes, setAppTypes] = useRecoilState(appTypesAtom);
+  const [banklist ,setBanklist]  =useState ([]);
+  const [states, setStates] = useState([]);
+const [loadingStates, setLoadingStates] = useState(false);
+
   
 
   // -----------------------------
@@ -180,6 +190,67 @@ const resetBannerTypes = () => setBannerTypes([]);
       setCountryLoading(false);
     }
   };
+
+// -----------------------------
+// states dropdown (BY COUNTRY)
+// -----------------------------
+const fetchStatesByCountry = async (countryName) => {
+  if (!countryName) {
+    setStates([]);
+    return;
+  }
+
+  setLoadingStates(true);
+  try {
+    const res = await fetchData({
+      method: "POST",
+      url: `${conf.apiBaseUrl}admin/country/external/states`,
+      data: { country: countryName },
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+
+    if (res?.success) {
+      setStates(res.states || []);
+    } else {
+      setStates([]);
+    }
+  } finally {
+    setLoadingStates(false);
+  }
+};
+
+const fetchCitiesByState = async (countryName, stateName) => {
+  if (!countryName || !stateName) {
+    setCities([]);
+    return;
+  }
+
+  setLoadingCities(true);
+  try {
+    const res = await fetchData({
+      method: "POST",
+      url: `${conf.apiBaseUrl}admin/country/external/cities`,
+      data: { country: countryName, state: stateName },
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+
+    if (res?.success) {
+      setCities(res.cities || []);
+    } else {
+      setCities([]);
+    }
+  } finally {
+    setLoadingCities(false);
+  }
+};
+
+
+
+
   // -----------------------------
   // order status
   // -----------------------------
@@ -213,29 +284,50 @@ const resetBannerTypes = () => setBannerTypes([]);
     }
   };
 
-  // -----------------------------
+  // ----------------------------- BANK LIST ----------------------------------- //
+    const fetchBanklist = async () => {
+    setLoadingBankList(true);
+    try {
+      const res = await fetchData({
+        method: "GET",
+        url: `${conf.apiBaseUrl}admin/staff/dropdown/bank-list`,
+        headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+      });
+      if (res) setBanklist(res?.bankList);
+    } finally {
+      setLoadingBankList(false);
+    }
+  };
   const loading =
     loadingSales ||
     loadingUser ||
     loadingProduct ||
     loadingOrderStatus ||
     countryLoading ||
-    loadingBannerTypes ||
+    loadingBannerTypes || loadingBankList || loadingStates ||
     loadingAppTypes;
 
   return {
     loading,
 
+    fetchCitiesByState,
     fetchSalesType,
     fetchProductCategory,
     fetchOrderStatus,
     fetchUserType,
     fetchProductDropdown,
     fetchCountryDropdown,
+    fetchStatesByCountry,
 
     fetchBannerTypesDropdown,
     fetchAppTypesDropdown,
-
+    fetchBanklist,
+    
+    states,
+    cities,
+    banklist,
     salesType,
     userType,
     productDropdown,

@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Camera } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import useStaffManagement from "../../../../hooks/staffManagement/useStaffManagement";
+import useDropdown from "../../../../hooks/dropdown/useDropdown";
 
 const CalendarIcon = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
-    strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" className={className}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    viewBox="0 0 24 24"
+    className={className}
+  >
     <path d="M8 2v4"></path>
     <path d="M16 2v4"></path>
     <rect width="18" height="18" x="3" y="4" rx="2"></rect>
@@ -17,7 +26,10 @@ const CalendarIcon = ({ className }) => (
 
 const FormInput = ({ label, id, icon: Icon, ...props }) => (
   <div className="w-full">
-    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+    <label
+      htmlFor={id}
+      className="block text-sm font-medium text-gray-700 mb-2"
+    >
       {label}
     </label>
     <div className="relative">
@@ -38,7 +50,10 @@ const FormInput = ({ label, id, icon: Icon, ...props }) => (
 
 const FormSelect = ({ label, id, options, value, onChange }) => (
   <div className="w-full">
-    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+    <label
+      htmlFor={id}
+      className="block text-sm font-medium text-gray-700 mb-2"
+    >
       {label}
     </label>
     <select
@@ -50,13 +65,13 @@ const FormSelect = ({ label, id, options, value, onChange }) => (
                  bg-white appearance-none cursor-pointer"
       style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`,
-        backgroundPosition: 'right 0.5rem center',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: '1.5em 1.5em',
-        paddingRight: '2.5rem'
+        backgroundPosition: "right 0.5rem center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "1.5em 1.5em",
+        paddingRight: "2.5rem",
       }}
     >
-      <option value="">Select {label}</option>
+      {/* <option value="">Select {label}</option> */}
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -66,9 +81,19 @@ const FormSelect = ({ label, id, options, value, onChange }) => (
   </div>
 );
 
-const PhoneInput = ({ label, id, countryCode, phoneNumber, onCountryCodeChange, onPhoneChange }) => (
+const PhoneInput = ({
+  label,
+  id,
+  countryCode,
+  phoneNumber,
+  onCountryCodeChange,
+  onPhoneChange,
+}) => (
   <div className="w-full">
-    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+    <label
+      htmlFor={id}
+      className="block text-sm font-medium text-gray-700 mb-2"
+    >
       {label}
     </label>
     <div className="flex gap-2">
@@ -80,10 +105,10 @@ const PhoneInput = ({ label, id, countryCode, phoneNumber, onCountryCodeChange, 
                    bg-white appearance-none cursor-pointer"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`,
-          backgroundPosition: 'right 0.3rem center',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: '1.2em 1.2em',
-          paddingRight: '1.8rem'
+          backgroundPosition: "right 0.3rem center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "1.2em 1.2em",
+          paddingRight: "1.8rem",
         }}
       >
         <option value="+91">+91</option>
@@ -130,70 +155,125 @@ const AddStaff = () => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-const handleProfileImageUpload = (e) => {
+  const handleProfileImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) setProfileImage(file);
-};
+  };
 
-const handleBankProofUpload = (e) => {
+  const handleBankProofUpload = (e) => {
     const file = e.target.files[0];
     if (file) setBankProofImage(file);
-};  
+  };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const fd = new FormData();
-  fd.append("name", formData.staffName);
-  fd.append("email", formData.email);
-  fd.append("countryCode", formData.countryCode);
-  fd.append("phoneNumber", formData.phoneNumber);
-  fd.append("city", formData.city);
-  fd.append("state", formData.state);
-  fd.append("country", formData.country);
-  fd.append("dob", formData.dob);
+    const fd = new FormData();
+    fd.append("name", formData.staffName);
+    fd.append("email", formData.email);
+    fd.append("countryCode", formData.countryCode);
+    fd.append("phoneNumber", formData.phoneNumber);
+    fd.append("city", formData.city);
+    fd.append("state", formData.state);
+    fd.append("country", formData.country);
+    fd.append("dob", formData.dob);
 
-  fd.append(
-    "bankDetails",
-    JSON.stringify({
-      bankName: formData.bankName,
-      ifscCode: formData.ifsc,
-      accountNumber: Number(formData.accountNumber),
-      accountHolderName: formData.accountHolderName,
-      accountType: formData.accountType,
-    })
-  );
+    fd.append(
+      "bankDetails",
+      JSON.stringify({
+        bankName: formData.bankName,
+        ifscCode: formData.ifsc,
+        accountNumber: Number(formData.accountNumber),
+        accountHolderName: formData.accountHolderName,
+        accountType: formData.accountType,
+      })
+    );
 
-  if (profileImage) fd.append("profileImage", profileImage);
+    if (profileImage) fd.append("profileImage", profileImage);
+    // if (bankProofImage) fd.append("bankProof", bankProofImage);
 
-  console.log("sending data", ...fd);
+    console.log("sending data", ...fd);
 
-  await addStaff(fd);
+    await addStaff(fd);
 
-  navigate("/staff-management");
-};
+    navigate("/staff-management");
+  };
 
   const handleCancel = () => {
     navigate("/staff-management");
   };
+  const {
+    fetchBanklist,
+    banklist,
+    fetchCountryDropdown,
+    fetchStatesByCountry,
+    countries,
+    states,
+    loadingStates,
+    fetchCitiesByState,
+    cities,
+    loadingCities,
+  } = useDropdown();
 
-  const countryOptions = [
-    { value: "India", label: "India" },
-    { value: "USA", label: "USA" },
-    { value: "UK", label: "UK" },
-  ];
+  useEffect(() => {
+    if (formData.country && formData.state) {
+      fetchCitiesByState(formData.country, formData.state);
+    }
+  }, [formData.country, formData.state]);
 
-  const stateOptions = [
-    { value: "Maharashtra", label: "Maharashtra" },
-    { value: "Delhi", label: "Delhi" },
-    { value: "Karnataka", label: "Karnataka" },
-  ];
+  console.log("cities", cities);
+  // City options for the dropdown
+  const cityOptions = (cities || []).map((city) => ({
+    value: city,
+    label: city,
+  }));
 
-  const bankOptions = [
-    { value: "State Bank Of India", label: "State Bank Of India" },
-    { value: "HDFC Bank", label: "HDFC Bank" },
-    { value: "ICICI Bank", label: "ICICI Bank" },
-  ];
+  useEffect(() => {
+    fetchBanklist();
+  }, []);
+
+  useEffect(() => {
+    fetchCountryDropdown();
+  }, []);
+
+  useEffect(() => {
+    if (states?.length) {
+      setFormData((prev) => ({
+        ...prev,
+        state: states[0], // ✅ THIS WAS MISSING
+      }));
+    }
+  }, [states]);
+
+  const handleCountryChange = (e) => {
+    const selectedCountry = e.target.value;
+
+    setFormData((prev) => ({
+      ...prev,
+      country: selectedCountry,
+      state: "", // reset state when country changes
+    }));
+
+    fetchStatesByCountry(selectedCountry);
+  };
+
+  console.log("fetch bank", banklist);
+  console.log("fetch banfffk", countries);
+
+  const countryOptions = (countries || []).map((country) => ({
+    value: country.name,
+    label: country.name,
+  }));
+
+  const stateOptions = (states || []).map((state) => ({
+    value: state,
+    label: state,
+  }));
+
+  const bankOptions = banklist.map((bank) => ({
+    value: bank,
+    label: bank,
+  }));
 
   const accountTypeOptions = [
     { value: "Savings", label: "Savings" },
@@ -218,7 +298,11 @@ const handleSubmit = async (e) => {
             <div className="relative">
               <div className="w-32 h-32 rounded-full border-2 border-gray-300 overflow-hidden bg-gray-100 flex items-center justify-center">
                 {profileImage ? (
-                  <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                  <img
+                    src={profileImage}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <div className="text-gray-400">
                     <Camera className="w-12 h-12" />
@@ -252,13 +336,18 @@ const handleSubmit = async (e) => {
               placeholder="Enter staff name"
               required
             />
-            
+
             <PhoneInput
               label="Phone Number :"
               id="phoneNumber"
               countryCode={formData.countryCode}
               phoneNumber={formData.phoneNumber}
-              onCountryCodeChange={(e) => setFormData(prev => ({ ...prev, countryCode: e.target.value }))}
+              onCountryCodeChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  countryCode: e.target.value,
+                }))
+              }
               onPhoneChange={handleChange}
             />
 
@@ -287,7 +376,7 @@ const handleSubmit = async (e) => {
               id="country"
               options={countryOptions}
               value={formData.country}
-              onChange={handleChange}
+              onChange={handleCountryChange}
             />
 
             <FormSelect
@@ -296,15 +385,16 @@ const handleSubmit = async (e) => {
               options={stateOptions}
               value={formData.state}
               onChange={handleChange}
+              disabled={!formData.country || loadingStates}
             />
 
-            <FormInput
+            <FormSelect
               label="City :"
               id="city"
-              type="text"
+              options={cityOptions}
               value={formData.city}
               onChange={handleChange}
-              placeholder="Enter city"
+              disabled={!formData.state || loadingCities}
             />
 
             <FormInput
@@ -319,7 +409,9 @@ const handleSubmit = async (e) => {
 
           {/* Bank Details Section */}
           <div className="mt-8 mb-6">
-            <h3 className="text-base font-semibold text-gray-900">Bank Details :</h3>
+            <h3 className="text-base font-semibold text-gray-900">
+              Bank Details :
+            </h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
@@ -368,16 +460,24 @@ const handleSubmit = async (e) => {
           </div>
 
           {/* Bank Proof Upload Section */}
-          <div className="mt-8 mb-6">
-            <h3 className="text-base font-semibold text-gray-900 mb-2">Upload Bank Proof :</h3>
-            <p className="text-sm text-gray-600">Upload either your Bank Passbook or a Cancelled Cheque image.</p>
-          </div>
+          {/* <div className="mt-8 mb-6">
+            <h3 className="text-base font-semibold text-gray-900 mb-2">
+              Upload Bank Proof :
+            </h3>
+            <p className="text-sm text-gray-600">
+              Upload either your Bank Passbook or a Cancelled Cheque image.
+            </p>
+          </div> */}
 
-          <div className="flex justify-center mb-8">
+          {/* <div className="flex justify-center mb-8">
             <div className="relative">
               <div className="w-64 h-40 border-2 border-gray-300 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
                 {bankProofImage ? (
-                  <img src={bankProofImage} alt="Bank Proof" className="w-full h-full object-cover" />
+                  <img
+                    src={bankProofImage}
+                    alt="Bank Proof"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <div className="text-gray-400 text-center">
                     <Camera className="w-12 h-12 mx-auto mb-2" />
@@ -409,7 +509,7 @@ const handleSubmit = async (e) => {
                 </button>
               )}
             </div>
-          </div>
+          </div> */}
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">

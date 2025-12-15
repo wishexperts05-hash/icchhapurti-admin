@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import Pagination from "../../../../components/uiComponent/Pagination"; 
+import useStaffManagement from "../../../../hooks/staffManagement/useStaffManagement";
 
 const StaffSales = () => {
   // States for Direct Sales
@@ -10,11 +11,18 @@ const StaffSales = () => {
   const [currentPageDirect, setCurrentPageDirect] = useState(1);
   const [itemsPerPageDirect] = useState(5);
 
+  const {allDirectSales,allInDirectSales,fetchAllDirectSales,fetchAllIndirectSales} = useStaffManagement();
   // States for Indirect Sales
   const [filtersOption, setFiltersOption] = useState("");
   const [currentPageIndirect, setCurrentPageIndirect] = useState(1);
   const [itemsPerPageIndirect] = useState(10);
 
+  useEffect (()=>{
+    fetchAllDirectSales(); fetchAllIndirectSales();
+  },[])
+
+  console.log("all direct",allDirectSales)
+  console.log("all direct",allInDirectSales)
   const handleFilterChange = (e) => {
     setFilterOption(e.target.value);
   };
@@ -53,39 +61,21 @@ const StaffSales = () => {
   );
 
   const directColumns = [
-    { header: "Sr No.", field: "id" },
-    {
-      header: "Staff Name",
-      field: "name",
-      render: (row) => (
-        <div className="flex flex-col justify-center h-full text-center leading-tight">
-          <span className="font-semibold text-gray-900">{row.name}</span>
-          <span className="text-gray-500 text-xs">{row.code}</span>
-        </div>
-      ),
-    },
+    { header: "Sr No.", field: "srNo" },
+    { header: "Staff Name",field: "staffName", },
     { header: "Product Name", field: "productName" },
-    { header: "Direct Sales", field: "directSales" },
+    { header: "Direct Sales", field: "directSalesAmount" },
     { header: "Quantity", field: "quantity" },
-    { header: "Referral Earnings", field: "referralEarnings" },
-    { header: "Total Revenue", field: "totalRevenue" },
+    { header: "Referral Earnings", field: "referralEarning" },
+    { header: "Total Revenue", field: "totalEarning" },
   ];
 
   const indirectColumns = [
-    { header: "Sr No.", field: "id" },
-    {
-      header: "Staff Name",
-      field: "name",
-      render: (row) => (
-        <div className="flex flex-col justify-center h-full text-center leading-tight">
-          <span className="font-semibold text-gray-900">{row.name}</span>
-          <span className="text-gray-500 text-xs">{row.code}</span>
-        </div>
-      ),
-    },
+    { header: "Sr No.", field: "srNo" },
+    {  header: "Staff Name", field: "staffName",   },
     { header: "Product Name", field: "productName" },
     { header: "Indirect Sales", field: "indirectSales" },
-    { header: "Referral Earnings", field: "referralEarnings" },
+    { header: "Referral Earnings", field: "referralEarning" },
     { header: "Total Revenue", field: "totalRevenue" },
   ];
 
@@ -119,7 +109,7 @@ const StaffSales = () => {
         <div className="p-4">
           <DataTable
             columns={directColumns}
-            data={currentDirect}
+            data={allDirectSales}
             currentPage={currentPageDirect}
             usersPerPage={itemsPerPageDirect}
           />
@@ -151,7 +141,7 @@ const StaffSales = () => {
         <div className="p-4">
           <DataTable
             columns={indirectColumns}
-            data={currentIndirect}
+            data={allInDirectSales}
             currentPage={currentPageIndirect}
             usersPerPage={itemsPerPageIndirect}
           />

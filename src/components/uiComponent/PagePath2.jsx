@@ -194,7 +194,7 @@ const PagePath2 = ({
 
           {showExtraButton && extraButtonText && (
             <button
-              onClick={onClick}
+              onClick={onExtraClick}
               disabled={!canCreate}
               className={`px-4 py-2 rounded-lg bg-yellow-600 text-white hover:bg-yellow-700 transition-colors duration-200 flex items-center gap-2 ${!canCreate ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
