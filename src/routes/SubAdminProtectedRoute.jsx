@@ -92,7 +92,7 @@ const SubAdminProtectedRoute = () => {
   }
 
   const requiredModule = routeModuleMap[matchedRoute];
-  const requiredAction = getRequiredAction(currentPath);
+  // const requiredAction = getRequiredAction(currentPath);
 
   const modulePermission = accessData.find(
     (item) =>
@@ -104,9 +104,9 @@ const SubAdminProtectedRoute = () => {
     return <Navigate to="/no-access" replace />;
   }
 
-  if (!modulePermission.accessTypes.includes(requiredAction)) {
-    return <Navigate to="/no-access" replace />;
-  }
+  // if (!modulePermission.accessTypes.includes(requiredAction)) {
+  //   return <Navigate to="/no-access" replace />;
+  // }
 
   return <Outlet />;
 };
