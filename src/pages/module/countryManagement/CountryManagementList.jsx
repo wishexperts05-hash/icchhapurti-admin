@@ -11,28 +11,34 @@ import { FaRegEdit } from "react-icons/fa";
 import useCountryManagement from "../../../hooks/countryManagement/useCountryManagement";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 import useDebounce from "../../../hooks/debounce/useDebounce";
+import useLogin from "../../../hooks/auth/useLogin";
+import usePermissions from "../../../hooks/auth/usePermissions";
 
 export default function CountryManagementList() {
   const navigate = useNavigate();
-
-  const { loading,countryList,fetchCountryList,deleteCountryListById}= useCountryManagement();
-
-  const [searchTerm, setSearchTerm] = useState("");
+  const { loading, countryList, fetchCountryList, deleteCountryListById } = useCountryManagement();
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState(10);
-   const debouncedSearch = useDebounce(searchTerm, 500);
+  const debouncedSearch = useDebounce(searchTerm, 500);
+  const { subAdminAccess } = useLogin();
+  const { canCreate, canUpdate, canDelete } = usePermissions(
+    subAdminAccess,
+    "Country Management"
+  );
 
-  useEffect(()=>{
-    fetchCountryList(page,itemsPerPage,debouncedSearch);
-  },[page,itemsPerPage,debouncedSearch])
-  
-  const setCurrentPage = (data) =>{
-    setPage(data);
-  }
+  useEffect(() => {
+    fetchCountryList(page, itemsPerPage, debouncedSearch);
+  }, [page, itemsPerPage, debouncedSearch])
 
-  const handleSearchTerm = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // reset page when searching
+  const onPageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const onItemsPerPageChange = (newLimit) => {
+    setLimit(newLimit);
+    setPage(1);
   };
 
   const handleAddCountry = () => {
@@ -41,33 +47,36 @@ export default function CountryManagementList() {
 
   const handleDelete = async (id) => {
     await deleteCountryListById(id);
-    fetchCountryList(page, itemsPerPage,  status); 
+    fetchCountryList(page, itemsPerPage, status);
   }
-  
 
-  // Columns for DataTable
+  const onSearchChange = (e) => {
+    const newSearchTerm = e.target.value;
+    setSearchTerm(newSearchTerm);
+    setPage(1);
+  };
+
   const columns = [
     { header: "Sr.No.", field: "srNo" },
     { header: "Country ", field: "name" },
-    { header: "Default language", field: "defaultLanguage" },
     { header: " Default Currency", field: "defaultCurrency" },
-     { header: "Action", field: "action" },
+    { header: "Action", field: "action" },
   ];
 
-  // Actions for DataTable
   const actions = [
-      {
-        icon: <FaEdit className="text-green-600" />,
-        title: "Edit",
-        onClick: (row) => navigate(`/country-management/edit-country/${row._id}`),
-      },
-      {
-        icon: <FaTrash className="text-red-600" />,
-        title: "Delete",
-        onClick: (row) => handleDelete(row?._id),
-  
-      },
-    ];
+    {
+      icon: <FaEdit className="w-5 h-5 text-yellow-600 hover:text-green-600 transition-colors duration-200 cursor-pointer" />,
+      title: "Edit",
+      onClick: (row) => navigate(`/country-management/edit-country/${row._id}`),
+      disableCondition: () => !canUpdate,
+    },
+    {
+      icon: <Trash2 className="w-5 h-5 text-red-600" />,
+      title: "Delete",
+      onClick: (row) => handleDelete(row?._id),
+      disableCondition: () => !canDelete,
+    },
+  ];
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -79,39 +88,39 @@ export default function CountryManagementList() {
         title="Country Management"
         showSearch={true}
         searchTerm={searchTerm}
-        handleSearchTerm={handleSearchTerm}
+        handleSearchTerm={onSearchChange}
         showAddButton={true}
         addButtonText="Add New Country"
-        onClick={handleAddCountry}
+        onClick={canCreate ? handleAddCountry : undefined}
+        canCreate={canCreate}
       />
 
-        {loading ? (
+      {loading ? (
         <div className="flex w-full items-center justify-center py-10">
           <LoaderSpinner />
         </div>
       ) : (
-      <div className="mt-6 bg-white p-4 rounded shadow">
-        {console.log(countryList?.countries)}
-        <DataTable
-          columns={columns}
-          data={countryList?.countries || []}
-          actions={actions}
-          usersPerPage={10}
-          currentPage={1}
-        />
+        <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
+          <DataTable
+            columns={columns}
+            data={countryList?.countries || []}
+            actions={actions}
+            currentPage={page}
+            usersPerPage={limit}
+          />
 
-        {/* Pagination */}
-      <Pagination
-        currentPage={countryList?.currentPage}
-        totalPages={countryList?.totalPages ||1}
-        totalItems={countryList?.totalCountries}
-        itemsPerPage={countryList?.perPage}
-        onPageChange={setCurrentPage}
-        onItemsPerPageChange={setItemsPerPage}
-      />
-      </div>
+          {/* Pagination */}
+          <Pagination
+            currentPage={countryList?.currentPage}
+            totalPages={countryList?.totalPages}
+            totalItems={countryList?.totalCountries}
+            itemsPerPage={countryList?.perPage}
+            onPageChange={onPageChange}
+            onItemsPerPageChange={onItemsPerPageChange}
+          />
+        </div>
       )}
-      
+
     </div>
   );
 }

@@ -52,7 +52,6 @@ export default function OfferManagementList() {
     navigate("/offer-management/add-offer");
   };
 
-  // Columns for DataTable
   const columns = [
     { header: "Sr.No.", field: "srNo" },
     { header: "Offer Title", field: "title" },
@@ -135,7 +134,6 @@ export default function OfferManagementList() {
       title: "Delete",
       disableCondition: () => !canDelete,
     },
-
   ];
 
   return (
