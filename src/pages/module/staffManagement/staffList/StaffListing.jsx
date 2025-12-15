@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Trash2 } from "lucide-react";
 import { MdOutlineBlock } from "react-icons/md";
 import { FaEye, FaRegEdit } from "react-icons/fa";
@@ -13,8 +13,10 @@ import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import useLogin from "../../../../hooks/auth/useLogin";
 import usePermissions from "../../../../hooks/auth/usePermissions";
 
+
 const StaffManagement = () => {
-    const { loading, staffList, fetchStaffList, updateStatus } = useStaffManagement();
+    const { loading, staffList, fetchStaffList, updateStatus ,deleteStaff} = useStaffManagement();
+   
     const navigate = useNavigate();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
@@ -38,6 +40,8 @@ const StaffManagement = () => {
         fetchStaffList(page, limit, debouncedSearch);
     }, [page, limit, debouncedSearch]);
 
+ 
+
     const handleBlock = async (row) => {
         console.log("Toggling block status for user:", row);
         await updateStatus(row._id, { isActive: !row.isActive });
@@ -54,9 +58,12 @@ const StaffManagement = () => {
         navigate(`/staff-management/staff-details/${row._id}`);
     };
 
-    const handleDelete = (row) => {
-        setStaffData((prev) => prev.filter((item) => item.id !== row.id));
-    };
+    const handleDelete =   async (row) => {
+    const result = await deleteStaff(row._id);
+    if (result) {
+      fetchStaffList(page, limit, debouncedSearch);
+    }
+  };
 
     const handleEdit = (row) => {
         navigate(`/staff-management/editStaff/${row._id}`,
@@ -70,10 +77,6 @@ const StaffManagement = () => {
 
     const handleAttendence = () => {
         navigate("/staff-management/attendanceListing");
-    };
-
-    const handleSales = () => {
-        navigate("/staff-management/salesListing");
     };
 
     const columns = [
@@ -141,9 +144,9 @@ const StaffManagement = () => {
                 extraButtonText="Attendance"
                 onExtraClick={handleAttendence}
                 // Sales
-                showThirdButton={true}
-                thirdButtonText="Sales"
-                onThirdClick={handleSales}
+                // showThirdButton={true}
+                // thirdButtonText="Sales"
+                // onThirdClick={handleSales}
             />
             {loading ? (
                 <div className="flex items-center justify-center py-12">
