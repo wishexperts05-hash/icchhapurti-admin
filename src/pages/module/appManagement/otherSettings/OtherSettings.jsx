@@ -226,12 +226,12 @@ function OtherSettings() {
 
               {/* Action Buttons */}
               <div className="flex items-center justify-center mt-5 gap-6">
-                <Button
+                {/* <Button
                   variant={2}
                   text="Cancel"
                   onClick={() => handleCancel(resetForm)}
                   disabled={loading}
-                />
+                /> */}
                 <Button
                   variant={1}
                   text={loading ? "Saving..." : "Save"}

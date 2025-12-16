@@ -1,10 +1,4 @@
 import { atom } from "recoil";
+import { createPersistedAtom } from "../recoilConfig";
 
-export const helpSupportAtom = atom({
-  key: "helpSupportAtom",
-  default: {
-    contactNumber: null,
-    loading: false,
-    error: null,
-  },
-});
+export const helpSupportAtom = atom(createPersistedAtom("helpSupportKey", null));

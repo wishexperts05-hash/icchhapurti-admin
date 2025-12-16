@@ -18,7 +18,7 @@ export default function ManageComments() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
   const { subAdminAccess } = useLogin();
-  const { canRead } = usePermissions(
+  const { canCreate, canRead } = usePermissions(
     subAdminAccess,
     "Comment Management"
   );
@@ -98,7 +98,8 @@ export default function ManageComments() {
         handleSearchTerm={handleSearchTerm}
         showExtraButton={true}
         extraButtonText="Set Review Display"
-        onExtraClick={handleSetReviewDisplay}
+        onExtraClick={canCreate ? handleSetReviewDisplay : undefined}
+        canCreate = {canCreate}
       />
 
       {/* Data Table */}
@@ -111,7 +112,15 @@ export default function ManageComments() {
           //   status: item.status === "show" ? "Shown" : "Hidden",
           //   review: renderStars(item.stars || 0),
           // }))}
-          data={commentAndReviews?.data || []}
+          data={(commentAndReviews?.data || []).map((item, index) => ({
+            ...item,
+            srNo: (commentAndReviews?.pagination?.currentPage - 1) * limit + index + 1,
+            status: item.status === "show" ? "Shown" : "Hidden",
+            review: renderStars(item.stars || 0),
+            mobileNumber: item.mobileNumber ? String(item.mobileNumber) : "-",
+            email: item.email || "-",
+            name: item.name || "-",
+          }))}
           actions={actions}
           currentPage={page}
           usersPerPage={limit}
