@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil";
 import useDashboardManagement from "../../../hooks/dashboard/useDashboardManagement";
 import useDropdown from "../../../hooks/dropdown/useDropdown";
 import { totalstaffAtom } from "../../../state/dashboard/DashboardManagementState";
+import PagePath2 from "../../../components/uiComponent/PagePath2";
 
 const TotalStaffChart = () => {
   const [country, setCountry] = useState("India");
