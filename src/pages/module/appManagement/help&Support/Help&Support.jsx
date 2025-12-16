@@ -12,7 +12,7 @@ function HelpSupport() {
   const [isEditing, setIsEditing] = useState(false);
   const {
     loading,
-    contactNumber,
+    helpSupportNumber,
     getHelpSupportContact,
     updateHelpSupportContact,
   } = useHelpSupport();
@@ -21,6 +21,8 @@ function HelpSupport() {
   useEffect(() => {
     getHelpSupportContact();
   }, []);
+
+  console.log("helpSupportNumber", helpSupportNumber)
 
   const validationSchema = Yup.object({
     contactNumber: Yup.string()
@@ -41,7 +43,7 @@ function HelpSupport() {
   };
 
   // Show loader while fetching initial data
-  if (loading && !contactNumber) {
+  if (loading && !helpSupportNumber) {
     return (
       <div className="bg-[#F9F9F9] min-h-screen">
         <BreadCrumb
@@ -73,7 +75,7 @@ function HelpSupport() {
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
         <Formik
           initialValues={{
-            contactNumber: contactNumber || "",
+            contactNumber: helpSupportNumber || "",
           }}
           validationSchema={validationSchema}
           enableReinitialize

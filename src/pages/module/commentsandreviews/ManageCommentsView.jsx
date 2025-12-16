@@ -74,7 +74,7 @@ export default function ManageCommentsView() {
 
   return (
     <div className="">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Breadcrumb */}
         <BreadCrumb
           linkText={[
@@ -93,7 +93,7 @@ export default function ManageCommentsView() {
         ) : (
           <>
             {/* User Profile Card */}
-            <div className="bg-white rounded-lg p-8 mb-8 shadow-sm border border-gray-200">
+            <div className="bg-white rounded-2xl p-8 mb-4 shadow-sm border border-gray-200">
               <div className="flex items-center gap-8">
                 {/* Profile Image */}
                 <div className="flex-shrink-0">
@@ -135,7 +135,7 @@ export default function ManageCommentsView() {
             </div>
 
             {/* Review Summary Card */}
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+            <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-200">
               <div className="bg-white px-6 py-4 border-b border-gray-300">
                 <div className="flex items-center gap-3">
                   <User className="w-5 h-5 text-gray-800" />
