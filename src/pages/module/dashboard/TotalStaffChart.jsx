@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -8,26 +8,81 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { useRecoilValue } from "recoil";
+import useDashboardManagement from "../../../hooks/dashboard/useDashboardManagement";
+import useDropdown from "../../../hooks/dropdown/useDropdown";
+import { totalstaffAtom } from "../../../state/dashboard/DashboardManagementState";
 
 const TotalStaffChart = () => {
   const [country, setCountry] = useState("India");
-  const [city, setCity] = useState("Mumbai");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
   const [timeframe, setTimeframe] = useState("This Year");
+  const { fetchStaffCountByMonth, loading } = useDashboardManagement();
+  const staffState = useRecoilValue(totalstaffAtom);
+  const monthlyData = staffState?.monthlyData || [];
+  const {
+    fetchCountryDropdown,
+    fetchStatesByCountry,
+    fetchCitiesByState,
+    countries,
+    states,
+    cities,
+  } = useDropdown();
 
-  const staffData = [
-    { month: "Jan", staff: 380 },
-    { month: "Feb", staff: 520 },
-    { month: "Mar", staff: 620 },
-    { month: "April", staff: 270 },
-    { month: "May", staff: 520 },
-    { month: "Jun", staff: 530 },
-    { month: "Jul", staff: 530 },
-    { month: "Aug", staff: 630 },
-    { month: "Sept", staff: 530 },
-    { month: "Oct", staff: 580 },
-    { month: "Nov", staff: 530 },
-    { month: "Dec", staff: 540 },
-  ];
+  const [year, setYear] = useState(2025);
+  const countryOptions = countries.map((c) => c.name);
+  const stateOptions = states;
+  const cityOptions = cities;
+  const onChangeCountry = (option) => {
+    const value = option ? option.value : "";
+    setCountry(value);
+    setState("");
+    setCity("");
+  };
+
+  const onChangeState = (option) => {
+    const value = option ? option.value : "";
+    setState(value);
+    setCity("");
+  };
+
+  const onChangeCity = (option) => {
+    const value = option ? option.value : "";
+    setCity(value);
+  };
+
+  // Load countries once
+  useEffect(() => {
+    fetchCountryDropdown();
+  }, []);
+
+  // Load states when country changes
+  useEffect(() => {
+    if (country) {
+      fetchStatesByCountry(country);
+      setState("");
+      setCity("");
+    }
+  }, [country]);
+
+  // Load cities when state changes
+  useEffect(() => {
+    if (country && state) {
+      fetchCitiesByState(country, state);
+    }
+  }, [state]);
+
+  // Fetch staff chart data
+  useEffect(() => {
+    fetchStaffCountByMonth({ year, country, state, city });
+  }, [year, country, state, city]);
+
+  const staffData =
+    monthlyData?.map((item) => ({
+      month: item.month,
+      staff: item.count,
+    })) || [];
 
   // Custom tooltip for premium feel
   const CustomTooltip = ({ active, payload }) => {
@@ -38,7 +93,8 @@ const TotalStaffChart = () => {
             {payload[0].payload.month}
           </p>
           <p className="text-sm text-gray-600">
-            Staff: <span className="font-bold text-teal-500">{payload[0].value}</span>
+            Staff:{" "}
+            <span className="font-bold text-teal-500">{payload[0].value}</span>
           </p>
         </div>
       );
@@ -51,29 +107,35 @@ const TotalStaffChart = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h3 className="text-lg font-semibold text-gray-900">Total Staff</h3>
         <div className="flex flex-wrap gap-2">
-          <select
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            className="px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs font-medium text-gray-700 transition-all hover:border-gray-400"
-          >
-            <option value="India">India</option>
-            <option value="USA">USA</option>
+          <PagePath2
+            title="Total Staff"
+            /* Country */
+            showSelect
+            options={countryOptions}
+            selectPlaceHolder="Select Country"
+            onChangeSelectFunc={onChangeCountry}
+            /* State */
+            showSecondSelect
+            secondSelectOptions={stateOptions}
+            secondSelectPlaceholder="Select State"
+            onChangeSecondSelect={onChangeState}
+            secondSelectLoading={!!country && states.length === 0}
+          />
+          <select value={city} onChange={(e) => setCity(e.target.value)}>
+            <option value="">All Cities</option>
+            {cities.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
           </select>
+
           <select
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            className="px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs font-medium text-gray-700 transition-all hover:border-gray-400"
+            value={year}
+            onChange={(e) => setYear(Number(e.target.value))}
           >
-            <option value="Mumbai">Mumbai</option>
-            <option value="Delhi">Delhi</option>
-          </select>
-          <select
-            value={timeframe}
-            onChange={(e) => setTimeframe(e.target.value)}
-            className="px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs font-medium text-gray-700 transition-all hover:border-gray-400"
-          >
-            <option value="This Year">This Year</option>
-            <option value="Last Year">Last Year</option>
+            <option value={2025}>2025</option>
+            <option value={2024}>2024</option>
           </select>
         </div>
       </div>
@@ -89,7 +151,7 @@ const TotalStaffChart = () => {
               <stop offset="100%" stopColor="#5EEAD4" stopOpacity={0.9} />
             </linearGradient>
             <filter id="staffShadow" height="200%">
-              <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.2"/>
+              <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.2" />
             </filter>
           </defs>
           <CartesianGrid
@@ -111,7 +173,10 @@ const TotalStaffChart = () => {
             tickLine={false}
             tickMargin={8}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(20, 184, 166, 0.1)' }} />
+          <Tooltip
+            content={<CustomTooltip />}
+            cursor={{ fill: "rgba(20, 184, 166, 0.1)" }}
+          />
           <Bar
             dataKey="staff"
             fill="url(#staffGradient)"

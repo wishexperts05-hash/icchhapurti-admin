@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -8,20 +8,33 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { useRecoilValue } from "recoil";
+import useDashboardManagement from "../../../hooks/dashboard/useDashboardManagement";
+import { CityWiseSalesReportAtom } from "../../../state/dashboard/DashboardManagementState";
+import useDropdown from "../../../hooks/dropdown/useDropdown";
 
 const CityWiseSalesReport = () => {
-  const [country, setCountry] = useState("India");
-  const [timeframe, setTimeframe] = useState("This Year");
+  const [country, setCountry] = useState("");
+  const [timeframe, setTimeframe] = useState("thisYear");
+  const { fetchCountryDropdown, countries } = useDropdown();
 
-  const cityData = [
-    { name: "Mumbai", sales: 650 },
-    { name: "Delhi", sales: 580 },
-    { name: "Kolkata", sales: 450 },
-    { name: "Chennai", sales: 630 },
-    { name: "Noida", sales: 530 },
-    { name: "Goa", sales: 530 },
-    { name: "Pune", sales: 700 },
-  ];
+  const { fetchSalesReport, loading } = useDashboardManagement();
+  const { monthlyData } = useRecoilValue(CityWiseSalesReportAtom);
+
+  const [year, setYear] = useState(2025);
+
+  useEffect(() => {
+    fetchSalesReport({
+      country,
+      year,
+    });
+  }, [country, year]);
+
+  const cityData =
+    monthlyData?.map((item) => ({
+      name: item.city || item.month,
+      sales: item.count || item.sales,
+    })) || [];
 
   // Custom tooltip for premium feel
   const CustomTooltip = ({ active, payload }) => {
@@ -32,7 +45,10 @@ const CityWiseSalesReport = () => {
             {payload[0].payload.name}
           </p>
           <p className="text-sm text-gray-600">
-            Sales: <span className="font-bold text-orange-500">{payload[0].value}</span>
+            Sales:{" "}
+            <span className="font-bold text-orange-500">
+              {payload[0].value}
+            </span>
           </p>
         </div>
       );
@@ -50,11 +66,16 @@ const CityWiseSalesReport = () => {
           <select
             value={country}
             onChange={(e) => setCountry(e.target.value)}
-            className="px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs font-medium text-gray-700 transition-all hover:border-gray-400"
+            className="px-3 py-1.5 border border-gray-300 rounded-lg"
           >
-            <option value="India">India</option>
-            <option value="USA">USA</option>
+            <option value="">Select Country</option>
+            {countries.map((c) => (
+              <option key={c.name} value={c.name}>
+                {c.name}
+              </option>
+            ))}
           </select>
+
           <select
             value={timeframe}
             onChange={(e) => setTimeframe(e.target.value)}
@@ -77,7 +98,7 @@ const CityWiseSalesReport = () => {
               <stop offset="100%" stopColor="#FDBA74" stopOpacity={0.9} />
             </linearGradient>
             <filter id="barShadow" height="200%">
-              <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.2"/>
+              <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.2" />
             </filter>
           </defs>
           <CartesianGrid
@@ -99,7 +120,10 @@ const CityWiseSalesReport = () => {
             tickLine={false}
             tickMargin={8}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(251, 146, 60, 0.1)' }} />
+          <Tooltip
+            content={<CustomTooltip />}
+            cursor={{ fill: "rgba(251, 146, 60, 0.1)" }}
+          />
           <Bar
             dataKey="sales"
             fill="url(#barGradient)"
