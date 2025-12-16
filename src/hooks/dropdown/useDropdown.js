@@ -46,11 +46,38 @@ const [loadingCities, setLoadingCities] = useState(false);
   const [appTypes, setAppTypes] = useRecoilState(appTypesAtom);
   const [banklist ,setBanklist]  =useState ([]);
   const [states, setStates] = useState([]);
-const [loadingStates, setLoadingStates] = useState(false);
+  const [loadingStates, setLoadingStates] = useState(false);
+  const [countryCode,setCountryCode] = useState();
+    const [loadingCode, setLoadingCode] = useState(false);
 
   
 
   // -----------------------------
+const fetchAlCountriescallingcodes = async () => {
+  setLoadingCode(true);
+
+  try {
+   
+
+    const res = await fetchData({
+      method: "GET",
+      url: `${conf.apiBaseUrl}admin/country/all/calling-code/dropdown`,
+            headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+
+    
+
+    if (res?.success) {
+      setCountryCode(res.countries || []);
+    }
+  } finally {
+    setLoadingCode(false);
+  }
+};
+
+
 // APP TYPES DROPDOWN
 // -----------------------------
 const fetchAppTypesDropdown = async () => {
@@ -306,7 +333,7 @@ const fetchCitiesByState = async (countryName, stateName) => {
     loadingProduct ||
     loadingOrderStatus ||
     countryLoading ||
-    loadingBannerTypes || loadingBankList || loadingStates ||
+    loadingBannerTypes || loadingBankList || loadingStates || loadingCode
     loadingAppTypes;
 
   return {
@@ -320,12 +347,13 @@ const fetchCitiesByState = async (countryName, stateName) => {
     fetchProductDropdown,
     fetchCountryDropdown,
     fetchStatesByCountry,
-
+fetchAlCountriescallingcodes,
     fetchBannerTypesDropdown,
     fetchAppTypesDropdown,
     fetchBanklist,
     
     states,
+    countryCode,
     cities,
     banklist,
     salesType,

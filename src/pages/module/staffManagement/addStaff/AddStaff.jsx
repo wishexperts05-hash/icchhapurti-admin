@@ -81,13 +81,14 @@ const FormSelect = ({ label, id, options, value, onChange }) => (
   </div>
 );
 
+
 const PhoneInput = ({
   label,
   id,
   countryCode,
   phoneNumber,
   onCountryCodeChange,
-  onPhoneChange,
+  onPhoneChange,  options,
 }) => (
   <div className="w-full">
     <label
@@ -111,9 +112,11 @@ const PhoneInput = ({
           paddingRight: "1.8rem",
         }}
       >
-        <option value="+91">+91</option>
-        <option value="+1">+1</option>
-        <option value="+44">+44</option>
+         {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
       </select>
       <input
         id={id}
@@ -154,6 +157,7 @@ const AddStaff = () => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
+
 
   const handleProfileImageUpload = (e) => {
     const file = e.target.files[0];
@@ -196,7 +200,7 @@ const AddStaff = () => {
 
     await addStaff(fd);
 
-    navigate("/staff-management");
+   
   };
 
   const handleCancel = () => {
@@ -212,7 +216,7 @@ const AddStaff = () => {
     loadingStates,
     fetchCitiesByState,
     cities,
-    loadingCities,
+    loadingCities,fetchAlCountriescallingcodes,countryCode,loadingCode,
   } = useDropdown();
 
   useEffect(() => {
@@ -227,6 +231,21 @@ const AddStaff = () => {
     value: city,
     label: city,
   }));
+   useEffect(()=>{
+    fetchAlCountriescallingcodes();
+   },[])
+   console.log("callingcode",countryCode)
+
+   const callingCodeOptions = (countryCode || []).map((item) => {
+  const countryName = Object.keys(item)[0];
+  const code = item[countryName];
+
+  return {
+    label: `(${code})`,
+    value: code,
+  };
+});
+
 
   useEffect(() => {
     fetchBanklist();
@@ -244,6 +263,28 @@ const AddStaff = () => {
       }));
     }
   }, [states]);
+
+  
+
+  useEffect(() => {
+  if (cities?.length && !formData.bankName) {
+    setFormData((prev) => ({
+      ...prev,
+      city: cities[0], // first City auto-selected
+    }));
+  }
+}, [cities]);
+
+  useEffect(() => {
+  if (banklist?.length && !formData.bankName) {
+    setFormData((prev) => ({
+      ...prev,
+      bankName: banklist[0], // first bank auto-selected
+    }));
+  }
+}, [banklist]);
+
+
 
   const handleCountryChange = (e) => {
     const selectedCountry = e.target.value;
@@ -342,6 +383,7 @@ const AddStaff = () => {
               id="phoneNumber"
               countryCode={formData.countryCode}
               phoneNumber={formData.phoneNumber}
+                options={callingCodeOptions}
               onCountryCodeChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,

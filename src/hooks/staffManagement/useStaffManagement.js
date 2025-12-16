@@ -10,8 +10,10 @@ import {
   staffDetailsAtom,
   staffListAtom,
 } from "../../state/staffManagement/staffManagementState";
+import { useNavigate } from "react-router-dom";
 
 const useStaffManagement = () => {
+  const navigate = useNavigate();
   const [fetchData] = useFetch();
   const [loading, setLoading] = useState(false);
   const [staffList, setStaffList] = useRecoilState(staffListAtom);
@@ -131,6 +133,7 @@ const useStaffManagement = () => {
       });
       if (res) {
         toast.success(res?.message);
+         navigate("/staff-management");
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);
