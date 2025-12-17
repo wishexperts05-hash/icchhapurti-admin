@@ -1,213 +1,250 @@
-// import { useEffect, useState } from "react";
-// import { useLocation, useNavigate, useParams } from "react-router-dom";
-// import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
-// import DetailsField from "../../../components/uiComponent/DetailsField";
-// import { User } from "lucide-react";
-// import PagePath2 from "../../../components/uiComponent/PagePath2";
-// import Button from "../../../components/uiComponent/Button";
-// import useChangeStatus from "../../../hooks/CommentandReviews/useChangeStatus";
-// import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
-// import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+    Star,
+    MapPin,
+    Phone,
+    Mail,
+    Eye,
+    EyeOff,
+    MessageSquare
+} from "lucide-react";
+import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
+import PagePath2 from "../../../components/uiComponent/PagePath2";
+import Button from "../../../components/uiComponent/Button";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
+import useCommentandReviews from "../../../hooks/CommentandReviews/useCommentandReviews";
+import Profile from "../../../assets/user.png";
 
-// export default function ManageCommentsView() {
-//   const navigate = useNavigate();
-//   //const location = useLocation();
-//   const { reviewId, reviewType } = useParams();
+export default function ManageCommentsView() {
+    const navigate = useNavigate();
+    const { reviewId, reviewType } = useParams();
 
-//   const { loading, commentById, fetchComment } = useGetCommentById();
-//   const { loading: statusLoading, changeStatus } = useChangeStatus();
+    const { loading, changeStatus, commentReviewById, fetchReviewById } = useCommentandReviews();
 
-//   //fetch call for api data
-//   useEffect(() => {
-//     //  console.log("Params:", reviewId, reviewType);
-//     if (reviewId && reviewType) {
-//       fetchComment(reviewId, reviewType);
-//     }
-//   }, [reviewId, reviewType]);
+    useEffect(() => {
+        if (reviewId && reviewType) {
+            fetchReviewById(reviewId, reviewType);
+        }
+    }, [reviewId, reviewType]);
 
-//   const handleBack = () => {
-//     navigate(-1);
-//   };
+    const handleBack = () => {
+        navigate("/manage-comments");
+    };
 
-//   //Handled Hide and Show
-//   const handleHide = async () => {
-//     if (!commentById?._id) return;
+    const handleHide = async () => {
+        if (!commentReviewById?._id || loading) return;
+        const newStatus = commentReviewById.status === "show" ? "hide" : "show";
+        const payload = { status: newStatus };
 
-//     const newStatus = commentById.status === "show" ? "hide" : "show";
+        await changeStatus(commentReviewById._id, commentReviewById.reviewType, payload);
+        fetchReviewById(reviewId, reviewType);
+    };
 
-//     await changeStatus(commentById._id, commentById.reviewType, newStatus);
+    const renderStars = (rating) => {
+        return (
+            <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <motion.span
+                        key={star}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: star * 0.05 }}
+                        className={`text-2xl ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
+                        whileHover={{ scale: 1.2 }}
+                    >
+                        <Star size={24} fill={star <= rating ? "currentColor" : "none"} />
+                    </motion.span>
+                ))}
+                <span className="ml-2 text-sm font-medium text-gray-600">
+                    ({rating}/5)
+                </span>
+            </div>
+        );
+    };
 
-//     toast.success("Status has been changed");
-//   };
+    const commentData = commentReviewById && {
+        name: commentReviewById.name || "-",
+        location: commentReviewById.address || "Maharashtra, India",
+        mobileNumber: commentReviewById.mobileNumber || "-",
+        email: commentReviewById.email || "-",
+        profileImage: commentReviewById.profileImage || Profile,
+        rating: commentReviewById.stars || 0,
+        status: commentReviewById.status === "show" ? "Show" : "Hide",
+        comment: commentReviewById.comment || "-",
+        createdAt: commentReviewById.createdAt || new Date().toISOString(),
+        reviewType: commentReviewById.reviewType || "-",
+    };
 
-//   const renderStars = (rating) => {
-//     return (
-//       <div className="flex gap-1">
-//         {[1, 2, 3, 4, 5].map((star) => (
-//           <span
-//             key={star}
-//             className={`text-2xl ${
-//               star <= rating ? "text-yellow-400" : "text-gray-300"
-//             }`}
-//           >
-//             ★
-//           </span>
-//         ))}
-//       </div>
-//     );
-//   };
+    return (
+        <div className="max-w-7xl mx-auto">
+            <BreadCrumb
+                linkText={[
+                    { text: "Comment & Review", href: "/manage-comments" },
+                    { text: "View Comment" },
+                ]}
+            />
+            <PagePath2 title="Review Details" />
 
-//   //data from api
-//   const commentData = commentById && {
-//     name: commentById.name || "-",
-//     location: commentById.address || "Maharashtra, India",
-//     mobileNumber: commentById.mobileNumber || "-",
-//     email: commentById.email || "-",
-//     profileImage:
-//       commentById.profileImage ||
-//       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
-//     rating: commentById.stars || 0,
-//     status: commentById.status === "show" ? "Show" : "Hide",
-//     comment: commentById.comment || "-",
-//   };
+            {loading || !commentData ? (
+                <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                    <LoaderSpinner size="lg" />
+                    <p className="mt-4 text-gray-600">Loading review details...</p>
+                </div>
+            ) : (
+                <div className="space-y-6">
+                    {/* User Profile Card */}
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.1 }}
+                        className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
+                    >
+                        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                            {/* Profile Image with Animation */}
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                className="relative"
+                            >
+                                <div className="relative">
+                                    <img
+                                        src={commentData.profileImage}
+                                        alt={commentData.name}
+                                        className="w-32 h-32 rounded-2xl object-cover border-4 border-white shadow-lg"
+                                    />
+                                    <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                        {commentData.reviewType}
+                                    </div>
+                                </div>
+                            </motion.div>
 
-//   return (
-//     <div className="">
-//       <div className="max-w-7xl mx-auto">
-//         {/* Breadcrumb */}
-//         <BreadCrumb
-//           linkText={[
-//             { text: "Comment & Review", href: "/manage-comments" },
-//             { text: "View Comment" },
-//           ]}
-//         />
+                            {/* User Details */}
+                            <div className="flex-1 space-y-4">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-gray-900">
+                                        {commentData.name}
+                                    </h2>
+                                    <div className="flex items-center gap-2 mt-2 text-gray-600">
+                                        <MapPin className="w-4 h-4" />
+                                        <p>{commentData.location}</p>
+                                    </div>
+                                </div>
 
-//         {/* Page Title */}
-//         <PagePath2 title="View Comment" />
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                                        <div className="p-2 bg-blue-100 rounded-lg">
+                                            <Phone className="w-4 h-4 text-blue-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm text-gray-500">Mobile Number</p>
+                                            <p className="font-medium text-gray-900">
+                                                {commentData.mobileNumber}
+                                            </p>
+                                        </div>
+                                    </div>
 
-//         {loading || statusLoading || !commentData ? (
-//           <div className="flex justify-center py-16">
-//             <LoaderSpinner />
-//           </div>
-//         ) : (
-//           <>
-//             {/* User Profile Card */}
-//             <div className="bg-white rounded-2xl p-8 mb-4 shadow-sm border border-gray-200">
-//               <div className="flex items-center gap-8">
-//                 {/* Profile Image */}
-//                 <div className="flex-shrink-0">
-//                   <img
-//                     src={commentData.profileImage} //commentData.profileImage
-//                     alt={commentData.name} //commentData.name
-//                     className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
-//                   />
-//                 </div>
+                                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                                        <div className="p-2 bg-green-100 rounded-lg">
+                                            <Mail className="w-4 h-4 text-green-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm text-gray-500">Email Address</p>
+                                            <p className="font-medium text-gray-900 break-all">
+                                                {commentData.email}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-//                 {/* User Details */}
-//                 <div className="flex-1">
-//                   <div className="mb-4">
-//                     <h2 className="text-2xl font-bold text-gray-900">
-//                       {commentData.name}
-//                     </h2>
-//                     <p className="text-gray-600 mt-1">{commentData.location}</p>
-//                   </div>
+                            {/* Status Badge */}
+                            <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className={`px-4 py-2 rounded-full font-semibold ${commentData.status?.toLowerCase() === "show"
+                                    ? "bg-green-100 text-green-700"
+                                    : "bg-red-100 text-red-700"
+                                    }`}
+                            >
+                                {commentData.status}
+                            </motion.div>
+                        </div>
+                    </motion.div>
 
-//                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//                     <div>
-//                       <p className="text-sm font-semibold text-gray-700 mb-1">
-//                         Mobile Number :
-//                       </p>
-//                       <p className="text-gray-900">
-//                         {commentData.mobileNumber}
-//                       </p>
-//                     </div>
+                    {/* Review Summary Card */}
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100"
+                    >
+                        <div className="bg-gradient-to-r from-gray-700 to-gray-500 px-6 py-4">
+                            <div className="flex items-center gap-3">
+                                <MessageSquare className="w-6 h-6 text-white" />
+                                <h3 className="text-lg font-bold text-white">
+                                    Review Summary
+                                </h3>
+                            </div>
+                        </div>
 
-//                     <div>
-//                       <p className="text-sm font-semibold text-gray-700 mb-1">
-//                         E-Mail ID :
-//                       </p>
-//                       <p className="text-gray-900">{commentData.email}</p>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
+                        <div className="p-6 space-y-6">
+                            {/* Rating Section */}
+                            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl">
+                                <div>
+                                    <p className="text-sm font-semibold text-gray-700 mb-1">
+                                        Rating
+                                    </p>
+                                    <p className="text-gray-500 text-sm">Based on user experience</p>
+                                </div>
+                                {renderStars(commentData.rating)}
+                            </div>
 
-//             {/* Review Summary Card */}
-//             <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-200">
-//               <div className="bg-white px-6 py-4 border-b border-gray-300">
-//                 <div className="flex items-center gap-3">
-//                   <User className="w-5 h-5 text-gray-800" />
-//                   <h3 className="text-lg font-bold text-gray-900">
-//                     Review summary
-//                   </h3>
-//                 </div>
-//               </div>
+                            {/* Comment Section */}
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-2 text-gray-700">
+                                    <MessageSquare className="w-4 h-4" />
+                                    <p className="font-semibold">User Comment</p>
+                                </div>
+                                <motion.div
+                                    whileHover={{ scale: 1.01 }}
+                                    className="p-4 bg-gray-50 rounded-xl border border-gray-200"
+                                >
+                                    <p className="text-gray-700 leading-relaxed">
+                                        "{commentData.comment}"
+                                    </p>
+                                </motion.div>
+                            </div>
+                        </div>
+                    </motion.div>
 
-//               <div className="p-8 bg-white">
-//                 <div className="space-y-6">
-//                   {/* Rating */}
-//                   <div className="flex items-start gap-4">
-//                     <p className="text-base font-semibold text-gray-900 min-w-[120px]">
-//                       Rating :
-//                     </p>
-//                     <div>{renderStars(commentData.rating)}</div>
-//                   </div>
-
-//                   {/* Status */}
-//                   <div className="flex items-start gap-4">
-//                     <p className="text-base font-semibold text-gray-900 min-w-[120px]">
-//                       Status :
-//                     </p>
-//                     <p
-//                       className={
-//                         commentData.status?.toLowerCase() === "show"
-//                           ? "text-green-600 font-medium"
-//                           : "text-red-600 font-medium"
-//                       }
-//                     >
-//                       {commentData.status}
-//                     </p>
-//                   </div>
-
-//                   {/* Comment */}
-//                   <div className="flex items-start gap-4">
-//                     <p className="text-base font-semibold text-gray-900 min-w-[120px]">
-//                       Comment :
-//                     </p>
-//                     <p className="text-gray-700 leading-relaxed flex-1">
-//                       {commentData.comment}
-//                     </p>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-
-//             {/* Action Buttons */}
-//             <div className="flex justify-center gap-8 mt-8 mb-8">
-//               <Button text="Back" variant={1} onClick={handleBack} />
-//               <Button
-//                 text={
-//                   statusLoading
-//                     ? "Updating..." // text while loading
-//                     : commentData.status?.toLowerCase() === "show"
-//                     ? "Hide"
-//                     : "Show"
-//                 }
-//                 variant={2}
-//                 onClick={handleHide}
-//                 disabled={statusLoading}
-//               >
-//                 {statusLoading && (
-//                   <span className="ml-2">
-//                     <LoaderSpinner />
-//                   </span>
-//                 )}
-//               </Button>
-//             </div>
-//           </>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
+                    {/* Action Buttons */}
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                        className="flex flex-col sm:flex-row justify-center gap-4 mt-8"
+                    >
+                        <Button
+                            text="Back"
+                            variant={2}
+                            onClick={handleBack}
+                            className="px-8 py-3"
+                        />
+                        <Button
+                            text={loading ? "Updating..." : commentData.status?.toLowerCase() === "show" ? "Hide Review" : "Show Review"}
+                            variant={1}
+                            onClick={handleHide}
+                            disabled={loading}
+                            icon={commentData.status?.toLowerCase() === "show" ?
+                                <EyeOff className="w-4 h-4" /> :
+                                <Eye className="w-4 h-4" />
+                            }
+                            className="px-8 py-3"
+                        />
+                    </motion.div>
+                </div>
+            )}
+        </div>
+    );
+}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
@@ -7,15 +7,15 @@ import DetailsField from "../../../components/uiComponent/DetailsField";
 import useCommentandReviews from "../../../hooks/CommentandReviews/useCommentandReviews";
 
 export default function SetReviewDisplay() {
-  const {loading, fetchUserRating, userRating, updatingUserRating} = useCommentandReviews()
+  const { loading, fetchUserRating, userRating, updatingUserRating } = useCommentandReviews()
   const navigate = useNavigate();
-  const {reviewId, reviewType} = useParams();
-  const [reviewRating, setReviewRating] = useState("3");
 
+  console.log
   useEffect(() => {
-    fetchUserRating(reviewId, reviewType)
+      fetchUserRating()
   }, [])
-  
+
+  console.log("userRating", userRating)
   const handleEdit = () => {
     navigate("/edit-review-display");
   };
@@ -48,7 +48,7 @@ export default function SetReviewDisplay() {
           <div className="flex items-center gap-4 mb-6">
             <DetailsField
               type="number"
-              value={reviewRating}
+              value={userRating}
               onChange={(e) => setReviewRating(e.target.value)}
               min="1"
               max="5"
