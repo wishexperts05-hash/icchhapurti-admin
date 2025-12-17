@@ -1,16 +1,10 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 const { persistAtom } = recoilPersist();
+import { createPersistedAtom } from "../recoilConfig";
 
+export const allCommentandReviewsAtom = atom(createPersistedAtom("allCommentandReviewsKey", []));
 
-export const getAllCommentandReviewsAtom= atom({
-    key: "getAllCommentandReviews", 
-    default:[],
-     effects_UNSTABLE: [persistAtom]
-})
+export const commentReviewByIdAtom = atom (createPersistedAtom("commentReviewByIdKey", null));
 
-export const getCommentById=atom({
-    key:"getCommentById",
-    default:{},
-    effects_UNSTABLE: [persistAtom]  // this will persit the value even after refresh
-})
+export const userRatingAtom = atom (createPersistedAtom("userRatingKey", null))

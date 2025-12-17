@@ -8,6 +8,11 @@ import TotalUsersChart from "./TotalUsersChart";
 import TotalStaffChart from "./TotalStaffChart";
 import CityWiseSalesReport from "./CityWiseSalesReport";
 import SalesChart from "./SalesChart";
+import { useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import useDashboardManagement from "../../../hooks/dashboard/useDashboardManagement";
+import { dashboardTotalStateAtom } from "../../../state/dashboard/DashboardManagementState";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 
 // StatCard Component
 const StatCard = ({ title, value, change, icon, bgColor, textColor }) => {
@@ -15,9 +20,7 @@ const StatCard = ({ title, value, change, icon, bgColor, textColor }) => {
     <div className={`${bgColor} rounded-xl p-6 shadow-md`}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p
-            className={`font-medium text-gray-500 text-sm ${textColor} mb-2`}
-          >
+          <p className={`font-medium text-gray-500 text-sm ${textColor} mb-2`}>
             {title}
           </p>
           <p className={`text-2xl font-bold ${textColor} mb-2`}>{value}</p>
@@ -33,12 +36,29 @@ const StatCard = ({ title, value, change, icon, bgColor, textColor }) => {
 
 // Main Dashboard Component
 const Dashboard = () => {
+  const { fetchDashboardTotals, loading } = useDashboardManagement();
+  const dashboardTotals = useRecoilValue(dashboardTotalStateAtom);
+
+  useEffect(() => {
+    fetchDashboardTotals();
+  }, []);
+
+  
+  const formatChange = (percent, trend) =>
+    `${trend === "increased" ? "+" : ""}${percent}%`;
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="mb-6">
         <PagePath2 title="Dashboard" />
       </div>
+
+  {loading || !dashboardTotals ? (
+     <div className="flex w-full items-center justify-center py-20">
+          <LoaderSpinner />
+        </div>
+             ) : (
 
       <div className="space-y-6">
         {/* Main Grid: Left Stats + Right Sales Chart */}
@@ -49,32 +69,47 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <StatCard
                 title="Total User"
-                value="300K"
-                change="+5% This Month"
+                value={dashboardTotals?.users?.total ?? 0}
+                change={formatChange(
+                  dashboardTotals.users.percent,
+                  dashboardTotals.users.trend
+                )}
                 icon={Teamwork}
                 bgColor="bg-[#c4ffba]"
                 textColor="text-gray-800"
               />
+
               <StatCard
                 title="Total Staff"
-                value="50K"
-                change="+5% This Month"
+                value={dashboardTotals.staff.total}
+                change={formatChange(
+                  dashboardTotals.staff.percent,
+                  dashboardTotals.staff.trend
+                )}
                 icon={Staff}
                 bgColor="bg-[#bdccf1]"
                 textColor="text-gray-800"
               />
+
               <StatCard
                 title="Total Sales"
-                value="₹ 250K"
-                change="+5% This Month"
+                value={`₹ ${dashboardTotals.sales.total.toLocaleString()}`}
+                change={formatChange(
+                  dashboardTotals.sales.percent,
+                  dashboardTotals.sales.trend
+                )}
                 icon={Analytics}
                 bgColor="bg-[#f1bdbd]"
                 textColor="text-gray-800"
               />
+
               <StatCard
                 title="Total Orders"
-                value="2.5K"
-                change="+5% This Month"
+                value={dashboardTotals.orders.total}
+                change={formatChange(
+                  dashboardTotals.orders.percent,
+                  dashboardTotals.orders.trend
+                )}
                 icon={Order}
                 bgColor="bg-[#a8deed]"
                 textColor="text-gray-800"
@@ -84,8 +119,11 @@ const Dashboard = () => {
             {/* Full Width Stat Card - App Installed */}
             <StatCard
               title="Total App Installed"
-              value="350K"
-              change="+5% This Month"
+              value={dashboardTotals.appInstalls.total}
+              change={formatChange(
+                dashboardTotals.appInstalls.percent,
+                dashboardTotals.appInstalls.trend
+              )}
               icon={Download}
               bgColor="bg-[#f1bdea]"
               textColor="text-gray-800"
@@ -105,6 +143,7 @@ const Dashboard = () => {
           <TotalStaffChart />
         </div>
       </div>
+         )}
     </div>
   );
 };

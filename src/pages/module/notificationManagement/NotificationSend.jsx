@@ -424,13 +424,13 @@ const SendNotification = () => {
 
               {/* Action Buttons */}
               <div className="flex justify-center gap-4 pt-4">
-                <Button
+                {/* <Button
                   text="Cancel"
                   variant={2}
                   type="button"
                   onClick={handleCancel}
                   disabled={loading || isSubmitting}
-                />
+                /> */}
                 <Button
                   text={loading || isSubmitting ? "Sending..." : "Send Notification"}
                   type="submit"

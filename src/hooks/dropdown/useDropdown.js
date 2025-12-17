@@ -150,7 +150,7 @@ const resetBannerTypes = () => setBannerTypes([]);
     } finally {
       setLoadingSales(false);
     }
-  };
+  };  
   // -----------------------------
   // user type
   // -----------------------------
@@ -265,8 +265,8 @@ const fetchCitiesByState = async (countryName, stateName) => {
       },
     });
 
-    if (res?.success) {
-      setCities(res.cities || []);
+    if (res?.success && Array.isArray(res.cities)) {
+      setCities(res.cities); // ✅ THIS WAS THE BUG
     } else {
       setCities([]);
     }
@@ -274,7 +274,6 @@ const fetchCitiesByState = async (countryName, stateName) => {
     setLoadingCities(false);
   }
 };
-
 
 
 

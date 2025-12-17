@@ -281,9 +281,9 @@ const ManageCommentsView = lazy(() =>
 const SetReviewDisplay = lazy(() =>
   import("../pages/module/commentsandreviews/SetReviewDisplay")
 );
-const EditReviewDisplay = lazy(() =>
-  import("../pages/module/commentsandreviews/EditReviewDisplay")
-);
+// const EditReviewDisplay = lazy(() =>
+//   import("../pages/module/commentsandreviews/EditReviewDisplay")
+// );
 // ---------------------------- Notification Management ----------------------------
 
 const NotificationSend = lazy(() =>
@@ -778,7 +778,7 @@ function PublicRoute() {
                 element={<ManageCommentsView />}
               />
               <Route path="/set-review-display" element={<SetReviewDisplay />} />
-              <Route path="/edit-review-display" element={<EditReviewDisplay />} />
+              {/* <Route path="/edit-review-display" element={<EditReviewDisplay />} /> */}
               {/* -------------------------- Notification Management -------------------------- */}
 
               <Route
