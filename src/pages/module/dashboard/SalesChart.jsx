@@ -4,6 +4,7 @@ import Select from "react-select";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 import useDashboardManagement from "../../../hooks/dashboard/useDashboardManagement";
 import useDropdown from "../../../hooks/dropdown/useDropdown";
+import { Tooltip } from "recharts";
 
 const SalesChart = () => {
   const [country, setCountry] = useState("India");
@@ -94,7 +95,76 @@ const SalesChart = () => {
       value: item.totalRevenue,
     })) || [];
 
-  const COLORS = ["#2563EB", "#FACC15", "#10B981", "#EF4444", "#8B5CF6"];
+  // Placeholder data for empty state
+  const placeholderData = [{ name: "No Data", value: 1 }];
+
+  const COLORS = [
+    "#2563EB",
+    "#FACC15",
+    "#10B981",
+    "#EF4444",
+    "#8B5CF6",
+    "#F97316",
+    "#06B6D4",
+    "#EC4899",
+  ];
+
+  // Custom label to show percentage
+  const renderLabel = (entry) => {
+    const percent = ((entry.percent || 0) * 100).toFixed(1);
+    return `${percent}%`;
+  };
+
+  // Custom Legend Component
+  const CustomLegend = ({ payload }) => {
+    return (
+      <div
+        className="
+        mt-4 px-2
+        max-h-[96px]          /* ~4 rows height */
+        overflow-y-auto
+        scrollbar-thin
+        scrollbar-thumb-gray-300
+        scrollbar-track-transparent
+      "
+      >
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+          {payload.map((entry, index) => (
+            <div key={index} className="flex items-center space-x-2">
+              <div
+                className="w-3 h-3 rounded-full flex-shrink-0"
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="text-xs text-gray-700 font-medium truncate">
+                {entry.value.length > 25
+                  ? entry.value.substring(0, 25) + "..."
+                  : entry.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const CustomPieTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const { name, value } = payload[0];
+
+      return (
+        <div className="bg-white px-4 py-2 rounded-lg shadow-lg border border-gray-200">
+          <p className="text-sm font-semibold text-gray-800">{name}</p>
+          <p className="text-sm text-gray-600">
+            Revenue:{" "}
+            <span className="font-bold text-blue-600">
+              ₹ {value.toLocaleString()}
+            </span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   /* ---------- STYLES ---------- */
   const selectStyles = {
@@ -174,64 +244,59 @@ const SalesChart = () => {
       </div>
 
       {/* ---------- PIE CHART ---------- */}
-      <div className="flex-1 flex justify-center items-center min-h-[280px]">
+      <div className={`flex-1 flex justify-center items-center `}>
         {loading || !fetchSalesChartData ? (
           <div className="flex w-full items-center justify-center py-20">
             <LoaderSpinner />
           </div>
         ) : pieData.length > 0 ? (
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                dataKey="value"
-                paddingAngle={3}
-                label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-                labelLine={false}
-              >
-                {pieData.map((_, index) => (
-                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
+          <div className="w-full h-full">
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={pieData.length > 6 ? 90 : 100}
+                  dataKey="value"
+                  paddingAngle={3}
+                  // label={renderLabel}
+                  // labelLine={false}
+                >
+                  {pieData.map((_, index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
 
-              <Legend
-                verticalAlign="bottom"
-                iconType="circle"
-                wrapperStyle={{
-                  paddingTop: "15px",
-                }}
-                formatter={(value) => (
-                  <span className="text-xs text-gray-700 font-medium">
-                    {value.length > 25 ? value.substring(0, 25) + "..." : value}
-                  </span>
-                )}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+                <Legend content={<CustomLegend />} />
+                <Tooltip content={<CustomPieTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         ) : (
-          <div className="text-center py-8">
-            <svg
-              className="mx-auto h-14 w-14 text-gray-400 mb-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              />
-            </svg>
-            <p className="text-sm text-gray-600 font-semibold mb-1">
-              No data available
-            </p>
-            <p className="text-xs text-gray-500">
-              Try adjusting your filters to see results
-            </p>
+          <div className="flex flex-col items-center">
+            <ResponsiveContainer width="100%" height={280}>
+              <PieChart>
+                <Pie
+                  data={placeholderData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  dataKey="value"
+                  paddingAngle={0}
+                >
+                  <Cell fill="#E5E7EB" />
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="text-center -mt-8">
+              <p className="text-sm text-gray-600 font-semibold mb-1">
+                No data available
+              </p>
+              <p className="text-xs text-gray-500">
+                Try adjusting your filters to see results
+              </p>
+            </div>
           </div>
         )}
       </div>
