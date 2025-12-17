@@ -397,7 +397,7 @@ export const allNavigationItems = [
       },
       {
         id: 63,
-        title: "Privicy Policy",
+        title: "Privacy Policy",
         url: "/app-management/privacy-policy",
         icon: privicyPolicyIcon,
         badge: null,

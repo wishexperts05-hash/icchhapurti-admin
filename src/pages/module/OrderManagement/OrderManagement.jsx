@@ -85,7 +85,7 @@ const OrderManagement = () => {
   };
 
   const onChangeSelectFunc = (option) => {
-    const selected = option ? option.value : "";
+    const selected = option ? option.value.toLowerCase() : "";
     setUserType(selected);
     setPage(1);
   };
