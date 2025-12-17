@@ -143,12 +143,22 @@ const ProductManagment = () => {
       ) : (
         <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
           <DataTable
-            columns={columns}
-            data={productList?.products || []}
-            actions={actions}
-            usersPerPage={10}
-            currentPage={1}
-          />
+  columns={columns}
+  data={productList?.products?.map((product, index) => ({
+    ...product,
+    srNo: (page - 1) * limit + index + 1
+  })) || []}
+  currentPage={productList?.currentPage}
+  usersPerPage={limit}
+  actions={actions.map((action) => ({
+    ...action,
+    label:
+      typeof action.label === "function"
+        ? undefined
+        : action.label,
+    onClick: action.onClick,
+  }))}
+/>
 
           <Pagination
             currentPage={productList?.currentPage}

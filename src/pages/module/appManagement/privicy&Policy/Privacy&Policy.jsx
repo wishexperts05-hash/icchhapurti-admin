@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { FaRegEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
+import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
-import { FiEye } from "react-icons/fi";
 import Pagination from "../../../../components/uiComponent/Pagination";
 import usePrivacyPolicy from "../../../../hooks/appManagement/usePrivacyAndPolicy";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+import { FaEye, FaRegEdit } from "react-icons/fa";
 
 function PrivacyPolicy() {
   const navigate = useNavigate();
@@ -86,17 +85,20 @@ function PrivacyPolicy() {
 
   const actions = [
     {
-      icon: <FiEye className="w-5 h-5 text-[#FF6B00]" />,
+      icon: <FaEye className="text-yellow-600" />,
       title: "View",
       onClick: (row) => navigate(`/app-management/privacy-policy/view/${row._id}`),
     },
     {
-      icon: <FaRegEdit className="w-5 h-5 text-[#FF6B00]" />,
+      icon: <FaRegEdit
+                          className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
+                          title="Edit"
+                      />,
       title: "Edit",
       onClick: (row) => navigate(`/app-management/edit-privacy-policy/${row._id}`),
     },
     {
-      icon: <MdDelete className="w-5 h-5 text-red-600" />,
+      icon: <Trash2 className="w-5 h-5 text-red-600" />,
       title: "Delete",
       onClick: (row) => handleDelete(row._id),
     },
