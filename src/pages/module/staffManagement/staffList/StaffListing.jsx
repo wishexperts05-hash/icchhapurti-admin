@@ -13,11 +13,9 @@ import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import useLogin from "../../../../hooks/auth/useLogin";
 import usePermissions from "../../../../hooks/auth/usePermissions";
 
-
 const StaffManagement = () => {
-    const { loading, staffList, fetchStaffList, updateStatus ,deleteStaff} = useStaffManagement();
-   
     const navigate = useNavigate();
+    const { loading, staffList, fetchStaffList, updateStatus, deleteStaff } = useStaffManagement();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [searchTerm, setSearchTerm] = useState("");
@@ -29,6 +27,7 @@ const StaffManagement = () => {
     );
 
     console.log("staffList:", staffList);
+
     const onPageChange = (data) => {
         setPage(data);
     };
@@ -36,11 +35,10 @@ const StaffManagement = () => {
     const onItemsPerPageChange = (data) => {
         setLimit(data);
     };
+
     useEffect(() => {
         fetchStaffList(page, limit, debouncedSearch);
     }, [page, limit, debouncedSearch]);
-
- 
 
     const handleBlock = async (row) => {
         console.log("Toggling block status for user:", row);
@@ -48,27 +46,20 @@ const StaffManagement = () => {
         fetchStaffList(page, limit, debouncedSearch);
     };
 
-    const handleSearchTerm = (e) => {
-        setSearchTerm(e.target.value);
-        setCurrentPage(1);
-    };
-
     const handleView = (row) => {
         console.log("Navigating to staff details with:", row);
         navigate(`/staff-management/staff-details/${row._id}`);
     };
 
-    const handleDelete =   async (row) => {
-    const result = await deleteStaff(row._id);
-    if (result) {
-      fetchStaffList(page, limit, debouncedSearch);
-    }
-  };
+    const handleDelete = async (row) => {
+        const result = await deleteStaff(row._id);
+        if (result) {
+            fetchStaffList(page, limit, debouncedSearch);
+        }
+    };
 
     const handleEdit = (row) => {
-        navigate(`/staff-management/editStaff/${row._id}`,
-            // { state: { staffData: row } }
-        );
+        navigate(`/staff-management/editStaff/${row._id}`);
     };
 
     const handleAddStaff = () => {
@@ -92,8 +83,8 @@ const StaffManagement = () => {
     const actions = [
         {
             icon: <FaEye className="text-yellow-600" />,
-            onClick: handleView,
             title: "View",
+            onClick: handleView,
             disableCondition: () => !canRead,
         },
         {
@@ -103,14 +94,14 @@ const StaffManagement = () => {
                     title="Edit"
                 />
             ),
-            onClick: handleEdit,
             title: "Edit",
+            onClick: handleEdit,
             disableCondition: () => !canUpdate,
         },
         {
             icon: <Trash2 className="w-5 h-5 text-red-600" />,
-            onClick: handleDelete,
             title: "Delete",
+            onClick: handleDelete,
             disableCondition: () => !canDelete,
         },
         {
@@ -120,60 +111,55 @@ const StaffManagement = () => {
                     title="Block User"
                 />
             ),
-            onClick: handleBlock,
             title: "Toggle Status",
+            onClick: handleBlock,
             disableCondition: () => !canUpdate,
         },
     ];
 
     return (
-        <div className="bg-gray-50 min-h-screen shadow-2xl">
-            <BreadCrumb linkText={[{ text: "Staff Management" },]} />
+        <div className="max-w-7xl mx-auto">
+            <BreadCrumb linkText={[{ text: "Staff Management" }]} />
 
             <PagePath2
                 title="Staff Management"
                 showSearch={true}
                 searchTerm={searchTerm}
-                handleSearchTerm={handleSearchTerm}
+                handleSearchTerm={(e) => {
+                    setSearchTerm(e.target.value);
+                    setPage(1);
+                }}
                 showAddButton={true}
                 addButtonText="Add New Staff"
                 onClick={canCreate ? handleAddStaff : undefined}
                 canCreate={canCreate}
-                // Attendence
                 showExtraButton={true}
                 extraButtonText="Attendance"
                 onExtraClick={handleAttendence}
-                // Sales
-                // showThirdButton={true}
-                // thirdButtonText="Sales"
-                // onThirdClick={handleSales}
             />
+
             {loading ? (
-                <div className="flex items-center justify-center py-12">
+                <div className="flex w-full items-center justify-center py-10">
                     <LoaderSpinner />
                 </div>
             ) : (
-                <>
+                <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
                     <DataTable
                         columns={columns}
-                        data={staffList?.staffList || []}
-                        actions={actions.map((a) =>
-                            a.icon
-                                ? {
-                                    ...a,
-                                    render: (row) => (
-                                        <button
-                                            onClick={() => a.onClick(row)}
-                                            className="p-2 rounded-full hover:bg-gray-100 transition"
-                                            title={a.title}
-                                            disabled={a.disableCondition?.(row)}
-                                        >
-                                            {typeof a.icon === "function" ? a.icon(row) : a.icon}
-                                        </button>
-                                    ),
-                                }
-                                : a
-                        )}
+                        data={staffList?.staffList?.map((staff, index) => ({
+                            ...staff,
+                            srNo: (page - 1) * limit + index + 1
+                        })) || []}
+                        currentPage={staffList?.currentPage}
+                        usersPerPage={limit}
+                        actions={actions.map((action) => ({
+                            ...action,
+                            label:
+                                typeof action.label === "function"
+                                    ? undefined
+                                    : action.label,
+                            onClick: action.onClick,
+                        }))}
                     />
 
                     {/* Pagination */}
@@ -185,7 +171,7 @@ const StaffManagement = () => {
                         onPageChange={onPageChange}
                         onItemsPerPageChange={onItemsPerPageChange}
                     />
-                </>
+                </div>
             )}
         </div>
     );

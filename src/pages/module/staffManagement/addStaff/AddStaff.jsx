@@ -88,14 +88,16 @@ const PhoneInput = ({
   countryCode,
   phoneNumber,
   onCountryCodeChange,
-  onPhoneChange,  options,
+  onPhoneChange,
+  error,
+  required,
 }) => (
   <div className="w-full">
     <label
       htmlFor={id}
       className="block text-sm font-medium text-gray-700 mb-2"
     >
-      {label}
+      {label} {required && <span className="text-red-500">*</span>}
     </label>
     <div className="flex gap-2">
       <select
@@ -124,10 +126,12 @@ const PhoneInput = ({
         value={phoneNumber}
         onChange={onPhoneChange}
         placeholder="9876543210"
-        className="flex-1 px-4 py-2.5 text-sm border border-gray-300 rounded-lg
-                   focus:outline-none focus:ring-2 focus:ring-[#CCA547] focus:border-transparent transition duration-200"
+        className={`flex-1 px-4 py-2.5 text-sm border rounded-lg
+                   focus:outline-none focus:ring-2 focus:ring-[#CCA547] focus:border-transparent transition duration-200
+                   ${error ? 'border-red-500' : 'border-gray-300'}`}
       />
     </div>
+    {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
   </div>
 );
 
@@ -136,6 +140,7 @@ const AddStaff = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [bankProofImage, setBankProofImage] = useState(null);
   const { addStaff } = useStaffManagement();
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     staffName: "",
     countryCode: "+91",
@@ -155,6 +160,20 @@ const AddStaff = () => {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
+    
+    // Phone number validation
+    if (id === "phoneNumber") {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      if (numericValue.length <= 10) {
+        setFormData((prev) => ({ ...prev, [id]: numericValue }));
+        // Clear error when user types
+        if (errors.phoneNumber) {
+          setErrors((prev) => ({ ...prev, phoneNumber: "" }));
+        }
+      }
+      return;
+    }
+    
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
@@ -169,8 +188,29 @@ const AddStaff = () => {
     if (file) setBankProofImage(file);
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Phone Number validation
+    if (!formData.phoneNumber) {
+      newErrors.phoneNumber = "Phone number is required";
+    } else if (formData.phoneNumber.length !== 10) {
+      newErrors.phoneNumber = "Phone number must be exactly 10 digits";
+    } else if (!/^[6-9][0-9]{9}$/.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Please enter a valid Indian phone number";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
 
     const fd = new FormData();
     fd.append("name", formData.staffName);
@@ -340,7 +380,7 @@ const AddStaff = () => {
               <div className="w-32 h-32 rounded-full border-2 border-gray-300 overflow-hidden bg-gray-100 flex items-center justify-center">
                 {profileImage ? (
                   <img
-                    src={profileImage}
+                    src={URL.createObjectURL(profileImage)}
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
@@ -379,7 +419,7 @@ const AddStaff = () => {
             />
 
             <PhoneInput
-              label="Phone Number :"
+              label="Phone Number"
               id="phoneNumber"
               countryCode={formData.countryCode}
               phoneNumber={formData.phoneNumber}
@@ -391,6 +431,8 @@ const AddStaff = () => {
                 }))
               }
               onPhoneChange={handleChange}
+              error={errors.phoneNumber}
+              required
             />
 
             <FormInput
