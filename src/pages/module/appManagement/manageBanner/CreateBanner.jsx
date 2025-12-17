@@ -226,7 +226,7 @@ function CreateBanner() {
                         htmlFor="banner-upload"
                         className="text-yellow-500 underline cursor-pointer hover:text-yellow-600 transition-colors"
                       >
-                        video
+                         Upload video
                       </label>
                     </div>
 
@@ -269,7 +269,7 @@ function CreateBanner() {
                                 </button>
 
                                 <div className="absolute top-1 left-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
-                                  video
+                                   video
                                 </div>
                               </div>
                             );
