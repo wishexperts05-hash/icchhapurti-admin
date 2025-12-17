@@ -89,7 +89,7 @@ const TargetManagement = () => {
               </Box>
               <Pagination
                 currentPage={targetList?.page}
-                totalPages={targetList?.limit}
+                totalPages={(targetList?.total)/(targetList?.limit)}
                 totalItems={targetList?.total}
                 itemsPerPage={targetList?.limit}
                 onPageChange={onPageChange}
