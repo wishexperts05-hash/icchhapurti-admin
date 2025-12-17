@@ -19,7 +19,6 @@ import DataTable from "../../../../components/uiComponent/DataTable";
 import Pagination from "../../../../components/uiComponent/Pagination";
 import CustomSelect from "../../../../components/uiComponent/CustomSelect";
 
-// Modern DatePicker Component
 const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(value || null);
