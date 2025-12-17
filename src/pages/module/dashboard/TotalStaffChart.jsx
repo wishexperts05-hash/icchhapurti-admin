@@ -13,6 +13,7 @@ import useDashboardManagement from "../../../hooks/dashboard/useDashboardManagem
 import useDropdown from "../../../hooks/dropdown/useDropdown";
 import { totalstaffAtom } from "../../../state/dashboard/DashboardManagementState";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
+import Select from "react-select";
 
 const TotalStaffChart = () => {
   const [country, setCountry] = useState("India");
@@ -107,39 +108,142 @@ const TotalStaffChart = () => {
     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h3 className="text-lg font-semibold text-gray-900">Total Staff</h3>
-        <div className="flex flex-wrap gap-2">
-          <PagePath2
-            title="Total Staff"
-            /* Country */
-            showSelect
-            options={countryOptions}
-            selectPlaceHolder="Select Country"
-            onChangeSelectFunc={onChangeCountry}
-            /* State */
-            showSecondSelect
-            secondSelectOptions={stateOptions}
-            secondSelectPlaceholder="Select State"
-            onChangeSecondSelect={onChangeState}
-            secondSelectLoading={!!country && states.length === 0}
-          />
-          <select value={city} onChange={(e) => setCity(e.target.value)}>
-            <option value="">All Cities</option>
-            {cities.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+        <div className="flex flex-wrap items-center gap-3">
+        {/* Country Dropdown */}
+        <Select
+          options={countryOptions.map((country) => ({
+            label: country,
+            value: country,
+          }))}
+          placeholder="Select Country"
+          onChange={onChangeCountry}
+          value={country ? { label: country, value: country } : null}
+          isClearable
+          styles={{
+            control: (provided, state) => ({
+              ...provided,
+              borderRadius: "0.5rem",
+              borderColor: state.isFocused ? "#FF6B00" : "#d1d5db",
+              boxShadow: state.isFocused ? "0 0 0 1px #FF6B00" : "none",
+              "&:hover": { borderColor: "#FF6B00" },
+              fontSize: "0.875rem",
+              minHeight: "40px",
+              minWidth: "150px",
+            }),
+            menu: (provided) => ({
+              ...provided,
+              borderRadius: "0.75rem",
+              fontSize: "0.875rem",
+              zIndex: 9999,
+            }),
+            option: (provided, state) => ({
+              ...provided,
+              backgroundColor: state.isSelected
+                ? "#FF6B00"
+                : state.isFocused
+                ? "#FFE5D1"
+                : "white",
+              color: state.isSelected ? "white" : "black",
+            }),
+          }}
+        />
 
-          <select
-            value={year}
-            onChange={(e) => setYear(Number(e.target.value))}
-          >
-            <option value={2025}>2025</option>
-            <option value={2024}>2024</option>
-          </select>
-        </div>
+        {/* State Dropdown */}
+        <Select
+          options={stateOptions.map((state) => ({
+            label: state,
+            value: state,
+          }))}
+          placeholder="Select State"
+          onChange={onChangeState}
+          value={state ? { label: state, value: state } : null}
+          isClearable
+          isLoading={!!country && states.length === 0}
+          isDisabled={!country}
+          styles={{
+            control: (provided, state) => ({
+              ...provided,
+              borderRadius: "0.5rem",
+              borderColor: state.isFocused ? "#FF6B00" : "#d1d5db",
+              boxShadow: state.isFocused ? "0 0 0 1px #FF6B00" : "none",
+              "&:hover": { borderColor: "#FF6B00" },
+              fontSize: "0.875rem",
+              minHeight: "40px",
+              minWidth: "150px",
+            }),
+            menu: (provided) => ({
+              ...provided,
+              borderRadius: "0.75rem",
+              fontSize: "0.875rem",
+              zIndex: 9999,
+            }),
+            option: (provided, state) => ({
+              ...provided,
+              backgroundColor: state.isSelected
+                ? "#FF6B00"
+                : state.isFocused
+                ? "#FFE5D1"
+                : "white",
+              color: state.isSelected ? "white" : "black",
+            }),
+          }}
+        />
+
+        {/* City Dropdown */}
+        <Select
+          options={cityOptions.map((city) => ({
+            label: city,
+            value: city,
+          }))}
+          placeholder="Select City"
+          onChange={onChangeCity}
+          value={city ? { label: city, value: city } : null}
+          isClearable
+          isLoading={!!state && cities.length === 0}
+          isDisabled={!state}
+          styles={{
+            control: (provided, state) => ({
+              ...provided,
+              borderRadius: "0.5rem",
+              borderColor: state.isFocused ? "#FF6B00" : "#d1d5db",
+              boxShadow: state.isFocused ? "0 0 0 1px #FF6B00" : "none",
+              "&:hover": { borderColor: "#FF6B00" },
+              fontSize: "0.875rem",
+              minHeight: "40px",
+              minWidth: "150px",
+            }),
+            menu: (provided) => ({
+              ...provided,
+              borderRadius: "0.75rem",
+              fontSize: "0.875rem",
+              zIndex: 9999,
+            }),
+            option: (provided, state) => ({
+              ...provided,
+              backgroundColor: state.isSelected
+                ? "#FF6B00"
+                : state.isFocused
+                ? "#FFE5D1"
+                : "white",
+              color: state.isSelected ? "white" : "black",
+            }),
+          }}
+        />
+
+        {/* Year Dropdown */}
+        <select
+          value={year}
+          onChange={(e) => setYear(Number(e.target.value))}
+          className="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-500 min-w-[100px]"
+        >
+          <option value={2025}>2025</option>
+          <option value={2024}>2024</option>
+          <option value={2023}>2023</option>
+        </select>
       </div>
+    </div>
+
+  
 
       <ResponsiveContainer width="100%" height={320}>
         <BarChart
