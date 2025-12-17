@@ -28,6 +28,7 @@ const StatCard = ({ title, value, change, icon, bgColor, textColor }) => {
           </p>
 
           <p className="text-sm font-semibold text-green-600">{change}</p>
+
           <p
             className={`text-2xl sm:text-3xl font-bold ${textColor} mt-10 whitespace-nowrap`}
           >
@@ -38,6 +39,7 @@ const StatCard = ({ title, value, change, icon, bgColor, textColor }) => {
           <img
             src={icon}
             alt={title}
+
            className="w-14 h-14 sm:w-20 sm:h-20 object-contain"
           />
         </div>
@@ -59,7 +61,9 @@ const Dashboard = () => {
     `${trend === "increased" ? "+" : ""}${percent}%`;
 
   return (
+
     <div className="min-h-screen bg-gray-50 px-2 sm:px-4">
+
       {/* Header */}
       <div className="">
         <PagePath2 title="Dashboard" />
