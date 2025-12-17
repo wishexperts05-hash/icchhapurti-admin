@@ -68,6 +68,7 @@ const useOrderManagement = () => {
   const resetOrderDetails = () => {
     setOrderDetails(null);
   }
+  
 
   return {
     loading,

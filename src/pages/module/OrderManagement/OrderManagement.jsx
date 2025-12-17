@@ -81,7 +81,7 @@ const OrderManagement = () => {
   const onSearchChange = (e) => {
     const newSearchTerm = e.target.value;
     setSearch(newSearchTerm);
-    setPage(1);
+    setPage(1); 
   };
 
   const onChangeSelectFunc = (option) => {

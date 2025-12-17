@@ -8,17 +8,28 @@ import useProductManagement from "../../../hooks/productList/useProductManagment
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 
 
+
 const ViewProduct = () => {
-  const [visible, setVisible] = useState(true);
+ const [visible, setVisible] = useState();
+
+
+
     const [currentImage, setCurrentImage] = useState(0);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { fetchProductDetailById, productDetail, loading } = useProductManagement();
+  const { fetchProductDetailById, productDetail, loading ,updateProductStatus,} = useProductManagement();
   useEffect(() => {
     fetchProductDetailById(id);
   }, [id]);
 
   console.log("Product Detail:", productDetail);
+
+
+  useEffect(() => {
+  if (productDetail?.product) {
+    setVisible(productDetail.product.isActive);
+  }
+}, [productDetail]);
 
   // 🟠 Dummy product data (replace with API data later)
   const product = {
@@ -126,7 +137,14 @@ const ViewProduct = () => {
               type="checkbox"
               className="sr-only peer"
               checked={visible}
-              onChange={() => setVisible(!visible)}
+            onChange={async () => {
+  const success = await updateProductStatus(id, !visible);
+  if (success) {
+    setVisible(!visible);
+  }
+}}
+
+
             />
             <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
           </label>
