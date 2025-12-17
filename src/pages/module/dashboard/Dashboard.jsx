@@ -19,7 +19,7 @@ const StatCard = ({ title, value, change, icon, bgColor, textColor }) => {
   return (
     <div
       className={`${bgColor} rounded-xl p-4 shadow-md border border-gray-100 
-  h-[200px] transition-all duration-200 hover:shadow-lg`}
+  h-[160px] transition-all duration-200 hover:shadow-lg`}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
@@ -29,17 +29,16 @@ const StatCard = ({ title, value, change, icon, bgColor, textColor }) => {
 
           <p className="text-sm font-semibold text-green-600">{change}</p>
           <p
-  className={`text-2xl sm:text-3xl font-bold ${textColor} mt-10 whitespace-nowrap`}
->
-  {value}
-</p>
-
+            className={`text-2xl sm:text-3xl font-bold ${textColor} mt-10 whitespace-nowrap`}
+          >
+            {value}
+          </p>
         </div>
         <div className="flex-shrink-0">
           <img
             src={icon}
             alt={title}
-            className="w-9 h-9 sm:w-20 sm:h-20 object-contain"
+           className="w-14 h-14 sm:w-20 sm:h-20 object-contain"
           />
         </div>
       </div>
@@ -60,8 +59,7 @@ const Dashboard = () => {
     `${trend === "increased" ? "+" : ""}${percent}%`;
 
   return (
-  <div className="min-h-screen bg-gray-50 px-2 sm:px-4">
-
+    <div className="min-h-screen bg-gray-50 px-2 sm:px-4">
       {/* Header */}
       <div className="">
         <PagePath2 title="Dashboard" />

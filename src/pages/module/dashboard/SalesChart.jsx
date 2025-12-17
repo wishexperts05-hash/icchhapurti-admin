@@ -4,6 +4,7 @@ import Select from "react-select";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 import useDashboardManagement from "../../../hooks/dashboard/useDashboardManagement";
 import useDropdown from "../../../hooks/dropdown/useDropdown";
+import { Tooltip } from "recharts";
 
 const SalesChart = () => {
   const [country, setCountry] = useState("India");
@@ -95,11 +96,18 @@ const SalesChart = () => {
     })) || [];
 
   // Placeholder data for empty state
-  const placeholderData = [
-    { name: "No Data", value: 1 }
-  ];
+  const placeholderData = [{ name: "No Data", value: 1 }];
 
-  const COLORS = ["#2563EB", "#FACC15", "#10B981", "#EF4444", "#8B5CF6", "#F97316", "#06B6D4", "#EC4899"];
+  const COLORS = [
+    "#2563EB",
+    "#FACC15",
+    "#10B981",
+    "#EF4444",
+    "#8B5CF6",
+    "#F97316",
+    "#06B6D4",
+    "#EC4899",
+  ];
 
   // Custom label to show percentage
   const renderLabel = (entry) => {
@@ -110,20 +118,52 @@ const SalesChart = () => {
   // Custom Legend Component
   const CustomLegend = ({ payload }) => {
     return (
-      <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-4 px-2">
-        {payload.map((entry, index) => (
-          <div key={index} className="flex items-center space-x-2">
-            <div
-              className="w-3 h-3 rounded-full flex-shrink-0"
-              style={{ backgroundColor: entry.color }}
-            />
-            <span className="text-xs text-gray-700 font-medium truncate">
-              {entry.value.length > 25 ? entry.value.substring(0, 25) + "..." : entry.value}
-            </span>
-          </div>
-        ))}
+      <div
+        className="
+        mt-4 px-2
+        max-h-[96px]          /* ~4 rows height */
+        overflow-y-auto
+        scrollbar-thin
+        scrollbar-thumb-gray-300
+        scrollbar-track-transparent
+      "
+      >
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+          {payload.map((entry, index) => (
+            <div key={index} className="flex items-center space-x-2">
+              <div
+                className="w-3 h-3 rounded-full flex-shrink-0"
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="text-xs text-gray-700 font-medium truncate">
+                {entry.value.length > 25
+                  ? entry.value.substring(0, 25) + "..."
+                  : entry.value}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     );
+  };
+
+  const CustomPieTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const { name, value } = payload[0];
+
+      return (
+        <div className="bg-white px-4 py-2 rounded-lg shadow-lg border border-gray-200">
+          <p className="text-sm font-semibold text-gray-800">{name}</p>
+          <p className="text-sm text-gray-600">
+            Revenue:{" "}
+            <span className="font-bold text-blue-600">
+              ₹ {value.toLocaleString()}
+            </span>
+          </p>
+        </div>
+      );
+    }
+    return null;
   };
 
   /* ---------- STYLES ---------- */
@@ -204,19 +244,19 @@ const SalesChart = () => {
       </div>
 
       {/* ---------- PIE CHART ---------- */}
-      <div className={`flex-1 flex justify-center items-center ${pieData.length > 6 ? 'min-h-[450px]' : 'min-h-[350px]'}`}>
+      <div className={`flex-1 flex justify-center items-center `}>
         {loading || !fetchSalesChartData ? (
           <div className="flex w-full items-center justify-center py-20">
             <LoaderSpinner />
           </div>
         ) : pieData.length > 0 ? (
           <div className="w-full h-full">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
                   data={pieData}
                   cx="50%"
-                  cy={pieData.length > 6 ? "40%" : "45%"}
+                  cy="50%"
                   outerRadius={pieData.length > 6 ? 90 : 100}
                   dataKey="value"
                   paddingAngle={3}
@@ -228,9 +268,8 @@ const SalesChart = () => {
                   ))}
                 </Pie>
 
-                <Legend
-                  content={<CustomLegend />}
-                />
+                <Legend content={<CustomLegend />} />
+                <Tooltip content={<CustomPieTooltip />} />
               </PieChart>
             </ResponsiveContainer>
           </div>
