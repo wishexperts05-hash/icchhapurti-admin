@@ -53,7 +53,7 @@ function useDashboardManagement() {
     }
   };
 
-  const fetchSalesChartData = async ({
+ const fetchSalesChartData = async ({
   country,
   state,
   city,
@@ -66,22 +66,19 @@ function useDashboardManagement() {
 
   setLoading(true);
   try {
-    const res = await fetch(
-      `${conf.apiBaseUrl}admin/dashboard/salesChart`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          country,
-          state,
-          city,
-          periodType, // today | week | month
-        }),
-      }
-    );
+    const res = await fetch(`${conf.apiBaseUrl}admin/dashboard/salesChart`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        country,
+        state,
+        city,
+        periodType, // today | week | month
+      }),
+    });
 
     if (!res.ok) throw new Error("Failed to fetch sales chart");
 
@@ -92,16 +89,15 @@ function useDashboardManagement() {
       return result.data;
     } else {
       setSalesChart([]);
-      return null;
     }
-  } catch (error) {
-    console.error("Sales chart error:", error);
+  } catch (err) {
+    console.error(err);
     setSalesChart([]);
-    return null;
   } finally {
     setLoading(false);
   }
 };
+
 
 const fetchSalesReport = async ({ country, year }) => {
     if (!year) {
@@ -140,6 +136,7 @@ const fetchSalesReport = async ({ country, year }) => {
       setLoading(false);
     }
   };
+
   const fetchUserCountByMonth = async ({
   year,
   country = "All",
