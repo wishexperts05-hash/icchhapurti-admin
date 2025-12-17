@@ -1,55 +1,171 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Pie, Cell, Legend, PieChart, ResponsiveContainer } from "recharts";
+import Select from "react-select";
+import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
+import useDashboardManagement from "../../../hooks/dashboard/useDashboardManagement";
+import useDropdown from "../../../hooks/dropdown/useDropdown";
 
 const SalesChart = () => {
   const [country, setCountry] = useState("India");
-  const [states, setState] = useState();
-  const [city, setCity] = useState("Mumbai");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
   const [timeframe, setTimeframe] = useState("Today");
 
-  const salesData = [
-    { name: "Product 1", value: 60 },
-    { name: "Product 2", value: 40 },
-  ];
+  const { fetchSalesChartData, salesChart, loading } = useDashboardManagement();
 
-  const COLORS = ["#2563EB", "#FACC15"]; // Blue & Yellow (matching UI)
+  const {
+    fetchCountryDropdown,
+    fetchStatesByCountry,
+    fetchCitiesByState,
+    countries,
+    states,
+    cities,
+  } = useDropdown();
+
+  /* ---------- OPTIONS ---------- */
+  const countryOptions = countries.map((c) => c.name);
+  const stateOptions = states;
+  const cityOptions = cities;
+
+  /* ---------- HANDLERS ---------- */
+  const onChangeCountry = (option) => {
+    const value = option ? option.value : "";
+    setCountry(value);
+    setState("");
+    setCity("");
+  };
+
+  const onChangeState = (option) => {
+    const value = option ? option.value : "";
+    setState(value);
+    setCity("");
+  };
+
+  const onChangeCity = (option) => {
+    const value = option ? option.value : "";
+    setCity(value);
+  };
+
+  /* ---------- TIMEFRAME MAP ---------- */
+  const mapTimeframeToType = (timeframe) => {
+    switch (timeframe) {
+      case "Today":
+        return "today";
+      case "This Week":
+        return "weekly";
+      case "This Month":
+        return "monthly";
+      default:
+        return "today";
+    }
+  };
+
+  /* ---------- EFFECTS ---------- */
+  useEffect(() => {
+    fetchCountryDropdown();
+  }, []);
+
+  useEffect(() => {
+    if (country) {
+      fetchStatesByCountry(country);
+    }
+  }, [country]);
+
+  useEffect(() => {
+    if (country && state) {
+      fetchCitiesByState(country, state);
+    }
+  }, [state]);
+
+  useEffect(() => {
+    const params = {
+      ...(country && { country }),
+      ...(state && { state }),
+      ...(city && { city }),
+      periodType: mapTimeframeToType(timeframe),
+    };
+    fetchSalesChartData(params);
+  }, [country, state, city, timeframe]);
+
+  /* ---------- CHART DATA ---------- */
+  const pieData =
+    salesChart?.map((item) => ({
+      name: item.productName,
+      value: item.totalRevenue,
+    })) || [];
+
+  const COLORS = ["#2563EB", "#FACC15", "#10B981", "#EF4444", "#8B5CF6"];
+
+  /* ---------- STYLES ---------- */
+  const selectStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      borderRadius: "0.5rem",
+      borderColor: state.isFocused ? "#2563EB" : "#d1d5db",
+      boxShadow: state.isFocused ? "0 0 0 1px #2563EB" : "none",
+      minHeight: "38px",
+      fontSize: "0.875rem",
+    }),
+    menu: (provided) => ({
+      ...provided,
+      borderRadius: "0.5rem",
+      zIndex: 9999,
+    }),
+    option: (provided) => ({
+      ...provided,
+      fontSize: "0.875rem",
+    }),
+  };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-7 w-full h-full flex flex-col">
-      {/* Title + Filters */}
-      <h3 className="text-xl font-semibold text-gray-900 mb-4">Sales Chart</h3>
+    <div className="bg-white rounded-xl shadow-md border border-gray-100 p-5 w-full h-full flex flex-col transition-all duration-200 hover:shadow-lg">
+      {/* ---------- HEADER ---------- */}
+      <h3 className="text-xl font-semibold text-gray-900 mb-5">Sales Chart</h3>
 
-      <div className="flex flex-wrap gap-3 mb-6">
-        <select
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1976d2] bg-white text-sm"
-        >
-          <option value="India">India</option>
-          <option value="USA">USA</option>
-        </select>
-        <select
-          value={city}
-          onChange={(e) => setState(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ffc107] bg-white text-sm"
-        >
-          <option value="Mumbai">Maharastra</option>
-          <option value="Delhi">Delhi</option>
-        </select>
+      {/* ---------- FILTERS ---------- */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+        {/* Country */}
+        <Select
+          options={countryOptions.map((c) => ({ label: c, value: c }))}
+          placeholder="Select Country"
+          value={country ? { label: country, value: country } : null}
+          onChange={onChangeCountry}
+          isClearable
+          styles={selectStyles}
+          className="w-full"
+        />
 
-        <select
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ffc107] bg-white text-sm"
-        >
-          <option value="Mumbai">Mumbai</option>
-          <option value="Delhi">Delhi</option>
-        </select>
+        {/* State */}
+        <Select
+          options={stateOptions.map((s) => ({ label: s, value: s }))}
+          placeholder="Select State"
+          value={state ? { label: state, value: state } : null}
+          onChange={onChangeState}
+          isClearable
+          isDisabled={!country}
+          isLoading={!!country && states.length === 0}
+          styles={selectStyles}
+          className="w-full"
+        />
 
+        {/* City */}
+        <Select
+          options={cityOptions.map((c) => ({ label: c, value: c }))}
+          placeholder="Select City"
+          value={city ? { label: city, value: city } : null}
+          onChange={onChangeCity}
+          isClearable
+          isDisabled={!state}
+          isLoading={!!state && cities.length === 0}
+          styles={selectStyles}
+          className="w-full"
+        />
+
+        {/* Timeframe */}
         <select
           value={timeframe}
           onChange={(e) => setTimeframe(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
         >
           <option value="Today">Today</option>
           <option value="This Week">This Week</option>
@@ -57,36 +173,67 @@ const SalesChart = () => {
         </select>
       </div>
 
-      {/* Pie Chart */}
-      <div className="flex justify-center items-center">
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={salesData}
-              cx="50%"
-              cy="50%"
-              outerRadius={110}
-              dataKey="value"
-              paddingAngle={2}
-            >
-              {salesData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index]} />
-              ))}
-            </Pie>
+      {/* ---------- PIE CHART ---------- */}
+      <div className="flex-1 flex justify-center items-center min-h-[280px]">
+        {loading || !fetchSalesChartData ? (
+          <div className="flex w-full items-center justify-center py-20">
+            <LoaderSpinner />
+          </div>
+        ) : pieData.length > 0 ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                dataKey="value"
+                paddingAngle={3}
+                label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                labelLine={false}
+              >
+                {pieData.map((_, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
 
-            {/* Legend styling */}
-            <Legend
-              verticalAlign="bottom"
-              iconType="circle"
-              formatter={(value) => (
-                <span className="text-sm text-gray-700 font-medium">
-                  {value}
-                </span>
-              )}
-              wrapperStyle={{ paddingTop: "20px" }}
-            />
-          </PieChart>
-        </ResponsiveContainer>
+              <Legend
+                verticalAlign="bottom"
+                iconType="circle"
+                wrapperStyle={{
+                  paddingTop: "15px",
+                }}
+                formatter={(value) => (
+                  <span className="text-xs text-gray-700 font-medium">
+                    {value.length > 25 ? value.substring(0, 25) + "..." : value}
+                  </span>
+                )}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="text-center py-8">
+            <svg
+              className="mx-auto h-14 w-14 text-gray-400 mb-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+            <p className="text-sm text-gray-600 font-semibold mb-1">
+              No data available
+            </p>
+            <p className="text-xs text-gray-500">
+              Try adjusting your filters to see results
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
