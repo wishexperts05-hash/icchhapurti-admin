@@ -80,7 +80,7 @@ function CoinSetting({ onEdit, coinSettingData, canUpdate }) {
     <>
       <BreadCrumb
         linkText={[
-          { text: "Commission Settings" },
+          { text: "Monetary Setting" , href: "/commission-settings" },
           { text: "Coin Settings" },
         ]}
       />

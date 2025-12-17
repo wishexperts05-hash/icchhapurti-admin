@@ -8,6 +8,7 @@ import FormField from "../../../../components/uiComponent/FormField";
 import Button from "../../../../components/uiComponent/Button";
 
 import useWithdrawSetting from "../../../../hooks/monetarySettings/useWithdrawSetting";
+import { href } from "react-router-dom";
 
 const SECTION_KEYS = [
   { key: "withdrawAmountSettingForUser", title: "User Withdraw Settings" },
@@ -112,7 +113,7 @@ export default function WithDrawSettings() {
 
   return (
     <>
-      <BreadCrumb linkText={[{ text: "Monetary Settings" }, { text: "Withdraw Settings" }]} />
+      <BreadCrumb linkText={[{ text: "Monetary Settings", href:"/commission-settings"}, { text: "Withdraw Settings" }]} />
       <PagePath2 title="Withdraw Settings" />
 
       <div className="bg-white rounded-lg p-6 shadow">

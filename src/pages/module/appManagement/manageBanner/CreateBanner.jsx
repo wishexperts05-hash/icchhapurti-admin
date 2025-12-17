@@ -30,40 +30,42 @@ function CreateBanner() {
     bannerDetail,
     updateBanner,
   } = useBanner();
-// Load app types on mount
-useEffect(() => {
-  fetchAppTypesDropdown();
-}, []);
 
-// Fetch banner detail if editing
-useEffect(() => {
-  if (id) fetchBannerById(id);
-}, [id]);
+  // Load app types on mount
+  useEffect(() => {
+    fetchAppTypesDropdown();
+  }, []);
 
-// Fetch banner types after detail loads
-useEffect(() => {
-  const appTypeFromDetail = bannerDetail?.data?.appType;
-  if (appTypeFromDetail) {
-    fetchBannerTypesDropdown(appTypeFromDetail);
-  }
-}, [bannerDetail?.data?.appType]);
+  // Fetch banner detail if editing
+  useEffect(() => {
+    if (id) fetchBannerById(id);
+  }, [id]);
 
+  // Fetch banner types after detail loads
+  useEffect(() => {
+    const appTypeFromDetail = bannerDetail?.data?.appType;
+    if (appTypeFromDetail) {
+      fetchBannerTypesDropdown(appTypeFromDetail);
+    }
+  }, [bannerDetail?.data?.appType]);
 
   // ---------- validation ----------
   const validationSchema = Yup.object({
     appType: Yup.string().required("Service Type is required"),
     bannerType: Yup.string().required("Banner Type is required"),
-    bannerMedia: Yup.array().min(1, "At least one image or video is required"),
+    bannerMedia: Yup.array().min(1, "At least one video is required"),
   });
 
   // ---------- initial values (supports edit) ----------
   const getInitialValues = () => {
     if (id && bannerDetail?.data) {
       const data = bannerDetail.data;
-      const existingMedia = (data.mediaUrls || []).map((url) => ({
-        url,
-        type: url.match(/\.(mp4|webm|ogg|mov)$/i) ? "video" : "image",
-      }));
+      const existingMedia = (data.mediaUrls || [])
+        .filter((url) => url.match(/\.(mp4|webm|ogg|mov)$/i)) // Only videos
+        .map((url) => ({
+          url,
+          type: "video",
+        }));
 
       return {
         appType: data.appType || "",
@@ -82,18 +84,13 @@ useEffect(() => {
   // ---------- helper to extract value from different onChange shapes ----------
   const extractValue = (input) => {
     if (input == null) return "";
-    // react-select or similar passes option object
     if (typeof input === "object" && !input.target) {
-      // option object or array (handle multi-case if needed)
       if (Array.isArray(input)) {
-        // multi-select -> return array of values
         return input.map((it) => (typeof it === "object" ? it.value ?? it.label ?? it : it));
       }
       return input.value ?? input.label ?? "";
     }
-    // native event
     if (input.target) return input.target.value;
-    // plain string/number
     return input;
   };
 
@@ -101,15 +98,12 @@ useEffect(() => {
   const formatOptions = (options) => {
     if (!options) return [];
     if (!Array.isArray(options)) return [];
-
     if (options.length === 0) return [];
 
-    // backend returns ["User","Staff"]
     if (typeof options[0] === "string") {
       return options.map((v) => ({ label: v, value: v }));
     }
 
-    // backend returns array of objects — map common keys
     if (typeof options[0] === "object") {
       return options.map((o) => ({
         label: o.label ?? o.name ?? o.title ?? o.bannerType ?? JSON.stringify(o),
@@ -181,13 +175,10 @@ useEffect(() => {
             onSubmit={handleSubmit}
           >
             {({ setFieldValue, values, isSubmitting }) => {
-              // local handlers that work for react-select or native select
               const onAppTypeChange = (input) => {
                 const value = extractValue(input);
                 setFieldValue("appType", value);
-                // reset dependent field
                 setFieldValue("bannerType", "");
-                // fetch banner types only when we have a value
                 if (value) fetchBannerTypesDropdown(value);
               };
 
@@ -226,28 +217,30 @@ useEffect(() => {
                     />
                   </div>
 
-                  {/* MEDIA UPLOAD */}
+                  {/* VIDEO UPLOAD */}
                   <div className="flex flex-col gap-3">
                     <label className="text-sm font-medium">Upload Banner Media</label>
 
-                    <label
-                      htmlFor="banner-upload"
-                      className="bg-[#e65d00] text-white px-6 py-2 rounded-lg cursor-pointer inline-flex items-center gap-2"
-                    >
-                      Add Images/Videos
-                    </label>
+                    <div>
+                      <label
+                        htmlFor="banner-upload"
+                        className="text-yellow-500 underline cursor-pointer hover:text-yellow-600 transition-colors"
+                      >
+                        video
+                      </label>
+                    </div>
 
                     <input
                       type="file"
                       id="banner-upload"
                       className="hidden"
                       multiple
-                      accept="image/*,video/*"
+                      accept="video/*"
                       onChange={(e) => {
                         const files = Array.from(e.target.files || []);
                         const newMedia = files.map((file) => ({
                           file,
-                          type: file.type.startsWith("video/") ? "video" : "image",
+                          type: "video",
                         }));
                         setFieldValue("bannerMedia", [...values.bannerMedia, ...newMedia]);
                       }}
@@ -262,11 +255,7 @@ useEffect(() => {
 
                             return (
                               <div key={idx} className="relative group">
-                                {media.type === "video" ? (
-                                  <video src={src} className="h-24 w-24 rounded-lg object-cover border shadow-sm" />
-                                ) : (
-                                  <img src={src} className="h-24 w-24 rounded-lg object-cover border shadow-sm" />
-                                )}
+                                <video src={src} className="h-24 w-24 rounded-lg object-cover border shadow-sm" />
 
                                 <button
                                   type="button"
@@ -280,14 +269,14 @@ useEffect(() => {
                                 </button>
 
                                 <div className="absolute top-1 left-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
-                                  {media.type}
+                                  video
                                 </div>
                               </div>
                             );
                           })}
                         </div>
                       ) : (
-                        <p className="text-gray-400 text-sm text-center">No Images or Videos Selected</p>
+                        <p className="text-gray-400 text-sm text-center">No Videos Selected</p>
                       )}
                     </div>
 

@@ -96,10 +96,7 @@ export default function UserManagement() {
           setSearchTerm(e.target.value);
           if (!error) setPage(1);
         }}
-        showAddButton={true}
-        addButtonText="Add New User"
-        onClick={canCreate ? () => navigate('/user-management/add-user') : undefined}
-        canCreate={canCreate}
+        
       />
 
       {loading ? (

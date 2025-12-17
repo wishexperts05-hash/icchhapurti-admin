@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { CheckCircle, UploadCloud, Video } from "lucide-react";
 import useLogin from "../../../../hooks/auth/useLogin";
 import usePermissions from "../../../../hooks/auth/usePermissions";
+import { href } from "react-router-dom";
 
 const UploadVideo = () => {
     const { updateRefferalVideo, referralVideo, loading, fetchReferralVideo } = useReferAndEarn();
@@ -133,7 +134,7 @@ const UploadVideo = () => {
 
     return (
         <Box>
-            <BreadCrumb linkText={[{ text: "Refer & Earn" }, { text: "Upload Video" }]} />
+            <BreadCrumb linkText={[{ text: "Refer & Earn", href:"/refer-and-earn-user" }, { text: "Upload Video" }]} />
             <PagePath2 title="Upload Video" />
 
             <motion.div

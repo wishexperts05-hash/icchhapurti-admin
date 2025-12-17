@@ -120,6 +120,7 @@ const SendNotification = () => {
 
     setSelectedUsers(newSelection);
     setFieldValue("selectedUsers", newSelection);
+    setIsDropdownOpen(false); // Close dropdown after selection
   };
 
   const getSelectedUsersDisplay = (selectedUsers) => {
@@ -243,7 +244,7 @@ const SendNotification = () => {
                       onChange={(e) =>
                         handleTargetAudienceChange(e.target.value, setFieldValue)
                       }
-                      className="w-5 h-5 text-[#FF6B00] focus:ring-[#FF6B00] cursor-pointer"
+                      className="w-5 h-5 text-[#FACD34] focus:ring-[#FACD34] cursor-pointer"
                     />
                     <span className="text-gray-700 font-medium">
                       Select Users
@@ -260,7 +261,7 @@ const SendNotification = () => {
                       onChange={(e) =>
                         handleTargetAudienceChange(e.target.value, setFieldValue)
                       }
-                      className="w-5 h-5 text-[#FF6B00] focus:ring-[#FF6B00] cursor-pointer"
+                      className="w-5 h-5 text-[#FF6B00] focus:ring-[#FACD34] cursor-pointer"
                     />
                     <span className="text-gray-700 font-medium">
                       Specific Country
@@ -279,7 +280,7 @@ const SendNotification = () => {
                     <button
                       type="button"
                       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                      className="w-full px-4 py-2.5 text-left bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B00] focus:border-[#FF6B00] flex items-center justify-between"
+                      className="w-full px-4 py-2.5 text-left bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FACD34] focus:border-[#FF6B00] flex items-center justify-between"
                     >
                       <span className={values.selectedUsers.length === 0 ? "text-gray-400" : "text-gray-700"}>
                         {getSelectedUsersDisplay(values.selectedUsers)}
@@ -307,7 +308,7 @@ const SendNotification = () => {
                                   values.selectedUsers
                                 )
                               }
-                              className="w-4 h-4 text-[#FF6B00] focus:ring-[#FF6B00] rounded cursor-pointer"
+                              className="w-4 h-4 text-[#FF6B00] focus:ring-[#FACD34]rounded cursor-pointer"
                             />
                             <span className="text-gray-700">{userType.label}</span>
                           </label>
@@ -324,7 +325,7 @@ const SendNotification = () => {
                       {getSelectedUsersLabels(values.selectedUsers).map((user) => (
                         <div
                           key={user.value}
-                          className="inline-flex items-center gap-2 bg-[#FF6B00] text-white px-3 py-1.5 rounded-full text-sm font-medium"
+                          className="inline-flex items-center gap-2 bg-[#FACD34] text-white px-3 py-1.5 rounded-full text-sm font-medium"
                         >
                           <span>{user.label}</span>
                           <button
@@ -383,7 +384,7 @@ const SendNotification = () => {
 
                   {values.targetCountry && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      <div className="inline-flex items-center gap-2 bg-[#FF6B00] text-white px-3 py-1.5 rounded-full text-sm font-medium">
+                      <div className="inline-flex items-center gap-2 bg-[#FACD34] text-white px-3 py-1.5 rounded-full text-sm font-medium">
                         <span>
                           {countryOptions.find(c => c.value === values.targetCountry)?.label || "Selected Country"}
                         </span>

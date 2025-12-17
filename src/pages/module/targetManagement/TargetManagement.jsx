@@ -36,6 +36,10 @@ const TargetManagement = () => {
     setLimit(newLimit);
     setPage(1);
   };
+  const totalPages = Math.ceil(
+  (targetList?.total || 0) / limit
+);
+
 
   const onSearchChange = (e) => {
     const newSearchTerm = e.target.value;
@@ -88,13 +92,14 @@ const TargetManagement = () => {
                 />
               </Box>
               <Pagination
-                currentPage={targetList?.page}
-                totalPages={targetList?.limit}
+                currentPage={page}
+                totalPages={totalPages}
                 totalItems={targetList?.total}
-                itemsPerPage={targetList?.limit}
+                itemsPerPage={limit}
                 onPageChange={onPageChange}
                 onItemsPerPageChange={onItemsPerPageChange}
               />
+
             </div>
           )}
         </>
