@@ -140,6 +140,57 @@ const fetchSalesReport = async ({ country, year }) => {
       setLoading(false);
     }
   };
+  const fetchUserCountByMonth = async ({
+  year,
+  country = "All",
+  state = "All",
+  city = "All",
+}) => {
+  if (!year) {
+    setSaleReport({ year: null, monthlyData: [] });
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const params = new URLSearchParams({
+      year,
+      country,
+      state,
+      city,
+    });
+
+    const res = await fetch(
+      `${conf.apiBaseUrl}admin/dashboard/userCountByMonth?${params.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed to fetch user count by month");
+
+    const result = await res.json();
+
+    if (result.success) {
+      // ✅ store only `data`
+      setSaleReport(result.data);
+      return result.data;
+    } else {
+      setSaleReport({ year, monthlyData: [] });
+      return null;
+    }
+  } catch (error) {
+    console.error("User count by month error:", error);
+    setSaleReport({ year, monthlyData: [] });
+    return null;
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const fetchStaffCountByMonth = async ({
   year,
@@ -179,7 +230,7 @@ const fetchSalesReport = async ({ country, year }) => {
 };
 
 
-  return { fetchDashboardTotals, dashboardTotals, loading,fetchSalesChartData,salesChart,fetchSalesReport,fetchStaffCountByMonth };
+  return { fetchDashboardTotals, dashboardTotals, loading,fetchSalesChartData,salesChart,fetchSalesReport,fetchStaffCountByMonth, fetchUserCountByMonth,  };
 }
 
 export default useDashboardManagement;

@@ -109,7 +109,7 @@ const TotalStaffChart = () => {
         <h3 className="text-lg font-semibold text-gray-900">Total Staff</h3>
         <div className="flex flex-wrap gap-2">
           <PagePath2
-            title="Total Staff"
+           
             /* Country */
             showSelect
             options={countryOptions}
@@ -122,14 +122,15 @@ const TotalStaffChart = () => {
             onChangeSecondSelect={onChangeState}
             secondSelectLoading={!!country && states.length === 0}
           />
-          <select value={city} onChange={(e) => setCity(e.target.value)}>
-            <option value="">All Cities</option>
-            {cities.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+          <PagePath2
+  title=""
+  showSelect
+  options={cityOptions}
+  selectPlaceHolder="Select City"
+  onChangeSelectFunc={onChangeCity}
+  secondSelectLoading={!!state && states.length === 0}
+/>
+
 
           <select
             value={year}
