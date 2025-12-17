@@ -17,17 +17,27 @@ import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 // StatCard Component
 const StatCard = ({ title, value, change, icon, bgColor, textColor }) => {
   return (
-    <div className={`${bgColor} rounded-xl p-6 shadow-md`}>
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className={`font-medium text-gray-500 text-sm ${textColor} mb-2`}>
+    <div
+      className={`${bgColor} rounded-xl p-4 shadow-md border border-gray-100 
+  h-[160px] transition-all duration-200 hover:shadow-lg`}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          <p className={`font-medium text-gray-600 text-sm ${textColor} mb-3`}>
             {title}
           </p>
-          <p className={`text-2xl font-bold ${textColor} mb-2`}>{value}</p>
-          <p className="text-xs font-medium text-green-600">{change}</p>
+
+          <p className="text-sm font-semibold text-green-600">{change}</p>
+          <p className={`text-3xl font-bold ${textColor} mt-4 truncate`}>
+            {value}
+          </p>
         </div>
-        <div>
-          <img src={icon} alt="icon" className="w-20 h-20 object-contain" />
+        <div className="flex-shrink-0">
+          <img
+            src={icon}
+            alt={title}
+            className="w-12 h-12 sm:w-20 sm:h-20 object-contain"
+          />
         </div>
       </div>
     </div>
@@ -47,9 +57,9 @@ const Dashboard = () => {
     `${trend === "increased" ? "+" : ""}${percent}%`;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50  sm:p-6">
       {/* Header */}
-      <div className="mb-6">
+      <div className="">
         <PagePath2 title="Dashboard" />
       </div>
 
@@ -59,12 +69,12 @@ const Dashboard = () => {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Main Grid: Left Stats + Right Sales Chart */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* LEFT SECTION (2 columns) */}
-            <div className="lg:col-span-2 space-y-6">
+          {/* Main Grid: 50-50 Split - Stats + Sales Chart */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* LEFT SECTION - 50% - Stat Cards */}
+            <div className="space-y-6">
               {/* 4 Stat Cards in 2-column layout */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <StatCard
                   title="Total User"
                   value={dashboardTotals?.users?.total ?? 0}
@@ -128,7 +138,7 @@ const Dashboard = () => {
               />
             </div>
 
-            {/* RIGHT SECTION - Sales Chart */}
+            {/* RIGHT SECTION - 50% - Sales Chart */}
             <div className="h-full">
               <SalesChart />
             </div>
