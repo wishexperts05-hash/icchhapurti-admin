@@ -17,6 +17,7 @@ export default function FormField({
   disabled = false,
   rightElement,
   onChange,
+  isClearable = false,
 }) {
   const formik = useFormikContext();
 
@@ -29,14 +30,14 @@ export default function FormField({
 
   const selectOptions = Array.isArray(options)
     ? options.map((opt) =>
-        typeof opt === "string" ? { label: opt, value: opt } : opt
-      )
+      typeof opt === "string" ? { label: opt, value: opt } : opt
+    )
     : [];
 
   const selectedOption = isMulti
     ? selectOptions.filter(
-        (opt) => Array.isArray(value) && value.includes(opt.value)
-      )
+      (opt) => Array.isArray(value) && value.includes(opt.value)
+    )
     : selectOptions.find((opt) => opt.value === value) || null;
 
   const inputValue =
@@ -93,36 +94,36 @@ export default function FormField({
             {label}
           </label>
           <div className="relative w-full  ">
-          <input
-            id={name}
-            type={type}
-            name={name}
-            autoComplete={autoComplete}
-            disabled={disabled}
-            readOnly={readOnly}
-            placeholder={placeholder}
-            value={inputValue}
-            onWheel={(e) => e.target.blur()}
-            onChange={(e) => {
-              if (type === "number") {
-                const numValue =
-                  e.target.value === "" ? "" : Number(e.target.value);
-                formik.setFieldValue(name, isNaN(numValue) ? "" : numValue);
-              } else if (type === "date") {
-                formik.setFieldValue(
-                  name,
-                  e.target.value ? new Date(e.target.value) : ""
-                );
-              } else {
-                formik.handleChange(e);
-              }
-            }}
-            onBlur={formik.handleBlur}
-            className="w-full border border-[#CCA547]/80 rounded-lg px-3 py-2 focus:outline-none"
-          />
-         {rightElement && (
-  <div
-    className="
+            <input
+              id={name}
+              type={type}
+              name={name}
+              autoComplete={autoComplete}
+              disabled={disabled}
+              readOnly={readOnly}
+              placeholder={placeholder}
+              value={inputValue}
+              onWheel={(e) => e.target.blur()}
+              onChange={(e) => {
+                if (type === "number") {
+                  const numValue =
+                    e.target.value === "" ? "" : Number(e.target.value);
+                  formik.setFieldValue(name, isNaN(numValue) ? "" : numValue);
+                } else if (type === "date") {
+                  formik.setFieldValue(
+                    name,
+                    e.target.value ? new Date(e.target.value) : ""
+                  );
+                } else {
+                  formik.handleChange(e);
+                }
+              }}
+              onBlur={formik.handleBlur}
+              className="w-full border border-[#CCA547]/80 rounded-lg px-3 py-2 focus:outline-none"
+            />
+            {rightElement && (
+              <div
+                className="
       absolute 
       left-[2px] right-[2px] top-[2px] bottom-[2px]
       rounded-md
@@ -131,12 +132,12 @@ export default function FormField({
       bg-white
       z-10
     "
-  >
-    {rightElement}
-  </div>
-)}
+              >
+                {rightElement}
+              </div>
+            )}
 
-  </div>
+          </div>
 
         </>
       ) : fieldType === "input" && type === "textarea" ? (
@@ -160,17 +161,13 @@ export default function FormField({
         </>
       ) : (
         <>
-          <label
-            htmlFor={name}
-            className="text-sm font-medium text-gray-700 mb-1"
-          >
-            {label}
-          </label>
+         
           <ReactSelect
             options={selectOptions}
             isLoading={loading}
             name={name}
             value={selectedOption}
+            isClearable={isClearable}
             onChange={(selected) => {
               if (isMulti) {
                 formik.setFieldValue(
@@ -180,7 +177,6 @@ export default function FormField({
               } else {
                 formik.setFieldValue(name, selected?.value || "");
               }
-              // Forward onChange to parent if provided (passes the selected option(s))
               if (typeof onChange === "function") {
                 onChange(selected);
               }
@@ -188,7 +184,7 @@ export default function FormField({
             onBlur={() => formik.setFieldTouched(name, true)}
             placeholder={`${label}`}
             classNamePrefix="react-select"
-            isDisabled={disabled||loading}
+            isDisabled={disabled || loading}
             isMulti={isMulti}
             styles={{
               control: (base, state) => ({
@@ -196,20 +192,42 @@ export default function FormField({
                 minHeight: "44px",
                 borderRadius: "0.5rem",
                 borderColor: state.isFocused
-                  ? "#60A5FA"
+                  ? "#f4920aff"
                   : touched && error
-                  ? "#EF4444"
-                  : "#CBD5E1",
-                boxShadow: state.isFocused ? "0 0 0 2px #60A5FA" : "none",
+                    ? "#EF4444"
+                    : "#bbbab7ff",
+                boxShadow: state.isFocused ? "0 0 0 2px #f4920aff" : "none",  // Changed from 2px to 1px
+                "&:hover": {
+                  borderColor: state.isFocused
+                    ? "#f4920aff"
+                    : touched && error
+                      ? "#EF4444"
+                      : "#bbbab7ff",
+                }
               }),
               valueContainer: (base) => ({
                 ...base,
                 padding: "0 6px",
                 fontSize: "0.95rem",
-                // fontWeight:500,
-                fontFamily:"Inter",
-                color:"black"
+                fontFamily: "Inter",
+                color: "black"
               }),
+            option: (base, state) => ({
+  ...base,
+  backgroundColor: state.isSelected
+    ? "#f4920aff !important"
+    : state.isFocused
+    ? "white !important"
+    : "white",
+  color: state.isSelected ? "white" : "#111827",
+  cursor: "pointer",
+  ":active": {
+    backgroundColor: "#FEF3C7 !important",
+  },
+  ":hover": {
+    backgroundColor: "#FEF3C7 !important",
+  },
+}),
             }}
           />
         </>

@@ -91,9 +91,9 @@ const PagePath2 = ({
               control: (provided, state) => ({
                 ...provided,
                 borderRadius: "0.5rem",
-                borderColor: state.isFocused ? "#FF6B00" : "#d1d5db",
-                boxShadow: state.isFocused ? "0 0 0 1px #FF6B00" : "none",
-                "&:hover": { borderColor: "#FF6B00" },
+                borderColor: state.isFocused ? "#cca547" : "#d1d5db", //border-[#cca547]
+                boxShadow: state.isFocused ? "0 0 0 1px #cca547" : "none",
+                "&:hover": { borderColor: "#cca547" },
                 fontSize: "0.875rem",
                 minHeight: "40px",
               }),
@@ -106,12 +106,12 @@ const PagePath2 = ({
               option: (provided, state) => ({
                 ...provided,
                 backgroundColor: state.isSelected
-                  ? "#FF6B00"
+                  ? "#cca547"
                   : state.isFocused
-                    ? "#FFE5D1"
+                    ? "#fee19eff"
                     : "white",
                 color: state.isSelected ? "white" : "black",
-                "&:active": { backgroundColor: "#FF6B00", color: "white" },
+                "&:active": { backgroundColor: "#fee19eff", color: "white" },
               }),
               placeholder: (provided) => ({ ...provided, color: "#9ca3af" }),
             }}
