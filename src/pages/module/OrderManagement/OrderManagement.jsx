@@ -14,8 +14,15 @@ import useLogin from "../../../hooks/auth/useLogin";
 import usePermissions from "../../../hooks/auth/usePermissions";
 
 const OrderManagement = () => {
-  const { loading, orderList, fetchOrderList, } = useOrderManagement();
-  const { fetchOrderStatus, orderStatus, fetchUserType, userType: userTypeOptions, loadingUser, loadingOrderStatus } = useDropdown();
+  const { loading, orderList, fetchOrderList } = useOrderManagement();
+  const {
+    fetchOrderStatus,
+    orderStatus,
+    fetchUserType,
+    userType: userTypeOptions,
+    loadingUser,
+    loadingOrderStatus,
+  } = useDropdown();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -26,13 +33,23 @@ const OrderManagement = () => {
   const [endDate, setEndDate] = useState("");
   const debouncedSearch = useDebounce(search, 500);
   const { subAdminAccess } = useLogin();
-  const { canRead } = usePermissions(
-    subAdminAccess,
-    "Order Management"
-  );
+  const { canRead } = usePermissions(subAdminAccess, "Order Management");
 
   useEffect(() => {
-    fetchOrderList(page, limit, debouncedSearch, status, userType, startDate, endDate);
+    // If only one date is selected, do NOT fetch
+    if ((startDate && !endDate) || (!startDate && endDate)) {
+      return;
+    }
+
+    fetchOrderList(
+      page,
+      limit,
+      debouncedSearch,
+      status,
+      userType,
+      startDate,
+      endDate
+    );
   }, [page, limit, debouncedSearch, status, userType, startDate, endDate]);
 
   useEffect(() => {
@@ -61,8 +78,10 @@ const OrderManagement = () => {
   ];
 
   const handleView = (row) => {
-    navigate(`/order-management/order-details/${row?.userType}/${row?.orderId}`);
-  }
+    navigate(
+      `/order-management/order-details/${row?.userType}/${row?.orderId}`
+    );
+  };
 
   const actions = [
     {
@@ -81,7 +100,7 @@ const OrderManagement = () => {
   const onSearchChange = (e) => {
     const newSearchTerm = e.target.value;
     setSearch(newSearchTerm);
-    setPage(1); 
+    setPage(1);
   };
 
   const onChangeSelectFunc = (option) => {
@@ -94,7 +113,7 @@ const OrderManagement = () => {
     const selected = option ? option.value : "";
     setStatus(selected);
     setPage(1);
-  }
+  };
   const onStartDateChange = (e) => {
     setStartDate(e.target.value);
     setPage(1);
@@ -107,7 +126,8 @@ const OrderManagement = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <BreadCrumb linkText={[{ text: "Order Management" }]} />
-      <PagePath2 title="Order Management"
+      <PagePath2
+        title="Order Management"
         // ShowSearch
         showSearch
         searchTerm={search}

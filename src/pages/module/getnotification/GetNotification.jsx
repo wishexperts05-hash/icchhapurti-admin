@@ -77,7 +77,7 @@ export default function GetNotification() {
   return (
     <div className="min-h-screen bg-gray-50 rounded-xl">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 rounded-xl px-6 py-4">
+      <div className="bg-white border-b border-gray-200 rounded-t-xl px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Left side: Icon + Text */}
           <div className="flex items-center gap-2">
@@ -93,7 +93,7 @@ export default function GetNotification() {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-200 px-6 rounded-xl">
+      <div className="bg-white border-b border-gray-200 px-6 ">
         <div className="flex gap-8">
           <button
             onClick={() => setActiveTab("all")}
@@ -129,7 +129,7 @@ export default function GetNotification() {
       </div>
 
       {/* Notifications List */}
-      <div className="bg-white border-b border-gray-200 px-6 rounded-xl mt-4 mb-8">
+      <div className="bg-white border-b border-gray-200 px-6 rounded-b-xl ">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           {displayNotifications.map((notification, index) => (
             <div
