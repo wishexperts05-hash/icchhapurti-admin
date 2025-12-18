@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { LayoutDashboard, ChevronRight, TrendingUp, Calendar, X } from "lucide-react";
+import { Formik, Form } from "formik";
 import useReportAndAnalytics from "../../../../hooks/reportAndAnalytics/useReportAndAnalytics";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import useDropdown from "../../../../hooks/dropdown/useDropdown";
+import FormField from "../../../../components/uiComponent/FormField";
 
 import {
   BarChart,
@@ -17,7 +19,6 @@ import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import Pagination from "../../../../components/uiComponent/Pagination";
-import CustomSelect from "../../../../components/uiComponent/CustomSelect";
 
 const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -285,22 +286,26 @@ const Reports = () => {
   const { fetchCountryDropdown, countries } = useDropdown();
   const [reportData, setReportData] = useState(null);
   const [revenueChart, setRevenueChart] = useState(null);
-  const [country, setCountry] = useState("");
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
-  const [region, setRegion] = useState("");
-  const [product, setProduct] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [value, setValue] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
   const [salesData, setSalesData] = useState([]);
-  const [periodType, setPeriodType] = useState("");
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
     totalRecords: 0,
+  });
+
+  // State for filters
+  const [filterValues, setFilterValues] = useState({
+    country: "",
+    state: "",
+    city: "",
+    region: "",
+    product: "",
+    periodType: "",
   });
 
   useEffect(() => {
@@ -311,13 +316,13 @@ const Reports = () => {
 
   const loadSalesSegmentation = async () => {
     const response = await fetchSalesSegmentation({
-      country,
-      state,
-      city,
-      region,
-      productName: product,
+      country: filterValues.country,
+      state: filterValues.state,
+      city: filterValues.city,
+      region: filterValues.region,
+      productName: filterValues.product,
       date: value ? value.toISOString().split("T")[0] : "",
-      periodType,
+      periodType: filterValues.periodType,
       page: currentPage,
       limit: itemsPerPage,
     });
@@ -331,12 +336,12 @@ const Reports = () => {
   useEffect(() => {
     loadSalesSegmentation();
   }, [
-    country,
-    city,
-    region,
-    product,
+    filterValues.country,
+    filterValues.city,
+    filterValues.region,
+    filterValues.product,
     value,
-    periodType,
+    filterValues.periodType,
     currentPage,
     itemsPerPage,
   ]);
@@ -539,54 +544,71 @@ const Reports = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex flex-wrap gap-3 sm:gap-4">
-                <div className="relative w-full sm:w-auto">
-                  <CustomSelect
-                    label="Country"
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                    options={countryList}
-                  />
-                </div>
+            <Formik
+              enableReinitialize
+              initialValues={filterValues}
+              onSubmit={() => {}}
+            >
+              {({ values, setFieldValue }) => {
+                // Update parent state when Formik values change
+                useEffect(() => {
+                  setFilterValues(values);
+                }, [values]);
 
-                <div className="relative w-full sm:w-auto">
-                  <CustomSelect
-                    label="City"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    options={cityList}
-                  />
-                </div>
+                return (
+                  <Form>
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-wrap gap-3 sm:gap-4">
+                        <div className="relative w-full sm:w-auto min-w-[200px]">
+                          <FormField
+                            label="Country"
+                            name="country"
+                            fieldType="select"
+                            options={countryList}
+                          />
+                        </div>
 
-                <div className="relative w-full sm:w-auto">
-                  <CustomSelect
-                    label="Region"
-                    value={region}
-                    onChange={(e) => setRegion(e.target.value)}
-                    options={regionList}
-                  />
-                </div>
+                        <div className="relative w-full sm:w-auto min-w-[200px]">
+                          <FormField
+                            label="City"
+                            name="city"
+                            fieldType="select"
+                            options={cityList}
+                          />
+                        </div>
 
-                <div className="relative w-full sm:w-auto">
-                  <CustomSelect
-                    label="Product Name"
-                    value={product}
-                    onChange={(e) => setProduct(e.target.value)}
-                    options={productList}
-                  />
-                </div>
+                        <div className="relative w-full sm:w-auto min-w-[200px]">
+                          <FormField
+                            label="Region"
+                            name="region"
+                            fieldType="select"
+                            options={regionList}
+                          />
+                        </div>
 
-                <div className="relative w-full sm:w-auto">
-                  <CustomSelect
-                    label="periodType"
-                    value={periodType}
-                    onChange={(e) => setPeriodType(e.target.value)}
-                    options={periodTypeOptions}
-                  />
-                </div>
-              </div>
-            </div>
+                        <div className="relative w-full sm:w-auto min-w-[200px]">
+                          <FormField
+                            label="Product"
+                            name="product"
+                            fieldType="select"
+                            options={productList}
+                          />
+                        </div>
+
+                        <div className="relative w-full sm:w-auto min-w-[200px]">
+                          <FormField
+                            label="Period Type"
+                            name="periodType"
+                            fieldType="select"
+                            options={periodTypeOptions}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </Form>
+                );
+              }}
+            </Formik>
 
             <div className="mt-4 rounded-2xl overflow-hidden shadow-lg border border-gray-200 overflow-x-auto">
               <DataTable
