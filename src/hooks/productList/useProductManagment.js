@@ -7,6 +7,7 @@ import conf from "../../config/index";
 import Swal from "sweetalert2";
 import { confirmAlert } from "../../utils/alertToast";
 import { useNavigate } from "react-router-dom";
+import { confirmBlock, confirmUnblock } from "../../utils/alertToast";
 
 const useProductManagement = () => {
   const [productList, setProductList] = useRecoilState(
@@ -47,8 +48,6 @@ const useProductManagement = () => {
   const resetProductList = () => {
     setProductList([]);
   };
-
-  
 
   const updateProduct = async (id, formdata) => {
     setLoading(true);
@@ -286,99 +285,146 @@ const useProductManagement = () => {
       return null;
     }
   };
-    
+
   // 🔹 Get Single Domestic Shipping Rate By ID
-const fetchDomesticShippingRateById = async (id) => {
-  setLoading(true);
-  try {
-    const res = await fetch(`${conf.apiBaseUrl}admin/shipping/domestic/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    });
-    if (!res.ok) throw new Error("Failed to fetch");
-    const data = await res.json();
-    return data.item || null;
-  } catch (err) {
-    console.error("Error fetching domestic shipping rate:", err);
-    return null;
-  } finally {
-    setLoading(false);
-  }
-};
+  const fetchDomesticShippingRateById = async (id) => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `${conf.apiBaseUrl}admin/shipping/domestic/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (!res.ok) throw new Error("Failed to fetch");
+      const data = await res.json();
+      return data.item || null;
+    } catch (err) {
+      console.error("Error fetching domestic shipping rate:", err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const updateDomesticShippingRate = async (id, payload) => {
-  setLoading(true);
-  try {
-    const res = await fetch(`${conf.apiBaseUrl}admin/shipping/domestic/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(payload),
-    });
+  const updateDomesticShippingRate = async (id, payload) => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `${conf.apiBaseUrl}admin/shipping/domestic/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("Failed to update domestic shipping rate:", err);
-    return null;
-  } finally {
-    setLoading(false);
-  }
-};
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Failed to update domestic shipping rate:", err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // 🔹 Get Single International Shipping Rate By ID
+  const fetchInternationalShippingRateById = async (id) => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `${conf.apiBaseUrl}admin/shipping/international/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
 
-// 🔹 Get Single International Shipping Rate By ID
-const fetchInternationalShippingRateById = async (id) => {
-  setLoading(true);
-  try {
-    const res = await fetch(`${conf.apiBaseUrl}admin/shipping/international/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    });
+      if (!res.ok) throw new Error("Failed to fetch");
 
-    if (!res.ok) throw new Error("Failed to fetch");
+      const data = await res.json();
+      console.log("International By ID Response => ", data);
 
-    const data = await res.json();
-    console.log("International By ID Response => ", data);
+      return data.item || data.data || data.shippingRate || data;
+    } catch (err) {
+      console.error("Error fetching international shipping rate:", err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return data.item || data.data || data.shippingRate || data;
+  const updateInternationalShippingRate = async (id, payload) => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `${conf.apiBaseUrl}admin/shipping/international/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
-  } catch (err) {
-    console.error("Error fetching international shipping rate:", err);
-    return null;
-  } finally {
-    setLoading(false);
-  }
-};
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Error updating international shipping rate:", err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const updateInternationalShippingRate = async (id, payload) => {
-  setLoading(true);
-  try {
-    const res = await fetch(`${conf.apiBaseUrl}admin/shipping/international/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(payload),
-    });
+  const updateProductStatus = async (id, isActive) => {
+    const result = isActive
+      ? await confirmUnblock("Do you want to make this product visible?")
+      : await confirmBlock("Do you want to hide this product?");
 
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("Error updating international shipping rate:", err);
-    return null;
-  } finally {
-    setLoading(false);
-  }
-};
+    if (!result.isConfirmed) return false;
 
+    setLoading(true);
+    try {
+      const res = await fetchData({
+        method: "PUT",
+        url: `${conf.apiBaseUrl}product/updateStatus/${id}`,
+        headers: {
+          "Content-Type": "application/json", // ✅ REQUIRED
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+        data: {
+          isActive: isActive, // ✅ JSON BODY
+        },
+      });
+
+      if (res?.success) {
+        Swal.fire({
+          title: isActive ? "Visible!" : "Hidden!",
+          text: res?.message || "Product status updated",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        return true;
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to update status");
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
     loading,
@@ -397,10 +443,11 @@ const updateInternationalShippingRate = async (id, payload) => {
     countries,
     addDomesticShippingRate,
     addInternationalShippingRate,
-      fetchDomesticShippingRateById,
-      updateDomesticShippingRate,
-  fetchInternationalShippingRateById,
-  updateInternationalShippingRate,
+    fetchDomesticShippingRateById,
+    updateDomesticShippingRate,
+    fetchInternationalShippingRateById,
+    updateInternationalShippingRate,
+    updateProductStatus,
   };
 };
 

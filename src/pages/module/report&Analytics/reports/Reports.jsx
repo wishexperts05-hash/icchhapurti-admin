@@ -535,7 +535,7 @@ const Reports = () => {
           <div className="p-2 sm:p-5 md:p-6">
             <div className="flex flex-row items-center justify-between mb-4">
               <h3 className="text-lg sm:text-xl font-semibold">Revenue Chart</h3>
-              <div className="relative w-full ml-40 sm:w-auto">
+              <div className="relative w-full sm:w-auto">
                 <ModernDatePicker
                   value={value}
                   onChange={setValue}
@@ -559,48 +559,53 @@ const Reports = () => {
                   <Form>
                     <div className="flex items-center justify-between">
                       <div className="flex flex-wrap gap-3 sm:gap-4">
-                        <div className="relative w-full sm:w-auto min-w-[200px]">
+                        <div className="relative w-full sm:w-auto min-w-[220px]">
                           <FormField
-                            label="Country"
+                            label="Select Country"
                             name="country"
                             fieldType="select"
                             options={countryList}
+                             isClearable={true} // Add this
                           />
                         </div>
 
-                        <div className="relative w-full sm:w-auto min-w-[200px]">
+                        <div className="relative w-full sm:w-auto min-w-[210px]">
                           <FormField
-                            label="City"
+                            label="Select City"
                             name="city"
                             fieldType="select"
                             options={cityList}
+                             isClearable={true} // Add this
                           />
                         </div>
 
-                        <div className="relative w-full sm:w-auto min-w-[200px]">
+                        <div className="relative w-full sm:w-auto min-w-[210px]">
                           <FormField
-                            label="Region"
+                            label="Select Region"
                             name="region"
                             fieldType="select"
                             options={regionList}
+                             isClearable={true} // Add this
                           />
                         </div>
 
-                        <div className="relative w-full sm:w-auto min-w-[200px]">
+                        <div className="relative w-full sm:w-auto min-w-[210px]">
                           <FormField
-                            label="Product"
+                            label="Select Product"
                             name="product"
                             fieldType="select"
                             options={productList}
+                             isClearable={true} // Add this
                           />
                         </div>
 
-                        <div className="relative w-full sm:w-auto min-w-[200px]">
+                        <div className="relative w-full sm:w-auto min-w-[220px]">
                           <FormField
-                            label="Period Type"
+                            label=" Select Period Type"
                             name="periodType"
                             fieldType="select"
                             options={periodTypeOptions}
+                             isClearable={true} // Add this
                           />
                         </div>
                       </div>

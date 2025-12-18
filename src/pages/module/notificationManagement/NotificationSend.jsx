@@ -101,6 +101,13 @@ const SendNotification = () => {
   const handleTargetAudienceChange = (value, setFieldValue) => {
     setTargetAudience(value);
     setFieldValue("targetAudience", value);
+    // Reset related fields
+    if (value === "selectUsers") {
+      setFieldValue("targetCountry", "");
+    } else if (value === "specificCountry") {
+      setSelectedUsers([]);
+      setFieldValue("selectedUsers", []);
+    }
   };
 
   const handleUserSelectionToggle = (userValue, setFieldValue, currentSelection) => {
@@ -325,7 +332,7 @@ const SendNotification = () => {
                       {getSelectedUsersLabels(values.selectedUsers).map((user) => (
                         <div
                           key={user.value}
-                          className="inline-flex items-center gap-2 bg-[#FACD34] text-white px-3 py-1.5 rounded-full text-sm font-medium"
+                          className="inline-flex items-center gap-2 bg-[#CCA547] text-white px-3 py-1.5 rounded-full text-sm font-medium"
                         >
                           <span>{user.label}</span>
                           <button
@@ -384,7 +391,7 @@ const SendNotification = () => {
 
                   {values.targetCountry && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      <div className="inline-flex items-center gap-2 bg-[#FACD34] text-white px-3 py-1.5 rounded-full text-sm font-medium">
+                      <div className="inline-flex items-center gap-2 bg-[#CCA547] text-white px-3 py-1.5 rounded-full text-sm font-medium">
                         <span>
                           {countryOptions.find(c => c.value === values.targetCountry)?.label || "Selected Country"}
                         </span>
