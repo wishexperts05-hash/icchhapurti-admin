@@ -5,7 +5,10 @@ import { useNavigate } from "react-router-dom";
 import user from "../../../src/assets/user.png";
 import useLogin from "../../hooks/auth/useLogin";
 import { useSetRecoilState } from "recoil";
-import { adminAuthState, subAdminAuthState } from "../../state/auth/authenticatedState";
+import {
+  adminAuthState,
+  subAdminAuthState,
+} from "../../state/auth/authenticatedState";
 import { GoBell } from "react-icons/go";
 
 function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
@@ -58,8 +61,9 @@ function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
   };
   return (
     <div
-      className={`fixed top-0 right-0 h-[72px] bg-[#FACD34] border-b border-gray-200 p-4 flex items-center justify-between z-40 transition-all duration-300 ${isMobile ? "left-0" : isSidebarOpen ? "left-72" : "left-20"
-        }`}
+      className={`fixed top-0 right-0 h-[72px] bg-[#FACD34] border-b border-gray-200 p-4 flex items-center justify-between z-40 transition-all duration-300 ${
+        isMobile ? "left-0" : isSidebarOpen ? "left-72" : "left-20"
+      }`}
       style={{ boxShadow: "0 4px 8px -2px rgba(0, 0, 0, 0.1)" }}
     >
       {/* Left side - Logo and Mobile Menu */}
@@ -81,31 +85,34 @@ function Navbar({ toggleSidebar, isSidebarOpen, isMobile }) {
 
       {/* Right side - Notifications and Profile */}
       <div className="flex items-center gap-4">
-
         {/* Profile Dropdown */}
-        <div className="relative "> 
-
+        <div className="relative ">
           <div className="flex items-center gap-2">
-          <GoBell className="w-8 h-8"/>
-          <button
-            onClick={() => {
-              setIsProfileDropdownOpen(!isProfileDropdownOpen);
-            }}
-            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-          >
-            <img
-              src={adminProfileImg}
-              alt="Profile"
-              className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+            <GoBell
+              className="w-8 h-8 cursor-pointer text-gray-700  transition-colors"
+              onClick={() => navigate("/getnotification/getnotification")}
             />
-            <span className="hidden sm:block text-sm font-medium text-gray-700">
-              {adminName}
-            </span>
-            <FaChevronDown
-              className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isProfileDropdownOpen ? "rotate-180" : ""
+
+            <button
+              onClick={() => {
+                setIsProfileDropdownOpen(!isProfileDropdownOpen);
+              }}
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+            >
+              <img
+                src={adminProfileImg}
+                alt="Profile"
+                className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+              />
+              <span className="hidden sm:block text-sm font-medium text-gray-700">
+                {adminName}
+              </span>
+              <FaChevronDown
+                className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
+                  isProfileDropdownOpen ? "rotate-180" : ""
                 }`}
-            />
-          </button>
+              />
+            </button>
           </div>
 
           {/* Profile Dropdown Menu */}
