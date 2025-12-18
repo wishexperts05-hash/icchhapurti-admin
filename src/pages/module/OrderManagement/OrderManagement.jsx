@@ -81,11 +81,11 @@ const OrderManagement = () => {
   const onSearchChange = (e) => {
     const newSearchTerm = e.target.value;
     setSearch(newSearchTerm);
-    setPage(1);
+    setPage(1); 
   };
 
   const onChangeSelectFunc = (option) => {
-    const selected = option ? option.value : "";
+    const selected = option ? option.value.toLowerCase() : "";
     setUserType(selected);
     setPage(1);
   };
