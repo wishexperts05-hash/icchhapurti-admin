@@ -83,7 +83,7 @@ const useCommentandReviews = () => {
   const fetchUserRating = async () => {
     setLoading(true);
     try {
-      let url = `${conf.apiBaseUrl}admin/reviews/getUserRatingById`
+      let url = `${conf.apiBaseUrl}admin/reviews/getUserRating`
       const res = await fetchData({
         method: "GET",
         url
@@ -104,7 +104,7 @@ const useCommentandReviews = () => {
   const updatingUserRating = async (data) => {
     setLoading(true);
     try {
-      let url = `${conf.apiBaseUrl}admin/reviews/updateUserRatingById`;
+      let url = `${conf.apiBaseUrl}admin/reviews/updateUserRating`;
       const res = await fetchData({
         method: "PUT",
         url,

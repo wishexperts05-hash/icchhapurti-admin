@@ -106,12 +106,6 @@ export default function ManageComments() {
       <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
         <DataTable
           columns={columns}
-          // data={currentItems.map((item, index) => ({
-          //   ...item,
-          //   srNo: startIndex + index + 1,
-          //   status: item.status === "show" ? "Shown" : "Hidden",
-          //   review: renderStars(item.stars || 0),
-          // }))}
           data={(commentAndReviews?.data || []).map((item, index) => ({
             ...item,
             srNo: (commentAndReviews?.pagination?.currentPage - 1) * limit + index + 1,
