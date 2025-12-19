@@ -28,6 +28,7 @@ const useStaffManagement = () => {
   const [attendanceList, setAttendanceList] = useState([]);
   const [attendancePagination, setAttendancePagination] = useState({});
   const [attendanceLoading, setAttendanceLoading] = useState(false);
+  const [attendanceDetail,setAttendaceDetail] = useState();
 
   const fetchStaffList = async (page, limit, debouncedSearch) => {
     setLoading(true);
@@ -305,6 +306,27 @@ const useStaffManagement = () => {
     }
   };
 
+
+    const fetchAttendanceById = async (id) => {
+    setIloading(true);
+    try {
+      const res = await fetchData({
+        method: "GET",
+        url: `${conf.apiBaseUrl}admin/staff/attendance/${id}`,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
+      if (res) {
+        setAttendaceDetail(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching staff details:", error);
+    } finally {
+      setIloading(false);
+    }
+  };
+
   return {
     fetchStaffList,
     loading,
@@ -326,6 +348,9 @@ const useStaffManagement = () => {
     indirectSales,
     dloading,
     iloading,
+
+    fetchAttendanceById,
+    attendanceDetail,
 
     fetchStaffAttendance,
     attendanceList,
