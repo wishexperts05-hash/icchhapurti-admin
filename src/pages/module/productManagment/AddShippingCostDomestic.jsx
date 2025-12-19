@@ -66,23 +66,14 @@ const AddShippingCost = () => {
         {/* Form Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Domestic/International */}
-          <div>
-            <label className="block font-medium mb-2">
-              Domestic/International :
-            </label>
-            <select
-              name="type"
-              value={formik.values.type}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className="w-full border rounded-md px-3 py-2"
-            >
-              <option value="Domestic">Domestic</option>
-              {/* <option value="International">International</option> */}
-            </select>
-            {formik.touched.type && formik.errors.type && (
-              <p className="text-red-500 text-sm mt-1">{formik.errors.type}</p>
-            )}
+         <div>
+            <label className="block font-medium mb-2">International :</label>
+            <input
+              type="text"
+              value="International"
+              readOnly
+              className="w-full border rounded-md px-3 py-2 bg-gray-100"
+            />
           </div>
 
           {/* Select Zone */}

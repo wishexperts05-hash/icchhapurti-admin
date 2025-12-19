@@ -381,7 +381,6 @@ const SendNotification = () => {
                     name="targetCountry"
                     fieldType="select"
                     options={[
-                      { value: "", label: "Select Country" },
                       ...countryOptions,
                     ]}
                     required

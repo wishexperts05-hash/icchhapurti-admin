@@ -161,7 +161,12 @@ export default function FormField({
         </>
       ) : (
         <>
-         
+         <label
+            htmlFor={name}
+            className="text-sm font-medium text-gray-700 mb-1"
+          >
+            {label}
+          </label>
           <ReactSelect
             options={selectOptions}
             isLoading={loading}

@@ -65,7 +65,7 @@ const getValidationSchema = () => {
 
 const OfferManagementAdd = () => {
     const { loading, fetchOfferDetails, addOffer, updateOffer, offerDetail, resetOfferDetails } = useOfferManagement();
-    const { fetchProducts, loadingProducts, products, fetchUserType, loadingUserType, userType,
+    const { fetchProductDropdown, loadingProducts, productDropdown, fetchUserType, loadingUserType, userType,
         fetchOfferType, loadingOfferType, offerType
     } = useDropdown();
     const { id } = useParams();
@@ -75,7 +75,7 @@ const OfferManagementAdd = () => {
     const [selectedOfferType, setSelectedOfferType] = useState("");
 
     useEffect(() => {
-        fetchProducts();
+        fetchProductDropdown();
         fetchUserType();
         fetchOfferType();
     }, []);
@@ -211,7 +211,7 @@ const OfferManagementAdd = () => {
         return { value: ot, label: labelMap[ot] || ot };
     });
 
-    const productOptions = products?.map((p) => ({
+    const productOptions = productDropdown?.map((p) => ({
         value: p._id,
         label: p.productName || p.name,
     })) || [];
@@ -235,7 +235,7 @@ const OfferManagementAdd = () => {
                     <LoaderSpinner />
                 </div>
             ) : (
-                <div className="bg-white rounded-lg shadow-md p-6 mt-4">
+                <div className="bg-white rounded-2xl shadow-md p-6 mt-4">
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
