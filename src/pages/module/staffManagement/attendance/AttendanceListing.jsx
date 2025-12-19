@@ -33,7 +33,7 @@ useEffect(() => {
 
 
 const tableData = attendanceList.map((item, index) => ({
-  id: index + 1,
+  id: item._id ,
   name: item.staff?.name || "--",
   code: item.staff?.staffId || "--",
   loginTime: item.loginTime || "--",
@@ -70,7 +70,7 @@ const totalItems = attendancePagination?.totalRecords || 0;
     ];
 
     const columns = [
-        { header: "Sr No.", field: "id" },
+        { header: "Sr No.", field: "SrNO" },
         {
             header: "Staff Name",
             field: "name",

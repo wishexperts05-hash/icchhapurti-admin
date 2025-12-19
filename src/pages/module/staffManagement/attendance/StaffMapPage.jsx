@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { MapPin } from "lucide-react";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DetailsField from "../../../../components/uiComponent/DetailsField";
 import Button from "../../../../components/uiComponent/Button";
+import useStaffManagement from "../../../../hooks/staffManagement/useStaffManagement";
 
 const StaffMapPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
+const {fetchAttendanceById ,attendanceDetail,loading}=useStaffManagement();
   const staffTravel = {
     loginTime: "10:00 AM",
     logoutTime: "8:00 PM",
@@ -24,9 +25,14 @@ const StaffMapPage = () => {
     navigate(-1); // Go back to previous page
   };
 
+    useEffect(() => {
+    fetchAttendanceById(id);
+  }, [id]);
+  console.log("jjj",attendanceDetail)
 
 
- {/* API UPDATE PENDING HERE (BACKEND) */}
+ {/* API UPDATE PENDING HERE (BACKEND)  19-12-2025  map pending now and transport mediaum */}
+
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Breadcrumb */}
@@ -52,18 +58,18 @@ const StaffMapPage = () => {
 
           {/* First Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <DetailsField label="Login Time" value={staffTravel.loginTime} />
-            <DetailsField label="Logout Time" value={staffTravel.logoutTime} />
+            <DetailsField label="Login Time" value={attendanceDetail?.loginTime  || "-"} />
+            <DetailsField label="Logout Time" value={attendanceDetail?.logoutTime || "-"} />
           </div>
 
           <div className="gap-2 mb-4">
-            <DetailsField label="Login Location" value={staffTravel.loginLocation} />
+            <DetailsField label="Login Location" value={attendanceDetail?.loginLocation || "-"}/>
           </div>
 
           {/* Second Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <DetailsField label="Start Point" value={staffTravel.startPoint} />
-            <DetailsField label="End Point" value={staffTravel.endPoint} />
+            <DetailsField label="Start Point" value={attendanceDetail?.startPoint || "-"} />
+            <DetailsField label="End Point" value={attendanceDetail?.endpoint || "-"} />
           </div>
 
           {/* Third Row */}
@@ -78,7 +84,7 @@ const StaffMapPage = () => {
             <div>
               <label className="text-sm font-medium text-gray-600">Distance Covered</label>
               <div className="bg-white border border-gray-300 rounded-[8px] px-4 py-3 flex items-center gap-2">
-                {staffTravel.distance}
+                {attendanceDetail?.distanceCoveredKm || "-"}
               </div>
             </div>
           </div>
