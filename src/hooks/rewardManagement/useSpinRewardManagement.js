@@ -88,7 +88,7 @@ const useSpinRewardManagement = () => {
 
       if (res?.success) {
         toast.success(res?.message || "Spin reward updated successfully.");
-        return res.data;
+        return res;
       } else {
         toast.error(res?.message || "Failed to update spin reward");
         return null;
@@ -162,7 +162,7 @@ const useSpinRewardManagement = () => {
         });
 
 
-        setSpinRewardList((prev) => prev.filter((item) => item._id !== id));
+        // setSpinRewardList((prev) => prev.filter((item) => item._id !== id));
 
         return true;
       } else {

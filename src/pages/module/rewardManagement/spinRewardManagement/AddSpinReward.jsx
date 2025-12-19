@@ -15,7 +15,6 @@ const validationSchema = Yup.object().shape({
   chooseReward: Yup.string().required("Please select a reward type"),
 });
 
-
 const mapRewardTypeToApi = (formValue = "") => {
   switch (formValue) {
     case "nothing":
@@ -30,7 +29,6 @@ const mapRewardTypeToApi = (formValue = "") => {
       return "";
   }
 };
-
 
 const mapRewardTypeFromApi = (apiValue = "") => {
   switch (apiValue) {
@@ -68,26 +66,23 @@ const AddSpinReward = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
   const dropdownOptions =
     userType?.map((item) => ({
       value: item,
       label: item,
     })) || [];
 
-  
   const productDrop =
     productDropdown?.map((item) => ({
       value: item._id,
       label: item.name,
     })) || [];
 
-
   const rewardTypeOptions =
     rewardTypes
       ?.map((rt) => {
-        const internalValue = mapRewardTypeFromApi(rt); 
-        if (!internalValue) return null; 
+        const internalValue = mapRewardTypeFromApi(rt);
+        if (!internalValue) return null;
         return {
           value: internalValue,
           label: rt,
@@ -178,21 +173,17 @@ const AddSpinReward = () => {
         >
           {({ values }) => (
             <Form className="space-y-6">
-              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   label="User Type"
                   name="userType"
                   fieldType="select"
-                  options={[
-                    {
-                      value: "",
-                      label: dropdownLoading
-                        ? "Loading User Type..."
-                        : "Select User Type",
-                    },
-                    ...dropdownOptions,
-                  ]}
+                  options={dropdownOptions}
+                  placeholder={
+                    dropdownLoading
+                      ? "Loading User Type..."
+                      : "Select User Type"
+                  }
                 />
                 <FormField
                   label="Reward Title"
@@ -201,14 +192,12 @@ const AddSpinReward = () => {
                 />
               </div>
 
-           
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   label="Reward Type"
                   name="chooseReward"
                   fieldType="select"
                   options={rewardTypeOptions}
-                  
                 />
               </div>
 

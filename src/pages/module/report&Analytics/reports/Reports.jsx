@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { LayoutDashboard, ChevronRight, TrendingUp, Calendar, X } from "lucide-react";
+import {
+  LayoutDashboard,
+  ChevronRight,
+  TrendingUp,
+  Calendar,
+  X,
+} from "lucide-react";
 import { Formik, Form } from "formik";
 import useReportAndAnalytics from "../../../../hooks/reportAndAnalytics/useReportAndAnalytics";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
@@ -19,6 +25,7 @@ import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import Pagination from "../../../../components/uiComponent/Pagination";
+import Select from "react-select";
 
 const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,8 +47,8 @@ const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const daysInMonth = (date) => {
@@ -53,15 +60,19 @@ const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
   };
 
   const formatDate = (date) => {
-    if (!date) return '';
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    if (!date) return "";
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
 
   const handleDateSelect = (day) => {
-    const newDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    const newDate = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      day
+    );
     setSelectedDate(newDate);
     onChange(newDate);
     setIsOpen(false);
@@ -74,19 +85,33 @@ const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
   };
 
   const nextMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
+    );
   };
 
   const prevMonth = () => {
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
+    );
   };
 
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
-  const dayNames = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  const dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
   const renderCalendar = () => {
     const days = [];
@@ -98,12 +123,14 @@ const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
     }
 
     for (let day = 1; day <= totalDays; day++) {
-      const isSelected = selectedDate &&
+      const isSelected =
+        selectedDate &&
         day === selectedDate.getDate() &&
         currentMonth.getMonth() === selectedDate.getMonth() &&
         currentMonth.getFullYear() === selectedDate.getFullYear();
 
-      const isToday = day === new Date().getDate() &&
+      const isToday =
+        day === new Date().getDate() &&
         currentMonth.getMonth() === new Date().getMonth() &&
         currentMonth.getFullYear() === new Date().getFullYear();
 
@@ -112,8 +139,12 @@ const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
           key={day}
           onClick={() => handleDateSelect(day)}
           className={`h-9 w-9 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-100
-            ${isSelected ? 'bg-yellow-500 text-white hover:bg-yellow-600' : 'text-gray-700'}
-            ${isToday && !isSelected ? 'border-2 border-yellow-500' : ''}`}
+            ${
+              isSelected
+                ? "bg-yellow-500 text-white hover:bg-yellow-600"
+                : "text-gray-700"
+            }
+            ${isToday && !isSelected ? "border-2 border-yellow-500" : ""}`}
         >
           {day}
         </button>
@@ -129,7 +160,11 @@ const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-between gap-2 px-4 py-2.5 bg-white border-2 border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors duration-200 min-w-[200px]"
       >
-        <span className={`text-sm ${selectedDate ? 'text-gray-900' : 'text-gray-400'}`}>
+        <span
+          className={`text-sm ${
+            selectedDate ? "text-gray-900" : "text-gray-400"
+          }`}
+        >
           {selectedDate ? formatDate(selectedDate) : placeholder}
         </span>
         <div className="flex items-center gap-2">
@@ -137,9 +172,7 @@ const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
             <button
               onClick={handleClear}
               className="text-gray-400 hover:text-gray-600 transition-colors"
-            >
-            
-            </button>
+            ></button>
           )}
           <Calendar size={18} className="text-gray-500" />
         </div>
@@ -153,7 +186,13 @@ const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path
+                  d="M12.5 15L7.5 10L12.5 5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </button>
             <div className="text-base font-semibold text-gray-900">
@@ -164,22 +203,29 @@ const ModernDatePicker = ({ value, onChange, placeholder = "Select Date" }) => {
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path
+                  d="M7.5 15L12.5 10L7.5 5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </button>
           </div>
 
           <div className="grid grid-cols-7 gap-1 mb-2">
-            {dayNames.map(day => (
-              <div key={day} className="h-9 w-9 flex items-center justify-center text-xs font-semibold text-gray-500">
+            {dayNames.map((day) => (
+              <div
+                key={day}
+                className="h-9 w-9 flex items-center justify-center text-xs font-semibold text-gray-500"
+              >
                 {day}
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-7 gap-1">
-            {renderCalendar()}
-          </div>
+          <div className="grid grid-cols-7 gap-1">{renderCalendar()}</div>
 
           <button
             onClick={() => {
@@ -442,6 +488,26 @@ const Reports = () => {
     { value: "yearly", label: "Yearly" },
   ];
 
+  const selectStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      borderRadius: "0.5rem",
+      borderColor: state.isFocused ? "#2563EB" : "#d1d5db",
+      boxShadow: state.isFocused ? "0 0 0 1px #2563EB" : "none",
+      minHeight: "40px",
+      fontSize: "0.875rem",
+    }),
+    menu: (provided) => ({
+      ...provided,
+      borderRadius: "0.5rem",
+      zIndex: 50,
+    }),
+    option: (provided) => ({
+      ...provided,
+      fontSize: "0.875rem",
+    }),
+  };
+
   return (
     <div className="max-w-7xl mx-auto ">
       <BreadCrumb
@@ -534,7 +600,9 @@ const Reports = () => {
         <div className="mt-4 bg-white rounded-2xl shadow-xl border border-gray-200 bg-white  mb-4 border-b ">
           <div className="p-2 sm:p-5 md:p-6">
             <div className="flex flex-row items-center justify-between mb-4">
-              <h3 className="text-lg sm:text-xl font-semibold">Revenue Chart</h3>
+              <h3 className="text-lg sm:text-xl font-semibold">
+                Revenue Chart
+              </h3>
               <div className="relative w-full sm:w-auto">
                 <ModernDatePicker
                   value={value}
@@ -560,52 +628,114 @@ const Reports = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex flex-wrap gap-3 sm:gap-4">
                         <div className="relative w-full sm:w-auto min-w-[220px]">
-                          <FormField
-                            label="Select Country"
-                            name="country"
-                            fieldType="select"
+                          <Select
                             options={countryList}
-                             isClearable={true} // Add this
+                            placeholder="Select Country"
+                            value={
+                              values.country
+                                ? countryList.find(
+                                    (opt) => opt.value === values.country
+                                  )
+                                : null
+                            }
+                            onChange={(option) =>
+                              setFieldValue(
+                                "country",
+                                option ? option.value : ""
+                              )
+                            }
+                            isClearable
+                            styles={selectStyles}
+                            className="min-w-[220px]"
                           />
                         </div>
 
                         <div className="relative w-full sm:w-auto min-w-[210px]">
-                          <FormField
-                            label="Select City"
-                            name="city"
-                            fieldType="select"
+                          <Select
                             options={cityList}
-                             isClearable={true} // Add this
+                            placeholder="Select City"
+                            value={
+                              values.city
+                                ? cityList.find(
+                                    (opt) => opt.value === values.city
+                                  )
+                                : null
+                            }
+                            onChange={(option) =>
+                              setFieldValue("city", option ? option.value : "")
+                            }
+                            isClearable
+                            styles={selectStyles}
+                            className="min-w-[210px]"
                           />
                         </div>
 
                         <div className="relative w-full sm:w-auto min-w-[210px]">
-                          <FormField
-                            label="Select Region"
-                            name="region"
-                            fieldType="select"
+                          <Select
                             options={regionList}
-                             isClearable={true} // Add this
+                            placeholder="Select Region"
+                            value={
+                              values.region
+                                ? regionList.find(
+                                    (opt) => opt.value === values.region
+                                  )
+                                : null
+                            }
+                            onChange={(option) =>
+                              setFieldValue(
+                                "region",
+                                option ? option.value : ""
+                              )
+                            }
+                            isClearable
+                            styles={selectStyles}
+                            className="min-w-[210px]"
                           />
                         </div>
 
                         <div className="relative w-full sm:w-auto min-w-[210px]">
-                          <FormField
-                            label="Select Product"
-                            name="product"
-                            fieldType="select"
+                          <Select
                             options={productList}
-                             isClearable={true} // Add this
+                            placeholder="Select Product"
+                            value={
+                              values.product
+                                ? productList.find(
+                                    (opt) => opt.value === values.product
+                                  )
+                                : null
+                            }
+                            onChange={(option) =>
+                              setFieldValue(
+                                "product",
+                                option ? option.value : ""
+                              )
+                            }
+                            isClearable
+                            styles={selectStyles}
+                            className="min-w-[210px]"
                           />
                         </div>
 
                         <div className="relative w-full sm:w-auto min-w-[220px]">
-                          <FormField
-                            label=" Select Period Type"
-                            name="periodType"
-                            fieldType="select"
+                          <Select
                             options={periodTypeOptions}
-                             isClearable={true} // Add this
+                            placeholder="Select Period Type"
+                            value={
+                              values.periodType
+                                ? periodTypeOptions.find(
+                                    (opt) => opt.value === values.periodType
+                                  )
+                                : null
+                            }
+                            onChange={(option) =>
+                              setFieldValue(
+                                "periodType",
+                                option ? option.value : ""
+                              )
+                            }
+                            isClearable
+                            styles={selectStyles}
+                            className="min-w-[220px]"
                           />
                         </div>
                       </div>
