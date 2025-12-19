@@ -51,17 +51,20 @@ function CreatePrivacyPolicy() {
   }, []);
 
   // Convert userType from dropdown hook to options format
-  const roleOptions = Array.isArray(userType) 
-    ? userType.map((type) => ({
-        label: type.name || type.label || type,
-        value: type.value || type.name || type,
-      }))
-    : [
-        { label: "User", value: "User" },
-        { label: "Staff", value: "Staff" },
-        { label: "Promoter", value: "Promoter" },
-        { label: "Admin", value: "Admin" },
-      ];
+ 
+    const roleOptions = Array.isArray(userType)
+  ? userType.map((item) => {
+      if (typeof item === "string") {
+        return { label: item, value: item };
+      }
+
+      return {
+        label: item.name,
+        value: item.name,
+      };
+    })
+  : [];
+
 
   // Validation schema
   const validationSchema = Yup.object({
