@@ -339,6 +339,9 @@ const AddEditSubAdmin = lazy(() =>
 const ViewUsersPermission = lazy(() =>
   import("../pages/module/subAdminAccess/userPermission/ViewUsersPermission")
 );
+const GetNotification = lazy(() =>
+  import("../pages/module/getnotification/GetNotification")
+);
 // ----------------------------------------------------------------------------------
 
 function PublicRoute() {
@@ -798,6 +801,12 @@ function PublicRoute() {
               <Route path="/app-management/about-us/edit" element={<AboutusEdit />} />
               {/* 404 Not Found */}
               {/* <Route path="*" element={<NotFound />} /> */}
+
+              
+              {/*----------------------------Get Notification page---------------------------------- */}
+
+              <Route path="/getnotification/getnotification" element={<GetNotification />} />
+
             </Route>
              <Route path="/no-access" element={<NotFound />} />
           </Route>

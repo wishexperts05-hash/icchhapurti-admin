@@ -87,6 +87,7 @@ const PhoneInput = ({
   id,
   countryCode,
   phoneNumber,
+  options, 
   onCountryCodeChange,
   onPhoneChange,
   error,
