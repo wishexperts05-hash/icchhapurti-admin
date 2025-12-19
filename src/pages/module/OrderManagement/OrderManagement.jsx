@@ -68,11 +68,11 @@ const OrderManagement = () => {
 
   const columns = [
     { header: "Sr.No", field: "srNo" },
-    { header: "User Name", field: "userName" },
-    { header: "Order Id", field: "orderId" },
-    { header: "User Type", field: "userType" },
-    { header: "Total Amount", field: "totalAmount" },
     { header: "Order Date", field: "orderDate" },
+    { header: "Customer Name", field: "userName" },
+    { header: "Order Id", field: "orderId" },
+    { header: "Customer Type", field: "userType" },
+    { header: "Total Amount", field: "totalAmount" },
     { header: "Status", field: "status" },
     { header: "Action", field: "action" },
   ];
