@@ -81,7 +81,7 @@ const formik = useFormik({
 
           {/* Type */}
           <div>
-            <label className="block font-medium mb-2">Domestic/International :</label>
+            <label className="block font-medium mb-2">International :</label>
             <input
               type="text"
               value="International"

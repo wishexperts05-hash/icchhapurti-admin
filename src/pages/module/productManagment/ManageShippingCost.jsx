@@ -4,7 +4,7 @@ import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import DataTable from "../../../components/uiComponent/DataTable";
 import Pagination from "../../../components/uiComponent/Pagination";
-import { FaEdit } from "react-icons/fa";
+import { FaRegEdit } from "react-icons/fa";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 import useProductManagement from "../../../hooks/productList/useProductManagment";
 
@@ -65,7 +65,10 @@ const ManageShippingCost = () => {
 
   const actions = [
     {
-      icon: <FaEdit className="text-green-600" />,
+      icon:  <FaRegEdit
+                    className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
+                    title="Edit"
+                />,
       title: "Edit",
       onClick: handleEdit,
     },

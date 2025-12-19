@@ -16,7 +16,7 @@ const EditInternationalShippingCost = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const { fetchInternationalShippingRateById, updateInternationalShippingRate } =
+  const { fetchDomesticShippingRateById, updateDomesticShippingRate } =
     useProductManagement();
 
   // -----------------------------
@@ -24,7 +24,7 @@ const EditInternationalShippingCost = () => {
   // -----------------------------
   const formik = useFormik({
     initialValues: {
-      type: "International",
+      type: "Domestic",
       country: "",
       category: "",
       currency: "",
@@ -36,7 +36,7 @@ const EditInternationalShippingCost = () => {
         shippingCost: values.cost.toString(), // keep string as API expects
       };
 
-      const res = await updateInternationalShippingRate(id, payload);
+      const res = await updateDomesticShippingRate(id, payload);
 
       if (res?.success) {
         toast.success("International shipping rate updated successfully");
@@ -52,12 +52,13 @@ const EditInternationalShippingCost = () => {
   // -----------------------------
   useEffect(() => {
     const loadShippingData = async () => {
-      const data = await fetchInternationalShippingRateById(id);
+      const data = await fetchDomesticShippingRateById(id);
+      
 
       if (data) {
         formik.setValues({
           type: "International",
-          country: data.country || "",
+          country: data.region || "",
           category: data.category || "",
           currency: data.currency || "",
           cost: data.shippingCost?.toString() || "",
@@ -74,11 +75,11 @@ const EditInternationalShippingCost = () => {
         linkText={[
           { text: "Product Management", href: "/product-management" },
           { text: "Manage Shipping Cost", href: "/product-management/shipping-cost" },
-          { text: "Edit International Shipping Cost" },
+          { text: "Edit Domestic Shipping Cost" },
         ]}
       />
 
-      <PagePath2 title="Edit International Shipping Cost" />
+      <PagePath2 title="Edit Domestic Shipping Cost" />
 
       <form
         onSubmit={formik.handleSubmit}
@@ -90,7 +91,7 @@ const EditInternationalShippingCost = () => {
           <div>
             <label className="block font-medium mb-2">Type :</label>
             <input
-              value="International"
+              value="Domestic"
               readOnly
               className="w-full border rounded-md px-3 py-2 bg-gray-100 cursor-not-allowed"
             />
