@@ -106,7 +106,7 @@ const EditStaff = () => {
     state: staffDetail?.staff?.state || "",
     city: staffDetail?.staff?.city || "",
     address: staffDetail?.staff?.address || "",
-
+    bankName : staffDetail?.staff?.bankDetails?.bankName || "",
     referralCode: staffDetail?.staff?.referralCode || "",
     profileImage: staffDetail?.staff?.profileImage || "",
     accountNumber: staffDetail?.staff?.bankDetails?.accountNumber || "",

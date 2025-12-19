@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -8,8 +8,7 @@ import PagePath2 from "../../../components/uiComponent/PagePath2";
 import { Select } from "@mui/material";
 import useProductManagement from "../../../hooks/productList/useProductManagment";
 import { toast } from "react-toastify";
-
-
+import useDropdown from "../../../hooks/dropdown/useDropdown";
 
 // 🔹 Validation Schema
 const validationSchema = Yup.object({
@@ -21,31 +20,38 @@ const validationSchema = Yup.object({
 const AddShippingCost = () => {
   const navigate = useNavigate();
   const { addDomesticShippingRate } = useProductManagement();
+  const { fetchAllRegion, region, loadingRrgion } = useDropdown();
+
+  useEffect(() => {
+    fetchAllRegion();
+  }, []);
+
+  console.log("region", region);
   // 🔹 Formik Setup
   const formik = useFormik({
-  initialValues: {
-    type: "Domestic",
-    zone: "North",
-    cost: "",
-  },
+    initialValues: {
+      type: "Domestic",
+      zone: "",
+      cost: "",
+    },
 
-  validationSchema,
-  onSubmit: async (values) => {
-    const payload = {
-      region: values.zone,
-      shippingCost: Number(values.cost.replace("₹", "").trim())
-    };
+    validationSchema,
+    onSubmit: async (values) => {
+      const payload = {
+        region: values.zone,
+        shippingCost: Number(values.cost.replace("₹", "").trim()),
+      };
 
-    const res = await addDomesticShippingRate(payload);
+      const res = await addDomesticShippingRate(payload);
 
-    if (res?.success) {
-      toast.success("Domestic Shipping Cost Added Successfully!");
-      navigate("/product-management/shipping-cost");
-    } else {
-      toast.error(res?.message || "Failed to add shipping cost");
-    }
-  },
-});
+      if (res?.success) {
+        toast.success("Domestic Shipping Cost Added Successfully!");
+        navigate("/product-management/shipping-cost");
+      } else {
+        toast.error(res?.message || "Failed to add shipping cost");
+      }
+    },
+  });
 
   return (
     <div>
@@ -53,20 +59,29 @@ const AddShippingCost = () => {
       <BreadCrumb
         linkText={[
           { text: "Product Management", href: "/product-management" },
-          { text: "Manage Shipping Cost", href: "/product-management/shipping-cost" },
-          
-          { text: "Add Shipping Cost", href: "/product-management/shipping-cost/add-shipping-cost" },
+          {
+            text: "Manage Shipping Cost",
+            href: "/product-management/shipping-cost",
+          },
+
+          {
+            text: "Add Shipping Cost",
+            href: "/product-management/shipping-cost/add-shipping-cost",
+          },
         ]}
       />
 
       {/* Page Title */}
       <PagePath2 title="Add Shipping Cost" />
 
-      <form onSubmit={formik.handleSubmit} className="mt-6 bg-white p-6 rounded shadow">
+      <form
+        onSubmit={formik.handleSubmit}
+        className="mt-6 bg-white p-6 rounded shadow"
+      >
         {/* Form Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Domestic/International */}
-         <div>
+          <div>
             <label className="block font-medium mb-2">International :</label>
             <input
               type="text"
@@ -86,12 +101,14 @@ const AddShippingCost = () => {
               onBlur={formik.handleBlur}
               className="w-full border rounded-md px-3 py-2"
             >
-              <option value="North">North</option>
-              <option value="South">South</option>
-              <option value="East">East</option>
-              <option value="West">West</option>
-              <option value="Center">Center</option>
+
+              {region?.map((item, index) => (
+                <option key={index} value={item}>
+                  {item}
+                </option>
+              ))}
             </select>
+
             {formik.touched.zone && formik.errors.zone && (
               <p className="text-red-500 text-sm mt-1">{formik.errors.zone}</p>
             )}

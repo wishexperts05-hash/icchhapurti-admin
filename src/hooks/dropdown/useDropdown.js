@@ -32,9 +32,10 @@ const useDropdown = () => {
   const [cities, setCities] = useState([]);
 
 
-const [loadingCities, setLoadingCities] = useState(false);
 
-
+  const [loadingCities, setLoadingCities] = useState(false);
+  const [loadingRegion,setLoadingRegion]=useState(false);
+ 
   const [salesType, setSalesType] = useRecoilState(salesTypeAtom);
   const [userType, setUserType] = useRecoilState(userTypeAtom);
   const [productDropdown, setProductDropdown] = useRecoilState(productDropdownAtom);
@@ -44,11 +45,12 @@ const [loadingCities, setLoadingCities] = useState(false);
   const [countries, setCountries] = useRecoilState(countriesAtom);
   const [bannerTypes, setBannerTypes] = useRecoilState(bannerTypesAtom);
   const [appTypes, setAppTypes] = useRecoilState(appTypesAtom);
+  const [region ,setRegion]=useState([]);
   const [banklist ,setBanklist]  =useState ([]);
   const [states, setStates] = useState([]);
   const [loadingStates, setLoadingStates] = useState(false);
   const [countryCode,setCountryCode] = useState();
-    const [loadingCode, setLoadingCode] = useState(false);
+  const [loadingCode, setLoadingCode] = useState(false);
 
   
 
@@ -326,8 +328,28 @@ const fetchCitiesByState = async (countryName, stateName) => {
       setLoadingBankList(false);
     }
   };
+
+// -----------------------------Region Dropdown----------------------------------- //
+  const fetchAllRegion = async () => {
+  setLoadingRegion(true);
+  try {
+    const res = await fetchData({
+      method: "GET",
+      url: `${conf.apiBaseUrl}admin/shipping/available-domestic-regions`,
+       headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+    });
+    if (res?.success) {
+      setRegion(res.regions|| []);
+    }
+  } finally {
+    setLoadingRegion(false);
+  }
+};
+
   const loading =
-    loadingSales ||
+    loadingSales || loadingRegion ||
     loadingUser ||
     loadingProduct ||
     loadingOrderStatus ||
@@ -337,7 +359,8 @@ const fetchCitiesByState = async (countryName, stateName) => {
 
   return {
     loading,
-
+    region,
+   fetchAllRegion,
     fetchCitiesByState,
     fetchSalesType,
     fetchProductCategory,
