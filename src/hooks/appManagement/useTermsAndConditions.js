@@ -71,7 +71,7 @@ const useTermsAndConditions = () => {
     setLoading(true);
     try {
       const res = await fetchData({
-        method: "POST",
+        method: "PUT",
         url: `${conf.apiBaseUrl}admin/termsAndCondition/createOrUpdate`,
         data: formdata,
       });
