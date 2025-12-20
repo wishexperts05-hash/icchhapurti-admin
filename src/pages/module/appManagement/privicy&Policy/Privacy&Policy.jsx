@@ -51,7 +51,7 @@ function PrivacyPolicy() {
   }, []);
 
   const onPageChange = (newPage) => setPage(newPage);
-  
+
   const onItemsPerPageChange = (newLimit) => {
     setLimit(newLimit);
     setPage(1); // Reset to first page when changing items per page
@@ -87,15 +87,19 @@ function PrivacyPolicy() {
     {
       icon: <FaEye className="text-yellow-600" />,
       title: "View",
-      onClick: (row) => navigate(`/app-management/privacy-policy/view/${row._id}`),
+      onClick: (row) =>
+        navigate(`/app-management/privacy-policy/view/${row._id}`),
     },
     {
-      icon: <FaRegEdit
-                          className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
-                          title="Edit"
-                      />,
+      icon: (
+        <FaRegEdit
+          className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
+          title="Edit"
+        />
+      ),
       title: "Edit",
-      onClick: (row) => navigate(`/app-management/edit-privacy-policy/${row._id}`),
+      onClick: (row) =>
+        navigate(`/app-management/edit-privacy-policy/${row._id}`),
     },
     {
       icon: <Trash2 className="w-5 h-5 text-red-600" />,
@@ -121,56 +125,34 @@ function PrivacyPolicy() {
   return (
     <div className="bg-[#F9F9F9] min-h-screen">
       <BreadCrumb
-        linkText={[
-          { text: "App Management" },
-          { text: "Privacy Policy" },
-        ]}
+        linkText={[{ text: "App Management" }, { text: "Privacy Policy" }]}
       />
 
       <PagePath2
         title="Privacy Policy"
-        showSearch
         showAddButton
-        placeholder="Search by Role"
-        searchTerm={searchTerm}
         handleSearchTerm={(e) => setSearchTerm(e.target.value)}
         addButtonText="Create Privacy Policy"
         onClick={() => navigate("/app-management/create-privacy-policy")}
       />
 
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <LoaderSpinner />
-          </div>
-        ) : mappedPolicies.length === 0 ? (
-          <div className="flex flex-col justify-center items-center py-20 text-gray-500">
-            <p className="text-lg">No Privacy Policies found</p>
-            {searchTerm && (
-              <p className="text-sm mt-2">Try adjusting your search criteria</p>
-            )}
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <div className="border border-gray-300 rounded-t-xl shadow-sm overflow-hidden">
-              <DataTable
-                columns={columns}
-                data={mappedPolicies}
-                currentPage={currentPage}
-                usersPerPage={limit}
-                actions={actions}
-              />
-            </div>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={totalPolicies}
-              itemsPerPage={limit}
-              onPageChange={onPageChange}
-              onItemsPerPageChange={onItemsPerPageChange}
-            />
-          </div>
-        )}
+        <DataTable
+          columns={columns}
+          data={mappedPolicies}
+          currentPage={currentPage}
+          usersPerPage={limit}
+          actions={actions}
+        />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalPolicies}
+          itemsPerPage={limit}
+          onPageChange={onPageChange}
+          onItemsPerPageChange={onItemsPerPageChange}
+        />
+        //{" "}
       </div>
     </div>
   );
