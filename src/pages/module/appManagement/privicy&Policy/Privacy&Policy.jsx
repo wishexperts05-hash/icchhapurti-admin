@@ -78,8 +78,8 @@ function PrivacyPolicy() {
   const columns = [
     { header: "Sr.No.", field: "srNo" },
     { header: "Role", field: "role" },
-    { header: "Created Date", field: "createdAt" },
-    { header: "Updated Date", field: "updatedAt" },
+    // { header: "Created Date", field: "createdAt" },
+    // { header: "Updated Date", field: "updatedAt" },
     { header: "Action", field: "action" },
   ];
 
@@ -101,11 +101,11 @@ function PrivacyPolicy() {
       onClick: (row) =>
         navigate(`/app-management/edit-privacy-policy/${row._id}`),
     },
-    {
-      icon: <Trash2 className="w-5 h-5 text-red-600" />,
-      title: "Delete",
-      onClick: (row) => handleDelete(row._id),
-    },
+    // {
+    //   icon: <Trash2 className="w-5 h-5 text-red-600" />,
+    //   title: "Delete",
+    //   onClick: (row) => handleDelete(row._id),
+    // },
   ];
 
   // Extract data from the API response structure
