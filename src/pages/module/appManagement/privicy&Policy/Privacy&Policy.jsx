@@ -152,7 +152,7 @@ function PrivacyPolicy() {
           onPageChange={onPageChange}
           onItemsPerPageChange={onItemsPerPageChange}
         />
-        //{" "}
+        
       </div>
     </div>
   );
