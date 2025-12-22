@@ -107,10 +107,12 @@ function TermsAndConditions() {
         navigate(`/app-management/terms-and-conditions/view/${row._id}`),
     },
     {
-      icon: <FaRegEdit
-                          className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
-                          title="Edit"
-                      />,
+      icon: (
+        <FaRegEdit
+          className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
+          title="Edit"
+        />
+      ),
       title: "Edit",
       onClick: (row) =>
         navigate(`/app-management/edit-terms-and-conditions/${row._id}`),
@@ -133,49 +135,29 @@ function TermsAndConditions() {
 
       <PagePath2
         title="Terms and Conditions"
-        showSearch
         showAddButton
-        placeholder="Search by Role"
-        searchTerm={searchTerm}
         handleSearchTerm={(e) => setSearchTerm(e.target.value)}
         addButtonText="Create Terms & Conditions"
         onClick={() => navigate("/app-management/create-terms-and-conditions")}
       />
 
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <LoaderSpinner />
-          </div>
-        ) : tableData.length === 0 ? (
-          <div className="flex flex-col justify-center items-center py-20 text-gray-500">
-            <p className="text-lg">No Terms and Conditions found</p>
-            {searchTerm && (
-              <p className="text-sm mt-2">Try adjusting your search criteria</p>
-            )}
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <div className="border border-gray-300 rounded-t-xl shadow-sm overflow-hidden">
-              <DataTable
-                columns={columns}
-                data={tableData}
-                currentPage={page}
-                usersPerPage={limit}
-                actions={actions}
-              />
-            </div>
-            <Pagination
-              currentPage={page}
-              totalPages={termsList?.totalPages || 1}
-              totalItems={termsList?.totalTerms || 0}
-              itemsPerPage={limit}
-              onPageChange={onPageChange}
-              onItemsPerPageChange={onItemsPerPageChange}
-            />
-          </div>
-        )}
+        <DataTable
+          columns={columns}
+          data={tableData}
+          currentPage={page}
+          usersPerPage={limit}
+          actions={actions}
+        />
       </div>
+      <Pagination
+        currentPage={page}
+        totalPages={termsList?.totalPages || 1}
+        totalItems={termsList?.totalTerms || 0}
+        itemsPerPage={limit}
+        onPageChange={onPageChange}
+        onItemsPerPageChange={onItemsPerPageChange}
+      />
     </div>
   );
 }
