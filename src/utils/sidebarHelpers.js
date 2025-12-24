@@ -429,7 +429,7 @@ export const allNavigationItems = [
       },
       {
         id: 67,
-        title: "Faq",
+        title: "FAQ",
         url: "/app-management/faq",
         icon: otherSettingsIcon,
         badge: null,
