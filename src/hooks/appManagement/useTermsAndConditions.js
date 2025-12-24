@@ -94,7 +94,7 @@ const useTermsAndConditions = () => {
     try {
       // Using POST method for createOrUpdate endpoint
       const res = await fetchData({
-        method: "POST",
+        method: "PUT",
         url: `${conf.apiBaseUrl}admin/termsAndCondition/createOrUpdate`,
         data: { ...data, id }, // Include ID in the data payload for update
       });
