@@ -373,7 +373,7 @@ export const allNavigationItems = [
   {
     id: 21,
     title: "App Management",
-    url: "/app-management",
+    url: "/app-management/about-us",
     icon: appManagementIcon,
     badge: null,
     color: "gray",
@@ -429,7 +429,7 @@ export const allNavigationItems = [
       },
       {
         id: 67,
-        title: "Faq",
+        title: "FAQ",
         url: "/app-management/faq",
         icon: otherSettingsIcon,
         badge: null,
