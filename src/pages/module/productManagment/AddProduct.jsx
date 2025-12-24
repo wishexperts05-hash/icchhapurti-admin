@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
+import JoditEditor from "jodit-pro-react";
+import { useRef } from "react";
+
 import * as Yup from "yup";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
@@ -11,18 +14,59 @@ import Added from '../../../assets/Added.png';
 import useProductManagement from "../../../hooks/productList/useProductManagment";
 const AddProduct = () => {
   const [productImages, setProductImages] = useState([]);
+const [productVideos, setProductVideos] = useState([]);
   const [easyReturn, setEasyReturn] = useState(true);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [visible, setVisible] = useState(true);
   const { addProduct } = useProductManagement();
   const navigate = useNavigate();
+  const editorRefs = useRef([]);
+
+const editorConfig = {
+  readonly: false,
+  placeholder: "Write product details...",
+  minHeight: 200,
+  buttons: [
+    "bold",
+    "italic",
+    "underline",
+    "|",
+    "ul",
+    "ol",
+    "|",
+    "font",
+    "fontsize",
+    "|",
+    "align",
+    "undo",
+    "redo",
+    "|",
+    "link",
+    "table",
+    "hr",
+    "fullsize",
+  ],
+  removeButtons: ["file", "video", "ai-assistant"],
+  showCharsCounter: false,
+  showWordsCounter: false,
+  showXPathInStatusbar: false,
+  toolbarAdaptive: false,
+};
+
   //  Formik setup
   const formik = useFormik({
     initialValues: {
       category: "",
       name: "",
       price: "",
-      description: "",
+      // description: "",
+
+        descriptions: [
+      {
+        title: "",
+        content: "",
+      },
+    ],
       returnable: "",
     },
     validationSchema: Yup.object({
@@ -32,7 +76,7 @@ const AddProduct = () => {
         .typeError("Price must be a number")
         .positive("Price must be positive")
         .required("Price is required"),
-      description: Yup.string().required("Description is required"),
+      // description: Yup.string().required("Description is required"),
       returnable: Yup.string()
         // .min(0, "Must be 0 or greater")
         .required("Return days are required"),
@@ -40,9 +84,10 @@ const AddProduct = () => {
   onSubmit: async (values) => {
   const formData = new FormData();
 
-  Object.keys(values).forEach(key => {
-    formData.append(key, values[key]);
-  });
+  formData.append(
+    "descriptions",
+    JSON.stringify(values.descriptions)
+  );
 
   formData.append("easyReturn", easyReturn);
   formData.append("visible", visible);
@@ -50,6 +95,12 @@ const AddProduct = () => {
   productImages.forEach(img => {
     formData.append("images", img);
   });
+
+        // Append videos to form data
+      productVideos.forEach(video => {
+        formData.append("videos", video);
+      });
+
 
   await addProduct(formData);
   // setShowSuccessModal(true);
@@ -66,10 +117,36 @@ const handleImageUpload = (e) => {
 };
 
 
+  // Video upload logic
+  const handleVideoUpload = (e) => {
+    const files = Array.from(e.target.files);
+    setProductVideos((prev) => [...prev, ...files]);
+  };
+
+    // Remove video logic
+  const handleRemoveVideo = (index) => {
+    setProductVideos((prev) => prev.filter((_, i) => i !== index));
+  };
+
   //  Remove image logic
   const handleRemoveImage = (index) => {
     setProductImages((prev) => prev.filter((_, i) => i !== index));
   };
+
+
+  const addDescription = () => {
+  formik.setFieldValue("descriptions", [
+    ...formik.values.descriptions,
+    { title: "", content: "" },
+  ]);
+};
+
+const removeDescription = (index) => {
+  const updated = [...formik.values.descriptions];
+  updated.splice(index, 1);
+  formik.setFieldValue("descriptions", updated);
+};
+
 
   return (
     <div>
@@ -144,7 +221,7 @@ const handleImageUpload = (e) => {
         </div>
 
         {/* Description */}
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <label className="block text-gray-700 font-medium mb-2">
             Description:
           </label>
@@ -160,7 +237,7 @@ const handleImageUpload = (e) => {
           {formik.touched.description && formik.errors.description && (
             <p className="text-red-500 text-sm">{formik.errors.description}</p>
           )}
-        </div>
+        </div> */}
 
         {/* Product Images */}
         <div className="mt-4">
@@ -201,6 +278,109 @@ const handleImageUpload = (e) => {
             </label>
           </div>
         </div>
+
+         {/* Product Videos */}
+        <div className="mt-4">
+          <label className="block text-gray-700 font-medium mb-2">Product Videos:</label>
+          <div className="flex flex-wrap gap-4">
+            {productVideos.map((video, index) => (
+              <div key={index} className="relative w-24 h-24 border rounded-lg overflow-hidden">
+                <video
+                  src={URL.createObjectURL(video)}
+                  controls
+                  className="object-cover w-full h-full"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveVideo(index)}
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 text-xs"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+            ))}
+            <label
+              htmlFor="upload-video"
+              className="w-24 h-24 flex items-center justify-center border border-dashed border-gray-400 rounded-lg cursor-pointer hover:bg-gray-100"
+            >
+              <FaPlus className="text-gray-500" />
+              <input
+                id="upload-video"
+                type="file"
+                accept="video/*"
+                multiple
+                className="hidden"
+                onChange={handleVideoUpload}
+              />
+            </label>
+          </div>
+        </div>
+
+{/* Product Descriptions */}
+<div className="mt-6">
+  <div className="flex justify-between items-center mb-2">
+    <label className="block text-gray-700 font-medium">
+      Product Details
+    </label>
+    <button
+      type="button"
+      onClick={addDescription}
+      className="flex items-center gap-1 text-orange-600 font-medium"
+    >
+      <FaPlus /> Add Details
+    </button>
+  </div>
+
+  {formik.values.descriptions.map((desc, index) => (
+    <div
+      key={index}
+      className="border rounded-lg p-4 mb-3 relative"
+    >
+      {/* Remove */}
+      {formik.values.descriptions.length > 1 && (
+        <button
+          type="button"
+          onClick={() => removeDescription(index)}
+          className="absolute top-2 right-2 text-red-500"
+        >
+          <FaTimes />
+        </button>
+      )}
+
+      {/* Title */}
+      <input
+        type="text"
+        placeholder="Title (e.g. Material, Usage, Care)"
+        value={desc.title}
+        onChange={(e) =>
+          formik.setFieldValue(
+            `descriptions[${index}].title`,
+            e.target.value
+          )
+        }
+        className="w-full border rounded-md p-2 mb-2"
+      />
+
+      {/* Description */}
+<div className="border rounded-lg overflow-hidden">
+  <JoditEditor
+    ref={(el) => (editorRefs.current[index] = el)}
+    value={desc.content}
+    config={editorConfig}
+    tabIndex={1}
+    onBlur={(newContent) =>
+      formik.setFieldValue(
+        `descriptions[${index}].content`,
+        newContent
+      )
+    }
+    onChange={() => {}}
+  />
+</div>
+
+    </div>
+  ))}
+</div>
 
         {/* Easy Return Toggle */}
         <div className="flex items-center gap-2 mt-6">
