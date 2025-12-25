@@ -10,6 +10,7 @@ import useDropdown from "../../../../hooks/dropdown/useDropdown";
 import useBanner from "../../../../hooks/appManagement/useManageBanner";
 import { IoMdClose } from "react-icons/io";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
+import { useRef } from "react";
 
 function CreateBanner() {
   const navigate = useNavigate();
@@ -48,29 +49,33 @@ function CreateBanner() {
       fetchBannerTypesDropdown(appTypeFromDetail);
     }
   }, [bannerDetail?.data?.appType]);
+  // const isInitialized = useRef(false);
 
   // ---------- validation ----------
   const validationSchema = Yup.object({
     appType: Yup.string().required("Service Type is required"),
     bannerType: Yup.string().required("Banner Type is required"),
-    bannerMedia: Yup.array().min(1, "At least one video is required"),
+    // bannerMedia: Yup.array()
+    //   .test(
+    //     "at-least-one-media",
+    //     "Please upload at least one image or video",
+    //     (value) => Array.isArray(value) && value.length > 0
+    //   ),
   });
+  const formikRef = useRef(null);
 
   // ---------- initial values (supports edit) ----------
   const getInitialValues = () => {
     if (id && bannerDetail?.data) {
       const data = bannerDetail.data;
-      const existingMedia = (data.mediaUrls || [])
-        .filter((url) => url.match(/\.(mp4|webm|ogg|mov)$/i)) // Only videos
-        .map((url) => ({
-          url,
-          type: "video",
-        }));
 
       return {
         appType: data.appType || "",
         bannerType: data.bannerType || "",
-        bannerMedia: existingMedia,
+        bannerMedia: [
+          ...(data.videos || []).map((url) => ({ url, type: "video" })),
+          ...(data.images || []).map((url) => ({ url, type: "image" })),
+        ],
       };
     }
 
@@ -86,7 +91,9 @@ function CreateBanner() {
     if (input == null) return "";
     if (typeof input === "object" && !input.target) {
       if (Array.isArray(input)) {
-        return input.map((it) => (typeof it === "object" ? it.value ?? it.label ?? it : it));
+        return input.map((it) =>
+          typeof it === "object" ? it.value ?? it.label ?? it : it
+        );
       }
       return input.value ?? input.label ?? "";
     }
@@ -95,40 +102,111 @@ function CreateBanner() {
   };
 
   // ---------- format backend options to { label, value } ----------
-  const formatOptions = (options) => {
-    if (!options) return [];
-    if (!Array.isArray(options)) return [];
-    if (options.length === 0) return [];
+  const formatOptions = (options, currentValue) => {
+    let formatted = [];
 
-    if (typeof options[0] === "string") {
-      return options.map((v) => ({ label: v, value: v }));
+    if (Array.isArray(options)) {
+      if (typeof options[0] === "string") {
+        formatted = options.map((v) => ({ label: v, value: v }));
+      } else if (typeof options[0] === "object") {
+        formatted = options.map((o) => ({
+          label: o.label ?? o.name ?? o.bannerType,
+          value: o.value ?? o.bannerType,
+        }));
+      }
     }
 
-    if (typeof options[0] === "object") {
-      return options.map((o) => ({
-        label: o.label ?? o.name ?? o.title ?? o.bannerType ?? JSON.stringify(o),
-        value: o.value ?? o.id ?? o.bannerType ?? o.name ?? o.title ?? JSON.stringify(o),
-      }));
+    // 🔥 ADD CURRENT VALUE IF MISSING (UPDATE MODE)
+    if (currentValue && !formatted.some((opt) => opt.value === currentValue)) {
+      formatted.unshift({
+        label: currentValue,
+        value: currentValue,
+      });
     }
 
-    return [];
+    return formatted;
   };
+
+  useEffect(() => {
+    if (
+      id &&
+      bannerDetail?.data?.bannerType &&
+      Array.isArray(bannerTypes) &&
+      bannerTypes.length > 0
+    ) {
+      // Ensure bannerType exists in options
+      const match = bannerTypes.find(
+        (b) =>
+          b.value === bannerDetail.data.bannerType ||
+          b.label === bannerDetail.data.bannerType
+      );
+
+      if (match) {
+        // Formik will reinitialize, but this guarantees correct selection
+        // No need to reset appType here
+      }
+    }
+  }, [id, bannerTypes, bannerDetail?.data?.bannerType]);
 
   // ---------- submit ----------
   const handleSubmit = async (values, formikHelpers) => {
     try {
       const formData = new FormData();
+
       formData.append("appType", values.appType);
       formData.append("bannerType", values.bannerType);
 
-      const newFiles = values.bannerMedia.filter((m) => m.file);
-      const existingUrls = values.bannerMedia.filter((m) => m.url && !m.file);
+      // Separate new files (with file object) from existing URLs (with url property)
+      const newVideos = values.bannerMedia.filter(
+        (m) => m.file && m.type === "video"
+      );
+      const newImages = values.bannerMedia.filter(
+        (m) => m.file && m.type === "image"
+      );
 
-      newFiles.forEach((media) => formData.append("banners", media.file));
-      existingUrls.forEach((m) => formData.append("existingMediaUrls", m.url));
+      const existingVideos = values.bannerMedia
+        .filter((m) => m.url && m.type === "video")
+        .map((m) => m.url);
 
-      if (id) await updateBanner(id, formData);
-      else await createBanner(formData);
+      const existingImages = values.bannerMedia
+        .filter((m) => m.url && m.type === "image")
+        .map((m) => m.url);
+
+      // 🔹 Debug log (remove after testing)
+      console.log("📤 Submitting:", {
+        newVideos: newVideos.length,
+        newImages: newImages.length,
+        existingVideos,
+        existingImages,
+        totalMedia: values.bannerMedia.length,
+      });
+
+      // Append new files
+      newVideos.forEach((m) => formData.append("videos", m.file));
+      newImages.forEach((m) => formData.append("images", m.file));
+
+      if (id) {
+        // 🔹 CRITICAL: Always send existing arrays, even if empty
+        // This tells backend to DELETE items that aren't in these arrays
+        formData.append("existingImages", JSON.stringify(existingImages));
+        formData.append("existingVideos", JSON.stringify(existingVideos));
+
+        // Debug FormData
+        console.log("📋 FormData for UPDATE:");
+        for (let pair of formData.entries()) {
+          console.log(
+            pair[0],
+            ":",
+            pair[1] instanceof File ? `File: ${pair[1].name}` : pair[1]
+          );
+        }
+
+        await updateBanner(id, formData);
+      } else {
+        // CREATE mode - no existing files
+        console.log("📋 FormData for CREATE");
+        await createBanner(formData);
+      }
 
       formikHelpers.setSubmitting(false);
       navigate("/app-management/manage-banner");
@@ -137,6 +215,25 @@ function CreateBanner() {
       formikHelpers.setSubmitting(false);
     }
   };
+  useEffect(() => {
+    if (
+      id &&
+      bannerDetail?.data?.bannerType &&
+      bannerTypes.length > 0 &&
+      formikRef.current
+    ) {
+      const bannerTypeValue = bannerDetail.data.bannerType;
+
+      // same data source as BannerDetails
+      const match = bannerTypes.find(
+        (b) => b.value === bannerTypeValue || b.label === bannerTypeValue
+      );
+
+      if (match) {
+        formikRef.current.setFieldValue("bannerType", match.value);
+      }
+    }
+  }, [id, bannerDetail?.data?.bannerType, bannerTypes]);
 
   return (
     <div className="bg-[#F9F9F9] min-h-screen">
@@ -169,6 +266,7 @@ function CreateBanner() {
           </div>
         ) : (
           <Formik
+            innerRef={formikRef}
             enableReinitialize
             initialValues={getInitialValues()}
             validationSchema={validationSchema}
@@ -207,9 +305,14 @@ function CreateBanner() {
                       label="Banner Type"
                       name="bannerType"
                       fieldType="select"
-                      options={formatOptions(bannerTypes)}
+                      options={formatOptions(
+                        bannerTypes,
+                        bannerDetail?.data?.bannerType
+                      )}
                       placeholder={
-                        values.appType ? "Select Banner Type" : "Select Service Type First"
+                        values.appType
+                          ? "Select Banner Type"
+                          : "Select Service Type First"
                       }
                       disabled={!values.appType}
                       value={values.bannerType}
@@ -219,14 +322,16 @@ function CreateBanner() {
 
                   {/* VIDEO UPLOAD */}
                   <div className="flex flex-col gap-3">
-                    <label className="text-sm font-medium">Upload Banner Media</label>
+                    <label className="text-sm font-medium">
+                      Upload Banner Media
+                    </label>
 
                     <div>
                       <label
                         htmlFor="banner-upload"
                         className="text-yellow-500 underline cursor-pointer hover:text-yellow-600 transition-colors"
                       >
-                         Upload video
+                        Upload video
                       </label>
                     </div>
 
@@ -242,51 +347,166 @@ function CreateBanner() {
                           file,
                           type: "video",
                         }));
-                        setFieldValue("bannerMedia", [...values.bannerMedia, ...newMedia]);
+                        setFieldValue("bannerMedia", [
+                          ...values.bannerMedia,
+                          ...newMedia,
+                        ]);
                       }}
                     />
 
                     {/* PREVIEW */}
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
-                      {values.bannerMedia?.length > 0 ? (
+                      {values.bannerMedia?.some((m) => m.type === "video") ? (
                         <div className="flex flex-wrap gap-4 justify-center">
-                          {values.bannerMedia.map((media, idx) => {
-                            const src = media.file ? URL.createObjectURL(media.file) : media.url;
+                          {values.bannerMedia
+                            .filter((m) => m.type === "video")
+                            .map((media, idx) => {
+                              const src = media.file
+                                ? URL.createObjectURL(media.file)
+                                : media.url;
 
-                            return (
-                              <div key={idx} className="relative group">
-                                <video src={src} className="h-24 w-24 rounded-lg object-cover border shadow-sm" />
+                              return (
+                                <div key={idx} className="relative group">
+                                  <video
+                                    src={src}
+                                    className="h-24 w-24 rounded-lg object-cover border shadow-sm"
+                                  />
 
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    const updated = values.bannerMedia.filter((_, i) => i !== idx);
-                                    setFieldValue("bannerMedia", updated);
-                                  }}
-                                  className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1"
-                                >
-                                  <IoMdClose />
-                                </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const updated = values.bannerMedia.filter(
+                                        (_, i) => i !== idx
+                                      );
+                                      setFieldValue("bannerMedia", updated);
+                                    }}
+                                    className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1"
+                                  >
+                                    <IoMdClose />
+                                  </button>
 
-                                <div className="absolute top-1 left-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
-                                   video
+                                  <div className="absolute top-1 left-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
+                                    video
+                                  </div>
                                 </div>
-                              </div>
-                            );
-                          })}
+                              );
+                            })}
                         </div>
                       ) : (
-                        <p className="text-gray-400 text-sm text-center">No Videos Selected</p>
+                        <p className="text-gray-400 text-sm text-center">
+                          No Videos Selected
+                        </p>
                       )}
                     </div>
 
-                    <ErrorMessage name="bannerMedia" component="div" className="text-red-500 text-sm" />
+                    <ErrorMessage
+                      name="bannerMedia"
+                      component="div"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+
+                  {/* IMAGE UPLOAD */}
+                  <div className="flex flex-col gap-3">
+                    <label className="text-sm font-medium">
+                      Upload Banner Images
+                    </label>
+
+                    <div>
+                      <label
+                        htmlFor="image-upload"
+                        className="text-yellow-500 underline cursor-pointer hover:text-yellow-600 transition-colors"
+                      >
+                        Upload images
+                      </label>
+                    </div>
+
+                    <input
+                      type="file"
+                      id="image-upload"
+                      className="hidden"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files || []);
+                        const newMedia = files.map((file) => ({
+                          file,
+                          type: "image",
+                        }));
+                        setFieldValue("bannerMedia", [
+                          ...values.bannerMedia,
+                          ...newMedia,
+                        ]);
+                      }}
+                    />
+
+                    {/* IMAGE PREVIEW */}
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                      {values.bannerMedia?.some((m) => m.type === "image") ? (
+                        <div className="flex flex-wrap gap-4 justify-center">
+                          {values.bannerMedia
+                            .filter((m) => m.type === "image")
+                            .map((media, idx) => {
+                              const src = media.file
+                                ? URL.createObjectURL(media.file)
+                                : media.url;
+
+                              return (
+                                <div key={idx} className="relative group">
+                                  <img
+                                    src={src}
+                                    alt="banner"
+                                    className="h-24 w-24 rounded-lg object-cover border shadow-sm"
+                                  />
+
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const updated = values.bannerMedia.filter(
+                                        (_, i) => i !== idx
+                                      );
+                                      setFieldValue("bannerMedia", updated);
+                                    }}
+                                    className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1"
+                                  >
+                                    <IoMdClose />
+                                  </button>
+
+                                  <div className="absolute top-1 left-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
+                                    image
+                                  </div>
+                                </div>
+                              );
+                            })}
+                        </div>
+                      ) : (
+                        <p className="text-gray-400 text-sm text-center">
+                          No Images Selected
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   {/* BUTTONS */}
                   <div className="flex justify-center gap-6 mt-5">
-                    <Button variant={2} text="Cancel" onClick={() => navigate("/app-management/manage-banner")} disabled={bannerLoading || isSubmitting} />
-                    <Button variant={1} text={bannerLoading || isSubmitting ? "Processing..." : id ? "Update" : "Create"} type="submit" disabled={bannerLoading || isSubmitting} />
+                    <Button
+                      variant={2}
+                      text="Cancel"
+                      onClick={() => navigate("/app-management/manage-banner")}
+                      disabled={bannerLoading || isSubmitting}
+                    />
+                    <Button
+                      variant={1}
+                      text={
+                        bannerLoading || isSubmitting
+                          ? "Processing..."
+                          : id
+                          ? "Update"
+                          : "Create"
+                      }
+                      type="submit"
+                      disabled={bannerLoading || isSubmitting}
+                    />
                   </div>
                 </Form>
               );
