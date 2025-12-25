@@ -33,6 +33,10 @@ const FaqAddEdit = () => {
     faqCategories,
     loadingFaqCategories,
     fetchFaqCategories,
+
+
+
+     fetchAllUserType,userTypeFAQ,loadingUser
   } = useDropdown();
 
   const [initialValues, setInitialValues] = useState({
@@ -53,6 +57,12 @@ const FaqAddEdit = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+
+  useEffect(()=>{
+    fetchAllUserType();
+  },[])
+  console.log("nice to meet you", userTypeFAQ)
 
   // Fetch FAQ data if in edit mode
   useEffect(() => {
@@ -129,27 +139,7 @@ const FaqAddEdit = () => {
     navigate("/app-management/faq");
   };
 
-  // Create category options from the fetched categories
-  const categoryOptions = React.useMemo(() => {
-    try {
-      const options = [{ value: "", label: "Select Category" }];
-      
-      if (Array.isArray(faqCategories) && faqCategories.length > 0) {
-        const categoryOpts = faqCategories
-          .filter(cat => cat && typeof cat === 'string')
-          .map((cat) => ({ 
-            value: cat, 
-            label: cat 
-          }));
-        return [...options, ...categoryOpts];
-      }
-      
-      return options;
-    } catch (error) {
-      console.error("Error creating category options:", error);
-      return [{ value: "", label: "Select Category" }];
-    }
-  }, [faqCategories]);
+
 
   if (loading || (isEditMode && initialValues.category === "" && initialValues.question === "")) {
     return (
@@ -196,7 +186,7 @@ const FaqAddEdit = () => {
                 name="category"
                 fieldType="select"
                 placeholder="Select Category"
-                options={categoryOptions}
+                options={userTypeFAQ}
                 disabled={loadingFaqCategories}
               />
 

@@ -51,6 +51,7 @@ const useDropdown = () => {
   const [loadingStates, setLoadingStates] = useState(false);
   const [countryCode,setCountryCode] = useState();
   const [loadingCode, setLoadingCode] = useState(false);
+  const [userTypeFAQ ,setUserTypeFAQ] =useState([])
 
   
 
@@ -348,6 +349,27 @@ const fetchCitiesByState = async (countryName, stateName) => {
   }
 };
 
+
+// ----------------------------- User Type Dropdown----------------------------------- //
+  const fetchAllUserType = async () => {
+  setLoadingUser(true);
+  try {
+    const res = await fetchData({
+      method: "GET",
+      url: `${conf.apiBaseUrl}admin/termsAndCondition/userType-dropdown`,
+       headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+    });
+    if (res?.success) {
+      setUserTypeFAQ(res.data || []);
+    }
+  } finally {
+    setLoadingUser(false);
+  }
+};
+
+
   const loading =
     loadingSales || loadingRegion ||
     loadingUser ||
@@ -360,7 +382,7 @@ const fetchCitiesByState = async (countryName, stateName) => {
   return {
     loading,
     region,
-   fetchAllRegion,
+   fetchAllRegion,  fetchAllUserType,userTypeFAQ,
     fetchCitiesByState,
     fetchSalesType,
     fetchProductCategory,

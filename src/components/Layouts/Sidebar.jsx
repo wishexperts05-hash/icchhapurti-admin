@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import AnimationCSS from "./AnimationCSS";
@@ -20,8 +21,179 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
 
   // 🔥 Only one menu can be expanded at a time
   const [expandedItems, setExpandedItems] = useState([]);
+  const [focusedItemId, setFocusedItemId] = useState(null);
+  const itemRefs = useRef({});
+  const sidebarRef = useRef(null);
 
-  // Check active parent
+  const navigationItems = useMemo(() => {
+    return filterNavigationItems(
+      allNavigationItems,
+      subAdminAccess,
+      isAdminLoggedIn
+    );
+  }, [subAdminAccess, isAdminLoggedIn]);
+
+  // Get all visible items including sub-items when expanded
+  const getAllVisibleItems = useCallback(() => {
+    const visibleItems = [];
+
+    const collectItems = (items) => {
+      items.forEach(item => {
+        visibleItems.push(item);
+        if (item.hasSubmenu && expandedItems.includes(item.id) && item.subItems) {
+          collectItems(item.subItems);
+        }
+      });
+    };
+
+    collectItems(navigationItems);
+    return visibleItems;
+  }, [navigationItems, expandedItems]);
+
+  // Get current item index based on path
+  const getCurrentItemIndex = useCallback(() => {
+    const visibleItems = getAllVisibleItems();
+    let bestMatchIndex = 0;
+    let bestMatchLength = 0;
+    
+    visibleItems.forEach((item, index) => {
+      if (item.url) {
+        if (currentPath === item.url) {
+          // Exact match takes highest priority
+          bestMatchIndex = index;
+          bestMatchLength = item.url.length;
+        } else if (currentPath.startsWith(item.url + "/") && item.url.length > bestMatchLength) {
+          // For nested paths, find the most specific match
+          bestMatchIndex = index;
+          bestMatchLength = item.url.length;
+        } else if (bestMatchLength === 0 && currentPath.startsWith(item.url)) {
+          // Fallback for partial matches
+          bestMatchIndex = index;
+        }
+      }
+    });
+    
+    return bestMatchIndex;
+  }, [getAllVisibleItems, currentPath]);
+
+  // Handle keyboard navigation
+  const handleKeyDown = useCallback((e) => {
+    if (!isOpen && !isMobile) return;
+
+    // Don't handle if user is typing in an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+      return;
+    }
+
+    const visibleItems = getAllVisibleItems();
+    let currentIndex = visibleItems.findIndex(item => item.id === focusedItemId);
+
+    // If no focus, start from current page
+    if (currentIndex === -1) {
+      currentIndex = getCurrentItemIndex();
+    }
+
+    let newIndex = currentIndex;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        e.stopPropagation();
+        newIndex = (currentIndex + 1) % visibleItems.length;
+        break;
+
+      case 'ArrowUp':
+        e.preventDefault();
+        e.stopPropagation();
+        newIndex = (currentIndex - 1 + visibleItems.length) % visibleItems.length;
+        break;
+
+      case 'Enter':
+        e.preventDefault();
+        e.stopPropagation();
+        const currentItem = visibleItems[currentIndex];
+        if (currentItem) {
+          if (currentItem.hasSubmenu && currentItem.url) {
+            // If the item has a URL and submenu, navigate to its URL
+            navigate(currentItem.url);
+            if (isMobile) setIsOpen(false);
+          } else if (currentItem.hasSubmenu) {
+            // If it's just a parent with submenu, toggle its expanded state
+            const isExpanded = expandedItems.includes(currentItem.id);
+            setExpandedItems(prev =>
+              isExpanded
+                ? prev.filter(id => id !== currentItem.id)
+                : [...prev, currentItem.id]
+            );
+          } else if (currentItem.url) {
+            navigate(currentItem.url);
+            if (isMobile) setIsOpen(false);
+          }
+        }
+        return;
+
+      default:
+        return;
+    }
+
+    // Update focused item
+    if (newIndex >= 0 && newIndex < visibleItems.length) {
+      const newItem = visibleItems[newIndex];
+      setFocusedItemId(newItem.id);
+
+      // Focus the element with a slight delay
+      setTimeout(() => {
+        if (itemRefs.current[newItem.id]) {
+          itemRefs.current[newItem.id].focus();
+          itemRefs.current[newItem.id].scrollIntoView({
+            block: 'nearest',
+            behavior: 'smooth'
+          });
+        }
+      }, 10);
+    }
+  }, [isOpen, isMobile, getAllVisibleItems, focusedItemId, getCurrentItemIndex, expandedItems, navigate]);
+
+  // Add and remove keyboard event listener
+  useEffect(() => {
+    const handleKeyDownEvent = (e) => handleKeyDown(e);
+    const sidebarElement = sidebarRef.current;
+    if (sidebarElement) {
+      sidebarElement.addEventListener('keydown', handleKeyDownEvent);
+    }
+    return () => {
+      if (sidebarElement) {
+        sidebarElement.removeEventListener('keydown', handleKeyDownEvent);
+      }
+    };
+  }, [handleKeyDown]);
+
+  // Initialize focused item on mount and when navigation items change
+  useEffect(() => {
+    const currentIndex = getCurrentItemIndex();
+    const visibleItems = getAllVisibleItems();
+    if (currentIndex >= 0 && currentIndex < visibleItems.length) {
+      setFocusedItemId(visibleItems[currentIndex].id);
+    }
+  }, [getCurrentItemIndex, getAllVisibleItems]);
+
+  console.log("subAdminAccess", subAdminAccess);
+  console.log("isAdminLoggedIn", isAdminLoggedIn);
+  console.log("isSubAdminLoggedIn", isSubAdminLoggedIn);
+
+  useEffect(() => {
+    if (!isAdminLoggedIn && subAdminAccess) {
+      console.log("Accessible Modules:", navigationItems.map(item => item.title));
+      navigationItems.forEach(item => {
+        if (item.subItems) {
+          console.log(`- ${item.title} sub-items:`, item.subItems.map(sub => sub.title));
+        }
+      });
+
+      debugAccessibleModules(subAdminAccess, allNavigationItems);
+    }
+  }, [navigationItems, isAdminLoggedIn, subAdminAccess, isSubAdminLoggedIn]);
+
   const isItemActive = (itemUrl, subItems = []) => {
     if (currentPath === itemUrl) return true;
     if (currentPath.startsWith(itemUrl + "/") && itemUrl !== "/") return true;
@@ -48,6 +220,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
 
   // 🔥 Clicking on parent
   const handleItemClick = (item) => {
+    setFocusedItemId(item.id);
     if (item.hasSubmenu) {
       handleToggle(item.id, item.subItems);
 
@@ -98,17 +271,24 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
           return (
             <div key={subItem.id}>
               <button
-                onClick={() =>
+                ref={el => itemRefs.current[subItem.id] = el}
+                onClick={() => {
+                  setFocusedItemId(subItem.id);
                   hasNested
                     ? handleToggle(subItem.id)
-                    : handleSubItemClick(subItem.url, parentId)
-                }
+                    : handleSubItemClick(subItem.url, parentId);
+                }}
+                onFocus={() => setFocusedItemId(subItem.id)}
+                tabIndex={focusedItemId === subItem.id ? 0 : -1}
                 className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 mb-1
-                  ${
-                    isActive
-                      ? "bg-yellow-400 text-gray-900"
+
+                  ${isActive
+                    ? "bg-yellow-400 text-gray-900"
+                    : focusedItemId === subItem.id
+                      ? "ring-2 ring-blue-500 ring-offset-1 bg-blue-50"
                       : "hover:bg-gray-100 text-gray-700"
                   }
+                  outline-none focus:outline-none
                 `}
               >
                 <subItem.icon className="h-4 w-4" />
@@ -155,20 +335,23 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
 
       {/* Mobile Black Overlay */}
       {isMobile && isOpen && (
-              <div
-                className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-                onClick={() => setIsOpen(false)}
-              />
-            )}
-      
-            <div
-              className={`
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      <div
+        ref={sidebarRef}
+        tabIndex={-1}
+        className={`
               ${isMobile ? "fixed" : "relative"} ${isMobile ? "z-50" : "z-10"}
               ${isOpen ? "w-72" : isMobile ? "w-0" : "w-20"} 
               ${isMobile && !isOpen ? "-translate-x-full" : "translate-x-0"}
               transition-all duration-300 ease-in-out
               bg-white border-r border-gray-200
               h-screen flex flex-col
+              outline-none
             `}
             >
               {isMobile && !isOpen ? null : (
@@ -186,8 +369,20 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
       
                   {!isMobile && (
                     <button
-                      onClick={toggleSidebar}
-                      className="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
+                      ref={el => itemRefs.current[item.id] = el}
+                      onClick={() => handleItemClick(item)}
+                      onFocus={() => setFocusedItemId(item.id)}
+                      tabIndex={focusedItemId === item.id ? 0 : -1}
+                      className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200
+                        ${isActive
+                          ? "bg-yellow-400 text-gray-900"
+                          : focusedItemId === item.id
+                            ? "ring-2 ring-blue-500 ring-offset-1 bg-blue-50"
+                            : "bg-white hover:bg-gray-100 text-gray-700"
+                        }
+                        ${!isOpen ? "justify-center" : ""}
+                        outline-none focus:outline-none
+                      `}
                     >
                       {isOpen ? (
                         <ChevronLeft className="h-5 w-5 text-gray-600" />
