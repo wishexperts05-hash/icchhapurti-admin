@@ -81,13 +81,12 @@ const FormSelect = ({ label, id, options, value, onChange }) => (
   </div>
 );
 
-
 const PhoneInput = ({
   label,
   id,
   countryCode,
   phoneNumber,
-  options, 
+  options,
   onCountryCodeChange,
   onPhoneChange,
   error,
@@ -115,7 +114,7 @@ const PhoneInput = ({
           paddingRight: "1.8rem",
         }}
       >
-         {options.map((opt) => (
+        {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}
           </option>
@@ -129,7 +128,7 @@ const PhoneInput = ({
         placeholder="9876543210"
         className={`flex-1 px-4 py-2.5 text-sm border rounded-lg
                    focus:outline-none focus:ring-2 focus:ring-[#CCA547] focus:border-transparent transition duration-200
-                   ${error ? 'border-red-500' : 'border-gray-300'}`}
+                   ${error ? "border-red-500" : "border-gray-300"}`}
       />
     </div>
     {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
@@ -161,10 +160,10 @@ const AddStaff = () => {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    
+
     // Phone number validation
     if (id === "phoneNumber") {
-      const numericValue = value.replace(/[^0-9]/g, '');
+      const numericValue = value.replace(/[^0-9]/g, "");
       if (numericValue.length <= 10) {
         setFormData((prev) => ({ ...prev, [id]: numericValue }));
         // Clear error when user types
@@ -174,10 +173,9 @@ const AddStaff = () => {
       }
       return;
     }
-    
+
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
-
 
   const handleProfileImageUpload = (e) => {
     const file = e.target.files[0];
@@ -191,7 +189,7 @@ const AddStaff = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Phone Number validation
     if (!formData.phoneNumber) {
       newErrors.phoneNumber = "Phone number is required";
@@ -200,7 +198,7 @@ const AddStaff = () => {
     } else if (!/^[6-9][0-9]{9}$/.test(formData.phoneNumber)) {
       newErrors.phoneNumber = "Please enter a valid Indian phone number";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -240,8 +238,6 @@ const AddStaff = () => {
     console.log("sending data", ...fd);
 
     await addStaff(fd);
-
-   
   };
 
   const handleCancel = () => {
@@ -257,7 +253,10 @@ const AddStaff = () => {
     loadingStates,
     fetchCitiesByState,
     cities,
-    loadingCities,fetchAlCountriescallingcodes,countryCode,loadingCode,
+    loadingCities,
+    fetchAlCountriescallingcodes,
+    countryCode,
+    loadingCode,
   } = useDropdown();
 
   useEffect(() => {
@@ -272,21 +271,29 @@ const AddStaff = () => {
     value: city,
     label: city,
   }));
-   useEffect(()=>{
+  useEffect(() => {
     fetchAlCountriescallingcodes();
-   },[])
-   console.log("callingcode",countryCode)
+  }, []);
+  console.log("callingcode", countryCode);
 
-   const callingCodeOptions = (countryCode || []).map((item) => {
-  const countryName = Object.keys(item)[0];
-  const code = item[countryName];
+  const callingCodeOptions = (countryCode || []).map((item) => {
+    const countryName = Object.keys(item)[0];
+    const code = item[countryName];
 
-  return {
-    label: `(${code})`,
-    value: code,
-  };
-});
+    return {
+      label: `(${code})`,
+      value: code,
+    };
+  });
 
+  useEffect(() => {
+    if (!formData.accountType) {
+      setFormData((prev) => ({
+        ...prev,
+        accountType: "Savings",
+      }));
+    }
+  }, []);
 
   useEffect(() => {
     fetchBanklist();
@@ -305,27 +312,23 @@ const AddStaff = () => {
     }
   }, [states]);
 
-  
+  useEffect(() => {
+    if (cities?.length && !formData.bankName) {
+      setFormData((prev) => ({
+        ...prev,
+        city: cities[0], // first City auto-selected
+      }));
+    }
+  }, [cities]);
 
   useEffect(() => {
-  if (cities?.length && !formData.bankName) {
-    setFormData((prev) => ({
-      ...prev,
-      city: cities[0], // first City auto-selected
-    }));
-  }
-}, [cities]);
-
-  useEffect(() => {
-  if (banklist?.length && !formData.bankName) {
-    setFormData((prev) => ({
-      ...prev,
-      bankName: banklist[0], // first bank auto-selected
-    }));
-  }
-}, [banklist]);
-
-
+    if (banklist?.length && !formData.bankName) {
+      setFormData((prev) => ({
+        ...prev,
+        bankName: banklist[0], // first bank auto-selected
+      }));
+    }
+  }, [banklist]);
 
   const handleCountryChange = (e) => {
     const selectedCountry = e.target.value;
@@ -424,7 +427,7 @@ const AddStaff = () => {
               id="phoneNumber"
               countryCode={formData.countryCode}
               phoneNumber={formData.phoneNumber}
-                options={callingCodeOptions}
+              options={callingCodeOptions}
               onCountryCodeChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
