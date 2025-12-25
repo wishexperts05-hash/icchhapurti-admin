@@ -173,8 +173,8 @@ const ViewStaff = () => {
                 />
 
                 <DetailsField
-                  label="Referral Name"
-                  value={staffDetail?.staff?.referralCodeUsed || "-"}
+                  label="Referral Code"
+                  value={staffDetail?.staff?.referralCode || "-"}
                 />
               </div>
             </div>

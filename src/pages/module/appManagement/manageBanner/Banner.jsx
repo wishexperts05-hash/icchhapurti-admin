@@ -49,43 +49,42 @@ function Banner() {
   };
 
   const renderBannerPreview = (row) => {
-  const media = row.mediaUrls || [];
-  const firstMedia = media[0];
-  const extraCount = media.length > 1 ? media.length - 1 : 0;
+    const media = row.mediaUrls || [];
+    const firstMedia = media[0];
+    const extraCount = media.length > 1 ? media.length - 1 : 0;
 
-  return (
-    <div className="flex justify-center items-center w-full h-full py-2">
-      {firstMedia ? (
-        <div className="relative w-16 h-16 flex justify-center items-center">
-          {/\.(mp4|webm|ogg|mov)$/i.test(firstMedia) ? (
-            <video
-              src={firstMedia}
-              className="w-16 h-16 object-cover rounded"
-              muted
-            />
-          ) : (
-            <img
-              src={firstMedia}
-              className="w-16 h-16 object-cover rounded"
-              alt="banner"
-            />
-          )}
+    return (
+      <div className="flex justify-center items-center w-full h-full py-2">
+        {firstMedia ? (
+          <div className="relative w-16 h-16 flex justify-center items-center">
+            {/\.(mp4|webm|ogg|mov)$/i.test(firstMedia) ? (
+              <video
+                src={firstMedia}
+                className="w-16 h-16 object-cover rounded"
+                muted
+              />
+            ) : (
+              <img
+                src={firstMedia}
+                className="w-16 h-16 object-cover rounded"
+                alt="banner"
+              />
+            )}
 
-          {extraCount > 0 && (
-            <div className="absolute top-0 left-0 w-16 h-16 bg-black bg-opacity-50 flex items-center justify-center text-white text-xs rounded">
-              +{extraCount}
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
-          No Media
-        </div>
-      )}
-    </div>
-  );
-};
-
+            {extraCount > 0 && (
+              <div className="absolute top-0 left-0 w-16 h-16 bg-black bg-opacity-50 flex items-center justify-center text-white text-xs rounded">
+                +{extraCount}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+            No Media
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const transformedData =
     bannerList?.data?.map((banner, index) => ({
@@ -93,23 +92,13 @@ function Banner() {
       srNo: (page - 1) * limit + index + 1,
       serviceType: banner.appType || "N/A",
       bannerType: banner.bannerType || "N/A",
-      mediaUrls: banner.mediaUrls || [],
+      images: banner.images || [],
+      videos: banner.videos || [],
+
       createdAt: banner.createdAt
         ? new Date(banner.createdAt).toLocaleDateString("en-GB")
         : "N/A",
     })) || [];
-
-  const columns = [
-    { header: "Sr.No.", field: "srNo" },
-    { header: "Service Type", field: "serviceType" },
-    { header: "Banner Type", field: "bannerType" },
-    {
-      header: "Banner Preview",
-      field: "mediaUrls",
-      render: renderBannerPreview,
-    },
-    { header: "Action", field: "action" },
-  ];
 
   const actions = [
     {
@@ -119,10 +108,12 @@ function Banner() {
         navigate(`/app-management/manage-banner/banner-details/${row._id}`),
     },
     {
-      icon:  <FaRegEdit
-                          className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
-                          title="Edit"
-                      />,
+      icon: (
+        <FaRegEdit
+          className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
+          title="Edit"
+        />
+      ),
       title: "Edit",
       onClick: (row) =>
         navigate(`/app-management/manage-banner/edit-banner/${row._id}`),
@@ -133,7 +124,80 @@ function Banner() {
       onClick: (row) => handleDelete(row._id),
     },
   ];
+  const renderImagePreview = (row) => {
+    const images = row.images || [];
+    const first = images[0];
+    const extra = images.length > 1 ? images.length - 1 : 0;
 
+    return (
+      <div className="flex justify-center">
+        {first ? (
+          <div className="relative w-16 h-16">
+            <img
+              src={first}
+              alt="banner"
+              className="w-16 h-16 rounded object-cover"
+            />
+            {extra > 0 && (
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-xs rounded">
+                +{extra}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="w-16 h-16 flex items-center justify-center bg-gray-100 text-xs text-gray-400 rounded">
+            No Image
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderVideoPreview = (row) => {
+    const videos = row.videos || [];
+    const first = videos[0];
+    const extra = videos.length > 1 ? videos.length - 1 : 0;
+
+    return (
+      <div className="flex justify-center">
+        {first ? (
+          <div className="relative w-16 h-16">
+            <video
+              src={first}
+              className="w-16 h-16 rounded object-cover"
+              muted
+            />
+            {extra > 0 && (
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-xs rounded">
+                +{extra}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="w-16 h-16 flex items-center justify-center bg-gray-100 text-xs text-gray-400 rounded">
+            No Video
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const columns = [
+    { header: "Sr.No.", field: "srNo" },
+    { header: "Service Type", field: "serviceType" },
+    { header: "Banner Type", field: "bannerType" },
+    {
+      header: "Image Preview",
+      field: "images",
+      render: renderImagePreview,
+    },
+    {
+      header: "Video Preview",
+      field: "videos",
+      render: renderVideoPreview,
+    },
+    { header: "Action", field: "action" },
+  ];
   return (
     <div className="bg-[#F9F9F9] min-h-screen">
       <BreadCrumb linkText={[{ text: "App Management" }, { text: "Banner" }]} />
@@ -149,9 +213,7 @@ function Banner() {
           setPage(1);
         }}
         addButtonText="Create Banner"
-        onClick={() =>
-          navigate("/app-management/manage-banner/create-banner")
-        }
+        onClick={() => navigate("/app-management/manage-banner/create-banner")}
       />
 
       <div className="bg-white border shadow-lg rounded-2xl p-6 mt-4">
