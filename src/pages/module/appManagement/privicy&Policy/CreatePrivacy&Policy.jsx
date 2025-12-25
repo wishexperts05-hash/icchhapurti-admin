@@ -83,14 +83,13 @@ function CreatePrivacyPolicy() {
       role: values.role,
       content: values.content,
       requestType: id ? "Update" : "Create",
+      id: id ? id : null,
     };
 
     let result;
     if (id) {
-      // Update existing privacy policy
       result = await updatePrivacyPolicy(id, formData);
     } else {
-      // Create new privacy policy
       result = await createPrivacyPolicy(formData);
     }
 

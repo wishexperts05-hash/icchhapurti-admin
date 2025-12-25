@@ -1,75 +1,295 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import AnimationCSS from "./AnimationCSS";
-import { allNavigationItems } from "../../utils/sidebarHelpers";
 import logo from "../../assets/logo.png";
 import { useSetRecoilState } from "recoil";
 import { adminAuthState, subAdminAuthState } from "../../state/auth/authenticatedState";
 import useLogin from "../../hooks/auth/useLogin";
+import {
+  filterNavigationItems,
+  allNavigationItems,
+  debugAccessibleModules
+} from "../../utils/sidebarHelpers";
 
 const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
-  const setAdminInfo = useSetRecoilState(adminAuthState);
-  const setSubAdminInfo = useSetRecoilState(subAdminAuthState);
-  const { resetAdminLogin, resetSubAdminAccess } = useLogin();
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
-
-  const navigationItems = allNavigationItems;
-
-  // 🔥 Only one menu can be expanded at a time
+  const setAdminInfo = useSetRecoilState(adminAuthState);
+  const setSubAdminInfo = useSetRecoilState(subAdminAuthState);
+  const { resetAdminLogin, resetSubAdminAccess, subAdminAccess } = useLogin();
+  const isAdminLoggedIn = sessionStorage.getItem("isAdminLoggedIn") === "true";
+  const isSubAdminLoggedIn = sessionStorage.getItem("isSubAdminLoggedIn") === "true";
   const [expandedItems, setExpandedItems] = useState([]);
+  const [focusedItemId, setFocusedItemId] = useState(null);
+  const itemRefs = useRef({});
+  const sidebarRef = useRef(null);
 
-  // Check active parent
+  const navigationItems = useMemo(() => {
+    return filterNavigationItems(
+      allNavigationItems,
+      subAdminAccess,
+      isAdminLoggedIn
+    );
+  }, [subAdminAccess, isAdminLoggedIn]);
+
+  // Get all visible items including sub-items when expanded
+  const getAllVisibleItems = useCallback(() => {
+    const visibleItems = [];
+
+    const collectItems = (items) => {
+      items.forEach(item => {
+        visibleItems.push(item);
+        if (item.hasSubmenu && expandedItems.includes(item.id) && item.subItems) {
+          collectItems(item.subItems);
+        }
+      });
+    };
+
+    collectItems(navigationItems);
+    return visibleItems;
+  }, [navigationItems, expandedItems]);
+
+  // Get current item index based on path
+  const getCurrentItemIndex = useCallback(() => {
+    const visibleItems = getAllVisibleItems();
+    let bestMatchIndex = 0;
+    let bestMatchLength = 0;
+    
+    visibleItems.forEach((item, index) => {
+      if (item.url) {
+        if (currentPath === item.url) {
+          // Exact match takes highest priority
+          bestMatchIndex = index;
+          bestMatchLength = item.url.length;
+        } else if (currentPath.startsWith(item.url + "/") && item.url.length > bestMatchLength) {
+          // For nested paths, find the most specific match
+          bestMatchIndex = index;
+          bestMatchLength = item.url.length;
+        } else if (bestMatchLength === 0 && currentPath.startsWith(item.url)) {
+          // Fallback for partial matches
+          bestMatchIndex = index;
+        }
+      }
+    });
+    
+    return bestMatchIndex;
+  }, [getAllVisibleItems, currentPath]);
+
+  // Handle keyboard navigation
+  const handleKeyDown = useCallback((e) => {
+    if (!isOpen && !isMobile) return;
+
+    // Don't handle if user is typing in an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+      return;
+    }
+
+    const visibleItems = getAllVisibleItems();
+    let currentIndex = visibleItems.findIndex(item => item.id === focusedItemId);
+
+    // If no focus, start from current page
+    if (currentIndex === -1) {
+      currentIndex = getCurrentItemIndex();
+    }
+
+    let newIndex = currentIndex;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        e.stopPropagation();
+        newIndex = (currentIndex + 1) % visibleItems.length;
+        break;
+
+      case 'ArrowUp':
+        e.preventDefault();
+        e.stopPropagation();
+        newIndex = (currentIndex - 1 + visibleItems.length) % visibleItems.length;
+        break;
+
+      case 'Enter':
+        e.preventDefault();
+        e.stopPropagation();
+        const currentItem = visibleItems[currentIndex];
+        if (currentItem) {
+          if (currentItem.hasSubmenu && currentItem.url) {
+            // If the item has a URL and submenu, navigate to its URL
+            navigate(currentItem.url);
+            if (isMobile) setIsOpen(false);
+          } else if (currentItem.hasSubmenu) {
+            // If it's just a parent with submenu, toggle its expanded state
+            const isExpanded = expandedItems.includes(currentItem.id);
+            setExpandedItems(prev =>
+              isExpanded
+                ? prev.filter(id => id !== currentItem.id)
+                : [...prev, currentItem.id]
+            );
+          } else if (currentItem.url) {
+            navigate(currentItem.url);
+            if (isMobile) setIsOpen(false);
+          }
+        }
+        return;
+
+      default:
+        return;
+    }
+
+    // Update focused item
+    if (newIndex >= 0 && newIndex < visibleItems.length) {
+      const newItem = visibleItems[newIndex];
+      setFocusedItemId(newItem.id);
+
+      // Focus the element with a slight delay
+      setTimeout(() => {
+        if (itemRefs.current[newItem.id]) {
+          itemRefs.current[newItem.id].focus();
+          itemRefs.current[newItem.id].scrollIntoView({
+            block: 'nearest',
+            behavior: 'smooth'
+          });
+        }
+      }, 10);
+    }
+  }, [isOpen, isMobile, getAllVisibleItems, focusedItemId, getCurrentItemIndex, expandedItems, navigate]);
+
+  // Add and remove keyboard event listener
+  useEffect(() => {
+    const handleKeyDownEvent = (e) => handleKeyDown(e);
+    const sidebarElement = sidebarRef.current;
+    if (sidebarElement) {
+      sidebarElement.addEventListener('keydown', handleKeyDownEvent);
+    }
+    return () => {
+      if (sidebarElement) {
+        sidebarElement.removeEventListener('keydown', handleKeyDownEvent);
+      }
+    };
+  }, [handleKeyDown]);
+
+  // Initialize focused item on mount and when navigation items change
+  useEffect(() => {
+    const currentIndex = getCurrentItemIndex();
+    const visibleItems = getAllVisibleItems();
+    if (currentIndex >= 0 && currentIndex < visibleItems.length) {
+      setFocusedItemId(visibleItems[currentIndex].id);
+    }
+  }, [getCurrentItemIndex, getAllVisibleItems]);
+
+  console.log("subAdminAccess", subAdminAccess);
+  console.log("isAdminLoggedIn", isAdminLoggedIn);
+  console.log("isSubAdminLoggedIn", isSubAdminLoggedIn);
+
+  useEffect(() => {
+    if (!isAdminLoggedIn && subAdminAccess) {
+      console.log("Accessible Modules:", navigationItems.map(item => item.title));
+      navigationItems.forEach(item => {
+        if (item.subItems) {
+          console.log(`- ${item.title} sub-items:`, item.subItems.map(sub => sub.title));
+        }
+      });
+
+      debugAccessibleModules(subAdminAccess, allNavigationItems);
+    }
+  }, [navigationItems, isAdminLoggedIn, subAdminAccess, isSubAdminLoggedIn]);
+
   const isItemActive = (itemUrl, subItems = []) => {
     if (currentPath === itemUrl) return true;
     if (currentPath.startsWith(itemUrl + "/") && itemUrl !== "/") return true;
 
-    return subItems.some((sub) => isSubItemActive(sub.url, sub.subItems));
+    if (
+      subItems.some((subItem) => {
+        if (subItem.subItems && subItem.subItems.length > 0) {
+          return isItemActive(subItem.url, subItem.subItems);
+        }
+        return (
+          currentPath === subItem.url ||
+          currentPath.startsWith(subItem.url + "/")
+        );
+      })
+    )
+      return true;
+    return false;
   };
 
-  // Check active submenus
-  const isSubItemActive = (url, subSubItems = []) => {
-    if (currentPath === url) return true;
-    if (currentPath.startsWith(url + "/") && url !== "/") return true;
+  const isSubItemActive = (subItemUrl, subSubItems = []) => {
+    if (currentPath === subItemUrl) return true;
+    if (currentPath.startsWith(subItemUrl + "/") && subItemUrl !== "/")
+      return true;
 
-    return subSubItems?.some(
-      (s) => currentPath === s.url || currentPath.startsWith(s.url + "/")
-    );
+    if (
+      subSubItems.some(
+        (subSubItem) =>
+          currentPath === subSubItem.url ||
+          currentPath.startsWith(subSubItem.url + "/")
+      )
+    )
+      return true;
+
+    return false;
   };
 
-  // 🔥 Toggle menu — only 1 open at a time
-  const handleToggle = (id, subItems = []) => {
-    setExpandedItems((prev) =>
-      prev.includes(id) ? [] : [id] // collapse all others
-    );
-  };
+  const handleToggle = (id, subItems = [], parentPath = []) => {
+    setExpandedItems((prev) => {
+      const isAlreadyOpen = prev.includes(id);
+      const newPath = [...parentPath, id];
 
-  // 🔥 Clicking on parent
-  const handleItemClick = (item) => {
-    if (item.hasSubmenu) {
-      handleToggle(item.id, item.subItems);
-
-      // Auto-open first submenu item
-      const firstSub = item.subItems?.[0];
-      if (firstSub && !firstSub.hasSubmenu) {
-        navigate(firstSub.url);
+      if (isAlreadyOpen) {
+        const index = prev.indexOf(id);
+        return prev.slice(0, index);
+      } else {
+        if (
+          subItems.length > 0 &&
+          !subItems.some((subItem) => isSubItemActive(subItem.url))
+        ) {
+          const firstSubItem = subItems[0];
+          if (firstSubItem.subItems && firstSubItem.subItems.length > 0) {
+            navigate(firstSubItem.subItems[0].url);
+          } else {
+            navigate(firstSubItem.url);
+          }
+        }
+        return newPath;
       }
-    } else {
-      // Normal menu item
-      navigate(item.url);
-      setExpandedItems([]); // collapse all
-    }
-
-    if (isMobile) setIsOpen(false);
+    });
   };
 
-  // 🔥 Clicking subitem
+  const handleItemClick = (item) => {
+    setFocusedItemId(item.id);
+    if (item.hasSubmenu) {
+      handleToggle(item.id, item.subItems, []);
+    } else {
+      navigate(item.url);
+      if (isMobile) {
+        setIsOpen(false);
+      }
+    }
+  };
+
   const handleSubItemClick = (url, parentId) => {
     navigate(url);
-    setExpandedItems([parentId]); // keep only parent open
-    if (isMobile) setIsOpen(false);
+    if (!expandedItems.includes(parentId)) {
+      setExpandedItems((prev) => [...prev, parentId]);
+    }
+    if (isMobile) {
+      setIsOpen(false);
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    localStorage.clear();
+    resetAdminLogin();
+    resetSubAdminAccess();
+    setAdminInfo({ isAuthenticated: false });
+    setSubAdminInfo({ isAuthenticated: false });
+    navigate("/");
+  };
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
   };
 
   // Auto-expand active menu
@@ -82,33 +302,34 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
     }
   }, [currentPath]);
 
-
-   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-
   const renderSubItems = (subItems, parentId) => {
     return (
       <div className="ml-3 mt-1">
         {subItems.map((subItem) => {
-          const isActive = isSubItemActive(subItem.url, subItem.subItems);
-          const hasNested = subItem.hasSubmenu;
           const isExpanded = expandedItems.includes(subItem.id);
+          const isActive = isSubItemActive(subItem.url, subItem.subItems);
+          const hasNested = subItem.hasSubmenu && subItem.subItems && subItem.subItems.length > 0;
 
           return (
             <div key={subItem.id}>
               <button
-                onClick={() =>
+                ref={el => itemRefs.current[subItem.id] = el}
+                onClick={() => {
+                  setFocusedItemId(subItem.id);
                   hasNested
                     ? handleToggle(subItem.id)
-                    : handleSubItemClick(subItem.url, parentId)
-                }
+                    : handleSubItemClick(subItem.url, parentId);
+                }}
+                onFocus={() => setFocusedItemId(subItem.id)}
+                tabIndex={focusedItemId === subItem.id ? 0 : -1}
                 className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 mb-1
-                  ${
-                    isActive
-                      ? "bg-yellow-400 text-gray-900"
+                  ${isActive
+                    ? "bg-yellow-400 text-gray-900"
+                    : focusedItemId === subItem.id
+                      ? "ring-2 ring-blue-500 ring-offset-1 bg-blue-50"
                       : "hover:bg-gray-100 text-gray-700"
                   }
+                  outline-none focus:outline-none
                 `}
               >
                 <subItem.icon className="h-4 w-4" />
@@ -118,9 +339,8 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
                     <span className="font-medium text-sm">{subItem.title}</span>
                     {hasNested && (
                       <ChevronDown
-                        className={`h-4 w-4 transition-transform ${
-                          isExpanded ? "rotate-180" : ""
-                        }`}
+                        className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""
+                          }`}
                       />
                     )}
                   </div>
@@ -139,116 +359,113 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
     );
   };
 
-  const handleLogout = () => {
-    sessionStorage.clear();
-    localStorage.clear();
-    resetAdminLogin();
-    resetSubAdminAccess();
-    setAdminInfo({ isAuthenticated: false });
-    setSubAdminInfo({ isAuthenticated: false });
-    navigate("/");
-  };
-
   return (
     <>
       <AnimationCSS />
 
       {/* Mobile Black Overlay */}
       {isMobile && isOpen && (
-              <div
-                className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-                onClick={() => setIsOpen(false)}
-              />
-            )}
-      
-            <div
-              className={`
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      <div
+        ref={sidebarRef}
+        tabIndex={-1}
+        className={`
               ${isMobile ? "fixed" : "relative"} ${isMobile ? "z-50" : "z-10"}
               ${isOpen ? "w-72" : isMobile ? "w-0" : "w-20"} 
               ${isMobile && !isOpen ? "-translate-x-full" : "translate-x-0"}
               transition-all duration-300 ease-in-out
               bg-white border-r border-gray-200
               h-screen flex flex-col
+              outline-none
             `}
-            >
-              {isMobile && !isOpen ? null : (
-                <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                  {isOpen && (
-                    <div className="flex items-center space-x-3 animate-slide-in-left w-full">
-                      <div className="h-16 w-full flex items-center justify-center">
-                        <img
-                          src={logo}
-                          alt="Logo" className="object-cover w-full h-full"
-                        />
-                      </div>
-                    </div>
-                  )}
-      
-                  {!isMobile && (
-                    <button
-                      onClick={toggleSidebar}
-                      className="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
-                    >
-                      {isOpen ? (
-                        <ChevronLeft className="h-5 w-5 text-gray-600" />
-                      ) : (
-                        <ChevronRight className="h-5 w-5 text-gray-600" />
-                      )}
-                    </button>
-                  )}
+      >
+        {isMobile && !isOpen ? null : (
+          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            {isOpen && (
+              <div className="flex items-center space-x-3 animate-slide-in-left w-full">
+                <div className="h-16 w-full flex items-center justify-center">
+                  <img
+                    src={logo}
+                    alt="Logo" className="object-cover w-full h-full"
+                  />
                 </div>
-              )}
+              </div>
+            )}
+
+            {!isMobile && (
+              <button
+                onClick={toggleSidebar}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
+              >
+                {isOpen ? (
+                  <ChevronLeft className="h-5 w-5 text-gray-600" />
+                ) : (
+                  <ChevronRight className="h-5 w-5 text-gray-600" />
+                )}
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Menus */}
-          <div className="flex-1 flex flex-col overflow-y-auto scrollbar-hide">
+        <div className="flex-1 flex flex-col overflow-y-auto scrollbar-hide">
           <div className="flex-1 p-3 overflow-y-auto scrollbar-hide">
             <div className="space-y-1">
-          {navigationItems.map((item) => {
-            const isActive = isItemActive(item.url, item.subItems);
-            const isExpanded = expandedItems.includes(item.id);
+              {navigationItems.map((item) => {
+                const isActive = isItemActive(item.url, item.subItems);
+                const isExpanded = expandedItems.includes(item.id);
 
-            return (
-              <div key={item.id}>
-                <button
-                  onClick={() => handleItemClick(item)}
-                  className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200
-                    ${
-                      isActive
-                        ? "bg-yellow-400 text-gray-900"
-                        : "bg-white hover:bg-gray-100 text-gray-700"
-                    }
-                    ${!isOpen ? "justify-center" : ""}
-                  `}
-                >
-                  <item.icon className="h-5 w-5" />
+                return (
+                  <div key={item.id}>
+                    <button
+                      ref={el => itemRefs.current[item.id] = el}
+                      onClick={() => handleItemClick(item)}
+                      onFocus={() => setFocusedItemId(item.id)}
+                      tabIndex={focusedItemId === item.id ? 0 : -1}
+                      className={`flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200
+                        ${isActive
+                          ? "bg-yellow-400 text-gray-900"
+                          : focusedItemId === item.id
+                            ? "ring-2 ring-blue-500 ring-offset-1 bg-blue-50"
+                            : "bg-white hover:bg-gray-100 text-gray-700"
+                        }
+                        ${!isOpen ? "justify-center" : ""}
+                        outline-none focus:outline-none
+                      `}
+                    >
+                      <item.icon className="h-5 w-5" />
 
-                  {isOpen && (
-                    <div className="flex items-center justify-between w-full ml-3">
-                      <span className="font-medium text-sm">{item.title}</span>
+                      {isOpen && (
+                        <div className="flex items-center justify-between w-full ml-3">
+                          <span className="font-medium text-sm">{item.title}</span>
 
-                      {item.hasSubmenu && (
-                        <ChevronDown
-                          className={`h-4 w-4 transition-transform ${
-                            isExpanded ? "rotate-180" : ""
-                          }`}
-                        />
+                          {item.hasSubmenu && (
+                            <ChevronDown
+                              className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""
+                                }`}
+                            />
+                          )}
+                        </div>
                       )}
-                    </div>
-                  )}
-                </button>
+                    </button>
 
-                {item.hasSubmenu && isExpanded && isOpen && (
-                  <div>{renderSubItems(item.subItems, item.id)}</div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-        </div>
-     
+                    {item.hasSubmenu && isExpanded && isOpen && (
+                      <div>{renderSubItems(item.subItems, item.id)}</div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
-        {/* Logout Button */}
-        <div className="px-3 pb-3 border-t-2 border-[#e65d00]/40">
+
+          {/* Logout Button */}
+          <div className="px-3 pb-3 border-t-2 border-[#e65d00]/40">
             <button
               onClick={handleLogout}
               className={`mt-2 relative group py-1 rounded-xl transition-all duration-300 hover:shadow-lg w-full card-hover-effect flex items-center px-3 bg-[#e65d00]/20 border border-[#e65d00]/20 hover:bg-[#e65d00]`}

@@ -40,7 +40,7 @@ const routeModuleMap = {
   "/app-management/help-and-support": "Help & Support",
 
   "/app-management/other-settings": "Other Settings",
-  "/app-management/faq": "Faq",
+  "/app-management/faq": "FAQ",
 
   "/sub-admin/roles": "Roles",
   "/sub-admin/users": "Users",
