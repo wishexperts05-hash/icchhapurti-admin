@@ -84,12 +84,17 @@ const editorConfig = {
   onSubmit: async (values) => {
   const formData = new FormData();
 
+  formData.append("category", values.category);
+  formData.append("name", values.name);
+  formData.append("price", values.price);
+  formData.append("returnableDays", values.returnable);
+
   formData.append(
-    "descriptions",
+    "description",
     JSON.stringify(values.descriptions)
   );
 
-  formData.append("easyReturn", easyReturn);
+  formData.append("returnable", easyReturn);
   formData.append("visible", visible);
 
   productImages.forEach(img => {
