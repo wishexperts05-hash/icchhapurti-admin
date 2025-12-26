@@ -84,12 +84,23 @@ const editorConfig = {
   onSubmit: async (values) => {
   const formData = new FormData();
 
-  formData.append(
-    "descriptions",
-    JSON.stringify(values.descriptions)
-  );
+  formData.append("category", values.category);
+  formData.append("name", values.name);
+  formData.append("price", values.price);
+  formData.append("returnableDays", values.returnable);
 
-  formData.append("easyReturn", easyReturn);
+  // formData.append(
+  //   "description",
+  //   JSON.stringify(values.descriptions)
+  // );
+
+  formData.append(
+  "productDetails",
+  JSON.stringify(values.descriptions)
+);
+
+
+  formData.append("returnable", easyReturn);
   formData.append("visible", visible);
 
   productImages.forEach(img => {
@@ -363,19 +374,20 @@ const removeDescription = (index) => {
 
       {/* Description */}
 <div className="border rounded-lg overflow-hidden">
-  <JoditEditor
-    ref={(el) => (editorRefs.current[index] = el)}
-    value={desc.content}
-    config={editorConfig}
-    tabIndex={1}
-    onBlur={(newContent) =>
-      formik.setFieldValue(
-        `descriptions[${index}].content`,
-        newContent
-      )
-    }
-    onChange={() => {}}
-  />
+<JoditEditor
+  ref={(el) => (editorRefs.current[index] = el)}
+  value={desc.detail}
+  config={editorConfig}
+  tabIndex={1}
+  onBlur={(newContent) =>
+    formik.setFieldValue(
+      `descriptions[${index}].detail`,
+      newContent
+    )
+  }
+  onChange={() => {}}
+/>
+
 </div>
 
     </div>
