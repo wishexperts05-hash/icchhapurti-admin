@@ -323,54 +323,51 @@ const EditProduct = () => {
               Description:
             </label>
 
-{descriptionBlocks.map((block, index) => (
-  <div
-    key={index}
-    className="relative border rounded-lg p-4 mb-3"
-  >
-    {/* ❌ Remove Button (TOP LEFT) */}
-    {descriptionBlocks.length > 1 && (
-      <button
-        type="button"
-        onClick={() =>
-          setDescriptionBlocks(
-            descriptionBlocks.filter((_, i) => i !== index)
-          )
-        }
-        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
-      >
-        <FaTimes />
-      </button>
-    )}
+            {descriptionBlocks.map((block, index) => (
+              <div key={index} className="relative border rounded-lg p-4 mb-3">
+                {/* ❌ Remove Button (TOP LEFT) */}
+                {descriptionBlocks.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setDescriptionBlocks(
+                        descriptionBlocks.filter((_, i) => i !== index)
+                      )
+                    }
+                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                  >
+                    <FaTimes />
+                  </button>
+                )}
 
-    {/* Title */}
-    <input
-      type="text"
-      placeholder="Title (e.g. Material, Usage, Care)"
-      value={block.title}
-      onChange={(e) => {
-        const updated = [...descriptionBlocks];
-        updated[index].title = e.target.value;
-        setDescriptionBlocks(updated);
-      }}
-      className="w-full border rounded-md p-2 mb-2 mt-6"
-    />
+                {/* Title */}
+                <input
+                  type="text"
+                  placeholder="Title (e.g. Material, Usage, Care)"
+                  value={block.title}
+                  onChange={(e) => {
+                    const updated = [...descriptionBlocks];
+                    updated[index].title = e.target.value;
+                    setDescriptionBlocks(updated);
+                  }}
+                  className="w-full border rounded-md p-2 mb-2 mt-6"
+                />
 
-    {/* JODIT EDITOR */}
-    <div className="border rounded-lg overflow-hidden">
-      <JoditEditor
-        ref={(el) => (editorRefs.current[index] = el)}
-        value={block.detail}
-        onBlur={(newContent) => {
-          const updated = [...descriptionBlocks];
-          updated[index].detail = newContent;
-          setDescriptionBlocks(updated);
-        }}
-        onChange={() => {}}
-      />
-    </div>
-  </div>
-))}
+                {/* JODIT EDITOR */}
+                <div className="border rounded-lg overflow-hidden">
+                  <JoditEditor
+                    ref={(el) => (editorRefs.current[index] = el)}
+                    value={block.detail}
+                    onBlur={(newContent) => {
+                      const updated = [...descriptionBlocks];
+                      updated[index].detail = newContent;
+                      setDescriptionBlocks(updated);
+                    }}
+                    onChange={() => {}}
+                  />
+                </div>
+              </div>
+            ))}
 
             {/* Add new block */}
             <button
@@ -470,38 +467,59 @@ const EditProduct = () => {
             </div>
           </div>
 
-          {/* EASY RETURN */}
-          <div className="mt-6 flex items-center gap-2">
-            <img src={returnIcon} alt="" className="w-6" />
-            <span className="font-medium">Easy Return</span>
-            <input
-              type="checkbox"
-              checked={easyReturn}
-              onChange={() => setEasyReturn(!easyReturn)}
-            />
-          </div>
+        {/* EASY RETURN */}
+<div className="mt-6 flex items-center gap-2">
+  <img src={returnIcon} alt="" className="w-6 h-6" />
+  <span className="font-medium">Easy Return</span>
 
-          {/* RETURN DAYS */}
-          <div className="mt-4">
-            <label className="font-medium mb-2 block">Return Days:</label>
-            <input
-              name="returnable"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.returnable}
-              className="w-full border p-2 rounded-md"
-            />
-          </div>
+  <label className="relative inline-flex items-center cursor-pointer ml-2">
+    <input
+      type="checkbox"
+      className="sr-only peer"
+      checked={easyReturn}
+      onChange={() => setEasyReturn(!easyReturn)}
+    />
+    <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 
+      after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border 
+      after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
+  </label>
+</div>
 
-          {/* VISIBILITY */}
-          <div className="mt-6 flex items-center gap-2">
-            <span className="font-medium">Visible</span>
-            <input
-              type="checkbox"
-              checked={visible}
-              onChange={() => setVisible(!visible)}
-            />
-          </div>
+{/* RETURN DAYS */}
+{easyReturn && (
+  <div className="mt-4">
+    <label className="font-medium mb-2 block">Return Days:</label>
+    <input
+      name="returnable"
+      type="text"
+      onChange={formik.handleChange}
+      onBlur={formik.handleBlur}
+      value={formik.values.returnable}
+      className="w-full border p-2 rounded-md"
+    />
+    {formik.touched.returnable && formik.errors.returnable && (
+      <p className="text-red-500 text-sm">{formik.errors.returnable}</p>
+    )}
+  </div>
+)}
+
+{/* VISIBILITY */}
+<div className="mt-6 flex items-center gap-2">
+  <span className="font-medium">Visibility</span>
+
+  <label className="relative inline-flex items-center cursor-pointer ml-2">
+    <input
+      type="checkbox"
+      className="sr-only peer"
+      checked={visible}
+      onChange={() => setVisible(!visible)}
+    />
+    <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 
+      after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border 
+      after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
+  </label>
+</div>
+
 
           {/* BUTTONS */}
           <div className="flex justify-center gap-4 mt-8">
