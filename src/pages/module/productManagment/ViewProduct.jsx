@@ -50,8 +50,6 @@ const ViewProduct = () => {
 
   const product = productDetail?.product;
 
-  const parsedDescriptions = product?.productDetails || [];
-
   //  const navigate = useNavigate();
   return (
     <div>
