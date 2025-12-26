@@ -197,14 +197,6 @@ const EditProduct = () => {
     setProductImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const parsedDescription = (() => {
-    try {
-      return JSON.parse(formik.values.description);
-    } catch {
-      return [];
-    }
-  })();
-
   return (
     <div>
       <BreadCrumb
