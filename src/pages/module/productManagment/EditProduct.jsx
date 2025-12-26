@@ -186,17 +186,13 @@ const EditProduct = () => {
 
     setProductVideos((prev) => prev.filter((_, i) => i !== index));
   };
-
   const handleRemoveImage = (index) => {
     const image = productImages[index];
-
     if (!image.isNew) {
       setImagesToDelete((prev) => [...prev, image.url]);
     }
-
     setProductImages((prev) => prev.filter((_, i) => i !== index));
   };
-
   return (
     <div>
       <BreadCrumb
