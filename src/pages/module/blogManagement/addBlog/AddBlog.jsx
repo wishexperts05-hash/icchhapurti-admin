@@ -11,7 +11,14 @@ import useBlogManagement from "../../../../hooks/blogManagement/useBlogManagemen
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 
 const AddBlog = () => {
-  const { createBlog, loading, updateBlog, fetchBlogDetails, blogDetail, resetBlogDetails } = useBlogManagement();
+  const {
+    createBlog,
+    loading,
+    updateBlog,
+    fetchBlogDetails,
+    blogDetail,
+    resetBlogDetails,
+  } = useBlogManagement();
   const navigate = useNavigate();
   const editor = useRef(null);
   const { id } = useParams();
@@ -60,7 +67,7 @@ const AddBlog = () => {
           <LoaderSpinner />
         </div>
       ) : (
-        < Formik
+        <Formik
           enableReinitialize
           initialValues={{
             title: blogDetail?.title || "",
@@ -109,7 +116,6 @@ const AddBlog = () => {
                 ref={editor}
                 value={values.body}
                 onBlur={(newContent) => setFieldValue("body", newContent)}
-
               />
 
               {/* Validation Error */}
@@ -127,7 +133,8 @@ const AddBlog = () => {
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
-                    const file = e.currentTarget.files && e.currentTarget.files[0];
+                    const file =
+                      e.currentTarget.files && e.currentTarget.files[0];
                     setFieldValue("image", file || null);
                     if (file) {
                       const url = URL.createObjectURL(file);
@@ -164,9 +171,8 @@ const AddBlog = () => {
             </Form>
           )}
         </Formik>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 };
 
