@@ -89,10 +89,16 @@ const editorConfig = {
   formData.append("price", values.price);
   formData.append("returnableDays", values.returnable);
 
+  // formData.append(
+  //   "description",
+  //   JSON.stringify(values.descriptions)
+  // );
+
   formData.append(
-    "description",
-    JSON.stringify(values.descriptions)
-  );
+  "productDetails",
+  JSON.stringify(values.descriptions)
+);
+
 
   formData.append("returnable", easyReturn);
   formData.append("visible", visible);
@@ -368,19 +374,20 @@ const removeDescription = (index) => {
 
       {/* Description */}
 <div className="border rounded-lg overflow-hidden">
-  <JoditEditor
-    ref={(el) => (editorRefs.current[index] = el)}
-    value={desc.content}
-    config={editorConfig}
-    tabIndex={1}
-    onBlur={(newContent) =>
-      formik.setFieldValue(
-        `descriptions[${index}].content`,
-        newContent
-      )
-    }
-    onChange={() => {}}
-  />
+<JoditEditor
+  ref={(el) => (editorRefs.current[index] = el)}
+  value={desc.detail}
+  config={editorConfig}
+  tabIndex={1}
+  onBlur={(newContent) =>
+    formik.setFieldValue(
+      `descriptions[${index}].detail`,
+      newContent
+    )
+  }
+  onChange={() => {}}
+/>
+
 </div>
 
     </div>

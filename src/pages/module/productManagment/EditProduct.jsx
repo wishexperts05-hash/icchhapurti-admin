@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import JoditEditor from "jodit-pro-react";
+import { useRef } from "react";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import { FaTimes, FaPlus } from "react-icons/fa";
@@ -14,12 +16,46 @@ import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 const EditProduct = () => {
   const [productImages, setProductImages] = useState([]);
   const [imagesToDelete, setImagesToDelete] = useState([]);
+  const [productVideos, setProductVideos] = useState([]);
+  const [videosToDelete, setVideosToDelete] = useState([]);
+  const [descriptionBlocks, setDescriptionBlocks] = useState([]);
   const [easyReturn, setEasyReturn] = useState(true);
   const [visible, setVisible] = useState(true);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-
   const { id } = useParams();
   const navigate = useNavigate();
+  const editorRefs = useRef([]);
+
+  const editorConfig = {
+    readonly: false,
+    placeholder: "Write product details...",
+    minHeight: 200,
+    buttons: [
+      "bold",
+      "italic",
+      "underline",
+      "|",
+      "ul",
+      "ol",
+      "|",
+      "font",
+      "fontsize",
+      "|",
+      "align",
+      "undo",
+      "redo",
+      "|",
+      "link",
+      "table",
+      "hr",
+      "fullsize",
+    ],
+    removeButtons: ["file", "video", "ai-assistant"],
+    showCharsCounter: false,
+    showWordsCounter: false,
+    showXPathInStatusbar: false,
+    toolbarAdaptive: false,
+  };
 
   const { updateProduct, fetchProductDetailById, productDetail, loading } =
     useProductManagement();
@@ -36,8 +72,11 @@ const EditProduct = () => {
       category: productDetail?.product?.category || "",
       name: productDetail?.product?.name || "",
       price: productDetail?.product?.price || "",
-      description: productDetail?.product?.description || "",
-      returnable: productDetail?.product?.returnable || "N/A",
+      returnable: productDetail?.product?.returnableDays || "",
+      // description: productDetail?.product?.description || "",
+      descriptions: productDetail?.product?.productDetails?.length
+        ? productDetail.product.productDetails
+        : [{ title: "", detail: "" }],
     },
 
     validationSchema: Yup.object({
@@ -47,45 +86,74 @@ const EditProduct = () => {
         .typeError("Price must be a number")
         .positive("Price must be positive")
         .required("Price is required"),
-      description: Yup.string().required("Description is required"),
+      // description: Yup.string().required("Description is required"),
       returnable: Yup.string().required("Return days are required"),
     }),
 
     onSubmit: async (values) => {
       const formData = new FormData();
 
-      Object.keys(values).forEach((key) => {
-        formData.append(key, values[key]);
-      });
+      formData.append("category", values.category);
+      formData.append("name", values.name);
+      formData.append("price", values.price);
+      formData.append("returnableDays", values.returnable);
+
+      // ✅ FIXED DESCRIPTION
+      formData.append("productDetails", JSON.stringify(descriptionBlocks));
 
       formData.append("easyReturn", easyReturn);
       formData.append("visible", visible);
 
-      // Append uploaded images (File objects)
-      // only NEW images
+      // NEW images
       productImages.forEach((img) => {
         if (img.isNew) {
           formData.append("images", img.file);
         }
       });
 
-      // ONLY deleted images
+      // Deleted images
       formData.append("imagesToDelete", JSON.stringify(imagesToDelete));
 
-      await updateProduct(id, formData);
-      // setShowSuccessModal(true);
+      // NEW videos
+      productVideos.forEach((vid) => {
+        if (vid.isNew) {
+          formData.append("videos", vid.file);
+        }
+      });
 
-      // setTimeout(() => {
-      //   setShowSuccessModal(false);
-      //   navigate("/product-management");
-      // }, 2000);
+      // Deleted videos
+      formData.append("videosToDelete", JSON.stringify(videosToDelete));
+
+      await updateProduct(id, formData);
     },
   });
 
   // Convert backend URLs into preview + store existing images
+  // useEffect(() => {
+  //   if (productDetail?.product) {
+  //     setProductImages(productDetail.product.images || []);
+  //     setEasyReturn(productDetail.product.returnable);
+  //     setVisible(productDetail.product.isActive);
+  //   }
+  // }, [productDetail]);
+
   useEffect(() => {
     if (productDetail?.product) {
-      setProductImages(productDetail.product.images || []);
+      const formattedImages = (productDetail.product.images || []).map(
+        (url) => ({
+          url,
+          isNew: false,
+        })
+      );
+      setProductVideos(
+        (productDetail.product.videos || []).map((url) => ({
+          url,
+          isNew: false,
+        }))
+      );
+
+      setDescriptionBlocks(productDetail.product.productDetails || []);
+      setProductImages(formattedImages);
       setEasyReturn(productDetail.product.returnable);
       setVisible(productDetail.product.isActive);
     }
@@ -100,16 +168,42 @@ const EditProduct = () => {
     setProductImages((prev) => [...prev, ...files]);
   };
 
+  const handleVideoUpload = (e) => {
+    const files = Array.from(e.target.files).map((file) => ({
+      file,
+      isNew: true,
+    }));
+
+    setProductVideos((prev) => [...prev, ...files]);
+  };
+
+  const handleRemoveVideo = (index) => {
+    const video = productVideos[index];
+
+    if (!video.isNew) {
+      setVideosToDelete((prev) => [...prev, video.url]);
+    }
+
+    setProductVideos((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleRemoveImage = (index) => {
     const image = productImages[index];
 
-    // if image already exists on cloudinary
-    if (!image.isNew && image.public_id) {
-      setImagesToDelete((prev) => [...prev, image.public_id]);
+    if (!image.isNew) {
+      setImagesToDelete((prev) => [...prev, image.url]);
     }
 
     setProductImages((prev) => prev.filter((_, i) => i !== index));
   };
+
+  const parsedDescription = (() => {
+    try {
+      return JSON.parse(formik.values.description);
+    } catch {
+      return [];
+    }
+  })();
 
   return (
     <div>
@@ -189,7 +283,7 @@ const EditProduct = () => {
           </div>
 
           {/* DESCRIPTION */}
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <label className="block text-gray-700 font-medium mb-2">
               Description:
             </label>
@@ -206,6 +300,91 @@ const EditProduct = () => {
                 {formik.errors.description}
               </p>
             )}
+          </div> */}
+          {/* DESCRIPTION PREVIEW */}
+          {/* {parsedDescription.length > 0 && (
+  <div className="mt-4 border rounded p-3 bg-gray-50">
+    <p className="font-semibold mb-2">Description Preview:</p>
+
+    {parsedDescription.map((item, idx) => (
+      <div key={idx} className="mb-3">
+        <h4 className="font-medium">{item.title}</h4>
+        <div
+          className="text-sm"
+          dangerouslySetInnerHTML={{ __html: item.content }}
+        />
+      </div>
+    ))}
+  </div>
+)} */}
+
+          <div className="mt-4">
+            <label className="block text-gray-700 font-medium mb-2">
+              Description:
+            </label>
+
+{descriptionBlocks.map((block, index) => (
+  <div
+    key={index}
+    className="relative border rounded-lg p-4 mb-3"
+  >
+    {/* ❌ Remove Button (TOP LEFT) */}
+    {descriptionBlocks.length > 1 && (
+      <button
+        type="button"
+        onClick={() =>
+          setDescriptionBlocks(
+            descriptionBlocks.filter((_, i) => i !== index)
+          )
+        }
+        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+      >
+        <FaTimes />
+      </button>
+    )}
+
+    {/* Title */}
+    <input
+      type="text"
+      placeholder="Title (e.g. Material, Usage, Care)"
+      value={block.title}
+      onChange={(e) => {
+        const updated = [...descriptionBlocks];
+        updated[index].title = e.target.value;
+        setDescriptionBlocks(updated);
+      }}
+      className="w-full border rounded-md p-2 mb-2 mt-6"
+    />
+
+    {/* JODIT EDITOR */}
+    <div className="border rounded-lg overflow-hidden">
+      <JoditEditor
+        ref={(el) => (editorRefs.current[index] = el)}
+        value={block.detail}
+        onBlur={(newContent) => {
+          const updated = [...descriptionBlocks];
+          updated[index].detail = newContent;
+          setDescriptionBlocks(updated);
+        }}
+        onChange={() => {}}
+      />
+    </div>
+  </div>
+))}
+
+            {/* Add new block */}
+            <button
+              type="button"
+              onClick={() =>
+                setDescriptionBlocks([
+                  ...descriptionBlocks,
+                  { title: "", content: "" },
+                ])
+              }
+              className="flex items-center gap-2 text-orange-600 mt-2 font-medium"
+            >
+              <FaPlus /> Add Details
+            </button>
           </div>
 
           {/* IMAGES */}
@@ -245,6 +424,47 @@ const EditProduct = () => {
                   multiple
                   className="hidden"
                   onChange={handleImageUpload}
+                />
+              </label>
+            </div>
+          </div>
+          {/* VIDEOS */}
+          <div className="mt-6">
+            <label className="block text-gray-700 font-medium mb-2">
+              Product Videos:
+            </label>
+
+            <div className="flex flex-wrap gap-4">
+              {productVideos.map((vid, index) => (
+                <div
+                  key={index}
+                  className="relative w-64 h-40 border rounded overflow-hidden"
+                >
+                  <video
+                    src={vid.isNew ? URL.createObjectURL(vid.file) : vid.url}
+                    controls
+                    className="w-full h-full object-cover"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveVideo(index)}
+                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                  >
+                    <FaTimes />
+                  </button>
+                </div>
+              ))}
+
+              {/* Upload */}
+              <label className="w-64 h-40 border border-dashed flex items-center justify-center cursor-pointer">
+                <FaPlus />
+                <input
+                  type="file"
+                  accept="video/*"
+                  multiple
+                  hidden
+                  onChange={handleVideoUpload}
                 />
               </label>
             </div>

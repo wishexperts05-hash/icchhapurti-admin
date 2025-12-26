@@ -50,9 +50,7 @@ const ViewProduct = () => {
 
   const product = productDetail?.product;
 
-  const parsedDescriptions = product?.description
-    ? JSON.parse(product.description)
-    : [];
+  const parsedDescriptions = product?.productDetails || [];
 
   //  const navigate = useNavigate();
   return (
@@ -138,19 +136,14 @@ const ViewProduct = () => {
                     Product Details
                   </h3>
 
-                  {parsedDescriptions.length === 0 ? (
-                    <p className="text-sm text-gray-500">
-                      No details available
-                    </p>
+                  {product?.productDetails?.length === 0 ? (
+                    <p>No details available</p>
                   ) : (
-                    parsedDescriptions.map((item, index) => (
-                      <div key={index} className="mb-4">
-                        <h4 className="font-medium text-gray-800 mb-1">
-                          {item.title}
-                        </h4>
+                    product?.productDetails?.map((block, index) => (
+                      <div key={index}>
+                        <h4> Title :{block.title}</h4>
                         <div
-                          className="text-sm text-gray-600"
-                          dangerouslySetInnerHTML={{ __html: item.content }}
+                          dangerouslySetInnerHTML={{ __html: block.detail }}
                         />
                       </div>
                     ))
