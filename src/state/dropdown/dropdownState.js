@@ -44,3 +44,8 @@ export const bannerTypesAtom = atom({
   key: "bannerTypesAtom",
   default: [],
 });
+
+export const faqCategoriesAtom = atom({
+  key: "faqCategoriesAtom",
+  default: [],
+});

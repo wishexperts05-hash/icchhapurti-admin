@@ -9,6 +9,7 @@ import Pagination from "../../../../components/uiComponent/Pagination";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 import useFAQ from "../../../../hooks/appManagement/useFAQ";
 import useDropdown from "../../../../hooks/dropdown/useDropdown";
+import useDebounce from "../../../../hooks/debounce/useDebounce";
 
 const FaqList = () => {
   const navigate = useNavigate();
@@ -19,49 +20,31 @@ const FaqList = () => {
     deleteFaqById,
   } = useFAQ();
 
-  const {
-    fetchFaqCategories,
-        faqCategories,
-        loadingFaqCategories,
-  } = useDropdown();
-  console.log("FAQ Categories", faqCategories);
-
-  const [searchTerm, setSearchTerm] = useState("");
+  const { fetchUserTypeFAQ, dropdownfaq, loadingFaqCategories } = useDropdown();
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 500);
   const [category, setCategory] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  
   useEffect(() => {
-    console.log("Fetching FAQ categories...");
-    try {
-      fetchFaqCategories();
-    } catch (error) {
-      console.error("Error in fetchFaqCategories effect:", error);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchUserTypeFAQ();
   }, []);
 
-  
-  // useEffect(() => {
-  //   console.log("FAQ Categories updated:", faqCategories);
-  //   console.log("Is array?", Array.isArray(faqCategories));
-  //   console.log("Length:", faqCategories?.length);
-  // }, [faqCategories]);
+  //   const faqCategoryOptions = React.useMemo(() => {
+  //   if (!Array.isArray(dropdownfaq)) return [];
 
-  
+  //   return dropdownfaq.map((item) => ({
+  //     label: item,
+  //     value: item,
+  //   }));
+  // }, [dropdownfaq]);
+
   useEffect(() => {
-    console.log("Fetching FAQ list with params:", { page, limit, searchTerm });
-    fetchFaqList(page, limit, searchTerm);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, limit, searchTerm]);
+    fetchFaqList(page, limit, debouncedSearch, category);
+  }, [page, limit, debouncedSearch, category]);
 
-  
-  useEffect(() => {
-    console.log("FAQ List updated:", faqList);
-  }, [faqList]);
-  
-
+  useEffect(() => {}, [faqList]);
 
   const onPageChange = (data) => {
     try {
@@ -79,74 +62,37 @@ const FaqList = () => {
       console.error("Error changing items per page:", error);
     }
   };
-
   const onSearchChange = (e) => {
-    try {
-      const newSearchTerm = e?.target?.value || "";
-      setSearchTerm(newSearchTerm);
-      setPage(1);
-    } catch (error) {
-      console.error("Error changing search term:", error);
-    }
+    setSearchQuery(e.target.value);
+    setPage(1);
   };
-
-  const onChangeSelectFunc = (selected) => {
-    try {
-      console.log("Category selected:", selected);
-      if (selected === null || selected === undefined) {
-        setCategory("");
-      } else if (selected && typeof selected === 'object' && selected.value !== undefined) {
-        
-        setCategory(selected.value);
-      } else {
-        
-        setCategory("");
-      }
-      
-      setPage(1);
-    } catch (error) {
-      console.error("Error changing category:", error);
-      setCategory("");
-    }
+  const onChangeSelectFunc = (option) => {
+    const value = option?.value ?? "";
+    setCategory(value);
+    setPage(1);
   };
 
   const handleDelete = async (id) => {
     const result = await deleteFaqById(id);
     if (result && result.success) {
-      fetchFaqList(page, limit, searchTerm);
+      fetchFaqList(page, limit, debouncedSearch, category);
     }
   };
 
-  
+  useEffect(() => {}, [page, limit, debouncedSearch, category]);
+
   const faqsWithSerialNumbers = React.useMemo(() => {
     const data = faqList?.data || [];
-    
-    
-    if (data.length > 0 && !data[0]?._id) {
-      console.error("FAQ data missing _id field:", data[0]);
-    }
-    
+
+    // if (data.length > 0 && !data[0]?._id) {
+    //   // console.error("FAQ data missing _id field:", data[0]);
+    // }
+
     return data.map((faq, index) => ({
       ...faq,
       srNo: (page - 1) * limit + index + 1,
     }));
   }, [faqList?.data, page, limit]);
-
-  
-  const filteredFaqs = React.useMemo(() => {
-    try {
-      if (!category || category === "") {
-        return faqsWithSerialNumbers;
-      }
-      return faqsWithSerialNumbers.filter((faq) => {
-        
-        return faq?.category && faq.category === category;
-      });
-    } catch (error) {
-      console.error("Error filtering FAQs:", error);
-      return faqsWithSerialNumbers;
-    }
-  }, [faqsWithSerialNumbers, category]);
 
   const columns = [
     { header: "Sr.No.", field: "srNo" },
@@ -164,7 +110,7 @@ const FaqList = () => {
         if (row?._id) {
           navigate(`/app-management/faq/view/${row._id}`);
         } else {
-          console.error("FAQ ID is missing:", row);
+          // console.error("FAQ ID is missing:", row);
         }
       },
     },
@@ -175,7 +121,7 @@ const FaqList = () => {
         if (row?._id) {
           navigate(`/app-management/faq/edit/${row._id}`);
         } else {
-          console.error("FAQ ID is missing:", row);
+          // console.error("FAQ ID is missing:", row);
         }
       },
     },
@@ -186,7 +132,7 @@ const FaqList = () => {
         if (row?._id) {
           handleDelete(row._id);
         } else {
-          console.error("FAQ ID is missing:", row);
+          // console.error("FAQ ID is missing:", row);
         }
       },
     },
@@ -195,7 +141,6 @@ const FaqList = () => {
   const totalPages = faqList?.pagination?.totalPages || 1;
   const totalEntries = faqList?.pagination?.totalRecords || 0;
 
-  
   return (
     <div className="bg-[#F9F9F9] min-h-screen pb-6">
       <BreadCrumb linkText={[{ text: "App Management" }, { text: "FAQ" }]} />
@@ -205,16 +150,17 @@ const FaqList = () => {
         showSearch
         showAddButton
         placeholder="Search FAQ"
-        searchTerm={searchTerm}
+        searchTerm={searchQuery}
         handleSearchTerm={onSearchChange}
         addButtonText="Add FAQ"
         onClick={() => navigate("/app-management/faq/add")}
         showSelect
-        options={faqCategories}
         selectPlaceHolder="Select Category"
+        options={dropdownfaq} // ✅ ADD THIS LINE
         optionsLoading={loadingFaqCategories}
+        // value={faqCategoryOptions.find(opt => opt.value === category) || null}
         onChangeSelectFunc={onChangeSelectFunc}
-        />
+      />
 
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
         <div className="overflow-x-auto">
@@ -223,14 +169,10 @@ const FaqList = () => {
               <div className="flex justify-center items-center py-10">
                 <LoaderSpinner />
               </div>
-            ) : filteredFaqs.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                No FAQs found
-              </div>
             ) : (
               <DataTable
                 columns={columns}
-                data={filteredFaqs}
+                data={faqsWithSerialNumbers}
                 currentPage={page}
                 usersPerPage={limit}
                 actions={actions}
@@ -238,16 +180,15 @@ const FaqList = () => {
             )}
           </div>
 
-          {!faqLoading && filteredFaqs.length > 0 && (
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              totalItems={totalEntries}
-              itemsPerPage={limit}
-              onPageChange={onPageChange}
-              onItemsPerPageChange={onItemsPerPageChange}
-            />
-          )}
+          {/* {!faqLoading && filteredFaqs.length > 0 && ( */}
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            totalItems={totalEntries}
+            itemsPerPage={limit}
+            onPageChange={onPageChange}
+            onItemsPerPageChange={onItemsPerPageChange}
+          />
         </div>
       </div>
     </div>

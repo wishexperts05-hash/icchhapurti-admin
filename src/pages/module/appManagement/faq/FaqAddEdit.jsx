@@ -21,23 +21,10 @@ const FaqAddEdit = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const formikRef = useRef(null);
-  
-  const { 
-    loading, 
-    fetchFaqById, 
-    createFaq, 
-    updateFaqById 
-  } = useFAQ();
-  
-  const {
-    faqCategories,
-    loadingFaqCategories,
-    fetchFaqCategories,
 
+  const { loading, fetchFaqById, createFaq, updateFaq } = useFAQ();
 
-
-     fetchAllUserType,userTypeFAQ,loadingUser
-  } = useDropdown();
+  const { fetchUserTypeFAQ, dropdownfaq, loadingUser } = useDropdown();
 
   const [initialValues, setInitialValues] = useState({
     category: "",
@@ -47,22 +34,9 @@ const FaqAddEdit = () => {
 
   const isEditMode = Boolean(id);
 
-  // Fetch FAQ categories on mount
   useEffect(() => {
-    console.log("Fetching FAQ categories...");
-    try {
-      fetchFaqCategories();
-    } catch (error) {
-      console.error("Error in fetchFaqCategories effect:", error);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchUserTypeFAQ();
   }, []);
-
-
-  useEffect(()=>{
-    fetchAllUserType();
-  },[])
-  console.log("nice to meet you", userTypeFAQ)
 
   // Fetch FAQ data if in edit mode
   useEffect(() => {
@@ -71,7 +45,7 @@ const FaqAddEdit = () => {
         try {
           console.log("Fetching FAQ with ID:", id);
           const result = await fetchFaqById(id);
-          
+
           if (result && result.success && result.data) {
             setInitialValues({
               category: result.data.category || "",
@@ -84,8 +58,8 @@ const FaqAddEdit = () => {
           }
         } catch (error) {
           console.error("Error fetching FAQ:", error);
-          toast.error("Something went wrong while fetching FAQ details");
-          navigate("/app-management/faq");
+          toast.error("Failed to fetch FAQ details");
+          // navigate("/app-management/faq");
         }
       };
 
@@ -103,13 +77,13 @@ const FaqAddEdit = () => {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       setSubmitting(true);
-      
+
       if (isEditMode) {
         console.log("Updating FAQ with ID:", id, "Values:", values);
-        const result = await updateFaqById(id, values);
-        
+        const result = await updateFaq(id, values);
+
         if (result && result.success) {
-          toast.success("FAQ updated successfully");
+          // toast.success("FAQ updated successfully");
           navigate("/app-management/faq");
         } else {
           toast.error(result?.message || "Failed to update FAQ");
@@ -117,7 +91,7 @@ const FaqAddEdit = () => {
       } else {
         console.log("Creating new FAQ with values:", values);
         const result = await createFaq(values);
-        
+
         if (result && result.success) {
           toast.success("FAQ added successfully");
           resetForm();
@@ -128,8 +102,13 @@ const FaqAddEdit = () => {
         }
       }
     } catch (error) {
-      console.error(`Error ${isEditMode ? "updating" : "creating"} FAQ:`, error);
-      toast.error(`Something went wrong while ${isEditMode ? "updating" : "creating"} FAQ`);
+      console.error(
+        `Error ${isEditMode ? "updating" : "creating"} FAQ:`,
+        error
+      );
+      toast.error(
+        `Something went wrong while ${isEditMode ? "updating" : "creating"} FAQ`
+      );
     } finally {
       setSubmitting(false);
     }
@@ -139,9 +118,12 @@ const FaqAddEdit = () => {
     navigate("/app-management/faq");
   };
 
-
-
-  if (loading || (isEditMode && initialValues.category === "" && initialValues.question === "")) {
+  if (
+    loading ||
+    (isEditMode &&
+      initialValues.category === "" &&
+      initialValues.question === "")
+  ) {
     return (
       <div className="bg-[#F9F9F9] min-h-screen pb-6">
         <BreadCrumb
@@ -186,14 +168,16 @@ const FaqAddEdit = () => {
                 name="category"
                 fieldType="select"
                 placeholder="Select Category"
-                options={userTypeFAQ}
-                disabled={loadingFaqCategories}
+                options={dropdownfaq || []} // ✅ STRING ARRAY
+                disabled={loadingUser}
               />
 
               <FormField
                 label="Question"
                 name="question"
-                placeholder={isEditMode ? "Enter your question" : "Enter question.."}
+                placeholder={
+                  isEditMode ? "Enter your question" : "Enter question.."
+                }
               />
 
               <FormField
@@ -213,11 +197,11 @@ const FaqAddEdit = () => {
                   onClick={handleCancel}
                   disabled={isSubmitting}
                 />
-                <Button 
-                  text={isEditMode ? "Update FAQ" : "Save"} 
-                  variant={1} 
+                <Button
+                  text={isEditMode ? "Update FAQ" : "Save"}
+                  variant={1}
                   type="submit"
-                  disabled={isSubmitting || loadingFaqCategories}
+                  disabled={isSubmitting || loadingUser}
                   loading={isSubmitting}
                 />
               </div>
