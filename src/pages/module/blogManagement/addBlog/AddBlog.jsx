@@ -38,6 +38,20 @@ const AddBlog = () => {
   const validationSchema = Yup.object().shape({
     title: Yup.string().trim().required("Blog title is required"),
     body: Yup.string().trim().required("Blog content cannot be empty"),
+
+    image: Yup.mixed().test(
+      "image-required",
+      "Feature image is required",
+      function (value) {
+        // CREATE MODE → image required
+        if (!id) {
+          return value instanceof File;
+        }
+
+        // EDIT MODE → allow existing image
+        return true;
+      }
+    ),
   });
 
   useEffect(() => {
@@ -123,22 +137,21 @@ const AddBlog = () => {
                 <p className="text-red-500 text-sm mt-1">{errors.body}</p>
               )}
 
-              {/* Buttons */}
               {/* Image upload + preview */}
               <div className="mt-4">
                 <label className="block text-sm font-medium text-[#004AAD] mb-2">
                   Feature Image
                 </label>
+
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
-                    const file =
-                      e.currentTarget.files && e.currentTarget.files[0];
-                    setFieldValue("image", file || null);
+                    const file = e.currentTarget.files?.[0] || null;
+                    setFieldValue("image", file);
+
                     if (file) {
-                      const url = URL.createObjectURL(file);
-                      setPreviewImage(url);
+                      setPreviewImage(URL.createObjectURL(file));
                     } else if (blogDetail?.imageUrl) {
                       setPreviewImage(blogDetail.imageUrl);
                     } else {
@@ -147,6 +160,11 @@ const AddBlog = () => {
                   }}
                   className="w-full"
                 />
+
+                {/* IMAGE ERROR */}
+                {touched.image && errors.image && (
+                  <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+                )}
 
                 {previewImage && (
                   <div className="mt-3">
@@ -165,6 +183,9 @@ const AddBlog = () => {
                   text="Cancel"
                   variant={2}
                   onClick={handleCancel}
+                  disabled={
+                    loading || (!id && !values.image) // disable if create mode & no image
+                  }
                 />
                 <Button type="submit" text="Save" variant={1} />
               </div>
