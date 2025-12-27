@@ -17,13 +17,17 @@ const useFAQ = () => {
   const [fetchData] = useFetch();
   const navigate = useNavigate();
 
-  const fetchFaqList = async (page = 1, limit = 10, search = "") => {
+  const fetchFaqList = async (page = 1, limit = 10, search = "",category) => {
     setLoading(true);
     try {
       let url = `${conf.apiBaseUrl}admin/faq/list?page=${page}&limit=${limit}`;
       
       if (search && search.trim() !== "") {
         url += `&search=${encodeURIComponent(search.trim())}`;
+      }
+
+      if (category && category.trim() !== "") {
+        url += `&category=${encodeURIComponent(category.trim())}`;
       }
 
       const res = await fetchData({
@@ -69,24 +73,31 @@ const useFAQ = () => {
 
  
   const fetchFaqById = async (id) => {
-    setFaqDetail(null);
-    setLoading(true);
-    try {
-      const res = await fetchData({
-        method: "GET",
-        url: `${conf.apiBaseUrl}admin/faq/${id}`,
-      });
+  let res = null;                 
+  setFaqDetail(null);
+  setLoading(true);
 
-      if (res && res.success) {
-        setFaqDetail(res.data);
-      }
-    } catch (error) {
-      console.error("Error fetching FAQ details:", error);
-      toast.error(error?.response?.data?.message || "Failed to fetch FAQ details");
-    } finally {
-      setLoading(false);
+  try {
+    res = await fetchData({
+      method: "GET",
+      url: `${conf.apiBaseUrl}admin/faq/${id}`,
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+
+    if (res?.success) {
+      setFaqDetail(res.data);
     }
-  };
+  } catch (error) {
+    console.error("Error fetching FAQ details:", error);
+  } finally {
+    setLoading(false);
+  }
+
+  return res;   
+};
+
 
   
   const resetFaqDetail = () => {
@@ -111,8 +122,7 @@ const useFAQ = () => {
       });
 
       if (res && res.success) {
-        toast.success(res?.message || "FAQ created successfully");
-        navigate("/faq-management");
+        navigate("/app-management/faq");
         return res;
       }
     } catch (error) {
