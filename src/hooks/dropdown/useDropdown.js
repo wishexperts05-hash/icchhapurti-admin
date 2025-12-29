@@ -52,6 +52,7 @@ const useDropdown = () => {
   const [countryCode,setCountryCode] = useState();
   const [loadingCode, setLoadingCode] = useState(false);
   const [userTypeFAQ ,setUserTypeFAQ] =useState([])
+  const [dropdownfaq, setDropdownfaq] = useState ([]);
 
   
 
@@ -369,6 +370,25 @@ const fetchCitiesByState = async (countryName, stateName) => {
   }
 };
 
+// -----------------------------Fetch user type in FAQ management----------------------------------- //
+const fetchUserTypeFAQ = async () => {
+  setLoadingUser(true);
+  try { 
+    const res = await fetchData({
+      method: "GET",
+      url: `${conf.apiBaseUrl}admin/faq/categories`,
+      headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+    });
+    if (res?.success) {
+      setDropdownfaq(res.data || []);
+    }
+  } finally {
+    setLoadingUser(false);
+  } 
+};
+
 
   const loading =
     loadingSales || loadingRegion ||
@@ -388,6 +408,7 @@ const fetchCitiesByState = async (countryName, stateName) => {
     fetchProductCategory,
     fetchOrderStatus,
     fetchUserType,
+    fetchUserTypeFAQ,
     fetchProductDropdown,
     fetchCountryDropdown,
     fetchStatesByCountry,
@@ -408,6 +429,7 @@ fetchAlCountriescallingcodes,
     countries,
     bannerTypes,
     appTypes,
+    dropdownfaq,
 
     resetUserType,
     resetBannerTypes,
