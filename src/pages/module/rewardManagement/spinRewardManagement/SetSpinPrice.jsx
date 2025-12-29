@@ -104,6 +104,7 @@ const SetSpinPrice = () => {
                       label="Spin"
                       name="staffSpin"
                       type="number"
+                      readOnly
                       placeholder="Enter spin count"
                     />
                     <FormField
@@ -124,6 +125,7 @@ const SetSpinPrice = () => {
                       label="Spin"
                       name="userSpin"
                       type="number"
+                       readOnly
                       placeholder="Enter spin count"
                     />
                     <FormField
