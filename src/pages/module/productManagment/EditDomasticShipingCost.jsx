@@ -99,7 +99,7 @@ const EditDomesticShippingCost = () => {
 
           {/* Country */}
           <div>
-            <label className="block font-medium mb-2">Country :</label>
+            <label className="block font-medium mb-2">Region :</label>
             <input
               name="country"
               value={formik.values.country}
