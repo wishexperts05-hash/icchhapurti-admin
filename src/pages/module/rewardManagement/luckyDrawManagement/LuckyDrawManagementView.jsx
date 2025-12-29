@@ -91,7 +91,7 @@ export default function LuckyDrawManagementView() {
     <div className="max-w-7xl mx-auto">
       {/* Breadcrumb */}
       <BreadCrumb
-        linkText={[
+        linkText={[  { text: "Reward Management" },
           { text: "Lucky Draw Management", href: "/lucky-draw-management" },
           { text: "View Lucky Draw Event" },
         ]}

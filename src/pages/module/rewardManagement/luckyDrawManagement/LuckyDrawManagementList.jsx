@@ -113,11 +113,11 @@ export default function LuckyDrawManagementList() {
   return (
     <div className="max-w-7xl mx-auto">
       {/* Breadcrumb */}
-      <BreadCrumb linkText={[{ text: "Lucky Draw Management" }]} />
+      <BreadCrumb linkText={[{ text: "Reward Management" },{ text: "Lucky Draw Management" }]} />
 
       {/* Page Title & Search */}
       <PagePath2
-        title="Lucky Draw Events"
+        title="Lucky Draw Management"
         showSearch={true}
         searchTerm={searchTerm}
         handleSearchTerm={handleSearchTerm}

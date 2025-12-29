@@ -157,7 +157,7 @@ const AddSpinReward = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <BreadCrumb
-        linkText={[
+        linkText={[  { text: "Reward Management" },
           { text: "Spin Reward Management", href: "/spin-reward-management" },
           { text: "Add Spin Reward" },
         ]}

@@ -46,7 +46,7 @@ const StatCard = ({ title, value, change, icon, variant }) => {
       <div className="p-4 sm:p-5 md:p-6 flex flex-col gap-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2 flex-1">
-            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-gray-600  first-letter-capital tracking-wider">
               {title}
             </p>
             <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
@@ -186,7 +186,7 @@ const LuckyDrawAnalysis = () => {
   const columns2 = [
     { header: "Sr.No.", field: "srNo" },
     { header: "Name", field: "winnerName" },
-    { header: "Ticket no", field: "ticketNumber" },
+    { header: "Ticket No", field: "ticketNumber" },
     { header: "Draw Id", field: "drawId" },
     { header: "Draw Name", field: "drawName" },
     { header: "Type", field: "userType" },
@@ -224,10 +224,10 @@ const LuckyDrawAnalysis = () => {
       <BreadCrumb
         linkText={[
           { text: "Reports & Analytics" },
-          { text: "Luck Draw Analysis" },
+          { text: "Lucky Draw Analysis" },
         ]}
       />
-      <PagePath2 title="Luck Draw Analysis" />
+      <PagePath2 title="Lucky Draw Analysis" />
 
       <div className="max-w-[2000px]  flex flex-col ">
         <div className="relative">

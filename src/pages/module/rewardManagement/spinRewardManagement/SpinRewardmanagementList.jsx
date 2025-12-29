@@ -96,7 +96,7 @@ export default function SpinRewardManagementList() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <BreadCrumb linkText={[{ text: "Spin Reward Management" }]} />
+      <BreadCrumb linkText={[ { text: "Reward Management" },{ text: "Spin Reward Management" }]} />
 
       <PagePath2
         title="Spin Reward Management"

@@ -186,25 +186,13 @@ const EditProduct = () => {
 
     setProductVideos((prev) => prev.filter((_, i) => i !== index));
   };
-
   const handleRemoveImage = (index) => {
     const image = productImages[index];
-
     if (!image.isNew) {
       setImagesToDelete((prev) => [...prev, image.url]);
     }
-
     setProductImages((prev) => prev.filter((_, i) => i !== index));
   };
-
-  const parsedDescription = (() => {
-    try {
-      return JSON.parse(formik.values.description);
-    } catch {
-      return [];
-    }
-  })();
-
   return (
     <div>
       <BreadCrumb
@@ -467,59 +455,64 @@ const EditProduct = () => {
             </div>
           </div>
 
-        {/* EASY RETURN */}
-<div className="mt-6 flex items-center gap-2">
-  <img src={returnIcon} alt="" className="w-6 h-6" />
-  <span className="font-medium">Easy Return</span>
+          {/* EASY RETURN */}
+          <div className="mt-6 flex items-center gap-2">
+            <img src={returnIcon} alt="" className="w-6 h-6" />
+            <span className="font-medium">Easy Return</span>
 
-  <label className="relative inline-flex items-center cursor-pointer ml-2">
-    <input
-      type="checkbox"
-      className="sr-only peer"
-      checked={easyReturn}
-      onChange={() => setEasyReturn(!easyReturn)}
-    />
-    <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 
+            <label className="relative inline-flex items-center cursor-pointer ml-2">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={easyReturn}
+                onChange={() => setEasyReturn(!easyReturn)}
+              />
+              <div
+                className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 
       after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border 
-      after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
-  </label>
-</div>
+      after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"
+              />
+            </label>
+          </div>
 
-{/* RETURN DAYS */}
-{easyReturn && (
-  <div className="mt-4">
-    <label className="font-medium mb-2 block">Return Days:</label>
-    <input
-      name="returnable"
-      type="text"
-      onChange={formik.handleChange}
-      onBlur={formik.handleBlur}
-      value={formik.values.returnable}
-      className="w-full border p-2 rounded-md"
-    />
-    {formik.touched.returnable && formik.errors.returnable && (
-      <p className="text-red-500 text-sm">{formik.errors.returnable}</p>
-    )}
-  </div>
-)}
+          {/* RETURN DAYS */}
+          {easyReturn && (
+            <div className="mt-4">
+              <label className="font-medium mb-2 block">Return Days:</label>
+              <input
+                name="returnable"
+                type="text"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.returnable}
+                className="w-full border p-2 rounded-md"
+              />
+              {formik.touched.returnable && formik.errors.returnable && (
+                <p className="text-red-500 text-sm">
+                  {formik.errors.returnable}
+                </p>
+              )}
+            </div>
+          )}
 
-{/* VISIBILITY */}
-<div className="mt-6 flex items-center gap-2">
-  <span className="font-medium">Visibility</span>
+          {/* VISIBILITY */}
+          <div className="mt-6 flex items-center gap-2">
+            <span className="font-medium">Visibility</span>
 
-  <label className="relative inline-flex items-center cursor-pointer ml-2">
-    <input
-      type="checkbox"
-      className="sr-only peer"
-      checked={visible}
-      onChange={() => setVisible(!visible)}
-    />
-    <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 
+            <label className="relative inline-flex items-center cursor-pointer ml-2">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={visible}
+                onChange={() => setVisible(!visible)}
+              />
+              <div
+                className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 
       after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border 
-      after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
-  </label>
-</div>
-
+      after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"
+              />
+            </label>
+          </div>
 
           {/* BUTTONS */}
           <div className="flex justify-center gap-4 mt-8">
