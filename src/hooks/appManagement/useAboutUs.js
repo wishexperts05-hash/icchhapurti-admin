@@ -38,9 +38,9 @@ const useAboutUs = () => {
         method: "PUT",
         url: `${conf.apiBaseUrl}admin/appManagement/aboutUs`,
         data: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        // headers: {
+        //   "Content-Type": "multipart/form-data",
+        // },
       });
 
       if (res) {

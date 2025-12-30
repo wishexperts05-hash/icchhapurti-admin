@@ -18,7 +18,7 @@ const PermissionTable = ({
     toggleModuleExpansion,
     toggleAllChildPermissions,
     toggleModulePrivilege,
-    getModuleIcon
+    getModuleIcon, onGrantRevokeAll 
 }) => {
 
     const PermissionCheckbox = ({ checked, onChange, disabled = false, type = 'default' }) => {
@@ -63,19 +63,28 @@ const PermissionTable = ({
         toggleModuleExpansion(parentName);
     };
 
+    //old code
+    // const handleBulkAction = (e, action) => {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     if (action === 'grant') {
+    //         parentModules.forEach(parent => {
+    //             toggleAllChildPermissions(parent, true);
+    //         });
+    //     } else {
+    //         parentModules.forEach(parent => {
+    //             toggleAllChildPermissions(parent, false);
+    //         });
+    //     }
+    // };
+
     const handleBulkAction = (e, action) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (action === 'grant') {
-            parentModules.forEach(parent => {
-                toggleAllChildPermissions(parent, true);
-            });
-        } else {
-            parentModules.forEach(parent => {
-                toggleAllChildPermissions(parent, false);
-            });
-        }
-    };
+    e.preventDefault();
+    e.stopPropagation();
+
+    onGrantRevokeAll(action === 'grant');
+};
+
 
     // const handleChildToggle = (e, moduleName, privilege) => {
     //     e.preventDefault();

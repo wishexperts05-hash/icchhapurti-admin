@@ -63,6 +63,7 @@ function AboutusEdit() {
     team3Name: aboutUs?.ourTeam?.[2]?.name || "",
     team3Role: aboutUs?.ourTeam?.[2]?.role || "",
     team3Description: aboutUs?.ourTeam?.[2]?.description || "",
+    customerRating: aboutUs?.showCustomerRatings ?? true,
   };
 
   // Handle image file selection
@@ -126,11 +127,12 @@ function AboutusEdit() {
 
     // Append statistics data
     formData.append("statistics[sellingProducts]", values.sellingProducts);
-    formData.append("statistics[satisfiedCustomer]", values.satisfiedCustomer);
+    formData.append("statistics[satisfiedCustomers]", values.satisfiedCustomer);
     formData.append("statistics[worldwideHonors]", values.worldwideHonors);
 
     // Append customer ratings toggle
-    formData.append("showCustomerRatings", values.showCustomerRatings);
+    // formData.append("showCustomerRatings", values.showCustomerRatings);
+     formData.append("customerRating", values.customerRating);
 
     // Append mission data
     formData.append("ourMission[description]", values.missionDescription);
@@ -151,22 +153,24 @@ function AboutusEdit() {
     formData.append("ourTeam[2][role]", values.team3Role);
     formData.append("ourTeam[2][description]", values.team3Description);
 
+   
+
     // Append new images
     heroImages.forEach((image) => {
-      formData.append("heroSection[images]", image);
+      formData.append("heroSection", image);
     });
 
     missionImages.forEach((image) => {
-      formData.append("ourMission[images]", image);
+      formData.append("ourMission", image);
     });
 
     visionImages.forEach((image) => {
-      formData.append("ourVision[images]", image);
+      formData.append("ourVision", image);
     });
 
     teamImages.forEach((image, index) => {
       if (image) {
-        formData.append(`ourTeam[${index}][image]`, image);
+        formData.append(`ourTeam${index+1}`, image);
       }
     });
 
@@ -206,7 +210,7 @@ function AboutusEdit() {
         <div className="bg-white w-full rounded-xl shadow-lg mb-2 p-8">
           <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema}
+            // validationSchema={validationSchema}
             onSubmit={handleSubmit}
             enableReinitialize={true}
           >
@@ -352,15 +356,16 @@ function AboutusEdit() {
                   
                   <div className="flex items-center justify-between border rounded-lg p-4">
                     <span className="font-medium">Show Customer Ratings</span>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={values.showCustomerRatings}
-                        onChange={(e) => setFieldValue("showCustomerRatings", e.target.checked)}
-                        className="sr-only peer"
-                      />
-                      <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-500"></div>
-                    </label>
+          <label className="relative inline-flex items-center cursor-pointer">
+  <input
+    type="checkbox"
+    checked={values.customerRating}
+    onChange={(e) => setFieldValue("customerRating", e.target.checked)}
+    className="sr-only peer"
+  />
+  <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-500"></div>
+</label>
+
                   </div>
                 </div>
 
