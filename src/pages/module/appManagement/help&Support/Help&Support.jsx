@@ -27,7 +27,9 @@ function HelpSupport() {
   const validationSchema = Yup.object({
     contactNumber: Yup.string()
       .required("Contact number is required")
-      .matches(/^[\d\s\-\(\)\+]+$/, "Invalid phone number format"),
+      .matches(/^[\d\s\-\(\)\+]+$/, "Invalid phone number format")
+          .min(10, "Phone number must be at least 10 digits")
+    .max(15, "Phone number must not exceed 15 digits"),
   });
 
   const handleSubmit = async (values) => {
