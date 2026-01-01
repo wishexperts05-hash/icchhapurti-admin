@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const ChatSupportSystem = () => {
   const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState("");
 
   const {
     fetchAllChatConversations,
@@ -18,8 +19,8 @@ const ChatSupportSystem = () => {
 
   // Fetch conversations when page loads
   useEffect(() => {
-    fetchAllChatConversations();
-  }, []);
+    fetchAllChatConversations(searchTerm);
+  }, [searchTerm]);
 
   // Map API response → table rows
   const mappedData =
@@ -43,10 +44,15 @@ const ChatSupportSystem = () => {
     { header: "Action", field: "action" },
   ];
 
+    const handleSearchTermChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Chat Support System" }]} />
-      <PagePath2 title="Chat Support System" showSearch />
+      <PagePath2 title="Chat Support System" showSearch  searchTerm={searchTerm}
+        handleSearchTerm={handleSearchTermChange} />
 
       <DataTable
         columns={columns}
