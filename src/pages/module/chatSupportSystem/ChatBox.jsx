@@ -129,8 +129,8 @@ const ChatBox = () => {
                   alignItems: "center",
                 }}
               >
-                <Chip label="Resolved" color="success" />
-                <Chip label="Pending" color="default" />
+                {/* <Chip label="Resolved" color="success" />
+                <Chip label="Pending" color="default" /> */}
               </Box>
             </Box>
             <Box

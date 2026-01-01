@@ -14,12 +14,12 @@ const useChatSupportSystem = () => {
     const [fetchData] = useFetch(); 
 
 
-const fetchAllChatConversations = async () => {
+const fetchAllChatConversations = async (searchTerm ) => {
   setLoading(true);
   try {
     const res = await fetchData({
       method: "GET",
-      url: `${conf.apiBaseUrl}admin/chat/getAllConversations`,
+      url: `${conf.apiBaseUrl}admin/chat/getAllConversations?search=${searchTerm || ""}`,
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
@@ -83,7 +83,7 @@ const fetchConversationById = async (conversationId) => {
 
 
 const sendMessage = async ({ receiverId, receiverType, message }) => {
-  setLoading(true);
+  // setLoading(true);
   try {
     const res = await fetchData({
       method: "POST",
@@ -105,7 +105,7 @@ const sendMessage = async ({ receiverId, receiverType, message }) => {
     toast.error(error?.response?.data?.message || "Failed to send message");
     return null;
   } finally {
-    setLoading(false);
+    // setLoading(false);
   }
 };
 

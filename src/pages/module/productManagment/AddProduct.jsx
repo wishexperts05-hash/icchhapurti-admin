@@ -381,12 +381,12 @@ const AddProduct = () => {
               <div className="border rounded-lg overflow-hidden">
                 <JoditEditor
                   ref={(el) => (editorRefs.current[index] = el)}
-                  value={desc.detail}
+                  value={desc.content}
                   config={editorConfig}
                   tabIndex={1}
                   onBlur={(newContent) =>
                     formik.setFieldValue(
-                      `descriptions[${index}].detail`,
+                      `descriptions[${index}].content`,
                       newContent
                     )
                   }
