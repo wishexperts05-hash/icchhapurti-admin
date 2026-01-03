@@ -406,11 +406,11 @@ const AddEditUser = () => {
                   </button>
                 </div>
                 
-                <p className="text-xs text-gray-500">
+                {/* <p className="text-xs text-gray-500">
                   {id
                     ? "Leave blank to keep current password, or enter new password"
                     : "Enter password (min 8 characters)"}
-                </p>
+                </p> */}
               </div>
 
               <FormField
