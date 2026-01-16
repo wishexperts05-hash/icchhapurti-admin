@@ -13,7 +13,7 @@ import useLogin from "../../../../hooks/auth/useLogin";
 import usePermissions from "../../../../hooks/auth/usePermissions";
 
 const BlogManagement = () => {
-    const { blogList, loading, fetchBlogList, deleteBlog } = useBlogManagement();
+    const { blogList, loading, fetchBlogList, deleteBlog, resetBlogDetails} = useBlogManagement();
     const navigate = useNavigate();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
@@ -49,6 +49,7 @@ const BlogManagement = () => {
 
     const handleAddBlog = () => {
         navigate("/blog-management/add-blogs");
+        resetBlogDetails();
     };
 
     const handleView = (row) => {

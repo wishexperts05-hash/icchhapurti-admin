@@ -21,9 +21,7 @@ const AddBlog = () => {
     if (id) {
       fetchBlogDetails(id);
     }
-    return () => {
-      resetBlogDetails();
-    };
+    return () => resetBlogDetails();
   }, [id]);
 
   console.log("blogDetail in AddBlog:", blogDetail);
