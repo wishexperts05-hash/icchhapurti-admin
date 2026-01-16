@@ -82,9 +82,6 @@ const useProductManagement = () => {
       const res = await fetchData({
         method: "POST",
         url: `${conf.apiBaseUrl}product/add`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
         data: formdata,
       });
       if (res) {
@@ -136,9 +133,6 @@ const useProductManagement = () => {
         const res = await fetchData({
           method: "DELETE",
           url: `${conf.apiBaseUrl}product/delete/${id}`,
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         });
 
         if (res) {
@@ -165,9 +159,6 @@ const useProductManagement = () => {
     try {
       const res = await fetch(`${conf.apiBaseUrl}admin/shipping/domestic`, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
 
       if (!res.ok) {
@@ -198,9 +189,6 @@ const useProductManagement = () => {
         `${conf.apiBaseUrl}admin/shipping/international`,
         {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         }
       );
 
@@ -228,9 +216,6 @@ const useProductManagement = () => {
   const fetchCountries = async () => {
     try {
       const res = await fetch(`${conf.apiBaseUrl}admin/country/all`, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
 
       const data = await res.json();
@@ -251,10 +236,6 @@ const useProductManagement = () => {
     try {
       const res = await fetch(`${conf.apiBaseUrl}admin/shipping/domestic`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
         body: JSON.stringify(payload),
       });
 
@@ -271,10 +252,6 @@ const useProductManagement = () => {
         `${conf.apiBaseUrl}admin/shipping/international`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
           body: JSON.stringify(payload),
         }
       );
@@ -294,9 +271,6 @@ const useProductManagement = () => {
         `${conf.apiBaseUrl}admin/shipping/domestic/${id}`,
         {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         }
       );
       if (!res.ok) throw new Error("Failed to fetch");
@@ -317,10 +291,6 @@ const useProductManagement = () => {
         `${conf.apiBaseUrl}admin/shipping/domestic/${id}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
           body: JSON.stringify(payload),
         }
       );
@@ -343,9 +313,6 @@ const useProductManagement = () => {
         `${conf.apiBaseUrl}admin/shipping/international/${id}`,
         {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         }
       );
 
@@ -370,10 +337,6 @@ const useProductManagement = () => {
         `${conf.apiBaseUrl}admin/shipping/international/${id}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
           body: JSON.stringify(payload),
         }
       );
@@ -400,10 +363,6 @@ const useProductManagement = () => {
       const res = await fetchData({
         method: "PUT",
         url: `${conf.apiBaseUrl}product/updateStatus/${id}`,
-        headers: {
-          "Content-Type": "application/json", // ✅ REQUIRED
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
         data: {
           isActive: isActive, // ✅ JSON BODY
         },
