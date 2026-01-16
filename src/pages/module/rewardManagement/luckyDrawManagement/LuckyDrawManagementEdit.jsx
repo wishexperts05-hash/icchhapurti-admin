@@ -232,7 +232,7 @@ const LuckyDrawManagementEdit = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <BreadCrumb
-        linkText={[
+        linkText={[ { text: "Reward Management" },
           { text: "Lucky Draw Management", href: "/lucky-draw-management" },
           { text: "Edit Lucky Draw" },
         ]}

@@ -97,7 +97,7 @@ function CoinSetting({ onEdit, coinSettingData, canUpdate }) {
 
         <Section title="Set Coin Value">
           <FieldView
-            label="Coin"
+            label="Coins"
             value={coinSettingData.setCoinValue?.coin}
           />
           <FaEquals />

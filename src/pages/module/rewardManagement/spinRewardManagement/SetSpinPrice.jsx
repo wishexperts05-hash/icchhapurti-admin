@@ -73,7 +73,7 @@ const SetSpinPrice = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <BreadCrumb
-        linkText={[
+        linkText={[ { text: "Reward Management" },
           { text: "Spin Reward Management", href: "/spin-reward-management" },
           { text: "Set Spin Price" },
         ]}
@@ -104,6 +104,7 @@ const SetSpinPrice = () => {
                       label="Spin"
                       name="staffSpin"
                       type="number"
+                      readOnly
                       placeholder="Enter spin count"
                     />
                     <FormField
@@ -124,6 +125,7 @@ const SetSpinPrice = () => {
                       label="Spin"
                       name="userSpin"
                       type="number"
+                       readOnly
                       placeholder="Enter spin count"
                     />
                     <FormField

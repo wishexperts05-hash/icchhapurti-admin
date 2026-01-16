@@ -223,54 +223,73 @@ const AddEditSubAdmin = () => {
         return isValid;
     };
 
-    const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        if (!validateAccessPermissions()) {
-            setSubmitting(false);
-            return;
-        }
+    //new code added(Harshal)
+    const validateAtLeastOnePermissionSelected = () => {
+    const hasAnyPermission = Object.values(modulePrivileges).some(
+        permissions =>
+            permissions.access &&
+            ['create', 'read', 'update', 'delete'].some(p => permissions[p])
+    );
 
-        try {
-            const modules = Object.entries(modulePrivileges)
-                .filter(([_, permissions]) => permissions.access)
-                .map(([moduleName, permissions]) => {
-                    const moduleData = allModules[moduleName];
-                    
-                    const accessTypes = Object.entries(permissions)
-                        .filter(([permName, isAllowed]) =>
-                            ['create', 'read', 'update', 'delete'].includes(permName) && isAllowed
-                        )
-                        .map(([permName]) => permName);
-
-                    return {
-                        moduleName,
-                        parentModuleName: permissions.parentModuleName,
-                        accessTypes
-                    };
-                });
-
-            const requestBody = {
-                adminUserId: values.adminUserId,
-                modules
-            };
-
-            console.log("Submitting data:", requestBody);
-            console.log("Selected modules:", modules);
-
-            if (id) {
-                await updateUserPermission(id, requestBody);
-            } else {
-                await addUserPermission(requestBody);
-                resetForm();
-                setModulePrivileges(initialModulePrivileges);
-            }
-            
-            navigate("/sub-admin/user-permissions");
-        } catch (error) {
-            console.error("Error saving user permission:", error);
-        } finally {
-            setSubmitting(false);
-        }
+    if (!hasAnyPermission) {
+        setAccessErrors({
+            _global: 'Please select at least one permission'
+        });
+        return false;
     }
+
+    return true;
+};
+
+
+const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+
+    const isModuleValid = validateAccessPermissions();
+    const isAnyPermissionSelected = validateAtLeastOnePermissionSelected();
+
+    if (!isModuleValid || !isAnyPermissionSelected) {
+        setSubmitting(false);
+        return;
+    }
+
+    try {
+        const modules = Object.entries(modulePrivileges)
+            .filter(([_, permissions]) => permissions.access)
+            .map(([moduleName, permissions]) => {
+                const accessTypes = Object.entries(permissions)
+                    .filter(([permName, isAllowed]) =>
+                        ['create', 'read', 'update', 'delete'].includes(permName) && isAllowed
+                    )
+                    .map(([permName]) => permName);
+
+                return {
+                    moduleName,
+                    parentModuleName: permissions.parentModuleName,
+                    accessTypes
+                };
+            });
+
+        const requestBody = {
+            adminUserId: values.adminUserId,
+            modules
+        };
+
+        if (id) {
+            await updateUserPermission(id, requestBody);
+        } else {
+            await addUserPermission(requestBody);
+            resetForm();
+            setModulePrivileges(initialModulePrivileges);
+        }
+
+        navigate("/sub-admin/user-permissions");
+    } catch (error) {
+        console.error(error);
+    } finally {
+        setSubmitting(false);
+    }
+};
+
 
     const handleCancel = () => {
         navigate("/sub-admin/user-permissions");
@@ -315,6 +334,33 @@ const AddEditSubAdmin = () => {
             </div>
         );
     }
+
+    //new Grant Permission  code
+
+    const toggleGrantRevokeAll = (grantAccess) => {
+    setModulePrivileges(prev => {
+        const newState = {};
+
+        Object.entries(prev).forEach(([moduleName, permissions]) => {
+            const moduleData = allModules[moduleName];
+
+            newState[moduleName] = {
+                ...permissions,
+                access: grantAccess,
+                create: grantAccess && moduleData.permissionTypes.includes('create'),
+                read: grantAccess && moduleData.permissionTypes.includes('read'),
+                update: grantAccess && moduleData.permissionTypes.includes('update'),
+                delete: grantAccess && moduleData.permissionTypes.includes('delete'),
+            };
+        });
+
+        return newState;
+    });
+
+    // clear errors when bulk action
+    setAccessErrors({});
+};
+
 
     return (
         <div>
@@ -407,6 +453,13 @@ const AddEditSubAdmin = () => {
                                 )}
                             </div>
 
+
+{accessErrors._global && (
+    <div className="p-4 mb-4 bg-red-50 border border-red-200 rounded-lg text-red-600 font-medium">
+        {accessErrors._global}
+    </div>
+)}
+
                             <PermissionTable
                                 allModules={allModules}
                                 parentModules={parentModules}
@@ -417,6 +470,7 @@ const AddEditSubAdmin = () => {
                                 toggleAllChildPermissions={toggleAllChildPermissions}
                                 toggleModulePrivilege={toggleModulePrivilege}
                                 getModuleIcon={getModuleIcon}
+                                 onGrantRevokeAll={toggleGrantRevokeAll} 
                             />
 
                             <div className="flex justify-center gap-4 pt-6 border-t border-gray-200">

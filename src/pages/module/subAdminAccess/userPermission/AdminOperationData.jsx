@@ -132,7 +132,7 @@ export const AdminOperation = [
                 icon: reportsIcon
             },
             {
-                label: 'Staff Performance"',
+                label: 'Staff Performance',
                 url: '/staff-performance',
                 permissionTypes: ['create', 'read', 'update', 'delete', 'access'],
                 parent: 'Report & Analytics',

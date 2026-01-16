@@ -164,7 +164,7 @@ const useLuckyDrawManagement = () => {
       return res;
     } catch (error) {
       console.error("Error creating lucky draw event:", error);
-      toast.error("Failed to create Lucky Draw Event");
+      toast.error(error?.response?.data?.message ||"Failed to create Lucky Draw Event");
       return null;
     } finally {
       setLoading(false);

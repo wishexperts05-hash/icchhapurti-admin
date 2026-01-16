@@ -95,8 +95,11 @@ import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
 import AddShippingCostDomestic from "../pages/module/productManagment/AddShippingCostDomestic";
 import AddShippingCostInternational from "../pages/module/productManagment/AddShippingCostInternational";
-import EditDomasticShipingCost from "../pages/module/productManagment/EditDomasticShipingCost";
+import EditDomesticShippingCost from "../pages/module/productManagment/EditDomasticShipingCost.jsx";
 import EditInternationalShipingCost from "../pages/module/productManagment/EditInternationalShipingCost";
+import StoriesSection from "../pages/module/appManagement/storiesSection/StoriesSection.jsx";
+import ProductUnboxing from "../pages/module/appManagement/productUnboxing/productUnboxing.jsx";
+import Testimonials from "../pages/module/appManagement/testimonials/testimonials.jsx";
 // -------------------------offer management --------------
 
 const OfferManagementAdd = lazy(() =>
@@ -565,7 +568,7 @@ function PublicRoute() {
               />
               <Route
                 path="/product-management/shipping-cost/edit-shipping-cost/domestic/:id"
-                element={<EditDomasticShipingCost />}
+                element={<EditDomesticShippingCost />}
               />
               <Route
                 path="/product-management/shipping-cost/edit-shipping-cost/international/:id"
@@ -799,6 +802,9 @@ function PublicRoute() {
 
               <Route path="/app-management/about-us" element={<AboutUs />} />
               <Route path="/app-management/about-us/edit" element={<AboutusEdit />} />
+               <Route path="/app-management/stories-section" element={<StoriesSection />} />
+                <Route path="/app-management/product-unboxing" element={<ProductUnboxing />} />
+                 <Route path="/app-management/testimonials" element={<Testimonials />} />
               {/* 404 Not Found */}
               {/* <Route path="*" element={<NotFound />} /> */}
 

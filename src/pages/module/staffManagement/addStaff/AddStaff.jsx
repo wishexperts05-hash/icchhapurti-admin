@@ -485,14 +485,14 @@ const AddStaff = () => {
               disabled={!formData.state || loadingCities}
             />
 
-            <FormInput
+            {/* <FormInput
               label="Assign Referral Code :"
               id="referralCode"
               type="text"
               value={formData.referralCode}
               onChange={handleChange}
               placeholder="Enter referral code"
-            />
+            /> */}
           </div>
 
           {/* Bank Details Section */}

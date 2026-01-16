@@ -82,10 +82,10 @@ const AddShippingCost = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Domestic/International */}
           <div>
-            <label className="block font-medium mb-2">International :</label>
+            <label className="block font-medium mb-2">Domestic :</label>
             <input
               type="text"
-              value="International"
+              value="Domestic"
               readOnly
               className="w-full border rounded-md px-3 py-2 bg-gray-100"
             />
@@ -101,7 +101,6 @@ const AddShippingCost = () => {
               onBlur={formik.handleBlur}
               className="w-full border rounded-md px-3 py-2"
             >
-
               {region?.map((item, index) => (
                 <option key={index} value={item}>
                   {item}
