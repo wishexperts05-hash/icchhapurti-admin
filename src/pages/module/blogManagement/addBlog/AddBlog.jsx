@@ -37,19 +37,12 @@ const AddBlog = () => {
     title: Yup.string().trim().required("Blog title is required"),
     body: Yup.string().trim().required("Blog content cannot be empty"),
 
-    image: Yup.mixed().test(
-      "image-required",
-      "Feature image is required",
-      function (value) {
-        // CREATE MODE → image required
-        if (!id) {
-          return value instanceof File;
-        }
-
-        // EDIT MODE → allow existing image
-        return true;
-      }
-    ),
+    image: Yup.mixed().when([], {
+      is: () => !id,
+      then: (schema) =>
+        schema.required("Feature image is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   });
 
   useEffect(() => {
