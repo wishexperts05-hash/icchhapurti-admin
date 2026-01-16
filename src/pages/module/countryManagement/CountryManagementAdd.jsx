@@ -30,7 +30,7 @@ const CountryManagementAdd = () => {
     LoaderSpinner: isLoading,
     countryDropdown,
     dropdown,
-    getCountryByName
+    getCountryByName,
   } = useCountryManagement();
 
   const [easyReturn] = useState(true);
@@ -48,7 +48,6 @@ const CountryManagementAdd = () => {
 
     loadData();
   }, [id, isEditMode]);
-
 
   const dropdownOptions =
     dropdown?.map((item) => ({
@@ -83,6 +82,10 @@ const CountryManagementAdd = () => {
             initialValues={{
               name: countryDetail?.country?.name || "",
               defaultCurrency: countryDetail?.country?.defaultCurrency || "",
+              defaultCurrencyName:
+                countryDetail?.country?.defaultCurrencyName || "",
+              defaultCurrencySymbol:
+                countryDetail?.country?.defaultCurrencySymbol || "",
             }}
             validationSchema={Yup.object({
               name: Yup.string().required("Country is required"),
@@ -104,18 +107,33 @@ const CountryManagementAdd = () => {
               }
             }}
           >
-            {({ values, setFieldValue }) => {
-
+            {({ values, setFieldValue, initialValues }) => {
               useEffect(() => {
+                const isEditInit =
+                  isEditMode && values.name === initialValues.name;
+
+                if (!values.name || isEditInit) return;
+
                 const autoFill = async () => {
-                  if (values.name) {
-                    setLocalLoading(true);
-                    const data = await getCountryByName(values.name);
-                    if (data) {
-                      setFieldValue("defaultCurrency", data.defaultCurrency || "");
-                    }
-                    setLocalLoading(false);
+                  setLocalLoading(true);
+                  const data = await getCountryByName(values.name);
+
+                  if (data) {
+                    setFieldValue(
+                      "defaultCurrency",
+                      data.defaultCurrency || ""
+                    );
+                    setFieldValue(
+                      "defaultCurrencyName",
+                      data.defaultCurrencyName || ""
+                    );
+                    setFieldValue(
+                      "defaultCurrencySymbol",
+                      data.defaultCurrencySymbol || ""
+                    );
                   }
+
+                  setLocalLoading(false);
                 };
 
                 autoFill();
@@ -124,7 +142,6 @@ const CountryManagementAdd = () => {
                 <Form className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <FormField
                     label="Select Country"
-                  
                     name="name"
                     fieldType="select"
                     options={dropdownOptions}
@@ -134,6 +151,20 @@ const CountryManagementAdd = () => {
                     label="Default Currency"
                     name="defaultCurrency"
                     placeholder="Enter currency (e.g., USD, INR)"
+                    rightElement={localLoading ? <BeatLoader size={6} /> : null}
+                  />
+
+                  <FormField
+                    label="Currency Name"
+                    name="defaultCurrencyName"
+                    placeholder="Enter Currency Name "
+                    rightElement={localLoading ? <BeatLoader size={6} /> : null}
+                  />
+
+                  <FormField
+                    label="Currency Symbol"
+                    name="defaultCurrencySymbol"
+                    placeholder="Enter Currency Symbol"
                     rightElement={localLoading ? <BeatLoader size={6} /> : null}
                   />
 
@@ -151,7 +182,7 @@ const CountryManagementAdd = () => {
                     />
                   </div>
                 </Form>
-              )
+              );
             }}
           </Formik>
         )}
