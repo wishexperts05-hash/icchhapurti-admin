@@ -8,8 +8,10 @@ import {
   totalstaffAtom,
 } from "../../state/dashboard/DashboardManagementState";
 import conf from "../../config/index";
+import useFetch from "../useFetch";
 
 function useDashboardManagement() {
+  const [fetchData] = useFetch();
   const [dashboardTotals, setDashboardTotals] = useRecoilState(
     dashboardTotalStateAtom
   );
@@ -26,19 +28,16 @@ function useDashboardManagement() {
   const fetchDashboardTotals = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${conf.apiBaseUrl}admin/dashboard/totalCounts`, {
+      const res = await fetchData({
         method: "GET",
+        url: `${conf.apiBaseUrl}admin/dashboard/totalCounts`
       });
-
-      if (!res.ok) throw new Error("Failed to fetch dashboard totals");
-
-      const result = await res.json();
-
-      if (result.success) {
-        setDashboardTotals(result.data);
-        return result.data;
+      if (res) {
+        setDashboardTotals(res.data);
+        setLoading(true);
+        return res.data;
       } else {
-        console.error(result.message);
+        console.error(res.message);
         return null;
       }
     } catch (error) {
@@ -49,55 +48,44 @@ function useDashboardManagement() {
     }
   };
 
-const fetchSalesChartData = async ({
-  country,
-  state,
-  city,
-  periodType = "today",
-}) => {
-  setLoading(true);
-  
-  try {
-    // Only add parameters that have values (not empty strings)
-    const params = new URLSearchParams();
-    
-    if (country) params.append("country", country);
-    if (state) params.append("state", state);
-    if (city) params.append("city", city);
-    params.append("type", periodType);
-    
-    const url = `${conf.apiBaseUrl}admin/dashboard/salesChart?${params.toString()}`;
-    console.log("📍 API URL:", url);
-  
-    
-    const res = await fetch(url, {
-      method: "GET",
+  const fetchSalesChartData = async ({
+    country,
+    state,
+    city,
+    periodType = "today",
+  }) => {
+    setLoading(true);
 
-    });
-    
-    if (!res.ok) {
-      console.error("❌ API Error:", res.status, res.statusText);
-      throw new Error("Failed to fetch sales chart");
-    }
-    
-    const result = await res.json();
-    console.log(" API Response:", result);
-    
-    if (result.success) {
-      setSalesChart(result.data);
-      return result.data;
-    } else {
+    try {
+      const params = new URLSearchParams();
+
+      if (country) params.append("country", country);
+      if (state) params.append("state", state);
+      if (city) params.append("city", city);
+      params.append("type", periodType);
+
+      const res = await fetchData({
+        method: "GET",
+        url: `${conf.apiBaseUrl}admin/dashboard/salesChart?${params.toString()}`
+      });
+
+      if (res) {
+        setSalesChart(res.data);
+        setLoading(false);
+        return res.data;
+      } else {
+        setSalesChart([]);
+        return null;
+      }
+    } catch (error) {
+      console.error("Sales chart error:", error);
       setSalesChart([]);
+      setLoading(false);
       return null;
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Sales chart error:", error);
-    setSalesChart([]);
-    return null;
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
   const fetchSalesReport = async ({
@@ -113,39 +101,32 @@ const fetchSalesChartData = async ({
         type,
       });
 
-      // only send year when backend expects it
       if (type === "year-wise") {
         params.append("year", year);
       }
 
-      const res = await fetch(
-        `${
-          conf.apiBaseUrl
-        }admin/dashboard/cityWiseSalesReport?${params.toString()}`,
-        {
-          method: "GET",
-        }
-      );
+      const res = await fetchData({
+        method: "GET",
+        url: `${conf.apiBaseUrl}admin/dashboard/cityWiseSalesReport?${params.toString()}`,
+      });
 
-      if (!res.ok) throw new Error("Failed to fetch sales report");
-
-      const result = await res.json();
-
-      if (result.success) {
+      if (res.success) {
         setSaleReport({
           country,
           type,
           year,
-          monthlyData: result.data,
+          monthlyData: res.data,
         });
-        return result.data;
+        return res.data;
       } else {
         setSaleReport({ country, type, year, monthlyData: [] });
+        setLoading(false);
         return null;
       }
     } catch (error) {
       console.error("City sales report error:", error);
       setSaleReport({ country, type, year, monthlyData: [] });
+      setLoading(false);
       return null;
     } finally {
       setLoading(false);
@@ -162,7 +143,6 @@ const fetchSalesChartData = async ({
       setUserReport({ year: null, monthlyData: [] });
       return;
     }
-
     setLoading(true);
     try {
       const params = new URLSearchParams({
@@ -172,30 +152,24 @@ const fetchSalesChartData = async ({
         city,
       });
 
-      const res = await fetch(
-        `${
-          conf.apiBaseUrl
-        }admin/dashboard/userCountByMonth?${params.toString()}`,
-        {
-          method: "GET",
-        }
-      );
+      const res = await fetchData({
+        method: "GET",
+        url: `${conf.apiBaseUrl}admin/dashboard/userCountByMonth?${params.toString()}`,
+      });
 
-      if (!res.ok) throw new Error("Failed to fetch user count by month");
-
-      const result = await res.json();
-
-      if (result.success) {
-        // ✅ store only `data`
-        setUserReport(result.data);
-        return result.data;
+      if (res) {
+        setUserReport(res.data);
+        setLoading(false);
+        return res.data;
       } else {
         setUserReport({ year, monthlyData: [] });
+        setLoading(false);
         return null;
       }
     } catch (error) {
       console.error("User count by month error:", error);
       setUserReport({ year, monthlyData: [] });
+      setLoading(false);
       return null;
     } finally {
       setLoading(false);
@@ -215,22 +189,19 @@ const fetchSalesChartData = async ({
 
     setLoading(true);
     try {
-      const res = await fetch(
-        `${conf.apiBaseUrl}admin/dashboard/staffCountByMonth?year=${year}&country=${country}&state=${state}&city=${city}`,
-        {
-          method: "GET",
-        }
-      );
+      const res = await fetchData({
+        method: "GET",
+        url: `${conf.apiBaseUrl}admin/dashboard/staffCountByMonth?year=${year}&country=${country}&state=${state}&city=${city}`,
+      });
 
-      const result = await res.json();
-
-      if (result.success) {
-        setStaffCountByMonth(result.data);
-      } else {
-        setStaffCountByMonth({ year, monthlyData: [] });
+      if (res) {
+        setStaffCountByMonth(res.data);
+        setLoading(false);
       }
     } catch (e) {
       setStaffCountByMonth({ year, monthlyData: [] });
+      setLoading(false);
+
     } finally {
       setLoading(false);
     }
