@@ -156,7 +156,7 @@ const handleSubmit = async (values, formikHelpers) => {
                 <Button
                   variant={2}
                   text="Cancel"
-                  onClick={() => navigate("/app-management/stories")}
+                  onClick={() => navigate("/app-management/stories-section")}
                   disabled={loading || isSubmitting}
                 />
 
