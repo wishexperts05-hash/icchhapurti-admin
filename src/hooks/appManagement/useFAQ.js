@@ -81,9 +81,6 @@ const useFAQ = () => {
     res = await fetchData({
       method: "GET",
       url: `${conf.apiBaseUrl}admin/faq/${id}`,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
     });
 
     if (res?.success) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import JoditEditor from "jodit-pro-react";
 import { useRef } from "react";
@@ -11,6 +11,10 @@ import returnIcon from "../../../assets/returnProduct.png";
 import { useNavigate } from "react-router-dom";
 import Added from "../../../assets/Added.png";
 import useProductManagement from "../../../hooks/productList/useProductManagment";
+import useDropdown from "../../../hooks/dropdown/useDropdown";
+import FormField from "../../../components/uiComponent/FormField";
+import { Formik } from "formik";
+
 const AddProduct = () => {
   const [productImages, setProductImages] = useState([]);
   const [productVideos, setProductVideos] = useState([]);
@@ -21,6 +25,7 @@ const AddProduct = () => {
   const navigate = useNavigate();
   const editorRefs = useRef([]);
   const [isAdding, setIsAdding] = useState(false);
+  const { countries, countryLoading, fetchCountryDropdown } = useDropdown();
 
   const editorConfig = {
     readonly: false,
@@ -52,6 +57,12 @@ const AddProduct = () => {
     showXPathInStatusbar: false,
     toolbarAdaptive: false,
   };
+  const countryOptions = Array.isArray(countries)
+    ? countries.map((country) => ({
+        value: country._id || country.id || country.name,
+        label: country.name,
+      }))
+    : [];
 
   //  Formik setup
   const formik = useFormik({
@@ -122,6 +133,10 @@ const AddProduct = () => {
     },
   });
 
+  useEffect(() => {
+    fetchCountryDropdown();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   //  Image upload logic
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -166,12 +181,13 @@ const AddProduct = () => {
         ]}
       />
       <PagePath2 title="Add Product" />
-
+ <Formik >
       <form
         onSubmit={formik.handleSubmit}
         className="bg-white p-6 rounded-lg shadow-md mt-4"
       >
         {/* Product Category & Name */}
+       
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-gray-700 font-medium mb-2">
@@ -210,6 +226,15 @@ const AddProduct = () => {
           </div>
         </div>
 
+        <FormField
+          label="Country"
+          name="targetCountry"
+          fieldType="select"
+          options={[...countryOptions]}
+          required
+          disabled={countryLoading}
+          loading={countryLoading}
+        />
         {/* Price */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div>
@@ -464,7 +489,7 @@ const AddProduct = () => {
           />
         </div>
       </form>
-
+</Formik>
       {/* 🔸 Success Modal */}
       {showSuccessModal && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-70 flex items-center justify-center z-50">

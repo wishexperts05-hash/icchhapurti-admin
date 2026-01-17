@@ -60,6 +60,7 @@ export default function CountryManagementList() {
     { header: "Sr.No.", field: "srNo" },
     { header: "Country ", field: "name" },
     { header: " Default Currency", field: "defaultCurrency" },
+    {header:"Currency Symbol",field:"defaultCurrencySymbol"},
     { header: "Action", field: "action" },
   ];
 

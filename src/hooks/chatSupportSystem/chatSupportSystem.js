@@ -39,7 +39,7 @@ const fetchAllChatConversations = async (searchTerm ) => {
 
     return list;
   } catch (error) {
-    console.error("Error fetching chat conversations:", error);
+    console.error("Error fetching chat conversations:", error)
     toast.error(error?.response?.data?.message || "Failed to fetch conversations");
   } finally {
     setLoading(false);
@@ -108,10 +108,6 @@ const sendMessage = async ({ receiverId, receiverType, message }) => {
     // setLoading(false);
   }
 };
-
-
-
-
 
   return {
     loading,
