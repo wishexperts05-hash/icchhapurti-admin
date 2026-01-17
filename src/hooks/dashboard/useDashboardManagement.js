@@ -28,9 +28,6 @@ function useDashboardManagement() {
     try {
       const res = await fetch(`${conf.apiBaseUrl}admin/dashboard/totalCounts`, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
 
       if (!res.ok) throw new Error("Failed to fetch dashboard totals");
@@ -71,15 +68,11 @@ const fetchSalesChartData = async ({
     
     const url = `${conf.apiBaseUrl}admin/dashboard/salesChart?${params.toString()}`;
     console.log("📍 API URL:", url);
-    
-    const token = sessionStorage.getItem("token");
-    console.log("🔑 Token exists:", !!token);
+  
     
     const res = await fetch(url, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+
     });
     
     if (!res.ok) {
@@ -131,9 +124,6 @@ const fetchSalesChartData = async ({
         }admin/dashboard/cityWiseSalesReport?${params.toString()}`,
         {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         }
       );
 
@@ -188,9 +178,6 @@ const fetchSalesChartData = async ({
         }admin/dashboard/userCountByMonth?${params.toString()}`,
         {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         }
       );
 
@@ -232,9 +219,6 @@ const fetchSalesChartData = async ({
         `${conf.apiBaseUrl}admin/dashboard/staffCountByMonth?year=${year}&country=${country}&state=${state}&city=${city}`,
         {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         }
       );
 

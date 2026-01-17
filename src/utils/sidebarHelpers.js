@@ -123,14 +123,14 @@ export const allNavigationItems = [
     color: "blue",
   },
 
-  // {
-  //   id: 4,
-  //   title: "Promoter Management",
-  //   url: "/promoter-management",
-  //   icon: productManagementIcon,
-  //   badge: null,
-  //   color: "blue",
-  // },
+  {
+    id: 4,
+    title: "Promoter Management",
+    url: "/promoter-management",
+    icon: productManagementIcon,
+    badge: null,
+    color: "blue",
+  },
   {
     id: 5,
     title: "Product Management",

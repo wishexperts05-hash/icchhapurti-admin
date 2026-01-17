@@ -66,9 +66,6 @@ const fetchAlCountriescallingcodes = async () => {
     const res = await fetchData({
       method: "GET",
       url: `${conf.apiBaseUrl}admin/country/all/calling-code/dropdown`,
-            headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
     });
 
     
@@ -237,9 +234,6 @@ const fetchStatesByCountry = async (countryName) => {
       method: "POST",
       url: `${conf.apiBaseUrl}admin/country/external/states`,
       data: { country: countryName },
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
     });
 
     if (res?.success) {
@@ -264,9 +258,6 @@ const fetchCitiesByState = async (countryName, stateName) => {
       method: "POST",
       url: `${conf.apiBaseUrl}admin/country/external/cities`,
       data: { country: countryName, state: stateName },
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
     });
 
     if (res?.success && Array.isArray(res.cities)) {
@@ -321,9 +312,6 @@ const fetchCitiesByState = async (countryName, stateName) => {
       const res = await fetchData({
         method: "GET",
         url: `${conf.apiBaseUrl}admin/staff/dropdown/bank-list`,
-        headers: {
-                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
       });
       if (res) setBanklist(res?.bankList);
     } finally {
@@ -338,9 +326,6 @@ const fetchCitiesByState = async (countryName, stateName) => {
     const res = await fetchData({
       method: "GET",
       url: `${conf.apiBaseUrl}admin/shipping/available-domestic-regions`,
-       headers: {
-                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
     });
     if (res?.success) {
       setRegion(res.regions|| []);
@@ -358,9 +343,6 @@ const fetchCitiesByState = async (countryName, stateName) => {
     const res = await fetchData({
       method: "GET",
       url: `${conf.apiBaseUrl}admin/termsAndCondition/userType-dropdown`,
-       headers: {
-                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
     });
     if (res?.success) {
       setUserTypeFAQ(res.data || []);
@@ -377,9 +359,6 @@ const fetchUserTypeFAQ = async () => {
     const res = await fetchData({
       method: "GET",
       url: `${conf.apiBaseUrl}admin/faq/categories`,
-      headers: {
-                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
     });
     if (res?.success) {
       setDropdownfaq(res.data || []);

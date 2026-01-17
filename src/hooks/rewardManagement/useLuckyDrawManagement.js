@@ -215,9 +215,6 @@ const useLuckyDrawManagement = () => {
           const res = await fetchData({
             method: "DELETE",
             url: `${conf.apiBaseUrl}admin/luckyDraw/deleteLuckyDraw/${luckyDrawId}`,
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            },
           });
   
           if (res) {

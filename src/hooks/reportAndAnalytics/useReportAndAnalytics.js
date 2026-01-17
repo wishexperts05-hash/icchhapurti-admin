@@ -14,9 +14,6 @@ const useReportAndAnalytics = () => {
         `${conf.apiBaseUrl}admin/reports/update/reports`,
         {
           method: "PUT",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         }
       );
 
@@ -44,9 +41,6 @@ const useReportAndAnalytics = () => {
         `${conf.apiBaseUrl}admin/reports/update/revenue-chart`,
         {
           method: "PUT",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         }
       );
 
@@ -87,9 +81,6 @@ const useReportAndAnalytics = () => {
       `${conf.apiBaseUrl}admin/reports/sales-segmentation?${queryParams.toString()}`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       }
     );
 
@@ -113,9 +104,6 @@ const useReportAndAnalytics = () => {
         `${conf.apiBaseUrl}admin/reports/update/top-sales-achievers?periodType=${periodType || ""} `,
         {
           method: "PUT",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         }
       );
 
@@ -153,9 +141,6 @@ const useReportAndAnalytics = () => {
       `${conf.apiBaseUrl}admin/reports/top-staff-by-revenue?${queryParams.toString()}`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       }
     );
 
@@ -177,9 +162,6 @@ const useReportAndAnalytics = () => {
         `${conf.apiBaseUrl}admin/reports/lucky-draw-analytics`,
         {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
         }
       );
 
@@ -207,9 +189,6 @@ const fetchRecentWinners = async ({ page = 1, limit = 10 }) => {
       `${conf.apiBaseUrl}admin/reports/recent-winners?page=${page}&limit=${limit}`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       }
     );
 
@@ -232,9 +211,6 @@ const fetchOngoingLuckyDraw = async () => {
       `${conf.apiBaseUrl}admin/reports/ongoing-lucky-draw`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       }
     );
 

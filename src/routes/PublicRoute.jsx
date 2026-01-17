@@ -435,7 +435,7 @@ function PublicRoute() {
               <Route path="adminProfile/editProfile" element={<EditProfile />} />
 
               {/* ---------------------------- Promoter Management ---------------------------- */}
-              <Route path="promoter-management" element={<PromoterManagement />} />
+              <Route path="/promoter-management" element={<PromoterManagement />} />
               <Route
                 path="/promoter-management/promoter-managementedit"
                 element={<PromoterManagementEdit />}

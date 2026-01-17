@@ -71,7 +71,7 @@ const useBlogManagement = () => {
         data: data,
       });
       if (res) {
-        toast.success("Blog created successfully");
+        toast.success(res?.message);
         setLoading(false);
       }
     } catch (error) {
