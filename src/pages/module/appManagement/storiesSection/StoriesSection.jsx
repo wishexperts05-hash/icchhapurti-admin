@@ -18,7 +18,7 @@ const StoriesSection = () => {
 
   const {
     loading,
-    stories,
+    stories, 
     fetchAllStories,
     deleteStory,
   } = useStoriesSection();
@@ -44,7 +44,7 @@ const StoriesSection = () => {
 
   /* ---------------- Transform API Data ---------------- */
   const transformedData =
-    stories?.map((story, index) => ({
+    stories?.data?.map((story, index) => ({
       _id: story._id,
       srNo: (page - 1) * limit + index + 1,
       title: story.title || "N/A",

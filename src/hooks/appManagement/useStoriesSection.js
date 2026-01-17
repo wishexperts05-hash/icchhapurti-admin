@@ -16,16 +16,17 @@ const useStoriesSection = () => {
    const navigate = useNavigate();
 
   // Get Other Settings
-  const fetchAllStories = async () => {
+  
+  const fetchAllStories = async (page,limit) => {
     setLoading(true);
     try {
       const res = await fetchData({
         method: "GET",
-        url: `${conf.apiBaseUrl}admin/ourStory`,
+        url: `${conf.apiBaseUrl}admin/ourStory?page=${page || ""}&limit=${limit || ""}`,
       });
 
       if (res) {
-        setAllStories(res?.data);
+        setAllStories(res);
         // toast.success(res?.message || "Settings fetched successfully");
       }
     } catch (error) {
