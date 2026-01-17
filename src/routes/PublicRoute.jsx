@@ -98,8 +98,11 @@ import AddShippingCostInternational from "../pages/module/productManagment/AddSh
 import EditDomesticShippingCost from "../pages/module/productManagment/EditDomasticShipingCost.jsx";
 import EditInternationalShipingCost from "../pages/module/productManagment/EditInternationalShipingCost";
 import StoriesSection from "../pages/module/appManagement/storiesSection/StoriesSection.jsx";
+import CreateStory from "../pages/module/appManagement/storiesSection/CreateStory.jsx";
 import ProductUnboxing from "../pages/module/appManagement/productUnboxing/productUnboxing.jsx";
 import Testimonials from "../pages/module/appManagement/testimonials/testimonials.jsx";
+import EditStory from "../pages/module/appManagement/storiesSection/EditStory.jsx";
+import ViewStory from "../pages/module/appManagement/storiesSection/ViewStories.jsx";
 // -------------------------offer management --------------
 
 const OfferManagementAdd = lazy(() =>
@@ -191,6 +194,7 @@ import {
 } from "../pages/module/ManageRedeemRequest/index";
 import SubAdminProtectedRoute from "./SubAdminProtectedRoute.jsx";
 import NotFound from "../pages/module/NotFound.jsx";
+// import CreateStory from "../pages/module/appManagement/storiesSection/CreateStory.jsx";
 // import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
 // import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
 
@@ -801,8 +805,11 @@ function PublicRoute() {
               {/*----------------------------About Us---------------------------------- */}
 
               <Route path="/app-management/about-us" element={<AboutUs />} />
-              <Route path="/app-management/about-us/edit" element={<AboutusEdit />} />
-               <Route path="/app-management/stories-section" element={<StoriesSection />} />
+              <Route path="/app-management/about-us/edit" element={<AboutusEdit />} /> 
+                <Route path="/app-management/stories/edit-story/:id" element={<EditStory />} />
+                <Route path="/app-management/stories/story-details/:id" element={<ViewStory />} />
+               <Route path="/app-management/stories-section" element={<StoriesSection />} />  
+                <Route path="/app-management/stories/create-story" element={<CreateStory />} />
                 <Route path="/app-management/product-unboxing" element={<ProductUnboxing />} />
                  <Route path="/app-management/testimonials" element={<Testimonials />} />
               {/* 404 Not Found */}
