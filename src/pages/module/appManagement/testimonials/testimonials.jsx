@@ -48,7 +48,7 @@ const Testimonials = () => {
             No testimonials found
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
             {testimonials.map((imageUrl, index) => (
               <div
                 key={index}
@@ -64,7 +64,7 @@ const Testimonials = () => {
                 <img
                   src={imageUrl}
                   alt={`testimonial-${index}`}
-                  className="w-full h-40 object-cover"
+                  className="w-full h-48 object-cover"
                 />
               </div>
             ))}
