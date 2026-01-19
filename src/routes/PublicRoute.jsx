@@ -100,7 +100,7 @@ import EditInternationalShipingCost from "../pages/module/productManagment/EditI
 import StoriesSection from "../pages/module/appManagement/storiesSection/StoriesSection.jsx";
 import CreateStory from "../pages/module/appManagement/storiesSection/CreateStory.jsx";
 import ProductUnboxing from "../pages/module/appManagement/productUnboxing/productUnboxing.jsx";
-import Testimonials from "../pages/module/appManagement/testimonials/testimonials.jsx";
+import Testimonials from "../pages/module/appManagement/testimonials/Testimonials.jsx";
 import EditStory from "../pages/module/appManagement/storiesSection/EditStory.jsx";
 import ViewStory from "../pages/module/appManagement/storiesSection/ViewStories.jsx";
 // -------------------------offer management --------------
@@ -173,7 +173,9 @@ const FaqList = lazy(() => import("../pages/module/appManagement/faq/FaqList"));
 
 const FaqView = lazy(() => import("../pages/module/appManagement/faq/FaqView"));
 
-const FaqAddEdit = lazy(() => import("../pages/module/appManagement/faq/FaqAddEdit"));
+const FaqAddEdit = lazy(() =>
+  import("../pages/module/appManagement/faq/FaqAddEdit")
+);
 // ---------------------------- About Us section ----------------------------
 const AboutUs = lazy(() =>
   import("../pages/module/appManagement/aboutus/AboutUs")
@@ -194,6 +196,7 @@ import {
 } from "../pages/module/ManageRedeemRequest/index";
 import SubAdminProtectedRoute from "./SubAdminProtectedRoute.jsx";
 import NotFound from "../pages/module/NotFound.jsx";
+import CreateTestimonial from "../pages/module/appManagement/testimonials/CreateTestimonial.jsx";
 // import CreateStory from "../pages/module/appManagement/storiesSection/CreateStory.jsx";
 // import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
 // import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
@@ -307,23 +310,25 @@ const SetTargetManagement = lazy(() =>
 );
 // ----------------------------  Refer & Earn ----------------------------
 
-const ReferralTrackingForUser = lazy(
-  () => import("../pages/module/refer&Earn/referralTracking/referralTracking/ReferralTrackingForUser.jsx")
+const ReferralTrackingForUser = lazy(() =>
+  import(
+    "../pages/module/refer&Earn/referralTracking/referralTracking/ReferralTrackingForUser.jsx"
+  )
 );
-const RefferalDiscountSetting = lazy(
-  () => import("../pages/module/refer&Earn/referralTracking/ReferralDiscountSetting")
+const RefferalDiscountSetting = lazy(() =>
+  import("../pages/module/refer&Earn/referralTracking/ReferralDiscountSetting")
 );
 
-const ViewUserReferral = lazy(
-  () => import("../pages/module/refer&Earn/referralTracking/ViewUserReferral")
-)
-const EditReferralTracking = lazy(
-  () => import("../pages/module/refer&Earn/referralTracking/EditReferralTracking.jsx")
-)
+const ViewUserReferral = lazy(() =>
+  import("../pages/module/refer&Earn/referralTracking/ViewUserReferral")
+);
+const EditReferralTracking = lazy(() =>
+  import("../pages/module/refer&Earn/referralTracking/EditReferralTracking.jsx")
+);
 // ----------------------------  Upload Video ----------------------------
-const UploadVideo = lazy(
-  () => import("../pages/module/refer&Earn/uploadVideo/UploadVideo")
-)
+const UploadVideo = lazy(() =>
+  import("../pages/module/refer&Earn/uploadVideo/UploadVideo")
+);
 
 // ---------------------------- Sub-admin Management ----------------------------
 const Roles = lazy(() => import("../pages/module/subAdminAccess/roles/Roles"));
@@ -373,49 +378,109 @@ function PublicRoute() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Layout />}>
             <Route element={<SubAdminProtectedRoute />}>
-
               {/* ----------------------------- Sub-admin Management ---------------------------- */}
-              <Route path="/sub-admin/roles" element={<Roles activeItem={activeItem} setActiveItem={setActiveItem} />} />
+              <Route
+                path="/sub-admin/roles"
+                element={
+                  <Roles
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
               <Route
                 path="/sub-admin/roles/create"
-                element={<CreateUpdateRole activeItem={activeItem} setActiveItem={setActiveItem} />}
+                element={
+                  <CreateUpdateRole
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
               <Route
                 path="/sub-admin/roles/edit/:id"
-                element={<CreateUpdateRole activeItem={activeItem} setActiveItem={setActiveItem} />}
+                element={
+                  <CreateUpdateRole
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
               {/* ------------------------------- */}
 
-              <Route path="/sub-admin/users" element={<Users activeItem={activeItem} setActiveItem={setActiveItem} />} />
+              <Route
+                path="/sub-admin/users"
+                element={
+                  <Users
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
               <Route
                 path="/sub-admin/users/create"
-                element={<AddEditUser activeItem={activeItem} setActiveItem={setActiveItem} />}
+                element={
+                  <AddEditUser
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
               <Route
                 path="/sub-admin/users/edit/:id"
-                element={<AddEditUser activeItem={activeItem} setActiveItem={setActiveItem} />}
+                element={
+                  <AddEditUser
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
               <Route
                 path="/sub-admin/users/view/:id"
-                element={<ViewUserDetail activeItem={activeItem} setActiveItem={setActiveItem} />}
+                element={
+                  <ViewUserDetail
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
               {/* ------------------------------ */}
 
               <Route
                 path="/sub-admin/user-permissions"
-                element={<UsersPermission activeItem={activeItem} setActiveItem={setActiveItem} />}
+                element={
+                  <UsersPermission
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
               <Route
                 path="/sub-admin/user-permissions/create"
-                element={<AddEditSubAdmin activeItem={activeItem} setActiveItem={setActiveItem} />}
+                element={
+                  <AddEditSubAdmin
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
               <Route
                 path="/sub-admin/user-permissions/edit/:id"
-                element={<AddEditSubAdmin activeItem={activeItem} setActiveItem={setActiveItem} />}
+                element={
+                  <AddEditSubAdmin
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
               <Route
                 path="/sub-admin/user-permissions/view/:id"
-                element={<ViewUsersPermission activeItem={activeItem} setActiveItem={setActiveItem} />}
+                element={
+                  <ViewUsersPermission
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
               />
               {/* ------------------------------ */}
 
@@ -432,10 +497,16 @@ function PublicRoute() {
 
               {/* ---------------------------- Admin Profile ---------------------------- */}
               <Route path="adminProfile" element={<AdminProfile />} />
-              <Route path="adminProfile/editProfile" element={<EditProfile />} />
+              <Route
+                path="adminProfile/editProfile"
+                element={<EditProfile />}
+              />
 
               {/* ---------------------------- Promoter Management ---------------------------- */}
-              <Route path="/promoter-management" element={<PromoterManagement />} />
+              <Route
+                path="/promoter-management"
+                element={<PromoterManagement />}
+              />
               <Route
                 path="/promoter-management/promoter-managementedit"
                 element={<PromoterManagementEdit />}
@@ -580,7 +651,10 @@ function PublicRoute() {
               />
 
               {/* -------------------------- Offer Management -------------------------- */}
-              <Route path="offer-management" element={<OfferManagementList />} />
+              <Route
+                path="offer-management"
+                element={<OfferManagementList />}
+              />
               <Route
                 path="/offer-management/add-offer"
                 element={<OfferManagementAdd />}
@@ -641,7 +715,10 @@ function PublicRoute() {
                 element={<ViewPrivacyPolicy />}
               />
 
-              <Route path="/app-management/manage-banner" element={<Banner />} />
+              <Route
+                path="/app-management/manage-banner"
+                element={<Banner />}
+              />
               <Route
                 path="/app-management/manage-banner/banner-details/:id"
                 element={<BannerDetails />}
@@ -736,14 +813,20 @@ function PublicRoute() {
               />
 
               {/* -------------------------- Chat Support System -------------------------- */}
-              <Route path="chat-support-system" element={<ChatSupportSystem />} />
+              <Route
+                path="chat-support-system"
+                element={<ChatSupportSystem />}
+              />
               <Route
                 path="chat-support-system/chatbox/:conversationId"
                 element={<ChatBox />}
               />
 
               {/* -------------------------------------Monetary Setting ------------------------------------------- */}
-              <Route path="/commission-settings" element={<CommissionSetting />} />
+              <Route
+                path="/commission-settings"
+                element={<CommissionSetting />}
+              />
               <Route
                 path="/commission-settings/add-commission"
                 element={<SetCommissionSetting />}
@@ -760,7 +843,10 @@ function PublicRoute() {
               <Route path="/reports" element={<Reports />} />
               <Route path="/staff-performance" element={<StaffPerformance />} />
 
-              <Route path="/lucky-draw-analysis" element={<LuckyDrawAnalysis />} />
+              <Route
+                path="/lucky-draw-analysis"
+                element={<LuckyDrawAnalysis />}
+              />
 
               {/* -------------------------- Target Management -------------------------- */}
 
@@ -772,10 +858,22 @@ function PublicRoute() {
               />
               {/* -------------------------- Refer & Earn -------------------------- */}
 
-              <Route path="/refer-and-earn-user" element={<ReferralTrackingForUser />} />
-              <Route path="/refer-and-earn-user/referral-discount-setting" element={<RefferalDiscountSetting />} />
-              <Route path="/refer-and-earn-user/view-user-referral/:id" element={<ViewUserReferral />} />
-              <Route path="/refer-and-earn-user/referral-discount-setting/edit-referral-tracking" element={<EditReferralTracking />} />
+              <Route
+                path="/refer-and-earn-user"
+                element={<ReferralTrackingForUser />}
+              />
+              <Route
+                path="/refer-and-earn-user/referral-discount-setting"
+                element={<RefferalDiscountSetting />}
+              />
+              <Route
+                path="/refer-and-earn-user/view-user-referral/:id"
+                element={<ViewUserReferral />}
+              />
+              <Route
+                path="/refer-and-earn-user/referral-discount-setting/edit-referral-tracking"
+                element={<EditReferralTracking />}
+              />
 
               {/* -------------------------- Upload Video -------------------------- */}
               <Route path="/upload-video" element={<UploadVideo />} />
@@ -787,7 +885,10 @@ function PublicRoute() {
                 path="/manage-comments/view-comment/:reviewId/:reviewType"
                 element={<ManageCommentsView />}
               />
-              <Route path="/set-review-display" element={<SetReviewDisplay />} />
+              <Route
+                path="/set-review-display"
+                element={<SetReviewDisplay />}
+              />
               {/* <Route path="/edit-review-display" element={<EditReviewDisplay />} /> */}
               {/* -------------------------- Notification Management -------------------------- */}
 
@@ -799,29 +900,109 @@ function PublicRoute() {
 
               <Route path="/app-management/faq" element={<FaqList />} />
               <Route path="/app-management/faq/add" element={<FaqAddEdit />} />
-              <Route path="/app-management/faq/edit/:id" element={<FaqAddEdit />} />
-              <Route path="/app-management/faq/view/:id" element={<FaqView />} />
+              <Route
+                path="/app-management/faq/edit/:id"
+                element={<FaqAddEdit />}
+              />
+              <Route
+                path="/app-management/faq/view/:id"
+                element={<FaqView />}
+              />
 
               {/*----------------------------About Us---------------------------------- */}
 
-              <Route path="/app-management/about-us" element={<AboutUs />} />
-              <Route path="/app-management/about-us/edit" element={<AboutusEdit />} /> 
-                <Route path="/app-management/stories/edit-story/:id" element={<EditStory />} />
-                <Route path="/app-management/stories/story-details/:id" element={<ViewStory />} />
-               <Route path="/app-management/stories-section" element={<StoriesSection />} />  
-                <Route path="/app-management/stories/create-story" element={<CreateStory />} />
-                <Route path="/app-management/product-unboxing" element={<ProductUnboxing />} />
-                 <Route path="/app-management/testimonials" element={<Testimonials />} />
+              <Route
+                path="/app-management/about-us"
+                element={
+                  <AboutUs
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="/app-management/about-us/edit"
+                element={
+                  <AboutusEdit
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="/app-management/stories/edit-story/:id"
+                element={
+                  <EditStory
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="/app-management/stories/story-details/:id"
+                element={
+                  <ViewStory
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="/app-management/stories-section"
+                element={
+                  <StoriesSection
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="/app-management/stories/create-story"
+                element={
+                  <CreateStory
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="/app-management/product-unboxing"
+                element={
+                  <ProductUnboxing
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="/app-management/testimonials"
+                element={
+                  <Testimonials
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
+              <Route
+                path="/app-management/testimonials/create-testimonial"
+                element={
+                  <CreateTestimonial
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                  />
+                }
+              />
               {/* 404 Not Found */}
               {/* <Route path="*" element={<NotFound />} /> */}
 
-              
               {/*----------------------------Get Notification page---------------------------------- */}
 
-              <Route path="/getnotification/getnotification" element={<GetNotification />} />
-
+              <Route
+                path="/getnotification/getnotification"
+                element={<GetNotification />}
+              />
             </Route>
-             <Route path="/no-access" element={<NotFound />} />
+            <Route path="/no-access" element={<NotFound />} />
           </Route>
         </Route>
       </Routes>

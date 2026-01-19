@@ -70,6 +70,10 @@ const EditStory = () => {
       <PagePath2 title="Edit Story" />
 
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4 w-full">
+
+           {/* {loading ?(<div className="flex justify-center">
+                  <LoaderSpinner />
+                </div>):( */}
         <Formik
           innerRef={formikRef}
           enableReinitialize
@@ -78,6 +82,7 @@ const EditStory = () => {
           onSubmit={handleSubmit}
         >
           {({ values, setFieldValue, isSubmitting }) => (
+            
             <Form className="flex flex-col gap-6">
               {/* TITLE */}
               <FormField
