@@ -12,15 +12,19 @@ import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 
 // Dynamic validation schema using Yup.when to depend on form values.offerType
 const getValidationSchema = () => {
+const today = new Date();
+today.setHours(0, 0, 0, 0);
     return Yup.object().shape({
         title: Yup.string().required("Offer title is required"),
         offerType: Yup.string().required("Offer type is required"),
         targetAudience: Yup.string().required("Target audience is required"),
-        startDate: Yup.date().required("Start date is required"),
-        endDate: Yup.date()
-            .min(Yup.ref("startDate"), "End date must be after start date")
-            .required("End date is required"),
-        isActive: Yup.boolean(),
+      startDate: Yup.date()
+      .required("Start date is required")
+      .min(today, "Start date cannot be in the past"),
+
+    endDate: Yup.date()
+      .required("End date is required")
+      .min(Yup.ref("startDate"), "End date must be after start date"),
 
         // BUY_GET fields
         buyGet: Yup.object().when('offerType', (offerType, schema) => {
@@ -73,6 +77,7 @@ const OfferManagementAdd = () => {
     const navigate = useNavigate();
     const isEditMode = location.pathname.includes("edit-offer") || (id && !location.pathname.includes("add-offer"));
     const [selectedOfferType, setSelectedOfferType] = useState("");
+    const today = new Date().toISOString().split("T")[0];
 
     useEffect(() => {
         fetchProductDropdown();
@@ -263,17 +268,20 @@ const OfferManagementAdd = () => {
                                             setSelectedOfferType(option?.value || "");
                                         }}
                                     />
+<FormField
+  label="Start Date"
+  name="startDate"
+  type="date"
+  min={today}
+/>
 
-                                    <FormField
-                                        label="Start Date"
-                                        name="startDate"
-                                        type="date"
-                                    />
-                                    <FormField
-                                        label="End Date"
-                                        name="endDate"
-                                        type="date"
-                                    />
+<FormField
+  label="End Date"
+  name="endDate"
+  type="date"
+  min={values.startDate || today}
+/>
+
 
                                     <FormField
                                         label="Target Audience"

@@ -89,7 +89,7 @@ export default function FormField({
         <>
           <label
             htmlFor={name}
-            className="text-sm font-medium text-[#004AAD] mb-1 "
+            className="text-sm font-medium text-gray-700 mb-1 "
           >
             {label}
           </label>

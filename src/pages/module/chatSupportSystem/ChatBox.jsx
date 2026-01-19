@@ -108,7 +108,7 @@ const ChatBox = () => {
               >
                 <Box sx={{}}>
                   <img
-                    src={userProfile}
+                    src={userProfile || ""}
                     alt="profile"
                     style={{
                       width: "35px",
@@ -129,8 +129,8 @@ const ChatBox = () => {
                   alignItems: "center",
                 }}
               >
-                <Chip label="Resolved" color="success" />
-                <Chip label="Pending" color="default" />
+                {/* <Chip label="Resolved" color="success" />
+                <Chip label="Pending" color="default" /> */}
               </Box>
             </Box>
             <Box

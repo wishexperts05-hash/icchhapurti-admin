@@ -62,8 +62,8 @@ export default function LuckyDrawManagementView() {
 
     const normalizedWinners = Array.isArray(winners)
       ? winners.map((w) => ({
-        name: w.name || w.fullName || w.userName || w.winnerName || "Winner",
-      }))
+          name: w.name || w.fullName || w.userName || w.winnerName || "Winner",
+        }))
       : [];
 
     return {
@@ -92,6 +92,7 @@ export default function LuckyDrawManagementView() {
       {/* Breadcrumb */}
       <BreadCrumb
         linkText={[
+          { text: "Reward Management" },
           { text: "Lucky Draw Management", href: "/lucky-draw-management" },
           { text: "View Lucky Draw Event" },
         ]}
@@ -115,10 +116,7 @@ export default function LuckyDrawManagementView() {
           {/* Basic Information Card */}
           <div className="bg-white rounded-2xl p-8 mb-4 shadow-sm border border-gray-200">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <DetailsField
-                label="Draw Name"
-                value={luckyDrawData.eventName}
-              />
+              <DetailsField label="Draw Name" value={luckyDrawData.eventName} />
 
               <DetailsField
                 label="Lucky Draw ID"
@@ -147,12 +145,9 @@ export default function LuckyDrawManagementView() {
                   value={luckyDrawData.startDate}
                 />
 
-                <DetailsField
-                  label="End Date"
-                  value={luckyDrawData.endDate}
-                />
+                <DetailsField label="End Date" value={luckyDrawData.endDate} />
 
-
+                <h1 className="font-bold">Rules Of Lucky Draw :</h1>
                 {luckyDrawData.rules.length === 0 ? (
                   <DetailsField
                     label="Products & Tickets"
@@ -173,7 +168,7 @@ export default function LuckyDrawManagementView() {
                         label={`Product ${index + 1} Tickets Per Quantity`}
                         value={
                           rule.ticketsPerQuantity !== undefined &&
-                            rule.ticketsPerQuantity !== null
+                          rule.ticketsPerQuantity !== null
                             ? rule.ticketsPerQuantity
                             : "-"
                         }
@@ -190,12 +185,6 @@ export default function LuckyDrawManagementView() {
                 <DetailsField
                   label="Result Announcement Date"
                   value={luckyDrawData.resultAnnouncementDate}
-                  className="md:col-span-2"
-                />
-
-                <DetailsField
-                  label="Rules Of Lucky Draw"
-                  value={" "}
                   className="md:col-span-2"
                 />
               </div>
@@ -231,11 +220,7 @@ export default function LuckyDrawManagementView() {
 
             <div className="flex justify-center gap-8 mt-8 mb-8">
               <Button text="Back" variant={2} onClick={handleBack} />
-              <Button
-                text="Add Winner"
-                variant={1}
-                onClick={handleAddWinner}
-              />
+              <Button text="Add Winner" variant={1} onClick={handleAddWinner} />
             </div>
           </div>
         </>

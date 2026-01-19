@@ -95,8 +95,14 @@ import EditProduct from "../pages/module/productManagment/EditProduct";
 import ViewProduct from "../pages/module/productManagment/ViewProduct";
 import AddShippingCostDomestic from "../pages/module/productManagment/AddShippingCostDomestic";
 import AddShippingCostInternational from "../pages/module/productManagment/AddShippingCostInternational";
-import EditDomasticShipingCost from "../pages/module/productManagment/EditDomasticShipingCost";
+import EditDomesticShippingCost from "../pages/module/productManagment/EditDomasticShipingCost.jsx";
 import EditInternationalShipingCost from "../pages/module/productManagment/EditInternationalShipingCost";
+import StoriesSection from "../pages/module/appManagement/storiesSection/StoriesSection.jsx";
+import CreateStory from "../pages/module/appManagement/storiesSection/CreateStory.jsx";
+import ProductUnboxing from "../pages/module/appManagement/productUnboxing/productUnboxing.jsx";
+import Testimonials from "../pages/module/appManagement/testimonials/testimonials.jsx";
+import EditStory from "../pages/module/appManagement/storiesSection/EditStory.jsx";
+import ViewStory from "../pages/module/appManagement/storiesSection/ViewStories.jsx";
 // -------------------------offer management --------------
 
 const OfferManagementAdd = lazy(() =>
@@ -188,6 +194,7 @@ import {
 } from "../pages/module/ManageRedeemRequest/index";
 import SubAdminProtectedRoute from "./SubAdminProtectedRoute.jsx";
 import NotFound from "../pages/module/NotFound.jsx";
+// import CreateStory from "../pages/module/appManagement/storiesSection/CreateStory.jsx";
 // import EditTermsAndConditions from "../pages/module/appManagement/term&condition/EditTerm&Condition";
 // import { countryManagementIcon } from "../assets/sidebaricon/sidebaricon";
 
@@ -428,7 +435,7 @@ function PublicRoute() {
               <Route path="adminProfile/editProfile" element={<EditProfile />} />
 
               {/* ---------------------------- Promoter Management ---------------------------- */}
-              <Route path="promoter-management" element={<PromoterManagement />} />
+              <Route path="/promoter-management" element={<PromoterManagement />} />
               <Route
                 path="/promoter-management/promoter-managementedit"
                 element={<PromoterManagementEdit />}
@@ -565,7 +572,7 @@ function PublicRoute() {
               />
               <Route
                 path="/product-management/shipping-cost/edit-shipping-cost/domestic/:id"
-                element={<EditDomasticShipingCost />}
+                element={<EditDomesticShippingCost />}
               />
               <Route
                 path="/product-management/shipping-cost/edit-shipping-cost/international/:id"
@@ -798,7 +805,13 @@ function PublicRoute() {
               {/*----------------------------About Us---------------------------------- */}
 
               <Route path="/app-management/about-us" element={<AboutUs />} />
-              <Route path="/app-management/about-us/edit" element={<AboutusEdit />} />
+              <Route path="/app-management/about-us/edit" element={<AboutusEdit />} /> 
+                <Route path="/app-management/stories/edit-story/:id" element={<EditStory />} />
+                <Route path="/app-management/stories/story-details/:id" element={<ViewStory />} />
+               <Route path="/app-management/stories-section" element={<StoriesSection />} />  
+                <Route path="/app-management/stories/create-story" element={<CreateStory />} />
+                <Route path="/app-management/product-unboxing" element={<ProductUnboxing />} />
+                 <Route path="/app-management/testimonials" element={<Testimonials />} />
               {/* 404 Not Found */}
               {/* <Route path="*" element={<NotFound />} /> */}
 

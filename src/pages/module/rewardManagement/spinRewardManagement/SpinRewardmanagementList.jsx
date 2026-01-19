@@ -35,7 +35,7 @@ export default function SpinRewardManagementList() {
 
   const handleSearchTerm = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1);
+    setPage(1);
   };
 
   const handleAddReward = () => {
@@ -52,7 +52,7 @@ export default function SpinRewardManagementList() {
 
   const handleDelete = async (id) => {
     await deleteSpinReward(id);
-    fetchSpinRewardList();
+     fetchSpinRewardList(page, limit, debouncedSearch);
   };
 
   const columns = [
@@ -96,7 +96,7 @@ export default function SpinRewardManagementList() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <BreadCrumb linkText={[{ text: "Spin Reward Management" }]} />
+      <BreadCrumb linkText={[ { text: "Reward Management" },{ text: "Spin Reward Management" }]} />
 
       <PagePath2
         title="Spin Reward Management"
@@ -118,7 +118,14 @@ export default function SpinRewardManagementList() {
         </div>
       ) : (
         <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
-          <DataTable columns={columns} data={spinRewardList?.data || []} actions={actions} />
+         <DataTable
+  columns={columns}
+  data={spinRewardList?.data || []}
+  currentPage={page}
+  usersPerPage={limit}
+  actions={actions}
+/>
+
 
           <Pagination
             currentPage={page}

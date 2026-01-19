@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
-
+import ModernDatePicker from "../../../../components/uiComponent/ModernDatePicker";
 import BreadCrumb from "../../../../components/uiComponent/BreadCrumb";
 import PagePath2 from "../../../../components/uiComponent/PagePath2";
 import DataTable from "../../../../components/uiComponent/DataTable";
 import Pagination from "../../../../components/uiComponent/Pagination";
-
-import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
-import { IoCalendarClearOutline } from "react-icons/io5";
-import { MdCancel } from "react-icons/md";
 import CustomSelect from "../../../../components/uiComponent/CustomSelect";
-
 import useReportAndAnalytics from "../../../../hooks/reportAndAnalytics/useReportAndAnalytics";
 
 const HighestSales = () => {
@@ -160,38 +155,6 @@ const StaffPerformance = () => {
     { header: "Total Revenue", field: "totalRevenue" },
   ];
 
-  // Filtered data with type and date
-  const filteredData = tableData.filter((item) => {
-    const matchesType = type;
-    // ? item.type.toLowerCase() === type.toLowerCase()
-    // : true;
-
-    const matchesDate = value
-      ? (() => {
-          const selectedDate = new Date(value);
-          const itemDateParts = item.date.split("/"); // "dd/MM/yyyy"
-          const itemDate = new Date(
-            Number(itemDateParts[2]),
-            Number(itemDateParts[1]) - 1,
-            Number(itemDateParts[0])
-          );
-          return itemDate.getTime() === selectedDate.getTime();
-        })()
-      : true;
-
-    return matchesType && matchesDate;
-  });
-
-  const totalItems = filteredData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = filteredData.slice(startIndex, endIndex);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [type]);
-
   return (
     <div className="max-w-7xl mx-auto">
       <BreadCrumb
@@ -220,37 +183,24 @@ const StaffPerformance = () => {
                   options={periodTypeOptions}
                 />
 
-                <DatePicker
-                  onChange={setValue}
+                <ModernDatePicker
                   value={value}
-                  // calendarIcon={<IoCalendarClearOutline />}
-                  // clearIcon={<MdCancel />}
-                  calendarIcon={value ? null : <IoCalendarClearOutline />} // show only when empty
-                  clearIcon={
-                    value ? (
-                      <MdCancel className="w-5 h-5 text-[#facc15]" />
-                    ) : null
-                  } // show only when a date exists
-                  format="dd/MM/yyyy"
-                  dayPlaceholder="DD"
-                  monthPlaceholder="MM"
-                  yearPlaceholder="YYYY"
-                  className="custom-ios-picker"
-                  onChangeRaw={(e) => e.preventDefault()}
+                  onChange={setValue}
+                  placeholder="DD/MM/YYYY"
                 />
               </div>
             </div>
             <div className="mt-4 rounded-2xl overflow-hidden shadow-lg border border-gray-200">
               <DataTable
                 columns={columns}
-                data={currentItems}
+                // data={currentItems}
                 currentPage={currentPage}
                 usersPerPage={itemsPerPage}
               />
               <Pagination
                 currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={totalItems}
+                // totalPages={totalPages}
+                // totalItems={totalItems}
                 itemsPerPage={itemsPerPage}
                 onPageChange={setCurrentPage}
                 onItemsPerPageChange={setItemsPerPage}

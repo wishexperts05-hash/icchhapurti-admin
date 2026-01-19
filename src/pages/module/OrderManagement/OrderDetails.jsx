@@ -460,7 +460,7 @@ const OrderDetails = () => {
 
                     <div className="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-[#CCA547] to-[#CCA547] bg-opacity-10 border border-[#CCA547] border-opacity-30">
                       <span className="text-lg font-bold text-gray-900">Grand Total</span>
-                      <span className="text-lg font-bold text-[#CCA547]">₹ {(orderDetails?.grandTotal || 0)?.toLocaleString()}</span>
+                      <span className="text-lg font-bold text-gray-900">₹ {(orderDetails?.grandTotal || 0)?.toLocaleString()}</span>
                     </div>
 
                     <div className="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-green-100 to-green-50 border border-green-200">

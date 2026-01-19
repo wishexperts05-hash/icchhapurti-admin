@@ -58,7 +58,7 @@ const ProductManagment = () => {
           <div className="relative w-12 h-12">
             {firstImage && (
               <img
-                src={firstImage.url}
+                src={firstImage}
                 alt={row.name}
                 className="w-12 h-12 object-cover rounded"
               />

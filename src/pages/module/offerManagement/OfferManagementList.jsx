@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState,  useEffect } from "react";
 import { FaEye } from "react-icons/fa";
 import { MdDelete, MdEdit, MdOutlineBlock } from "react-icons/md";
 import { useNavigate } from "react-router-dom";

@@ -185,7 +185,7 @@ const PagePath2 = ({
             <button
               onClick={onClick}
               disabled={!canCreate}
-              className={`px-4 py-2 rounded-lg bg-yellow-600 text-white hover:bg-yellow-700 transition-colors duration-200 flex items-center gap-2 ${!canCreate ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`px-4 py-2 rounded-lg bg-[#CCA547] text-white hover:bg-[#CCA547]/90 transition-colors duration-200 flex items-center gap-2 ${!canCreate ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <span>+</span>
               {addButtonText}

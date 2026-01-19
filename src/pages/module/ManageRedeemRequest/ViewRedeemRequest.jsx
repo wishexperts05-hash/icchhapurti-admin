@@ -22,10 +22,16 @@ import { ClassNames } from "@emotion/react";
 const RejectRequestModal = ({ open, onClose, onSave }) => {
   const [reason, setReason] = React.useState("");
 
+  // Handle modal close and reset reason
+  const handleClose = () => {
+    setReason(""); // Clear the reason input
+    onClose(); // Close the modal
+  };
+
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       maxWidth="md"
       fullWidth
       PaperProps={{
@@ -64,7 +70,7 @@ const RejectRequestModal = ({ open, onClose, onSave }) => {
           alignItems="center"
           gap={2}
         >
-          <Button variant={2} onClick={onClose} text="Cancel" />
+          <Button variant={2} onClick={handleClose} text="Cancel" />
           <Button
             variant={1}
             onClick={() => {
@@ -85,7 +91,7 @@ const RejectRequestModal = ({ open, onClose, onSave }) => {
 const ViewRedeemRequest = () => {
   const { id } = useParams();
   const [openReject, setOpenReject] = useState(false);
-  const navigate = useNavigate(); //
+  const navigate = useNavigate(); 
 
   const { loading, fetchRedeemRequestDetails, redeemRequestsDetails, updateRedeemRequestStatus} =
     useManageRedeemRequest();
@@ -95,12 +101,13 @@ const ViewRedeemRequest = () => {
   }, [id]);
 
   const handleBack = () => {
-    navigate(-1); //
+    navigate(-1); // Go back to previous page
+    setOpenReject(false); // Close the modal if it's open
   };
 
   const handleRejectReject = (status, reason) => {
     updateRedeemRequestStatus(id, status, reason);
-    setStatus("");
+    setStatus(""); // Reset any other states if needed
   };
 
   return (
@@ -119,14 +126,12 @@ const ViewRedeemRequest = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-
           }}
         >
           <LoaderSpinner />
         </Box>
       ) : (
         <>
-          {" "}
           <Box
             sx={{
               display: "flex",
@@ -134,7 +139,7 @@ const ViewRedeemRequest = () => {
               gap: 2,
               background: "#ffffff",
               border: "1px solid #E0E0E0",
-              borderRadius: "16px"
+              borderRadius: "16px",
             }}
           >
             <Box
@@ -144,60 +149,26 @@ const ViewRedeemRequest = () => {
                 gap: 1,
                 p: 2,
               }}
-            >
-              {/* Added Border Bottom */}
-            </Box>
+            ></Box>
             <Box
               sx={{
                 display: "grid",
                 gridTemplateColumns: "repeat(2,1fr)",
                 gap: 3,
                 p: 2,
-                width: "100%", //40%
-                marginTop: "-40px"
+                width: "100%", 
+                marginTop: "-40px",
               }}
             >
-              <DetailsField
-                label="Name :"
-                value={redeemRequestsDetails.name || "-"}
-              />
-              <DetailsField
-                label="Role :"
-                value={redeemRequestsDetails.role || "-"}
-              />
-              <DetailsField
-                label="Balance :"
-                value={redeemRequestsDetails.walletBalance || "-"}
-              />
-              <DetailsField
-                label="Redeem Request Amount :"
-                value={redeemRequestsDetails.redeemRequestAmount || "-"}
-              />
-              <DetailsField
-                label="Bank Name :"
-                value={redeemRequestsDetails.bankName || "-"}
-              />
-              <DetailsField
-                label="Bank Account Number :"
-                value={redeemRequestsDetails.bankAccountNumber || "-"}
-              />
-              <DetailsField
-                label="IFSC Code :"
-                value={redeemRequestsDetails.ifscCode || "-"}
-              />
-              <DetailsField
-                label="Account Holder Name :"
-                value={redeemRequestsDetails.accountHolderName || "-"}
-              />
-              <DetailsField
-                label="Status by SubAdmin :"
-                color={
-                  redeemRequestsDetails.statusBySubAdmin === "Approved"
-                    ? "green"
-                    : "red"
-                }
-                value={redeemRequestsDetails.statusBySubAdmin || "-"}
-              />
+              <DetailsField label="Name :" value={redeemRequestsDetails.name || "-"} />
+              <DetailsField label="Role :" value={redeemRequestsDetails.role || "-"} />
+              <DetailsField label="Balance :" value={redeemRequestsDetails.walletBalance || "-"} />
+              <DetailsField label="Redeem Request Amount :" value={redeemRequestsDetails.redeemRequestAmount || "-"} />
+              <DetailsField label="Bank Name :" value={redeemRequestsDetails.bankName || "-"} />
+              <DetailsField label="Bank Account Number :" value={redeemRequestsDetails.bankAccountNumber || "-"} />
+              <DetailsField label="IFSC Code :" value={redeemRequestsDetails.ifscCode || "-"} />
+              <DetailsField label="Account Holder Name :" value={redeemRequestsDetails.accountHolderName || "-"} />
+              <DetailsField label="Status by SubAdmin :" color={redeemRequestsDetails.statusBySubAdmin === "Approved" ? "green" : "red"} value={redeemRequestsDetails.statusBySubAdmin || "-"} />
             </Box>
           </Box>
           <Box
@@ -210,31 +181,22 @@ const ViewRedeemRequest = () => {
               margin: 3,
             }}
           >
-            <Button text="Back"
-              variant={2}
-              onClick={handleBack}
-            />
+            <Button text="Back" variant={2} onClick={handleBack} />
             <Button
               variant={4}
               text="Reject"
-              onClick={() => setOpenReject((prev) => !prev)}
+              onClick={() => setOpenReject(true)} // Directly open the modal
             />
-            <Button
-              variant={3}
-              text="Approve"
-              onClick={() => {
-                handleRejectReject("Approved");
-              }}
-            />
+            <Button variant={3} text="Approve" onClick={() => handleRejectReject("Approved")} />
           </Box>
         </>
       )}
       <RejectRequestModal
         open={openReject}
-        onClose={() => setOpenReject(false)}
+        onClose={() => setOpenReject(false)} // Close the modal when onClose is triggered
         onSave={(reason) => {
-          setOpenReject(false);
-          handleRejectReject("Rejected", reason);
+          setOpenReject(false); // Close the modal after saving
+          handleRejectReject("Rejected", reason); // Handle rejection logic
         }}
       />
     </Box>
@@ -242,3 +204,4 @@ const ViewRedeemRequest = () => {
 };
 
 export default ViewRedeemRequest;
+

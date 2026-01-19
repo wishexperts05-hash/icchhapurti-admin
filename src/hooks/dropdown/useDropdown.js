@@ -32,9 +32,10 @@ const useDropdown = () => {
   const [cities, setCities] = useState([]);
 
 
-const [loadingCities, setLoadingCities] = useState(false);
 
-
+  const [loadingCities, setLoadingCities] = useState(false);
+  const [loadingRegion,setLoadingRegion]=useState(false);
+ 
   const [salesType, setSalesType] = useRecoilState(salesTypeAtom);
   const [userType, setUserType] = useRecoilState(userTypeAtom);
   const [productDropdown, setProductDropdown] = useRecoilState(productDropdownAtom);
@@ -44,31 +45,23 @@ const [loadingCities, setLoadingCities] = useState(false);
   const [countries, setCountries] = useRecoilState(countriesAtom);
   const [bannerTypes, setBannerTypes] = useRecoilState(bannerTypesAtom);
   const [appTypes, setAppTypes] = useRecoilState(appTypesAtom);
+  const [region ,setRegion]=useState([]);
   const [banklist ,setBanklist]  =useState ([]);
   const [states, setStates] = useState([]);
   const [loadingStates, setLoadingStates] = useState(false);
   const [countryCode,setCountryCode] = useState();
-    const [loadingCode, setLoadingCode] = useState(false);
+  const [loadingCode, setLoadingCode] = useState(false);
+  const [userTypeFAQ ,setUserTypeFAQ] =useState([])
+  const [dropdownfaq, setDropdownfaq] = useState ([]);
 
-  
-
-  // -----------------------------
-const fetchAlCountriescallingcodes = async () => {
+  const fetchAlCountriescallingcodes = async () => {
   setLoadingCode(true);
 
   try {
-   
-
     const res = await fetchData({
       method: "GET",
       url: `${conf.apiBaseUrl}admin/country/all/calling-code/dropdown`,
-            headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
     });
-
-    
-
     if (res?.success) {
       setCountryCode(res.countries || []);
     }
@@ -77,21 +70,15 @@ const fetchAlCountriescallingcodes = async () => {
   }
 };
 
-
-// APP TYPES DROPDOWN
-// -----------------------------
 const fetchAppTypesDropdown = async () => {
   setLoadingAppTypes(true);
 
   try {
-   
 
     const res = await fetchData({
       method: "GET",
       url: `${conf.apiBaseUrl}admin/banners/getAppTypesDropdown`,
     });
-
-    
 
     if (res?.success) {
       setAppTypes(res.data || []);
@@ -103,10 +90,6 @@ const fetchAppTypesDropdown = async () => {
 
 const resetAppTypes = () => setAppTypes([]);
 
-
-// -----------------------------
-// BANNER TYPES DROPDOWN 
-// -----------------------------
 const fetchBannerTypesDropdown = async (appType = null) => {
   setLoadingBannerTypes(true);
 
@@ -114,14 +97,10 @@ const fetchBannerTypesDropdown = async (appType = null) => {
     const params = new URLSearchParams();
     if (appType) params.append("appType", appType);  
 
-    
-
     const res = await fetchData({
       method: "GET",
       url: `${conf.apiBaseUrl}admin/banners/getBannerTypesDropdown?${params.toString()}`,
     });
-
-    
 
     if (res?.success) {
       setBannerTypes(res.data || []);
@@ -135,10 +114,6 @@ const fetchBannerTypesDropdown = async (appType = null) => {
 
 const resetBannerTypes = () => setBannerTypes([]);
 
-
-  // -----------------------------
-  // sales type
-  // -----------------------------
   const fetchSalesType = async () => {
     setLoadingSales(true);
     try {
@@ -151,9 +126,7 @@ const resetBannerTypes = () => setBannerTypes([]);
       setLoadingSales(false);
     }
   };  
-  // -----------------------------
-  // user type
-  // -----------------------------
+
   const fetchUserType = async (salesType = null) => {
     setLoadingUser(true);
     try {
@@ -172,9 +145,7 @@ const resetBannerTypes = () => setBannerTypes([]);
   };
 
   const resetUserType = () => setUserType([]);
-  // -----------------------------
-  // product dropdown
-  // -----------------------------
+
   const fetchProductDropdown = async () => {
     setLoadingProduct(true);
     try {
@@ -187,9 +158,7 @@ const resetBannerTypes = () => setBannerTypes([]);
       setLoadingProduct(false);
     }
   };
-  // -----------------------------
-  // product category
-  // -----------------------------
+
   const fetchProductCategory = async () => {
     setLoadingProduct(true);
     try {
@@ -233,9 +202,6 @@ const fetchStatesByCountry = async (countryName) => {
       method: "POST",
       url: `${conf.apiBaseUrl}admin/country/external/states`,
       data: { country: countryName },
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
     });
 
     if (res?.success) {
@@ -260,9 +226,6 @@ const fetchCitiesByState = async (countryName, stateName) => {
       method: "POST",
       url: `${conf.apiBaseUrl}admin/country/external/cities`,
       data: { country: countryName, state: stateName },
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
     });
 
     if (res?.success && Array.isArray(res.cities)) {
@@ -274,8 +237,6 @@ const fetchCitiesByState = async (countryName, stateName) => {
     setLoadingCities(false);
   }
 };
-
-
 
   // -----------------------------
   // order status
@@ -317,17 +278,64 @@ const fetchCitiesByState = async (countryName, stateName) => {
       const res = await fetchData({
         method: "GET",
         url: `${conf.apiBaseUrl}admin/staff/dropdown/bank-list`,
-        headers: {
-                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
       });
       if (res) setBanklist(res?.bankList);
     } finally {
       setLoadingBankList(false);
     }
   };
+
+// -----------------------------Region Dropdown----------------------------------- //
+  const fetchAllRegion = async () => {
+  setLoadingRegion(true);
+  try {
+    const res = await fetchData({
+      method: "GET",
+      url: `${conf.apiBaseUrl}admin/shipping/available-domestic-regions`,
+    });
+    if (res?.success) {
+      setRegion(res.regions|| []);
+    }
+  } finally {
+    setLoadingRegion(false);
+  }
+};
+
+
+// ----------------------------- User Type Dropdown----------------------------------- //
+  const fetchAllUserType = async () => {
+  setLoadingUser(true);
+  try {
+    const res = await fetchData({
+      method: "GET",
+      url: `${conf.apiBaseUrl}admin/termsAndCondition/userType-dropdown`,
+    });
+    if (res?.success) {
+      setUserTypeFAQ(res.data || []);
+    }
+  } finally {
+    setLoadingUser(false);
+  }
+};
+
+// -----------------------------Fetch user type in FAQ management----------------------------------- //
+const fetchUserTypeFAQ = async () => {
+  setLoadingUser(true);
+  try { 
+    const res = await fetchData({
+      method: "GET",
+      url: `${conf.apiBaseUrl}admin/faq/categories`,
+    });
+    if (res?.success) {
+      setDropdownfaq(res.data || []);
+    }
+  } finally {
+    setLoadingUser(false);
+  } 
+};
+
   const loading =
-    loadingSales ||
+    loadingSales || loadingRegion ||
     loadingUser ||
     loadingProduct ||
     loadingOrderStatus ||
@@ -337,12 +345,14 @@ const fetchCitiesByState = async (countryName, stateName) => {
 
   return {
     loading,
-
+    region,
+   fetchAllRegion,  fetchAllUserType,userTypeFAQ,
     fetchCitiesByState,
     fetchSalesType,
     fetchProductCategory,
     fetchOrderStatus,
     fetchUserType,
+    fetchUserTypeFAQ,
     fetchProductDropdown,
     fetchCountryDropdown,
     fetchStatesByCountry,
@@ -363,6 +373,7 @@ fetchAlCountriescallingcodes,
     countries,
     bannerTypes,
     appTypes,
+    dropdownfaq,
 
     resetUserType,
     resetBannerTypes,

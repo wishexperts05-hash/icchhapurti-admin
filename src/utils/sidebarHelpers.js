@@ -123,14 +123,14 @@ export const allNavigationItems = [
     color: "blue",
   },
 
-  // {
-  //   id: 4,
-  //   title: "Promoter Management",
-  //   url: "/promoter-management",
-  //   icon: productManagementIcon,
-  //   badge: null,
-  //   color: "blue",
-  // },
+  {
+    id: 4,
+    title: "Promoter Management",
+    url: "/promoter-management",
+    icon: productManagementIcon,
+    badge: null,
+    color: "blue",
+  },
   {
     id: 5,
     title: "Product Management",
@@ -373,7 +373,7 @@ export const allNavigationItems = [
   {
     id: 21,
     title: "App Management",
-    url: "/app-management",
+    url: "/app-management/about-us",
     icon: appManagementIcon,
     badge: null,
     color: "gray",
@@ -412,6 +412,30 @@ export const allNavigationItems = [
         color: "yellow",
       },
       {
+        id: 68,
+        title: "Stories Section",
+        url: "/app-management/stories-section",
+        icon: FiInfo,
+        badge: null,
+        color: "yellow",
+      },
+      {
+        id: 69,
+        title: "Product Unboxing",
+        url: "/app-management/product-unboxing",
+        icon: FiInfo,
+        badge: null,
+        color: "yellow",
+      },
+      {
+        id: 70,
+        title: "Testimonials",
+        url: "/app-management/testimonials",
+        icon: FiInfo,
+        badge: null,
+        color: "yellow",
+      },
+      {
         id: 65,
         title: "Help & Support",
         url: "/app-management/help-and-support",
@@ -429,7 +453,7 @@ export const allNavigationItems = [
       },
       {
         id: 67,
-        title: "Faq",
+        title: "FAQ",
         url: "/app-management/faq",
         icon: otherSettingsIcon,
         badge: null,

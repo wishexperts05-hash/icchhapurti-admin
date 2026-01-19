@@ -12,7 +12,7 @@ const validationSchema = Yup.object({
   cost: Yup.string().required("Required"),
 });
 
-const EditInternationalShippingCost = () => {
+const EditDomesticShippingCost = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -39,7 +39,7 @@ const EditInternationalShippingCost = () => {
       const res = await updateDomesticShippingRate(id, payload);
 
       if (res?.success) {
-        toast.success("International shipping rate updated successfully");
+        toast.success("Domestic shipping rate updated successfully");
         navigate("/product-management/shipping-cost");
       } else {
         toast.error(res?.message || "Failed to update shipping rate");
@@ -57,7 +57,7 @@ const EditInternationalShippingCost = () => {
 
       if (data) {
         formik.setValues({
-          type: "International",
+          type:"Domestic",
           country: data.region || "",
           category: data.category || "",
           currency: data.currency || "",
@@ -99,7 +99,7 @@ const EditInternationalShippingCost = () => {
 
           {/* Country */}
           <div>
-            <label className="block font-medium mb-2">Country :</label>
+            <label className="block font-medium mb-2">Region :</label>
             <input
               name="country"
               value={formik.values.country}
@@ -158,4 +158,4 @@ const EditInternationalShippingCost = () => {
   );
 };
 
-export default EditInternationalShippingCost;
+export default EditDomesticShippingCost;

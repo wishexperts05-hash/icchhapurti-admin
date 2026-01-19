@@ -45,8 +45,13 @@ const AddEditUser = () => {
       ? Yup.string().min(8, "Password must be at least 8 characters")
       : Yup.string()
         .required("Password is required")
-        .min(8, "Password must be at least 8 characters"),
+        .min(8, "Password must be at least 8 characters")
+              .matches(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "Password must contain at least one special character"
+      ),
     phoneNumber: Yup.string()
+    .required("Password is required")
       .matches(/^[0-9]+$/, "Phone number must contain only digits")
       .min(10, "Phone number must be at least 10 digits")
       .max(15, "Phone number must be less than 15 digits"),
@@ -181,7 +186,7 @@ const AddEditUser = () => {
           { text: id ? "Edit User" : "Add User" },
         ]}
       />
-      <PagePath2 title={id ? "Edit User" : "Create User"} />
+      <PagePath2 title={id ? "Edit User" : "Add User"} />
 
       <div className="w-full min-h-[300px] p-6 rounded-[8px] bg-white shadow flex flex-col gap-6 ">
         <Formik
@@ -390,7 +395,7 @@ const AddEditUser = () => {
                   <button
                     type="button"
                     onClick={togglePasswordVisibility}
-                    className="absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-500 "
+                    className="absolute right-7 top-1/4  text-gray-500 "
                   >
                     {showPassword ? (
                       
@@ -400,17 +405,18 @@ const AddEditUser = () => {
                     )}
                   </button>
                 </div>
-                <p className="text-xs text-gray-500">
+                
+                {/* <p className="text-xs text-gray-500">
                   {id
                     ? "Leave blank to keep current password, or enter new password"
-                    : "Enter password (min 6 characters)"}
-                </p>
+                    : "Enter password (min 8 characters)"}
+                </p> */}
               </div>
 
               <FormField
                 label="Phone Number"
                 name="phoneNumber"
-                type="tel"
+                type="number"
                 fieldType="input"
                 placeholder="Enter phone number"
               />
@@ -426,7 +432,7 @@ const AddEditUser = () => {
                   type="submit"
                   disabled={isSubmitting || loading}
                   variant={1}
-                  text={id ? "Update User" : "Create User"}
+                  text={id ? "Update User" : "Add User"}
                 />
               </div>
             </form>

@@ -10,13 +10,8 @@ const BannerDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const {
-    loading,
-    bannerDetail,
-    fetchBannerById,
-    resetBannerDetail,
-  } = useBanner();
-
+  const { loading, bannerDetail, fetchBannerById, resetBannerDetail } =
+    useBanner();
   useEffect(() => {
     if (id) fetchBannerById(id);
   }, [id]);
@@ -24,37 +19,7 @@ const BannerDetails = () => {
   useEffect(() => {
     return () => resetBannerDetail();
   }, []);
-
-  const isVideoUrl = (url) => {
-    return url?.toLowerCase().match(/\.(mp4|webm|ogg|mov)$/);
-  };
-
-  const renderMedia = (url, index) => {
-    if (isVideoUrl(url)) {
-      return (
-        <video
-          key={index}
-          src={url}
-          className="h-64 rounded-lg shadow-md object-cover"
-          controls
-          preload="metadata"
-        />
-      );
-    }
-
-    return (
-      <img
-        key={index}
-        src={url}
-        alt={`banner-${index}`}
-        className="h-64 rounded-lg shadow-md object-cover"
-        onError={(e) => {
-          e.target.src =
-            "https://via.placeholder.com/400x200?text=Image+Not+Found";
-        }}
-      />
-    );
-  };
+  
 
   if (loading) {
     return (
@@ -75,7 +40,7 @@ const BannerDetails = () => {
     );
   }
 
-  if (!bannerDetail?.data) {
+  if (!bannerDetail?.data || !bannerDetail.data) {
     return (
       <div className="bg-[#F9F9F9] min-h-screen">
         <BreadCrumb
@@ -93,8 +58,9 @@ const BannerDetails = () => {
       </div>
     );
   }
-
   const data = bannerDetail.data;
+  const videos = data.videos || [];
+  const images = data.images || [];
 
   return (
     <div className="bg-[#F9F9F9] min-h-screen">
@@ -108,32 +74,71 @@ const BannerDetails = () => {
       <PagePath2 title="Banner Details" />
 
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4">
-        <div className="flex flex-col items-center gap-4">
-          <div className="flex flex-wrap justify-center items-center gap-4">
-            {data.mediaUrls?.length > 0 ? (
-              data.mediaUrls.map((url, i) => renderMedia(url, i))
-            ) : (
-              <div className="h-64 w-full flex items-center justify-center bg-gray-100 rounded-lg border border-gray-300 px-4">
-                No Media Available
+       <div className="flex flex-col gap-8 w-full">
+            <div className="flex flex-col gap-6 w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 py-4">
+                <div className="flex flex-col gap-2">
+                  <span className="font-medium text-[#004AAD]">
+                    Service Type
+                  </span>
+                  <div className="px-3 py-3 border border-[#e65d00]/80 rounded-lg shadow-sm">
+                    {data.appType || "N/A"}
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <span className="font-medium text-[#004AAD]">
+                    Banner Type
+                  </span>
+                  <div className="px-3 py-3 border border-[#e65d00]/80 rounded-lg shadow-sm">
+                    {data.bannerType || "N/A"}
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
+              {/* VIDEOS */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Videos</h3>
 
-        <div className="my-6 border-t border-gray-200"></div>
+                {videos.length > 0 ? (
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 py-4">
-          <div className="flex flex-col gap-2">
-            <span className="font-medium text-[#004AAD]">Service Type</span>
-            <div className="px-3 py-3 border border-[#e65d00]/80 rounded-lg shadow-sm">
-              {data.appType || "N/A"}
-            </div>
-          </div>
+                    {videos.map((url, i) => (
+                      <video
+                        key={i}
+                        src={url}
+                        className="h-64 rounded-lg shadow-md object-cover"
+                        controls
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-400 text-center">
+                    No Videos Uploaded
+                  </p>
+                )}
+              </div>
 
-          <div className="flex flex-col gap-2">
-            <span className="font-medium text-[#004AAD]">Banner Type</span>
-            <div className="px-3 py-3 border border-[#e65d00]/80 rounded-lg shadow-sm">
-              {data.bannerType || "N/A"}
+              {/* IMAGES */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Images</h3>
+                {images.length > 0 ? (
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                    {images.map((url, i) => (
+                      <img
+                        key={i}
+                        src={url}
+                        alt={`banner-${i}`}
+                        className="h-64 rounded-lg shadow-md object-cover"
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="h-40 flex items-center justify-center border border-dashed border-gray-300 rounded-lg text-gray-400">
+                    No Images Uploaded
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -151,7 +156,7 @@ const BannerDetails = () => {
           />
         </div>
       </div>
-    </div>
+   
   );
 };
 

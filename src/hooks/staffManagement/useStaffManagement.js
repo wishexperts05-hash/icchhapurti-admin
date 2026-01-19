@@ -28,6 +28,7 @@ const useStaffManagement = () => {
   const [attendanceList, setAttendanceList] = useState([]);
   const [attendancePagination, setAttendancePagination] = useState({});
   const [attendanceLoading, setAttendanceLoading] = useState(false);
+  const [attendanceDetail,setAttendaceDetail] = useState();
 
   const fetchStaffList = async (page, limit, debouncedSearch) => {
     setLoading(true);
@@ -63,9 +64,6 @@ const useStaffManagement = () => {
       const res = await fetchData({
         method: "GET",
         url: `${conf.apiBaseUrl}admin/staff/get-staff/${id}`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
 
       if (res) {
@@ -84,9 +82,6 @@ const useStaffManagement = () => {
       const res = await fetchData({
         method: "GET",
         url: `${conf.apiBaseUrl}admin/staff/staff-direct-sales/${id}?type=${type}&page=${page}&limit=${limit}`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
 
       if (res) {
@@ -105,9 +100,6 @@ const useStaffManagement = () => {
       const res = await fetchData({
         method: "GET",
         url: `${conf.apiBaseUrl}admin/staff/staff-indirect-sales/${id}?type=${type}&page=${page}&limit=${limit}`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
       if (res) {
         setIndirectSales(res);
@@ -126,10 +118,6 @@ const useStaffManagement = () => {
         method: "POST",
         url: `${conf.apiBaseUrl}admin/staff/add`, // <-- FIXED
         data: data,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          "Content-Type": "multipart/form-data",
-        },
       });
       if (res) {
         toast.success(res?.message);
@@ -248,9 +236,6 @@ const useStaffManagement = () => {
       const res = await fetchData({
         method: "DELETE",
         url: `${conf.apiBaseUrl}admin/staff/delete/${id}`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
 
       if (res) {
@@ -288,9 +273,6 @@ const useStaffManagement = () => {
       const res = await fetchData({
         method: "GET",
         url: `${conf.apiBaseUrl}admin/staff/attendance?${params.toString()}`,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
       });
 
       if (res?.success) {
@@ -302,6 +284,24 @@ const useStaffManagement = () => {
       toast.error("Failed to fetch attendance");
     } finally {
       setAttendanceLoading(false);
+    }
+  };
+
+
+    const fetchAttendanceById = async (id) => {
+    setIloading(true);
+    try {
+      const res = await fetchData({
+        method: "GET",
+        url: `${conf.apiBaseUrl}admin/staff/attendance/${id}`,
+      });
+      if (res) {
+        setAttendaceDetail(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching staff details:", error);
+    } finally {
+      setIloading(false);
     }
   };
 
@@ -326,6 +326,9 @@ const useStaffManagement = () => {
     indirectSales,
     dloading,
     iloading,
+
+    fetchAttendanceById,
+    attendanceDetail,
 
     fetchStaffAttendance,
     attendanceList,
