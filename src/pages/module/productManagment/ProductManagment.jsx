@@ -75,7 +75,7 @@ const ProductManagment = () => {
     { header: "Product Category", field: "category" },
     { header: "Product Name", field: "name" },
 
-    { header: "Price", field: "price" },
+    // { header: "Price", field: "price" },
     { header: "Action", field: "action" },
   ];
 

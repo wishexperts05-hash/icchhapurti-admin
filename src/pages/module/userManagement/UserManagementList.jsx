@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { FaEye } from "react-icons/fa";
 import { MdOutlineBlock } from "react-icons/md";
+import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import DataTable from "../../../components/uiComponent/DataTable";
@@ -9,7 +10,7 @@ import Pagination from "../../../components/uiComponent/Pagination";
 import useUserManagement from "../../../hooks/userManagement/useUserManagement";
 import useDebounce from "../../../hooks/debounce/useDebounce";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
-import usePermissions from "../../../hooks/auth/usePermissions";
+import usePermissions from "../../../hooks/auth/usePermissions";   
 import useLogin from "../../../hooks/auth/useLogin";
 
 export default function UserManagement() {
@@ -79,6 +80,12 @@ export default function UserManagement() {
       title: "Toggle Status",
       disableCondition: () => !canUpdate,
     },
+    {
+            icon: <Trash2 className="w-5 h-5 text-red-600" />,
+            title: "Delete",
+            // onClick: handleDelete,
+            disableCondition: () => !canDelete,
+        },
   ];
 
   return (
