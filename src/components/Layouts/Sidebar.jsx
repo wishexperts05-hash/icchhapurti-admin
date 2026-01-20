@@ -468,7 +468,7 @@ const Sidebar = ({ isOpen, setIsOpen, isMobile }) => {
           <div className="px-3 pb-3 border-t-2 border-[#e65d00]/40">
             <button
               onClick={handleLogout}
-              className={`mt-2 relative group py-1 rounded-xl transition-all duration-300 hover:shadow-lg w-full card-hover-effect flex items-center px-3 bg-[#e65d00]/20 border border-[#e65d00]/20 hover:bg-[#e65d00]`}
+              className={`mt1-2 relative group py-1 rounded-xl transition-all duration-300 hover:shadow-lg w-full card-hover-effect flex items-center px-3 bg-[#e65d00]/20 border border-[#e65d00]/20 hover:bg-[#e65d00]`}
             >
               <div className="flex items-center justify-center rounded-lg transition-all duration-200 micro-bounce text-white">
                 <div className="bg-[#ce0808] p-1 rounded-md">

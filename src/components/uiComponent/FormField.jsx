@@ -124,14 +124,14 @@ export default function FormField({
             {rightElement && (
               <div
                 className="
-      absolute 
-      left-[2px] right-[2px] top-[2px] bottom-[2px]
-      rounded-md
-      pointer-events-none
-      flex items-center pl-3
-      bg-white
-      z-10
-    "
+            absolute 
+            left-[2px] right-[2px] top-[2px] bottom-[2px]
+            rounded-md
+            pointer-events-none
+            flex items-center pl-3
+            bg-white
+            z-10
+          "
               >
                 {rightElement}
               </div>
@@ -161,7 +161,7 @@ export default function FormField({
         </>
       ) : (
         <>
-         <label
+          <label
             htmlFor={name}
             className="text-sm font-medium text-gray-700 mb-1"
           >
@@ -217,22 +217,22 @@ export default function FormField({
                 fontFamily: "Inter",
                 color: "black"
               }),
-            option: (base, state) => ({
-  ...base,
-  backgroundColor: state.isSelected
-    ? "#f4920aff !important"
-    : state.isFocused
-    ? "white !important"
-    : "white",
-  color: state.isSelected ? "white" : "#111827",
-  cursor: "pointer",
-  ":active": {
-    backgroundColor: "#FEF3C7 !important",
-  },
-  ":hover": {
-    backgroundColor: "#FEF3C7 !important",
-  },
-}),
+              option: (base, state) => ({
+                ...base,
+                backgroundColor: state.isSelected
+                  ? "#f4920aff !important"
+                  : state.isFocused
+                    ? "white !important"
+                    : "white",
+                color: state.isSelected ? "white" : "#111827",
+                cursor: "pointer",
+                ":active": {
+                  backgroundColor: "#FEF3C7 !important",
+                },
+                ":hover": {
+                  backgroundColor: "#FEF3C7 !important",
+                },
+              }),
             }}
           />
         </>

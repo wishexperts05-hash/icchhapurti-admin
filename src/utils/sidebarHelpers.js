@@ -127,7 +127,7 @@ export const allNavigationItems = [
     id: 4,
     title: "Promoter Management",
     url: "/promoter-management",
-    icon: productManagementIcon,
+    icon: staffManagementIcon,
     badge: null,
     color: "blue",
   },
