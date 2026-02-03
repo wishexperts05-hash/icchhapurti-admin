@@ -20,7 +20,7 @@ const EditProduct = () => {
   const [productVideos, setProductVideos] = useState([]);
   const [videosToDelete, setVideosToDelete] = useState([]);
   const [descriptionBlocks, setDescriptionBlocks] = useState([]);
-  const [easyReturn, setEasyReturn] = useState(true);
+  // const [easyReturn, setEasyReturn] = useState(true);
   const [visible, setVisible] = useState(true);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { id } = useParams();
@@ -98,7 +98,7 @@ const EditProduct = () => {
     validationSchema: Yup.object({
       category: Yup.string().required("Category is required"),
       name: Yup.string().required("Product name is required"),
-      returnable: Yup.string().required("Return days are required"),
+      // returnable: Yup.string().required("Return days are required"),
     }),
 
     onSubmit: async (values) => {
@@ -107,9 +107,9 @@ const EditProduct = () => {
       formData.append("category", values.category);
       formData.append("name", values.name);
       formData.append("prices", JSON.stringify(countryPrices));
-      formData.append("returnableDays", values.returnable);
+      // formData.append("returnableDays", values.returnable);
       formData.append("productDetails", JSON.stringify(descriptionBlocks));
-      formData.append("easyReturn", easyReturn);
+      // formData.append("easyReturn", easyReturn);
       formData.append("visible", visible);
 
       // NEW images
@@ -152,22 +152,21 @@ const EditProduct = () => {
 
       setDescriptionBlocks(productDetail.product.productDetails || []);
       setProductImages(formattedImages);
-      setEasyReturn(productDetail.product.returnable);
+      // setEasyReturn(productDetail.product.returnable);
       setVisible(productDetail.product.isActive);
 
       // Map prices with country information from the dropdown
       if (productDetail.product.prices && productDetail.product.prices.length > 0) {
         const formattedPrices = productDetail.product.prices.map((priceObj) => {
           // Find the matching country from the dropdown to get full details
-          const matchingCountry = countries.find(
-            (country) => 
-              country._id === priceObj.countryId || 
-              country.id === priceObj.countryId ||
-              country.name === priceObj.countryName
-          );
+       const matchingCountry = countries.find(
+  (country) =>
+    country.name?.toLowerCase().trim() ===
+    priceObj.countryName?.toLowerCase().trim()
+);
 
           return {
-            countryId: matchingCountry?._id || matchingCountry?.id || priceObj.countryId || "",
+            countryId: matchingCountry?._id || matchingCountry?.id || priceObj.countryName || "",
             countryName: matchingCountry?.name || priceObj.countryName || "",
             currencyName: matchingCountry?.defaultCurrencyName || priceObj.currencyName || "",
             currencySymbol: matchingCountry?.defaultCurrencySymbol || priceObj.currencySymbol || "",
@@ -190,7 +189,7 @@ const EditProduct = () => {
 
   const addCountryPrice = () => {
     setCountryPrices((prev) => [
-      ...prev,
+      
       {
         countryId: "",
         countryName: "",
@@ -198,6 +197,7 @@ const EditProduct = () => {
         currencySymbol: "",
         price: "",
       },
+      ...prev,
     ]);
   };
 
@@ -252,6 +252,11 @@ const EditProduct = () => {
     }
     setProductImages((prev) => prev.filter((_, i) => i !== index));
   };
+
+  const hasAvailableCountries =
+  countryOptions.length > 0 &&
+  countryPrices.length < countryOptions.length;
+
 
   return (
     <div>
@@ -312,13 +317,20 @@ const EditProduct = () => {
 
           {/*  ADD COUNTRY & PRICE BUTTON */}
           <div className="mt-4 flex justify-end">
-            <button
-              type="button"
-              onClick={addCountryPrice}
-              className="flex items-center gap-2 text-orange-600 font-medium mt-4 hover:text-orange-700"
-            >
-              <FaPlus /> Add Country & Price
-            </button>
+           <button
+  type="button"
+  onClick={addCountryPrice}
+  disabled={!hasAvailableCountries || countryLoading}
+  className={`flex items-center gap-2 font-medium mt-4
+    ${
+      !hasAvailableCountries || countryLoading
+        ? "text-gray-400 cursor-not-allowed"
+        : "text-orange-600 hover:text-orange-700"
+    }`}
+>
+  <FaPlus /> Add Country & Price
+</button>
+
           </div>
 
           {/* PRICING SECTION */}
@@ -569,7 +581,7 @@ const EditProduct = () => {
           </div>
 
           {/* EASY RETURN */}
-          <div className="mt-6 flex items-center gap-2">
+          {/* <div className="mt-6 flex items-center gap-2">
             <img src={returnIcon} alt="" className="w-6 h-6" />
             <span className="font-medium">Easy Return</span>
 
@@ -582,10 +594,10 @@ const EditProduct = () => {
               />
               <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
             </label>
-          </div>
+          </div> */}
 
           {/* RETURN DAYS */}
-          {easyReturn && (
+          {/* {easyReturn && (
             <div className="mt-4">
               <label className="font-medium mb-2 block">Return Days:</label>
               <input
@@ -602,7 +614,7 @@ const EditProduct = () => {
                 </p>
               )}
             </div>
-          )}
+          )} */}
 
           {/* VISIBILITY */}
           <div className="mt-6 flex items-center gap-2">

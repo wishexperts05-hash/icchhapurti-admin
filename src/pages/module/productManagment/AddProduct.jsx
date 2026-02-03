@@ -18,7 +18,7 @@ import { BeatLoader } from "react-spinners";
 const AddProduct = () => {
   const [productImages, setProductImages] = useState([]);
   const [productVideos, setProductVideos] = useState([]);
-  const [easyReturn, setEasyReturn] = useState(true);
+  // const [easyReturn, setEasyReturn] = useState(true);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [visible, setVisible] = useState(true);
   const { addProduct } = useProductManagement();
@@ -60,11 +60,11 @@ const AddProduct = () => {
   };
   const countryOptions = Array.isArray(countries)
     ? countries.map((country) => ({
-      value: country._id || country.id || country.name,
-      label: country.name,
-      currencyName: country.defaultCurrencyName || "",
-      currencySymbol: country.defaultCurrencySymbol || "",
-    }))
+        value: country._id || country.id || country.name,
+        label: country.name,
+        currencyName: country.defaultCurrencyName || "",
+        currencySymbol: country.defaultCurrencySymbol || "",
+      }))
     : [];
   // console.log(countryOptions.currencyName, countryOptions.currencySymbol);
 
@@ -79,7 +79,7 @@ const AddProduct = () => {
   ]);
   const addCountryPrice = () => {
     setCountryPrices((prev) => [
-      ...prev,
+
       {
         countryId: "",
         countryName: "",
@@ -87,11 +87,9 @@ const AddProduct = () => {
         currencySymbol: "",
         price: "",
       },
+            ...prev,
     ]);
   };
-
-
-
 
   //  Formik setup
   const formik = useFormik({
@@ -104,7 +102,7 @@ const AddProduct = () => {
       descriptions: [
         {
           title: "",
-          content: "",
+          detail: "",
         },
       ],
       returnable: "",
@@ -114,19 +112,18 @@ const AddProduct = () => {
       name: Yup.string().required("Product name is required"),
 
       // description: Yup.string().required("Description is required"),
-      returnable: Yup.string()
-        // .min(0, "Must be 0 or greater")
-        .required("Return days are required"),
+      // returnable: Yup.string()
+      //   // .min(0, "Must be 0 or greater")
+      //   .required("Return days are required"),
     }),
     onSubmit: async (values) => {
       setIsAdding(true); // Start loading
       const formData = new FormData();
 
-
       formData.append("category", values.category);
       formData.append("name", values.name);
       formData.append("prices", JSON.stringify(countryPrices));
-      formData.append("returnableDays", values.returnable);
+      // formData.append("returnableDays", values.returnable);
 
       // formData.append(
       //   "description",
@@ -135,7 +132,7 @@ const AddProduct = () => {
 
       formData.append("productDetails", JSON.stringify(values.descriptions));
 
-      formData.append("returnable", easyReturn);
+      // formData.append("returnable", easyReturn);
       formData.append("visible", visible);
 
       productImages.forEach((img) => {
@@ -157,8 +154,6 @@ const AddProduct = () => {
       }
 
       console.log("FormData sent:", formData);
-
-
     },
   });
 
@@ -191,7 +186,7 @@ const AddProduct = () => {
   const addDescription = () => {
     formik.setFieldValue("descriptions", [
       ...formik.values.descriptions,
-      { title: "", content: "" },
+      { title: "", detail: "" },
     ]);
   };
 
@@ -207,11 +202,16 @@ const AddProduct = () => {
   };
   const getAvailableCountryOptions = (currentIndex) => {
     const selectedCountryIds = countryPrices
-      .map((price, idx) => idx !== currentIndex ? price.countryId : null)
-      .filter(id => id && id !== '');
+      .map((price, idx) => (idx !== currentIndex ? price.countryId : null))
+      .filter((id) => id && id !== "");
 
-    return countryOptions.filter(option => !selectedCountryIds.includes(option.value));
+    return countryOptions.filter(
+      (option) => !selectedCountryIds.includes(option.value)
+    );
   };
+  const hasAvailableCountries =
+  countryOptions.length > 0 &&
+  countryPrices.length < countryOptions.length;
 
 
   //  useEffect(() => {
@@ -236,7 +236,7 @@ const AddProduct = () => {
         ]}
       />
       <PagePath2 title="Add Product" />
-      <Formik >
+      <Formik>
         <form
           onSubmit={formik.handleSubmit}
           className="bg-white p-6 rounded-lg shadow-md mt-4"
@@ -281,24 +281,29 @@ const AddProduct = () => {
             </div>
           </div>
           <div className="mt-4 flex justify-end">
-            <button
-              type="button"
-              onClick={addCountryPrice}
-              className="flex items-center gap-2 text-orange-600 font-medium mt-4 hover:text-orange-700"
-            >
-              <FaPlus /> Add Country & Price
-            </button>
+<div className="mt-4 flex justify-end">
+  <button
+    type="button"
+    onClick={addCountryPrice}
+    disabled={!hasAvailableCountries || countryLoading}
+    className={`flex items-center gap-2 font-medium mt-4
+      ${
+        !hasAvailableCountries || countryLoading
+          ? "text-gray-400 cursor-not-allowed"
+          : "text-orange-600 hover:text-orange-700"
+      }`}
+  >
+    <FaPlus /> Add Country & Price
+  </button>
+</div>
+
           </div>
           {/* // Replace this entire section in AddProduct.jsx: */}
           {countryPrices.map((row, index) => (
-
             <div
-
               key={index}
               className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 border p-4 rounded relative"
             >
-
-
               {/* Country Select */}
               <div className="w-full">
                 <label className="block text-gray-700 font-medium mb-2">
@@ -307,21 +312,22 @@ const AddProduct = () => {
                 <div className="relative">
                   <select
                     value={row.countryId}
-                     isSearchable
+                    isSearchable
                     onChange={(e) => {
                       const selected = countryOptions.find(
-                        opt => opt.value === e.target.value);
+                        (opt) => opt.value === e.target.value
+                      );
                       if (selected) {
                         setCountryPrices((prev) =>
                           prev.map((item, i) =>
                             i === index
                               ? {
-                                ...item,
-                                countryId: selected.value,
-                                countryName: selected.label,
-                                currencyName: selected.currencyName,
-                                currencySymbol: selected.currencySymbol,
-                              }
+                                  ...item,
+                                  countryId: selected.value,
+                                  countryName: selected.label,
+                                  currencyName: selected.currencyName,
+                                  currencySymbol: selected.currencySymbol,
+                                }
                               : item
                           )
                         );
@@ -339,9 +345,6 @@ const AddProduct = () => {
                         {option.label}
                       </option>
                     ))}
-
-
-
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg
@@ -362,7 +365,7 @@ const AddProduct = () => {
                 </label>
                 <div className="flex items-center border border-gray-300 rounded-lg">
                   <span className="text-gray-500 font-semibold px-3">
-                    {row.currencySymbol || '$'}
+                    {row.currencySymbol || "$"}
                   </span>
                   <input
                     type="number"
@@ -370,16 +373,16 @@ const AddProduct = () => {
                     onChange={(e) => {
                       setCountryPrices((prev) =>
                         prev.map((item, i) =>
-                          i === index ? { ...item, price: e.target.value } : item
+                          i === index
+                            ? { ...item, price: e.target.value }
+                            : item
                         )
                       );
                     }}
                     placeholder="0.00"
                     className="flex-1 px-4 py-2.5 focus:outline-none focus:ring-0 rounded-r-lg"
                   />
-
                 </div>
-
               </div>
 
               {/* Remove Button */}
@@ -394,7 +397,6 @@ const AddProduct = () => {
               )}
 
               {/* Info Display */}
-
             </div>
           ))}
 
@@ -418,7 +420,6 @@ const AddProduct = () => {
               )}
             </div>
           </div> */}
-
 
           {/* Description */}
           {/* <div className="mt-4">
@@ -551,7 +552,6 @@ const AddProduct = () => {
                     <FaTimes />
                   </button>
                 )}
-
                 {/* Title */}
                 <input
                   type="text"
@@ -570,16 +570,16 @@ const AddProduct = () => {
                 <div className="border rounded-lg overflow-hidden">
                   <JoditEditor
                     ref={(el) => (editorRefs.current[index] = el)}
-                    value={desc.content}
+                    value={desc.detail}
                     config={editorConfig}
                     tabIndex={1}
                     onBlur={(newContent) =>
                       formik.setFieldValue(
-                        `descriptions[${index}].content`,
+                        `descriptions[${index}].detail`,
                         newContent
                       )
                     }
-                    onChange={() => { }}
+                    onChange={() => {}}
                   />
                 </div>
               </div>
@@ -587,7 +587,7 @@ const AddProduct = () => {
           </div>
 
           {/* Easy Return Toggle */}
-          <div className="flex items-center gap-2 mt-6">
+          {/* <div className="flex items-center gap-2 mt-6">
             <img src={returnIcon} alt="" className="w-6 h-6 text-yellow-600" />
             <span className="text-gray-700 font-medium">Easy Return</span>
             <label className="relative inline-flex items-center cursor-pointer ml-2">
@@ -599,10 +599,10 @@ const AddProduct = () => {
               />
               <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
             </label>
-          </div>
+          </div> */}
 
           {/* Return Days */}
-          {easyReturn && (
+          {/* {easyReturn && (
             <div className="mt-4">
               <label className="block text-gray-700 font-medium mb-2">
                 Enter Return Days:
@@ -621,12 +621,14 @@ const AddProduct = () => {
                 <p className="text-red-500 text-sm">{formik.errors.returnable}</p>
               )}
             </div>
-          )}
+          )} */}
 
           {/* Product Visibility Toggle */}
           <div className="flex items-center gap-2 mt-6">
             <img src={returnIcon} alt="" className="w-6 h-6 text-yellow-600" />
-            <span className="text-gray-700 font-medium">Product Visibility</span>
+            <span className="text-gray-700 font-medium">
+              Product Visibility
+            </span>
             <label className="relative inline-flex items-center cursor-pointer ml-2">
               <input
                 type="checkbox"
@@ -634,7 +636,7 @@ const AddProduct = () => {
                 checked={visible}
                 onChange={() => setVisible(!visible)}
               />
-              <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
+              <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-orange-500 rounded-full peer peer-checked:bg-green-500 after:detail-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full" />
             </label>
           </div>
 
@@ -650,9 +652,7 @@ const AddProduct = () => {
               text={isAdding ? "Adding..." : "Add"}
               disabled={isAdding}
               type="submit"
-              onClick={() => {
-
-              }}
+              onClick={() => {}}
             />
           </div>
         </form>
