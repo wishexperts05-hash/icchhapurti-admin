@@ -128,36 +128,30 @@ const ViewProduct = () => {
                 {/* Product Information */}
                 <div className="space-y-6">
                   {/* Price Section with Country Selector */}
-                  <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-5 border border-yellow-200">
-                    <h3 className="text-sm font-semibold text-gray-600 mb-3">PRICING</h3>
+                 <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-5 border border-yellow-200">
+  <h3 className="text-sm font-semibold text-gray-600 mb-4">PRICING</h3>
 
-                    {product?.prices?.length > 1 && (
-                      <div className="flex gap-2 mb-4 flex-wrap">
-                        {product?.prices?.map((priceObj, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setSelectedCountry(index)}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${selectedCountry === index
-                                ? "bg-yellow-500 text-white shadow-md"
-                                : "bg-white text-gray-700 hover:bg-yellow-200"
-                              }`}
-                          >
-                            {priceObj.countryName}
-                          </button>
-                        ))}
-                      </div>
-                    )}
+  <div className="space-y-3">
+    {product?.prices?.map((priceObj, index) => (
+      <div
+        key={index}
+        className="flex items-center justify-between bg-white rounded-lg px-4 py-3 border border-yellow-200"
+      >
+        <span className="text-sm font-medium text-gray-700">
+          {priceObj.countryName}
+        </span>
 
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-bold text-yellow-600">
-                        {product?.prices?.[selectedCountry]?.currencySymbol}
-                        {product?.prices?.[selectedCountry]?.price}
-                      </span>
-                      <span className="text-sm text-gray-600">
-                        {product?.prices?.[selectedCountry]?.currencyCode}
-                      </span>
-                    </div>
-                  </div>
+        <span className="text-lg font-bold text-yellow-600">
+          {priceObj.currencySymbol}
+          {priceObj.price}
+          <span className="text-sm text-gray-500 ml-1">
+            ({priceObj.currencyCode})
+          </span>
+        </span>
+      </div>
+    ))}
+  </div>
+</div>
 
                   {/* Basic Details */}
                   <div className="space-y-4">
@@ -168,12 +162,12 @@ const ViewProduct = () => {
                       </span>
                     </div>
 
-                    <div className="flex items-start">
+                     {/* <div className="flex items-start">
                       <span className="text-sm font-semibold text-gray-600 w-32">Added On:</span>
                       <span className="text-sm text-gray-800">{formatDate(product?.createdAt)}</span>
-                    </div>
+                    </div> */}
 
-                    <div className="flex items-start">
+                    {/* <div className="flex items-start">
                       <span className="text-sm font-semibold text-gray-600 w-32">Return Policy:</span>
                       <span className={`text-sm px-3 py-1 rounded-full ${product?.returnable
                           ? "bg-green-100 text-green-700"
@@ -183,7 +177,7 @@ const ViewProduct = () => {
                           ? `Easy Return within ${product?.returnableDays} days`
                           : "No Return Available"}
                       </span>
-                    </div>
+                    </div>  */}
 
                     <div className="flex items-start">
                       <span className="text-sm font-semibold text-gray-600 w-32">Status:</span>
