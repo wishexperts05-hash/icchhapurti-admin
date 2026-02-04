@@ -213,8 +213,6 @@ const ViewProduct = () => {
                   ))}
                 </div>
               )}
-
-              {/* Videos Section */}
               {/* Videos Section */}
               {product?.videos?.length > 0 && (
                 <div className="space-y-4 mb-8">
