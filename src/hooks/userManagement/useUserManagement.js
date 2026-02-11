@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import useFetch from "../useFetch";
 import conf from "../../config/index";
 import Swal from "sweetalert2";
-import { confirmBlock, confirmUnblock } from "../../utils/alertToast";
+import { confirmAlert, confirmBlock, confirmUnblock } from "../../utils/alertToast";
 import { da } from 'date-fns/locale';
 
 const useUserManagement = () => {
@@ -98,7 +98,38 @@ const useUserManagement = () => {
         }
     };
 
-    return { fetchUserList, fetchUserDetails, resetUserDetails, updateStatus, loading, userList, userDetail };
+      const deleteUser = async (id) => {
+    const confirm = await confirmAlert(
+      "Are you sure you want to delete this user?"
+    );
+    if (!confirm) return;
+    setLoading(true);
+    if (confirm.isConfirmed) {
+      try {
+        const res = await fetchData({
+          method: "DELETE",
+          url: `${conf.apiBaseUrl}admin/user/deleteUser/${id}`,
+        });
+        if (res) {
+          Swal.fire({
+            title: "Deleted!",
+            text: res?.message,
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Error deleting User:", error);
+        toast.error(error?.response?.data?.message);
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+    return { fetchUserList, fetchUserDetails, resetUserDetails, updateStatus, loading, userList, userDetail,deleteUser };
 }
 
 export default useUserManagement
