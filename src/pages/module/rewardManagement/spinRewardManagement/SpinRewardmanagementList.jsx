@@ -59,6 +59,21 @@ export default function SpinRewardManagementList() {
     { header: "Sr. No.", field: "srNo" },
     { header: "Reward Title", field: "title" },
     { header: "Reward Get", field: "rewardType" },
+    {
+  header: "Spin Eligible",
+  field: "isSpinEligible",
+  render: (row) => (
+    <span
+      className={`px-3 py-1 rounded-xl text-xs font-semibold ${
+        row.isSpinEligible
+          ? "bg-green-100 text-green-700"
+          : "bg-red-100 text-red-600"
+      }`}
+    >
+      {row.isSpinEligible ? "Eligible" : "Not Eligible"}
+    </span>
+  ),
+},
     { header: "Action", field: "action" },
   ];
 
@@ -103,9 +118,9 @@ export default function SpinRewardManagementList() {
         showSearch={true}
         searchTerm={searchTerm}
         handleSearchTerm={handleSearchTerm}
-        showAddButton={true}
-        addButtonText="Set Spin Price"
-        onClick={canCreate ? handleSetSpinPrice : undefined}
+        // showAddButton={true}
+        // addButtonText="Set Spin Price"
+        // onClick={canCreate ? handleSetSpinPrice : undefined}
         showExtraButton={true}
         extraButtonText="Add New Reward"
         onExtraClick={canCreate ? handleAddReward : undefined}

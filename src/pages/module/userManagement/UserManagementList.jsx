@@ -10,12 +10,13 @@ import Pagination from "../../../components/uiComponent/Pagination";
 import useUserManagement from "../../../hooks/userManagement/useUserManagement";
 import useDebounce from "../../../hooks/debounce/useDebounce";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
-import usePermissions from "../../../hooks/auth/usePermissions";   
+import usePermissions from "../../../hooks/auth/usePermissions";
 import useLogin from "../../../hooks/auth/useLogin";
 
 export default function UserManagement() {
   const navigate = useNavigate();
-  const { loading, fetchUserList, userList, updateStatus } = useUserManagement();
+  const { loading, fetchUserList, userList, updateStatus, deleteUser } =
+    useUserManagement();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -62,6 +63,11 @@ export default function UserManagement() {
     navigate(`/user-management/user-details/${row._id}`);
   };
 
+  const handleDelete = async (row) => {
+    await deleteUser(row._id);
+    fetchUserList(page, limit, debouncedSearch);
+  };
+
   const actions = [
     {
       icon: <FaEye className="text-yellow-600" />,
@@ -80,20 +86,42 @@ export default function UserManagement() {
       title: "Toggle Status",
       disableCondition: () => !canUpdate,
     },
+    // {
+    //         icon: <Trash2 className="w-5 h-5 text-red-600" />,
+    //         title: "Delete",
+    //         // onClick: handleDelete,
+    //         disableCondition: () => !canDelete
+    //     },
+
     {
-            icon: <Trash2 className="w-5 h-5 text-red-600" />,
-            title: "Delete",
-            // onClick: handleDelete,
-            disableCondition: () => !canDelete,
-        },
+      icon: (row) => (
+        <Trash2
+          className={`w-5 h-5 ${
+            row.deletePossible && canDelete
+              ? "text-red-600 cursor-pointer"
+              : "text-gray-400 cursor-not-allowed"
+          }`}
+          title={
+            row.deletePossible
+              ? "Delete User"
+              : "User must be soft deleted first"
+          }
+        />
+      ),
+      title: "Delete",
+      onClick: (row) => {
+        if (row.deletePossible && canDelete) {
+          handleDelete(row);
+        }
+      },
+      disableCondition: (row) => !row.deletePossible || !canDelete,
+    },
   ];
 
   return (
     <div className="max-w-7xl mx-auto">
       {/* Breadcrumb */}
-      <BreadCrumb
-        linkText={[{ text: "User Management" }]}
-      />
+      <BreadCrumb linkText={[{ text: "User Management" }]} />
       {/* Page Path */}
       <PagePath2
         title="User Management"
@@ -103,7 +131,6 @@ export default function UserManagement() {
           setSearchTerm(e.target.value);
           if (!error) setPage(1);
         }}
-        
       />
 
       {loading ? (
@@ -114,15 +141,13 @@ export default function UserManagement() {
         <div className="rounded-t-2xl overflow-hidden shadow-lg border border-gray-200">
           <DataTable
             columns={columns}
-            data={userList?.userList || []}
+            data={userList?.formantedUserList || []}
             currentPage={userList?.currentPage}
             usersPerPage={limit}
             actions={actions.map((action) => ({
               ...action,
               label:
-                typeof action.label === "function"
-                  ? undefined
-                  : action.label,
+                typeof action.label === "function" ? undefined : action.label,
               onClick: action.onClick,
             }))}
           />
@@ -138,6 +163,7 @@ export default function UserManagement() {
         </div>
       )}
     </div>
-
   );
 }
+ 
+ 

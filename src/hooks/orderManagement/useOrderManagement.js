@@ -3,6 +3,7 @@ import useFetch from '../useFetch';
 import conf from "../../config/index";
 import { useRecoilState } from 'recoil';
 import { orderDetailsAtom, orderListAtom } from '../../state/orderManagement/orderManagementState';
+import { toast } from 'react-toastify';
 
 const useOrderManagement = () => {
   const [fetchData] = useFetch();
@@ -10,6 +11,7 @@ const useOrderManagement = () => {
   const [errors, setErrors] = useState("");
   const [orderList, setOrderList] = useRecoilState(orderListAtom);
   const [orderDetails, setOrderDetails] = useRecoilState(orderDetailsAtom);
+  const [statusList,setStatusList]=useState()
 
   const fetchOrderList = async (page, limit, search, status, userType, startDate, endDate) => {
     setLoading(true);
@@ -65,6 +67,46 @@ const useOrderManagement = () => {
     }
   };
 
+    const fetchStatusList = async (status) => {
+    setLoading(true);
+    try {
+      const res = await fetchData({
+        method: "GET",
+        url: `${conf.apiBaseUrl}admin/orders/getOrderStatus?currentStatus=${status || ""}`,
+      });
+      if (res) {
+        setStatusList(res?.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error fetching order details:", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+      const updateOrderStatus = async (id, data) => {
+        setLoading(true);
+        try {
+            const res = await fetchData({
+                method: "PUT",
+                url: `${conf.apiBaseUrl}admin/orders/updateOrderStatus/${id}`,
+                data: data,
+            });
+            if (res) {
+                toast.success(res?.message);
+                setLoading(false);
+            }
+        } catch (error) {
+            console.error("Error updating offer:", error);
+            toast.error(error?.response?.data?.message);
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
   const resetOrderDetails = () => {
     setOrderDetails(null);
   }
@@ -77,7 +119,7 @@ const useOrderManagement = () => {
     orderDetails,
     fetchOrderList,
     fetchOrderDetails,
-    resetOrderDetails
+    resetOrderDetails,statusList,fetchStatusList,updateOrderStatus,
   }
 }
 

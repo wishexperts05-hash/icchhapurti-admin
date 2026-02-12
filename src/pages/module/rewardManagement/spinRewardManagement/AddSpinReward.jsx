@@ -100,6 +100,7 @@ const AddSpinReward = () => {
     buyQuantity: "",
     getQuantity: "",
     ticketQuantity: "",
+     isSpinEligible: false,
   };
 
   const handleSubmit = async (values, { resetForm }) => {
@@ -139,7 +140,7 @@ const AddSpinReward = () => {
     const payload = {
       userType: values.userType,
       title: values.rewardTitle,
-      rewardType: rewardTypeApi,
+      rewardType: rewardTypeApi,   isSpinEligible:values.isSpinEligible,
       ...(rewardDetails && { rewardDetails }),
     };
 
@@ -199,8 +200,18 @@ const AddSpinReward = () => {
                   fieldType="select"
                   options={rewardTypeOptions}
                 />
-              </div>
 
+                  <FormField
+    label="Spin Eligibility"
+    name="isSpinEligible"
+    fieldType="select"
+    options={[
+      { value: true, label: "Eligible for Spin" },
+      { value: false, label: "Not Eligible for Spin" },
+    ]}
+  />
+              </div>
+ 
               {/* Buy & Get */}
               {values.chooseReward === "buy&Get" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -252,6 +263,8 @@ const AddSpinReward = () => {
                 </div>
               )}
 
+              
+
               {/* Grab Ticket */}
               {values.chooseReward === "grabTicket" && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -261,7 +274,11 @@ const AddSpinReward = () => {
                     placeholder="e.g. 1"
                   />
                 </div>
+
+                
               )}
+
+              
 
               {/* Buttons */}
               <div className="flex justify-center gap-4 pt-6">

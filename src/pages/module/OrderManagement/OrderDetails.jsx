@@ -17,14 +17,34 @@ import {
 
 const OrderDetails = () => {
   const { userType, orderId } = useParams();
-  const { loading, orderDetails, fetchOrderDetails } = useOrderManagement();
+  const { loading, orderDetails, fetchOrderDetails ,statusList,fetchStatusList,updateOrderStatus,} = useOrderManagement();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
+  const [selectedStatus, setSelectedStatus] = useState("");
+
 
   useEffect(() => {
     fetchOrderDetails(userType, orderId);
   }, [userType, orderId]);
+
+  const currentStatus = orderDetails?.status
+  useEffect(()=>{
+    fetchStatusList(currentStatus)
+  },[])
+  console.log("status List :",statusList);
+
+  const handleStatusUpdate = async () => {
+  if (!selectedStatus) return;
+
+  await updateOrderStatus(orderId, {
+    status: selectedStatus,
+     userType: userType, 
+  });
+
+  // Optional: refresh order details after update
+  fetchOrderDetails(userType, orderId);
+};
 
   const getTimelineSteps = () => {
     if (!orderDetails?.timeline) return [];
@@ -476,8 +496,59 @@ const OrderDetails = () => {
                         {orderDetails?.paymentMethod || '-'}
                       </span>
                     </div>
+                    
                   </div>
                 </div>
+{/* Update Order Status */}
+<div className="bg-white rounded-3xl border border-gray-200 p-6 shadow-sm mt-6">
+  <div className="flex items-center gap-3 mb-4">
+    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-400 flex items-center justify-center text-white">
+      <LocalShipping className="text-xl" />
+    </div>
+    <h3 className="text-xl font-bold text-gray-900">Update Delivery Status</h3>
+  </div>
+
+  <div className="space-y-4">
+    {/* Current Status */}
+    <div className="flex justify-between items-center">
+      <span className="text-gray-600 font-medium">Current Status</span>
+      <span className="font-bold text-[#CCA547]">
+        {orderDetails?.status || "-"}
+      </span>
+    </div>
+
+    {/* Status Dropdown */}
+    <div>
+      <label className="block text-sm font-medium text-gray-600 mb-2">
+        Select New Status
+      </label>
+
+      <select
+        value={selectedStatus}
+        onChange={(e) => setSelectedStatus(e.target.value)}
+        className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CCA547] focus:outline-none"
+      >
+        <option value="">-- Select Status --</option>
+        {statusList?.map((status) => (
+          <option  value={status?.name}>
+            {status}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    {/* Update Button */}
+    <button
+      onClick={handleStatusUpdate}
+      disabled={!selectedStatus || loading}
+      className="w-full bg-gradient-to-r from-[#CCA547] to-[#b8933f] text-white font-bold py-3 rounded-xl hover:opacity-90 transition disabled:opacity-50"
+    >
+      {loading ? "Updating..." : "Update Status"}
+    </button>
+  </div>
+</div>
+
+
               </div>
             </div>
           </div>
