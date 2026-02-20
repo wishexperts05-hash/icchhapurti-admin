@@ -42,6 +42,20 @@ const StoriesSection = () => {
     );
   };
 
+    const renderImagePreview = (row) => {
+
+
+    return (
+      <div className="flex justify-center">
+        <img
+          src={row.thumbnailUrl}
+          className="w-16 h-16 rounded object-cover"
+          muted
+        />
+      </div>
+    );
+  };
+
   /* ---------------- Transform API Data ---------------- */
   const transformedData =
     stories?.data?.map((story, index) => ({
@@ -50,6 +64,7 @@ const StoriesSection = () => {
       title: story.title || "N/A",
       type: story.type || "N/A",
       videoUrl: story.videoUrl,
+      thumbnailUrl : story.thumbnailUrl,
       status: story.isActive ? "Active" : "Inactive",
       createdAt: story.createdAt
         ? new Date(story.createdAt).toLocaleDateString("en-GB")
@@ -87,6 +102,7 @@ const StoriesSection = () => {
       field: "videoUrl",
       render: renderVideoPreview,
     },
+    { header: "Thumbnail", field: "thumbnailUrl", render: renderImagePreview ,  },
     { header: "Status", field: "status" },
     { header: "Created At", field: "createdAt" },
     { header: "Action", field: "action" },
