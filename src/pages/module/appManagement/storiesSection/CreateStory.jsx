@@ -31,6 +31,7 @@ function CreateStory() {
     type: "",
     description: "",
     video: null,
+    thumbnail : null
   };
 
   /* ---------------- Submit ---------------- */
@@ -52,7 +53,7 @@ const handleSubmit = async (values, formikHelpers) => {
       <BreadCrumb
         linkText={[
           { text: "App Management" },
-          { text: "Stories", href: "/app-management/stories" },
+          { text: "Stories", href: "/app-management/stories-section" },
           { text: "Create Story" },
         ]}
       />
@@ -94,6 +95,62 @@ const handleSubmit = async (values, formikHelpers) => {
                 fieldType="input"
                 placeholder="Enter description"
               />
+                            {/* THUMBNAIL UPLOAD */}
+              <div className="flex flex-col gap-3">
+                <label className="text-sm font-medium">Upload Thumbnail</label>
+
+                <label
+                  htmlFor="thumbnail-upload"
+                  className="text-yellow-500 underline cursor-pointer hover:text-yellow-600"
+                >
+                  Upload Thumbnail
+                </label>
+
+                <input
+                  id="thumbnail-upload"
+                  type="file"
+                  accept="img/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setFieldValue("thumbnail", file);
+                    }
+                  }}
+                />
+
+                {/* PREVIEW */}
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                  {values.thumbnail ? (
+                    <div className="relative w-40 mx-auto">
+                      <img
+                        src={URL.createObjectURL(values.thumbnail)}
+                        className="rounded-lg w-40 h-40 object-cover"
+                        controls
+                      />
+
+                      <button
+                        type="button"
+                        onClick={() => setFieldValue("thumbnail", null)}
+                        className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1"
+                      >
+                        <IoMdClose />
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="text-gray-400 text-sm text-center">
+                      No thumbnail selected
+                    </p>
+                  )}
+                </div>
+
+                <ErrorMessage
+                  name="video"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </div>
+
 
               {/* VIDEO UPLOAD */}
               <div className="flex flex-col gap-3">
@@ -170,11 +227,11 @@ const handleSubmit = async (values, formikHelpers) => {
                 />
               </div>
 
-              {(loading || isSubmitting) && (
+              {/* {(loading || isSubmitting) && (
                 <div className="flex justify-center">
                   <LoaderSpinner />
                 </div>
-              )}
+              )} */}
             </Form>
           )}
         </Formik>
