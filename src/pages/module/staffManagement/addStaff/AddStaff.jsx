@@ -58,6 +58,7 @@ const FormSelect = ({ label, id, options, value, onChange }) => (
     </label>
     <select
       id={id}
+      // name={id} 
       value={value}
       onChange={onChange}
       className="block w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg
@@ -72,6 +73,7 @@ const FormSelect = ({ label, id, options, value, onChange }) => (
       }}
     >
       {/* <option value="">Select {label}</option> */}
+      <option value="">Select </option>
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -286,14 +288,14 @@ const AddStaff = () => {
     };
   });
 
-  useEffect(() => {
-    if (!formData.accountType) {
-      setFormData((prev) => ({
-        ...prev,
-        accountType: "Savings",
-      }));
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!formData.accountType) {
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       accountType: "Savings",
+  //     }));
+  //   }
+  // }, []);
 
   useEffect(() => {
     fetchBanklist();
@@ -321,14 +323,14 @@ const AddStaff = () => {
     }
   }, [cities]);
 
-  useEffect(() => {
-    if (banklist?.length && !formData.bankName) {
-      setFormData((prev) => ({
-        ...prev,
-        bankName: banklist[0], // first bank auto-selected
-      }));
-    }
-  }, [banklist]);
+  // useEffect(() => {
+  //   if (banklist?.length && !formData.bankName) {
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       bankName: banklist[0], // first bank auto-selected
+  //     }));
+  //   }
+  // }, [banklist]);
 
   const handleCountryChange = (e) => {
     const selectedCountry = e.target.value;
@@ -446,7 +448,7 @@ const AddStaff = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter email address"
-              required
+             
             />
 
             <FormInput
@@ -505,6 +507,7 @@ const AddStaff = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <FormSelect
               label="Bank Name :"
+              
               id="bankName"
               options={bankOptions}
               value={formData.bankName}
