@@ -80,6 +80,8 @@ const EditSpinReward = () => {
     buyQuantity: "",
     getQuantity: "",
     ticketQuantity: "",
+   isSpinEligible: false,
+
   });
 
   useEffect(() => {
@@ -135,6 +137,9 @@ const EditSpinReward = () => {
           buyQuantity: data.rewardDetails?.buyQuantity || "",
           getQuantity: data.rewardDetails?.getQuantity || "",
           ticketQuantity: data.rewardDetails?.ticketQuantity || "",
+        isSpinEligible: data.isSpinEligible ? "true" : "false",
+
+
         }));
       }
     };
@@ -185,7 +190,7 @@ const EditSpinReward = () => {
     const payload = {
       userType: values.userType,
       title: values.rewardTitle,
-      rewardType: rewardTypeApi,
+      rewardType: rewardTypeApi, isSpinEligible: values.isSpinEligible === "true",
       ...(rewardDetails && { rewardDetails }),
     };
 
@@ -255,6 +260,17 @@ const EditSpinReward = () => {
                     fieldType="select"
                     options={rewardTypeOptions}   
                   />
+
+ <FormField
+  label="Spin Eligibility"
+  name="isSpinEligible"
+  fieldType="select"
+  options={[
+    { value: "true", label: "Eligible for Spin" },
+    { value: "false", label: "Not Eligible for Spin" },
+  ]}
+/>
+
                 </div>
 
              

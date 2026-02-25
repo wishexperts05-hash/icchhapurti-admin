@@ -39,6 +39,7 @@ const EditStory = () => {
     type: storyDetail?.data?.type || "",
     description: storyDetail?.data?.description || "",
     video: null, // only set if user uploads new one
+    thumbnail: null,
   };
 
   /* ---------------- Submit ---------------- */
@@ -62,7 +63,7 @@ const EditStory = () => {
       <BreadCrumb
         linkText={[
           { text: "App Management" },
-          { text: "Stories", href: "/app-management/stories" },
+          { text: "Stories", href: "/app-management/stories-section" },
           { text: "Edit Story" },
         ]}
       />
@@ -70,8 +71,7 @@ const EditStory = () => {
       <PagePath2 title="Edit Story" />
 
       <div className="bg-white border border-gray-200 shadow-xl rounded-2xl p-6 mt-4 w-full">
-
-           {/* {loading ?(<div className="flex justify-center">
+        {/* {loading ?(<div className="flex justify-center">
                   <LoaderSpinner />
                 </div>):( */}
         <Formik
@@ -82,7 +82,6 @@ const EditStory = () => {
           onSubmit={handleSubmit}
         >
           {({ values, setFieldValue, isSubmitting }) => (
-            
             <Form className="flex flex-col gap-6">
               {/* TITLE */}
               <FormField
@@ -110,8 +109,47 @@ const EditStory = () => {
                 placeholder="Enter description"
               />
 
-              {/* EXISTING VIDEO PREVIEW */}
+              {/* ================= THUMBNAIL SECTION ================= */}
+              <div className="flex flex-col gap-3">
+                <label className="text-base font-medium">Thumbnail</label>
+
+                {/* Thumbnail Display Box */}
+                <div className="flex justify-center">
+                  <img
+                    src={
+                      values.thumbnail
+                        ? URL.createObjectURL(values.thumbnail) // New uploaded image
+                        : storyDetail?.data?.thumbnailUrl || "" // Existing image
+                    }
+                    alt="Thumbnail"
+                    className="w-48 h-48 rounded-lg object-cover bg-gray-100"
+                  />
+
+                  {/* Cross Button (Only when new thumbnail selected) */}
+                  {values.thumbnail && (
+                    <button
+                      type="button"
+                      onClick={() => setFieldValue("thumbnail", null)}
+                      className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full p-1 shadow-md"
+                    >
+                      <IoMdClose size={16} />
+                    </button>
+                  )}
+                </div>
+
+                {/* File Input */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) setFieldValue("thumbnail", file);
+                  }}
+                />
+              </div>
+
               {/* EXISTING VIDEO FROM API */}
+              <label className="text-base font-medium">Video</label>
               {storyDetail?.data?.videoUrl && !values.video && (
                 <div className="flex justify-center">
                   <video

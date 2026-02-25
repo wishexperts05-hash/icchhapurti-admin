@@ -30,7 +30,7 @@ const ViewStories = () => {
       <BreadCrumb
         linkText={[
           { text: "App Management", href: "/app-management/stories" },
-          { text: "Stories", href: "/app-management/stories" },
+          { text: "Stories", href: "/app-management/stories-section" },
           { text: "View Story" },
         ]}
       />
@@ -58,6 +58,19 @@ const ViewStories = () => {
           Description :{storyDetail?.data?.description}
         </p>
 
+        {/* Thumbnail */}
+        <label className="text-base font-medium">Thumbnail :</label>
+        {storyDetail?.data?.thumbnailUrl && (
+          <div className="mb-6 flex justify-center">
+            <img
+              src={storyDetail?.data?.thumbnailUrl}
+              alt="Story Thumbnail"
+              className="w-full object-cover rounded-lg border shadow-md"
+            />
+          </div>
+        )}
+
+        <label className="text-base font-medium">Video :</label>
         {storyDetail?.data?.videoUrl && (
           <video
             src={storyDetail?.data?.videoUrl}
