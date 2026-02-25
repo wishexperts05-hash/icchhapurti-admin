@@ -24,8 +24,7 @@ const ManageShippingCost = () => {
     { header: "Shipping Cost", field: "cost" },
     { header: "Action", field: "action" },
   ];
-
-  // 🔹 Fetch data based on tab
+// fetch shippingdata on tab
   const fetchShippingData = async () => {
     try {
       let data = null;
