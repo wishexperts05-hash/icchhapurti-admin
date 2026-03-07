@@ -88,10 +88,9 @@ const useLogin = () => {
   const verifyOtp = async (data) => {
     setLoading(true);
     try {
-      const url = new URL(`${conf.apiBaseUrl}admin/auth/verify-otp`);
       const res = await fetchData({
         method: "POST",
-        url: url.toString(),
+        url: `${conf.apiBaseUrl}admin/auth/verify-otp`,
         data: data,
       });
       if (res) {
@@ -236,3 +235,4 @@ const useLogin = () => {
 };
 
 export default useLogin;
+
