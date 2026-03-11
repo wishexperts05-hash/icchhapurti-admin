@@ -5,6 +5,7 @@ import useOrderManagement from "../../../hooks/orderManagement/useOrderManagemen
 import { useParams } from "react-router-dom";
 import LoaderSpinner from "../../../components/uiComponent/LoaderSpinner";
 import DetailsField from "../../../components/uiComponent/DetailsField";
+import Button from "../../../components/uiComponent/Button";
 import {
   LocalShipping,
   Receipt,
@@ -17,34 +18,42 @@ import {
 
 const OrderDetails = () => {
   const { userType, orderId } = useParams();
-  const { loading, orderDetails, fetchOrderDetails ,statusList,fetchStatusList,updateOrderStatus,} = useOrderManagement();
+  const {
+    loading,
+    orderDetails,
+    fetchOrderDetails,
+    statusList,
+    fetchStatusList,
+    updateOrderStatus,
+    bookShippingOrder,
+    cancelBookShippingOrder,
+  } = useOrderManagement();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [selectedStatus, setSelectedStatus] = useState("");
 
-
   useEffect(() => {
     fetchOrderDetails(userType, orderId);
   }, [userType, orderId]);
 
-  const currentStatus = orderDetails?.status
-  useEffect(()=>{
-    fetchStatusList(currentStatus)
-  },[])
-  console.log("status List :",statusList);
+  const currentStatus = orderDetails?.status;
+  useEffect(() => {
+    fetchStatusList(currentStatus);
+  }, []);
+  console.log("status List :", statusList);
 
   const handleStatusUpdate = async () => {
-  if (!selectedStatus) return;
+    if (!selectedStatus) return;
 
-  await updateOrderStatus(orderId, {
-    status: selectedStatus,
-     userType: userType, 
-  });
+    await updateOrderStatus(orderId, {
+      status: selectedStatus,
+      userType: userType,
+    });
 
-  // Optional: refresh order details after update
-  fetchOrderDetails(userType, orderId);
-};
+    // Optional: refresh order details after update
+    fetchOrderDetails(userType, orderId);
+  };
 
   const getTimelineSteps = () => {
     if (!orderDetails?.timeline) return [];
@@ -60,19 +69,27 @@ const OrderDetails = () => {
   const timelineSteps = getTimelineSteps();
 
   const InfoCard = ({ icon, title, value, color = "#CCA547" }) => (
-    <div className={`p-4 rounded-2xl border transition-all duration-300 hover:translate-y-[-4px] hover:shadow-lg`}
+    <div
+      className={`p-4 rounded-2xl border transition-all duration-300 hover:translate-y-[-4px] hover:shadow-lg`}
       style={{
         background: `linear-gradient(135deg, ${color}15 0%, ${color}08 100%)`,
-        borderColor: `${color}30`
-      }}>
+        borderColor: `${color}30`,
+      }}
+    >
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-full flex items-center justify-center text-white"
-          style={{ background: `linear-gradient(135deg, ${color} 0%, ${color}AA 100%)` }}>
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center text-white"
+          style={{
+            background: `linear-gradient(135deg, ${color} 0%, ${color}AA 100%)`,
+          }}
+        >
           {icon}
         </div>
         <div>
           <div className="text-gray-600 font-medium text-sm">{title}</div>
-          <div className="text-lg font-bold" style={{ color }}>{value}</div>
+          <div className="text-lg font-bold" style={{ color }}>
+            {value}
+          </div>
         </div>
       </div>
     </div>
@@ -110,18 +127,82 @@ const OrderDetails = () => {
     }
   };
 
+  const BookingID = orderDetails?._id;
+  // const handleShippingOrder = () => {
+  //   if(orderDetails?._id)
+  //   cancelBookShippingOrder({
+  //     orderId: BookingID,
+  //   });
+  // };
+
+  //after getting any bookig status set this
+  //   const handleShippingOrder = () => {
+  //   if(orderDetails?.awbNumber == ""){
+  //    bookShippingOrder    ({
+  //     orderId: BookingID,
+  //   })}else{
+  //   cancelBookShippingOrder ({
+  //     orderId: BookingID,
+  //   })
+  //   }
+
+  //     fetchOrderDetails(userType, orderId);
+  // };
+
+  const handleShippingOrder = async () => {
+    if (!BookingID) return;
+
+    try {
+      if (orderDetails?.awbNumber === "") {
+        await bookShippingOrder({
+          orderId: BookingID,
+        });
+      } else {
+        await cancelBookShippingOrder({
+          orderId: BookingID,
+        });
+      }
+
+      //  Reload data after response
+      await fetchOrderDetails(userType, orderId);
+    } catch (error) {
+      console.error("Shipping error:", error);
+    }
+  };
+
+  const handleDownload = async (url, fileName) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = blobUrl;
+      link.download = fileName;
+
+      document.body.appendChild(link);
+      link.click();
+
+      link.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
+
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!isModalOpen) return;
 
-      if (e.key === 'Escape') closeImageModal();
-      if (e.key === 'ArrowRight') nextImage();
-      if (e.key === 'ArrowLeft') prevImage();
+      if (e.key === "Escape") closeImageModal();
+      if (e.key === "ArrowRight") nextImage();
+      if (e.key === "ArrowLeft") prevImage();
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isModalOpen]);
 
   console.log("orderDetails", orderDetails);
@@ -166,7 +247,10 @@ const OrderDetails = () => {
             {/* Main Image */}
             <div className="flex justify-center items-center h-full">
               <img
-                src={orderDetails?.products?.[currentProductIndex]?.productImages?.[selectedImageIndex]}
+                src={
+                  orderDetails?.products?.[currentProductIndex]
+                    ?.productImages?.[selectedImageIndex]
+                }
                 alt={`Product image ${selectedImageIndex + 1}`}
                 className="max-w-full max-h-[80vh] object-contain rounded-lg"
               />
@@ -174,22 +258,30 @@ const OrderDetails = () => {
 
             {/* Image Counter */}
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black bg-opacity-50 px-3 py-1 rounded-full text-sm">
-              {selectedImageIndex + 1} / {orderDetails?.products?.[currentProductIndex]?.productImages?.length || 0}
+              {selectedImageIndex + 1} /{" "}
+              {orderDetails?.products?.[currentProductIndex]?.productImages
+                ?.length || 0}
             </div>
 
             {/* Thumbnail Strip */}
-            {orderDetails?.products?.[currentProductIndex]?.productImages?.length > 1 && (
+            {orderDetails?.products?.[currentProductIndex]?.productImages
+              ?.length > 1 && (
               <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex gap-2">
-                {orderDetails.products[currentProductIndex].productImages.map((img, index) => (
-                  <img
-                    key={index}
-                    src={img}
-                    alt={`Thumbnail ${index + 1}`}
-                    className={`w-12 h-12 object-cover rounded cursor-pointer border-2 ${selectedImageIndex === index ? 'border-[#CCA547]' : 'border-transparent'
+                {orderDetails.products[currentProductIndex].productImages.map(
+                  (img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Thumbnail ${index + 1}`}
+                      className={`w-12 h-12 object-cover rounded cursor-pointer border-2 ${
+                        selectedImageIndex === index
+                          ? "border-[#CCA547]"
+                          : "border-transparent"
                       }`}
-                    onClick={() => setSelectedImageIndex(index)}
-                  />
-                ))}
+                      onClick={() => setSelectedImageIndex(index)}
+                    />
+                  )
+                )}
               </div>
             )}
           </div>
@@ -242,8 +334,12 @@ const OrderDetails = () => {
                       <Receipt className="text-2xl" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900">Order Information</h2>
-                      <p className="text-gray-600">Complete order details and tracking information</p>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        Order Information
+                      </h2>
+                      <p className="text-gray-600">
+                        Complete order details and tracking information
+                      </p>
                     </div>
                   </div>
 
@@ -256,7 +352,9 @@ const OrderDetails = () => {
                     />
                     <DetailsField
                       label="Order Date & Time"
-                      value={`${orderDetails?.orderDate || "-"} ${orderDetails?.orderTime || ""}`.trim()}
+                      value={`${orderDetails?.orderDate || "-"} ${
+                        orderDetails?.orderTime || ""
+                      }`.trim()}
                     />
                     <DetailsField
                       label="Payment Method"
@@ -278,7 +376,9 @@ const OrderDetails = () => {
 
                   <hr className="my-6 border-gray-200" />
 
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Customer Information</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                    Customer Information
+                  </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <DetailsField
                       label="User Name"
@@ -295,9 +395,16 @@ const OrderDetails = () => {
                     <div className="sm:col-span-2 lg:col-span-3">
                       <DetailsField
                         label="Shipping Address"
-                        value={orderDetails?.shippingAddress ?
-                          `${orderDetails.shippingAddress.street || ""}${orderDetails.shippingAddress.label ? ` (${orderDetails.shippingAddress.label})` : ""}, ${orderDetails.shippingAddress.city || ""} - ${orderDetails.shippingAddress.pinCode || ""}`
-                          : "-"
+                        value={
+                          orderDetails?.shippingAddress
+                            ? `${orderDetails.shippingAddress.street || ""}${
+                                orderDetails.shippingAddress.label
+                                  ? ` (${orderDetails.shippingAddress.label})`
+                                  : ""
+                              }, ${orderDetails.shippingAddress.city || ""} - ${
+                                orderDetails.shippingAddress.pinCode || ""
+                              }`
+                            : "-"
                         }
                       />
                     </div>
@@ -311,14 +418,20 @@ const OrderDetails = () => {
                       <Inventory2 className="text-2xl" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900">Products Ordered</h2>
-                      <p className="text-gray-600">{orderDetails?.products?.length} item(s) in this order</p>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        Products Ordered
+                      </h2>
+                      <p className="text-gray-600">
+                        {orderDetails?.products?.length} item(s) in this order
+                      </p>
                     </div>
                   </div>
 
                   {orderDetails?.products?.map((product, productIndex) => (
-                    <div key={productIndex}
-                      className="bg-gradient-to-br from-white to-gray-50 border-2 border-gray-100 rounded-2xl p-6 mb-4 transition-all duration-400 hover:border-[#CCA547] hover:shadow-xl hover:translate-y-[-4px]">
+                    <div
+                      key={productIndex}
+                      className="bg-gradient-to-br from-white to-gray-50 border-2 border-gray-100 rounded-2xl p-6 mb-4 transition-all duration-400 hover:border-[#CCA547] hover:shadow-xl hover:translate-y-[-4px]"
+                    >
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div className="md:col-span-1">
                           <div className="relative">
@@ -337,29 +450,36 @@ const OrderDetails = () => {
                             {/* Thumbnail Gallery */}
                             {product?.productImages?.length > 1 && (
                               <div className="flex justify-center gap-2 mt-3">
-                                {product.productImages.slice(0, 4).map((img, imgIdx) => (
-                                  <div
-                                    key={imgIdx}
-                                    className={`relative w-10 h-10 rounded-lg border-2 cursor-pointer overflow-hidden ${imgIdx === 0
-                                      ? 'border-[#CCA547] opacity-100'
-                                      : 'border-white opacity-70'
+                                {product.productImages
+                                  .slice(0, 4)
+                                  .map((img, imgIdx) => (
+                                    <div
+                                      key={imgIdx}
+                                      className={`relative w-10 h-10 rounded-lg border-2 cursor-pointer overflow-hidden ${
+                                        imgIdx === 0
+                                          ? "border-[#CCA547] opacity-100"
+                                          : "border-white opacity-70"
                                       }`}
-                                    onClick={() => openImageModal(productIndex, imgIdx)}
-                                  >
-                                    <img
-                                      src={img}
-                                      alt={`Thumbnail ${imgIdx + 1}`}
-                                      className="w-full h-full object-cover"
-                                    />
-                                    {imgIdx === 3 && product.productImages.length > 4 && (
-                                      <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-                                        <span className="text-white text-xs font-bold">
-                                          +{product.productImages.length - 4}
-                                        </span>
-                                      </div>
-                                    )}
-                                  </div>
-                                ))}
+                                      onClick={() =>
+                                        openImageModal(productIndex, imgIdx)
+                                      }
+                                    >
+                                      <img
+                                        src={img}
+                                        alt={`Thumbnail ${imgIdx + 1}`}
+                                        className="w-full h-full object-cover"
+                                      />
+                                      {imgIdx === 3 &&
+                                        product.productImages.length > 4 && (
+                                          <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                                            <span className="text-white text-xs font-bold">
+                                              +
+                                              {product.productImages.length - 4}
+                                            </span>
+                                          </div>
+                                        )}
+                                    </div>
+                                  ))}
                               </div>
                             )}
 
@@ -378,7 +498,9 @@ const OrderDetails = () => {
                         <div className="md:col-span-3">
                           <div className="flex flex-col h-full">
                             <div className="flex-1">
-                              <h3 className="text-xl font-bold text-gray-900 mb-2">{product.productName}</h3>
+                              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                {product.productName}
+                              </h3>
                               <span className="inline-block bg-gradient-to-r from-blue-500 to-cyan-400 text-white text-sm font-medium px-3 py-1 rounded-full mb-3">
                                 {product.productCategory}
                               </span>
@@ -405,7 +527,9 @@ const OrderDetails = () => {
                               <div className="col-span-2 sm:col-span-1">
                                 <DetailsField
                                   label="Total Amount"
-                                  value={`₹ ${(product.price * product.quantity)?.toLocaleString()}`}
+                                  value={`₹ ${(
+                                    product.price * product.quantity
+                                  )?.toLocaleString()}`}
                                   valueColor="#262626"
                                   valueWeight="bold"
                                 />
@@ -416,6 +540,51 @@ const OrderDetails = () => {
                       </div>
                     </div>
                   ))}
+                  <div className="flex justify-center mt-6">
+                    {!orderDetails?.awbNumber ? (
+                      /* Show only Book Button */
+                      <Button
+                        text="Book Shipment"
+                        variant={3}
+                        onClick={handleShippingOrder}
+                      />
+                    ) : (
+                      /* Show Cancel + Downloads */
+                      <div className="flex flex-wrap items-center gap-3">
+                        <Button
+                          text="Cancel Shipment"
+                          variant={4}
+                          onClick={handleShippingOrder}
+                        />
+
+                        {orderDetails?.shippingLabel && (
+                          <Button
+                            text="Download Label"
+                            variant={2}
+                            onClick={() =>
+                              handleDownload(
+                                orderDetails.shippingLabel,
+                                `shipping-label-${orderDetails.awbNumber}.pdf`
+                              )
+                            }
+                          />
+                        )}
+
+                        {orderDetails?.invoicePdf && (
+                          <Button
+                            text="Download Invoice"
+                            variant={2}
+                            onClick={() =>
+                              handleDownload(
+                                orderDetails.invoicePdf,
+                                `invoice-${orderDetails.awbNumber}.pdf`
+                              )
+                            }
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -427,24 +596,40 @@ const OrderDetails = () => {
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-orange-300 flex items-center justify-center text-white">
                       <LocalShipping className="text-xl" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900">Order Timeline</h3>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      Order Timeline
+                    </h3>
                   </div>
 
                   <div className="space-y-4">
                     {timelineSteps.map((step, index) => (
                       <div key={step.label} className="flex">
                         <div className="flex flex-col items-center mr-4">
-                          <div className={`w-3 h-3 rounded-full ${index < timelineSteps.length - 1 ? 'bg-green-500' : 'bg-[#CCA547]'}`}></div>
+                          <div
+                            className={`w-3 h-3 rounded-full ${
+                              index < timelineSteps.length - 1
+                                ? "bg-green-500"
+                                : "bg-[#CCA547]"
+                            }`}
+                          ></div>
                           {index < timelineSteps.length - 1 && (
                             <div className="w-0.5 h-12 bg-gray-300 mt-1"></div>
                           )}
                         </div>
                         <div className="flex-1 pb-4">
-                          <h4 className={`font-semibold ${step.active ? 'text-[#CCA547]' : 'text-gray-900'}`}>
+                          <h4
+                            className={`font-semibold ${
+                              step.active ? "text-[#CCA547]" : "text-gray-900"
+                            }`}
+                          >
                             {step.label}
                           </h4>
-                          <p className="text-gray-600 text-sm mt-1">{step.description}</p>
-                          <p className="text-gray-500 text-xs italic mt-1">{step.date}</p>
+                          <p className="text-gray-600 text-sm mt-1">
+                            {step.description}
+                          </p>
+                          <p className="text-gray-500 text-xs italic mt-1">
+                            {step.date}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -457,98 +642,128 @@ const OrderDetails = () => {
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-green-400 flex items-center justify-center text-white">
                       <Receipt className="text-xl" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900">Price Breakdown</h3>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      Price Breakdown
+                    </h3>
                   </div>
 
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600 font-medium">Subtotal</span>
-                      <span className="font-medium">₹ {(orderDetails?.subtotalAmount || 0)?.toLocaleString()}</span>
+                      <span className="text-gray-600 font-medium">
+                        Subtotal
+                      </span>
+                      <span className="font-medium">
+                        ₹{" "}
+                        {(orderDetails?.subtotalAmount || 0)?.toLocaleString()}
+                      </span>
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600 font-medium">Discount</span>
-                      <span className="text-green-600 font-medium">- ₹ {(orderDetails?.discountAmount || 0)?.toLocaleString()}</span>
+                      <span className="text-gray-600 font-medium">
+                        Discount
+                      </span>
+                      <span className="text-green-600 font-medium">
+                        - ₹{" "}
+                        {(orderDetails?.discountAmount || 0)?.toLocaleString()}
+                      </span>
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600 font-medium">Shipping Charges</span>
-                      <span className="text-gray-600">₹ {(orderDetails?.shippingAmount || 0)?.toLocaleString()}</span>
+                      <span className="text-gray-600 font-medium">
+                        Shipping Charges
+                      </span>
+                      <span className="text-gray-600">
+                        ₹{" "}
+                        {(orderDetails?.shippingAmount || 0)?.toLocaleString()}
+                      </span>
                     </div>
 
                     <hr className="border-dashed border-gray-300 my-2" />
 
                     <div className="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-[#CCA547] to-[#CCA547] bg-opacity-10 border border-[#CCA547] border-opacity-30">
-                      <span className="text-lg font-bold text-gray-900">Grand Total</span>
-                      <span className="text-lg font-bold text-gray-900">₹ {(orderDetails?.grandTotal || 0)?.toLocaleString()}</span>
+                      <span className="text-lg font-bold text-gray-900">
+                        Grand Total
+                      </span>
+                      <span className="text-lg font-bold text-gray-900">
+                        ₹ {(orderDetails?.grandTotal || 0)?.toLocaleString()}
+                      </span>
                     </div>
 
                     <div className="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-green-100 to-green-50 border border-green-200">
-                      <span className="text-sm font-bold text-green-800">Total Saved</span>
                       <span className="text-sm font-bold text-green-800">
-                        ₹ {Math.max(0, ((orderDetails?.subtotalAmount ?? 0) + (orderDetails?.shippingAmount ?? 0)) - (orderDetails?.grandTotal ?? 0))?.toLocaleString()}
+                        Total Saved
+                      </span>
+                      <span className="text-sm font-bold text-green-800">
+                        ₹{" "}
+                        {Math.max(
+                          0,
+                          (orderDetails?.subtotalAmount ?? 0) +
+                            (orderDetails?.shippingAmount ?? 0) -
+                            (orderDetails?.grandTotal ?? 0)
+                        )?.toLocaleString()}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-                      <span className="text-gray-600 text-sm font-medium">Payment Method</span>
+                      <span className="text-gray-600 text-sm font-medium">
+                        Payment Method
+                      </span>
                       <span className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white text-sm font-bold px-3 py-1 rounded-full">
-                        {orderDetails?.paymentMethod || '-'}
+                        {orderDetails?.paymentMethod || "-"}
                       </span>
                     </div>
-                    
                   </div>
                 </div>
-{/* Update Order Status */}
-<div className="bg-white rounded-3xl border border-gray-200 p-6 shadow-sm mt-6">
-  <div className="flex items-center gap-3 mb-4">
-    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-400 flex items-center justify-center text-white">
-      <LocalShipping className="text-xl" />
-    </div>
-    <h3 className="text-xl font-bold text-gray-900">Update Delivery Status</h3>
-  </div>
+                {/* Update Order Status */}
+                <div className="bg-white rounded-3xl border border-gray-200 p-6 shadow-sm mt-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-400 flex items-center justify-center text-white">
+                      <LocalShipping className="text-xl" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      Update Delivery Status
+                    </h3>
+                  </div>
 
-  <div className="space-y-4">
-    {/* Current Status */}
-    <div className="flex justify-between items-center">
-      <span className="text-gray-600 font-medium">Current Status</span>
-      <span className="font-bold text-[#CCA547]">
-        {orderDetails?.status || "-"}
-      </span>
-    </div>
+                  <div className="space-y-4">
+                    {/* Current Status */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 font-medium">
+                        Current Status
+                      </span>
+                      <span className="font-bold text-[#CCA547]">
+                        {orderDetails?.status || "-"}
+                      </span>
+                    </div>
 
-    {/* Status Dropdown */}
-    <div>
-      <label className="block text-sm font-medium text-gray-600 mb-2">
-        Select New Status
-      </label>
+                    {/* Status Dropdown */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600 mb-2">
+                        Select New Status
+                      </label>
 
-      <select
-        value={selectedStatus}
-        onChange={(e) => setSelectedStatus(e.target.value)}
-        className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CCA547] focus:outline-none"
-      >
-        <option value="">-- Select Status --</option>
-        {statusList?.map((status) => (
-          <option  value={status?.name}>
-            {status}
-          </option>
-        ))}
-      </select>
-    </div>
+                      <select
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                        className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#CCA547] focus:outline-none"
+                      >
+                        <option value="">-- Select Status --</option>
+                        {statusList?.map((status) => (
+                          <option value={status?.name}>{status}</option>
+                        ))}
+                      </select>
+                    </div>
 
-    {/* Update Button */}
-    <button
-      onClick={handleStatusUpdate}
-      disabled={!selectedStatus || loading}
-      className="w-full bg-gradient-to-r from-[#CCA547] to-[#b8933f] text-white font-bold py-3 rounded-xl hover:opacity-90 transition disabled:opacity-50"
-    >
-      {loading ? "Updating..." : "Update Status"}
-    </button>
-  </div>
-</div>
-
-
+                    {/* Update Button */}
+                    <button
+                      onClick={handleStatusUpdate}
+                      disabled={!selectedStatus || loading}
+                      className="w-full bg-gradient-to-r from-[#CCA547] to-[#b8933f] text-white font-bold py-3 rounded-xl hover:opacity-90 transition disabled:opacity-50"
+                    >
+                      {loading ? "Updating..." : "Update Status"}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
