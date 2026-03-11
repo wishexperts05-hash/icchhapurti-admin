@@ -110,6 +110,81 @@ const useOrderManagement = () => {
   const resetOrderDetails = () => {
     setOrderDetails(null);
   }
+
+
+const bookShippingOrder = async (data) => {
+  setLoading(true);
+  try {
+    const res = await fetchData({
+      method: "POST",
+      url: `${conf.apiBaseUrl}admin/bluedart/shipping/book`,
+      data: data,
+    });
+
+    if (res) {
+      toast.success(res?.message);
+
+            if (res?.invoicePdf) {
+        const response = await fetch(res.invoicePdf);
+        const blob = await response.blob();
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `Inovoice-${res.awbNumber}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      }
+
+      // 📥 Force download shipping label
+      if (res?.shippingLabel) {
+        const response = await fetch(res.shippingLabel);
+        const blob = await response.blob();
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `shipping-label-${res.awbNumber}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      }
+
+      return res;
+    }
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    toast.error(error?.response?.data?.message);
+  } finally {
+    setLoading(false);
+  }
+};
+            const cancelBookShippingOrder = async (data) => {
+        setLoading(true);
+        try {
+            const res = await fetchData({
+                method: "POST",
+                url: `${conf.apiBaseUrl}admin/bluedart/shipping/cancel`,
+                data: data,
+            });
+            if (res) {
+                toast.success(res?.message);
+                setLoading(false);
+            }
+        } catch (error) {
+            console.error("Error updating order status:", error);
+            toast.error(error?.response?.data?.message);
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
   
 
   return {
@@ -119,7 +194,7 @@ const useOrderManagement = () => {
     orderDetails,
     fetchOrderList,
     fetchOrderDetails,
-    resetOrderDetails,statusList,fetchStatusList,updateOrderStatus,
+    resetOrderDetails,statusList,fetchStatusList,updateOrderStatus, bookShippingOrder,cancelBookShippingOrder
   }
 }
 
