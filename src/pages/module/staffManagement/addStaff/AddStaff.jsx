@@ -223,6 +223,14 @@ const AddStaff = () => {
     fd.append("country", formData.country);
     fd.append("dob", formData.dob);
 
+   const hasBankDetails =
+    formData.bankName ||
+    formData.ifsc ||
+    formData.accountNumber ||
+    formData.accountHolderName ||
+    formData.accountType;
+
+  if (hasBankDetails) {
     fd.append(
       "bankDetails",
       JSON.stringify({
@@ -233,7 +241,7 @@ const AddStaff = () => {
         accountType: formData.accountType,
       })
     );
-
+  }
     if (profileImage) fd.append("profileImage", profileImage);
     // if (bankProofImage) fd.append("bankProof", bankProofImage);
 
