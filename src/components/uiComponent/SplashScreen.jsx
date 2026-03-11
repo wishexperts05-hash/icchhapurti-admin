@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import logo from "../../assets/adminLogo.png";
+import logo from "../../assets/logo.png";
 
 const SplashScreen = () => {
   const [fadeOut, setFadeOut] = useState(false);
