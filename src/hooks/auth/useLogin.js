@@ -127,14 +127,14 @@ const useLogin = () => {
   };
 
   //new resend otp added sent here email instaed of data (harshal)
-  const resendOtp = async (email) => {
+  const resendOtp = async (data) => {
     setLoading(true);
     try {
-      const url = new URL(`${conf.apiBaseUrl}admin/auth/forgot-password`);
+      const url = new URL(`${conf.apiBaseUrl}admin/auth/resend-otp`);
       const res = await fetchData({
-        method: "PUT",
+        method: "POST",
         url: url.toString(),
-        data: { email },
+        data: data,
       });
       if (res) {
         setLoading(false);
@@ -146,7 +146,7 @@ const useLogin = () => {
       }
     } catch (error) {
       console.error("Error fetching Resend OTP:", error);
-      toast.error("Failed to resend OTP. Please try again.");
+      toast.error(error.response?.data?.message);
       setLoading(false);
       return false;
     }

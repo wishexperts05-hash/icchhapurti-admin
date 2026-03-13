@@ -13,6 +13,7 @@ const VerifyOtp = () => {
   const { verifyOtp, resendOtp, loading, subAdminAccess } = useLogin();
   const location = useLocation();
   const [verified, setVerified] = useState(false);
+  const [isResent, setIsResent] = useState(false);
 
   const email = sessionStorage.getItem("email");
 
@@ -157,6 +158,7 @@ const VerifyOtp = () => {
     const data = {
       otp: otpString,
       email: email,
+      // ...(isLogin && !isResent ? { isLogin } : isResent ? { isResend: true } : {})
       ...(isLogin && { isLogin })
     };
     const isValid = await verifyOtp(data);
@@ -179,13 +181,22 @@ const VerifyOtp = () => {
       } else {
         navigate("/reset-password");
       }
+    } else {
+      setOtp(["", "", "", ""]);
+      inputRef.current[0]?.focus();
     }
   };
 
   const handleResend = async () => {
-    const success = await resendOtp(email);
+    const isLogin = location.state?.isLogin;
+    const payload = isLogin ? { email, isLogin } : { email };
+    const success = await resendOtp(payload);
     if (success) {
       setTimer(30);
+      setIsResent(true);
+    } else {
+      setOtp(["", "", "", ""]);
+      inputRef.current[0]?.focus();
     }
   };
 

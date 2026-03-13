@@ -118,19 +118,19 @@ export const allNavigationItems = [
     id: 2,
     title: "Staff Management",
     url: "/staff-management",
-    icon: staffManagementIcon,  
-    badge: null,
-    color: "blue",
-  },
-
-  {
-    id: 4,
-    title: "Promoter Management",
-    url: "/promoter-management",
     icon: staffManagementIcon,
     badge: null,
     color: "blue",
   },
+
+  // {
+  //   id: 4,
+  //   title: "Promoter Management",
+  //   url: "/promoter-management",
+  //   icon: staffManagementIcon,
+  //   badge: null,
+  //   color: "blue",
+  // },
   {
     id: 5,
     title: "Product Management",

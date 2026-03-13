@@ -124,13 +124,15 @@ const Login = () => {
             </div>
 
             {/* Forgot Password */}
-            <div className="flex justify-end">
-              <Link to="/forgot-password">
-                <p className="text-sm text-[#CCA547] hover:text-[#CCA547]">
-                  Forgot Password?
-                </p>
-              </Link>
-            </div>
+            {selectedRole !== "subadmin" && (
+              <div className="flex justify-end">
+                <Link to="/forgot-password">
+                  <p className="text-sm text-[#CCA547] hover:text-[#CCA547]">
+                    Forgot Password?
+                  </p>
+                </Link>
+              </div>
+            )}
 
             {/* Submit Button */}
             <SubmitButton loading={loading} selectedRole={selectedRole}  />
