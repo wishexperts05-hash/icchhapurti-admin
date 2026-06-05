@@ -41,8 +41,8 @@ const useLogin = () => {
       console.log("OTP", res?.data?.otp);
       if (res) {
         setLoading(false);
-        const otp = res?.data?.otp;
-        const msg = otp ? `${res?.message} OTP: ${otp}` : res?.message;
+        // const otp = res?.data?.otp;
+        const msg = `${res?.message} `
         toast.success(msg);
         setAdminResponse(res);
         sessionStorage.setItem("email", res?.data?.email);

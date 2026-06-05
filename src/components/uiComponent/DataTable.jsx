@@ -1,6 +1,17 @@
 import { Users } from "lucide-react";
 import React from "react";
 
+const orderStatusColors = {
+  pending:        "bg-yellow-100 text-yellow-700",
+  Placed:         "bg-gray-100 text-gray-600",
+  Confirmed:      "bg-blue-100 text-blue-700",
+  Processing:     "bg-indigo-100 text-indigo-700",
+  Shipped:        "bg-sky-100 text-sky-700",
+  outfordelivery: "bg-orange-100 text-orange-700",
+  delivered:      "bg-green-100 text-green-700",
+  cancelled:      "bg-red-100 text-red-700",
+};
+
 const DataTable = ({
   columns,
   data,
@@ -13,7 +24,7 @@ const DataTable = ({
     <div className="w-full overflow-x-auto overflow-y-auto m-w-[500px] rounded-t-2xl shadow-black">
       <table className="min-w-full text-center table-auto bg-[#FFFFFF] rounded-t-2xl overflow-hidden shadow-black">
         <thead>
-          <tr className="border-b border-border/50 bg-[#F7F7F7] h-[60px] ">
+          <tr className="border-b border-border/50 bg-[#F7F7F7] h-[60px]">
             {columns.map((col, index) => (
               <th
                 key={index}
@@ -29,11 +40,12 @@ const DataTable = ({
             data.map((row, rowIndex) => (
               <tr
                 key={row.id || rowIndex}
-                className="border-b border-border/50 hover:bg-blue-50 transition-colors duration-200 group "
+                className="border-b border-border/50 hover:bg-blue-50 transition-colors duration-200 group"
               >
                 {columns.map((col, colIndex) => {
                   const value = row[col.field];
 
+                  // ── BANNER ──
                   if (col.field === "banner") {
                     return (
                       <td key={colIndex} className="px-4 py-3 align-middle">
@@ -41,7 +53,7 @@ const DataTable = ({
                           <img
                             src={value}
                             alt={row.name}
-                            className="w-24 sm:w-32 md:w-48 object-cover rounded-md shadow-sm "
+                            className="w-24 sm:w-32 md:w-48 object-cover rounded-md shadow-sm"
                           />
                         </div>
                         {col.render(row)}
@@ -49,8 +61,7 @@ const DataTable = ({
                     );
                   }
 
-                  /* ------------------- UPDATED STATUS BLOCK ------------------- */
-                  /* Skip built-in status rendering if col has a custom render */
+                  // ── STATUS ──
                   if ((col.field === "status" || col.field === "isActive") && !col.render) {
                     const displayValue =
                       value === true
@@ -59,53 +70,23 @@ const DataTable = ({
                         ? "Blocked"
                         : value;
 
-                    // New order status colors
-                    const orderStatusColors = {
-                      Placed: "bg-gray-200 text-gray-700",
-                      Confirmed: "bg-blue-100 text-blue-700",
-                      Packed: "bg-indigo-100 text-indigo-700",
-                      Shipped: "bg-blue-200 text-blue-800",
-                      "Out For Delivery": "bg-sky-100 text-sky-700",
-                      Delivered: "bg-green-100 text-green-700",
-
-                      "Return Requested": "bg-amber-100 text-amber-700",
-                      "Return Approved": "bg-lime-100 text-lime-700",
-                      "Return Rejected": "bg-orange-100 text-orange-700",
-
-                      "Pickup Scheduled": "bg-purple-100 text-purple-700",
-                      "Picked Up": "bg-violet-100 text-violet-700",
-
-                      "Refund Initiated": "bg-orange-100 text-orange-700",
-                      Refunded: "bg-emerald-100 text-emerald-700",
-
-                      Cancelled: "bg-red-100 text-red-700",
-
-                      
-                    };
-
-                    // Old logic (unchanged)
                     const oldColorClass =
                       displayValue === "Present" ||
                       displayValue === "Approved" ||
                       displayValue === "Paid" ||
-                      displayValue === "Confirmed" ||
                       displayValue === "Ongoing" ||
                       displayValue === "Shown" ||
                       displayValue === "Resolved" ||
-                      displayValue === "Active" ||
-                      displayValue === "show"
+                      displayValue === "Active"
                         ? "bg-green-100 text-green-700"
                         : displayValue === "Absent" ||
                           displayValue === "Upcoming" ||
                           displayValue === "Created" ||
-                          displayValue === "Pending" ||
-                          displayValue === ""
+                          displayValue === "Pending"
                         ? "bg-yellow-100 text-yellow-700"
                         : "bg-red-100 text-red-700";
 
-                    // If order status found → use it, else fallback to old
-                    const finalClass =
-                      orderStatusColors[displayValue] || oldColorClass;
+                    const finalClass = orderStatusColors[displayValue] || oldColorClass;
 
                     return (
                       <td key={colIndex} className="px-4 py-3 align-middle">
@@ -118,15 +99,14 @@ const DataTable = ({
                       </td>
                     );
                   }
-                  /* ------------------- END STATUS BLOCK ------------------- */
 
+                  // ── ACTION ──
                   if (col.field === "action") {
                     return (
                       <td key={colIndex} className="px-4 py-3 align-middle">
-                        <div className="flex gap-2 sm:gap-1 justify-center ">
+                        <div className="flex gap-2 sm:gap-1 justify-center">
                           {actions.map((action, idx) => {
-                            const isDisabledAction =
-                              action.disableCondition?.(row) || false;
+                            const isDisabledAction = action.disableCondition?.(row) || false;
 
                             if (action.render) {
                               return (
@@ -150,9 +130,7 @@ const DataTable = ({
                                       ? "cursor-not-allowed opacity-40"
                                       : "hover:bg-blue-100 hover:text-[#004AAD]"
                                   }`}
-                                  onClick={() =>
-                                    !isDisabledAction && action.onClick?.(row)
-                                  }
+                                  onClick={() => !isDisabledAction && action.onClick?.(row)}
                                   disabled={isDisabledAction}
                                   type="button"
                                 >
@@ -169,21 +147,15 @@ const DataTable = ({
                                   ${action.className || "bg-gray-200 text-black hover:bg-gray-300"}
                                   ${isDisabledAction ? "opacity-40 cursor-not-allowed" : ""}
                                 `}
-                                onClick={() =>
-                                  !isDisabledAction && action.onClick?.(row)
-                                }
+                                onClick={() => !isDisabledAction && action.onClick?.(row)}
                                 disabled={isDisabledAction}
                                 type="button"
                               >
                                 {action.icon && (
-                                  <span className="flex items-center">
-                                    {action.icon}
-                                  </span>
+                                  <span className="flex items-center">{action.icon}</span>
                                 )}
                                 {action.label && (
-                                  <span className="text-[16px]">
-                                    {action.label}
-                                  </span>
+                                  <span className="text-[16px]">{action.label}</span>
                                 )}
                               </button>
                             );
@@ -193,6 +165,7 @@ const DataTable = ({
                     );
                   }
 
+                  // ── DEFAULT ──
                   return (
                     <td
                       key={colIndex}
@@ -218,14 +191,9 @@ const DataTable = ({
                             "date",
                           ].includes(col.field)
                         ? (() => {
-                            if (
-                              typeof value === "string" &&
-                              value.includes("/")
-                            ) {
+                            if (typeof value === "string" && value.includes("/")) {
                               const [day, month, year] = value.split("/");
-                              return new Date(
-                                `${year}-${month}-${day}`
-                              ).toLocaleDateString("en-GB");
+                              return new Date(`${year}-${month}-${day}`).toLocaleDateString("en-GB");
                             }
                             const d = new Date(value);
                             return d.toLocaleDateString("en-GB") || "-";
@@ -243,12 +211,7 @@ const DataTable = ({
               <td colSpan={columns.length} className="text-center py-12">
                 <div className="text-muted-foreground">
                   <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg sm:text-sm font-medium">
-                    No data found
-                  </p>
-                  {/* <p className="text-sm">
-                    Try adjusting your search or filters
-                  </p> */}
+                  <p className="text-lg sm:text-sm font-medium">No data found</p>
                 </div>
               </td>
             </tr>
@@ -258,4 +221,5 @@ const DataTable = ({
     </div>
   );
 };
+
 export default DataTable;

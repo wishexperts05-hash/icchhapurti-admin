@@ -38,9 +38,13 @@ const OrderDetails = () => {
   }, [userType, orderId]);
 
   const currentStatus = orderDetails?.status;
+
+
   useEffect(() => {
     fetchStatusList(currentStatus);
-  }, []);
+  }, [orderDetails?.status]);
+
+  
   console.log("status List :", statusList);
 
   const handleStatusUpdate = async () => {
@@ -749,7 +753,7 @@ const OrderDetails = () => {
                       >
                         <option value="">-- Select Status --</option>
                         {statusList?.map((status) => (
-                          <option value={status?.name}>{status}</option>
+                          <option value={status}>{status}</option>
                         ))}
                       </select>
                     </div>
