@@ -22,9 +22,8 @@ const useProductManagement = () => {
   const fetchProductList = async (page, limit, search) => {
     setLoading(true);
     try {
-      let url = `${conf.apiBaseUrl}product/all?page=${page || 1}&limit=${
-        limit || ""
-      }`;
+      let url = `${conf.apiBaseUrl}product/all?page=${page || 1}&limit=${limit || ""
+        }`;
       if (search && search.trim() !== "") {
         url += `&search=${encodeURIComponent(search.trim())}`;
       }
@@ -157,23 +156,12 @@ const useProductManagement = () => {
   const fetchAllDomesticShippingRates = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${conf.apiBaseUrl}admin/shipping/domestic`, {
+      const res = await fetchData({
+        url: `${conf.apiBaseUrl}admin/shipping/domestic`,
         method: "GET",
       });
 
-      if (!res.ok) {
-        throw new Error(`Failed to fetch: ${res.statusText}`);
-      }
-
-      const data = await res.json();
-
-      if (data.success) {
-        // Return the whole response so component can use items, total, etc.
-        return data;
-      } else {
-        console.log(data.message || "Failed to fetch shipping rates");
-        return null;
-      }
+      return res
     } catch (error) {
       console.error("Error fetching shipping rates:", error);
       return null;
@@ -185,25 +173,15 @@ const useProductManagement = () => {
   const fetchAllInternationalShippingRates = async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${conf.apiBaseUrl}admin/shipping/international`,
+      const res = await fetchData(
+
         {
+          url: `${conf.apiBaseUrl}admin/shipping/international`,
           method: "GET",
         }
       );
 
-      if (!res.ok) throw new Error(`Failed to fetch: ${res.statusText}`);
-
-      const data = await res.json();
-
-      if (data.success) {
-        return data; // return full response
-      } else {
-        console.log(
-          data.message || "Failed to fetch international shipping rates"
-        );
-        return null;
-      }
+      return res
     } catch (error) {
       console.error("Error fetching international shipping rates:", error);
       return null;
@@ -215,31 +193,29 @@ const useProductManagement = () => {
   // 🔹 Fetch country + currency list
   const fetchCountries = async () => {
     try {
-      const res = await fetch(`${conf.apiBaseUrl}admin/country/all`, {
+      const res = await fetchData({
+        url: `${conf.apiBaseUrl}admin/country/all`,
+        method: "GET"
       });
 
-      const data = await res.json();
-
-      if (data.success) {
-        setCountries(data.countries);
-      } else {
-        toast.error("Failed to load country list");
-      }
+      setCountries(res.countries)
     } catch (err) {
       console.error("Error fetching country list:", err);
-      toast.error("Error fetching country list");
+      return null;
     }
   };
 
   // ADD DOMESTIC SHIPPING RATE
   const addDomesticShippingRate = async (payload) => {
     try {
-      const res = await fetch(`${conf.apiBaseUrl}admin/shipping/domestic`, {
+      const res = await fetchData({
+        url: `${conf.apiBaseUrl}admin/shipping/domestic`,
         method: "POST",
-        body: JSON.stringify(payload),
-      });
+        data: payload
 
-      return await res.json();
+      });
+      // const data = await res.json();
+      return res;
     } catch (err) {
       console.error("Failed to add domestic shipping cost", err);
       return null;
@@ -248,15 +224,15 @@ const useProductManagement = () => {
 
   const addInternationalShippingRate = async (payload) => {
     try {
-      const res = await fetch(
-        `${conf.apiBaseUrl}admin/shipping/international`,
-        {
-          method: "POST",
-          body: JSON.stringify(payload),
-        }
+      const res = await fetchData({
+        url: `${conf.apiBaseUrl}admin/shipping/international`,
+        method: "POST",
+        data: payload
+
+      }
       );
 
-      return await res.json();
+      return res
     } catch (err) {
       console.error("Failed to add international shipping cost:", err);
       return null;
@@ -267,15 +243,14 @@ const useProductManagement = () => {
   const fetchDomesticShippingRateById = async (id) => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${conf.apiBaseUrl}admin/shipping/domestic/${id}`,
+      const res = await fetchData(
+
         {
+          url: `${conf.apiBaseUrl}admin/shipping/domestic/${id}`,
           method: "GET",
         }
       );
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      return data.item || null;
+      return res
     } catch (err) {
       console.error("Error fetching domestic shipping rate:", err);
       return null;
@@ -287,16 +262,17 @@ const useProductManagement = () => {
   const updateDomesticShippingRate = async (id, payload) => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${conf.apiBaseUrl}admin/shipping/domestic/${id}`,
+      const res = await fetchData(
+
         {
+          url: `${conf.apiBaseUrl}admin/shipping/domestic/${id}`,
           method: "PUT",
-          body: JSON.stringify(payload),
+          data: payload,
         }
       );
-
-      const data = await res.json();
-      return data;
+      if (res) {
+        return res;
+      }
     } catch (err) {
       console.error("Failed to update domestic shipping rate:", err);
       return null;
@@ -309,19 +285,15 @@ const useProductManagement = () => {
   const fetchInternationalShippingRateById = async (id) => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${conf.apiBaseUrl}admin/shipping/international/${id}`,
+      const res = await fetchData(
+
         {
+          url: `${conf.apiBaseUrl}admin/shipping/international/${id}`,
           method: "GET",
         }
       );
 
-      if (!res.ok) throw new Error("Failed to fetch");
-
-      const data = await res.json();
-      console.log("International By ID Response => ", data);
-
-      return data.item || data.data || data.shippingRate || data;
+      return res
     } catch (err) {
       console.error("Error fetching international shipping rate:", err);
       return null;
@@ -333,16 +305,18 @@ const useProductManagement = () => {
   const updateInternationalShippingRate = async (id, payload) => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${conf.apiBaseUrl}admin/shipping/international/${id}`,
+      const res = await fetchData(
+
         {
+          url: `${conf.apiBaseUrl}admin/shipping/international/${id}`,
           method: "PUT",
-          body: JSON.stringify(payload),
+          data: payload,
         }
       );
 
-      const data = await res.json();
-      return data;
+      if (res) {
+        return res;
+      }
     } catch (err) {
       console.error("Error updating international shipping rate:", err);
       return null;

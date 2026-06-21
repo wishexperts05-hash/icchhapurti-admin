@@ -53,7 +53,7 @@ export default function UserManagement() {
     { header: "User Name", field: "name" },
     { header: "Phone No.", field: "phoneNumber" },
     { header: "Email", field: "email" },
-    { header: "Referrer", field: "referrer" },
+    // { header: "Referrer", field: "referrer" },
     { header: "Status", field: "isActive" },
     { header: "Action", field: "action" },
   ];
@@ -86,36 +86,35 @@ export default function UserManagement() {
       title: "Toggle Status",
       disableCondition: () => !canUpdate,
     },
-    // {
-    //         icon: <Trash2 className="w-5 h-5 text-red-600" />,
-    //         title: "Delete",
-    //         // onClick: handleDelete,
-    //         disableCondition: () => !canDelete
-    //     },
-
     {
-      icon: (row) => (
-        <Trash2
-          className={`w-5 h-5 ${
-            row.deletePossible && canDelete
-              ? "text-red-600 cursor-pointer"
-              : "text-gray-400 cursor-not-allowed"
-          }`}
-          title={
-            row.deletePossible
-              ? "Delete User"
-              : "User must be soft deleted first"
-          }
-        />
-      ),
+      icon: <Trash2 className="w-5 h-5 text-red-600" />,
       title: "Delete",
-      onClick: (row) => {
-        if (row.deletePossible && canDelete) {
-          handleDelete(row);
-        }
-      },
-      disableCondition: (row) => !row.deletePossible || !canDelete,
+      onClick: handleDelete,
+      disableCondition: () => !canDelete
     },
+
+    // {
+    //   icon: (row) => (
+    //     <Trash2
+    //       className={`w-5 h-5 ${row.deletePossible && canDelete
+    //         ? "text-red-600 cursor-pointer"
+    //         : "text-gray-400 cursor-not-allowed"
+    //         }`}
+    //       title={
+    //         row.deletePossible
+    //           ? "Delete User"
+    //           : "User must be soft deleted first"
+    //       }
+    //     />
+    //   ),
+    //   title: "Delete",
+    //   onClick: (row) => {
+    //     if (row.deletePossible && canDelete) {
+    //       handleDelete(row);
+    //     }
+    //   },
+    //   disableCondition: (row) => !row.deletePossible || !canDelete,
+    // },
   ];
 
   return (
@@ -165,5 +164,4 @@ export default function UserManagement() {
     </div>
   );
 }
- 
- 
+

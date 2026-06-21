@@ -53,14 +53,14 @@ const ViewUserReferral = () => {
     const getUserData = () => {
         const data = referralTrackingById?.data;
         if (!data) return null;
-        
+
         const users = data.users || [];
         const calculatedTotal = calculateTotal(users);
-        
+
         // Use API's totalEarnings if available, otherwise use calculated total
         const totalEarnings = data.totalEarnings || formatDisplay(calculatedTotal.value, calculatedTotal.unit);
         const unit = getUnit(totalEarnings);
-        
+
         return {
             name: data.name || 'User',
             userType: data.userType || 'User',
@@ -81,7 +81,7 @@ const ViewUserReferral = () => {
     const onPageChange = (newPage) => {
         setPage(newPage);
     };
-    
+
     const onItemsPerPageChange = (newLimit) => {
         setLimit(newLimit);
         setPage(1);
@@ -93,6 +93,7 @@ const ViewUserReferral = () => {
         return [
             { header: "Sr. No.", field: "srNo" },
             { header: "Refer To", field: "referTo" },
+            { header: "Reffer By", field: "referredBy" },
             { header: `Earned ${unit}`, field: "earning" },
         ];
     };
@@ -103,7 +104,7 @@ const ViewUserReferral = () => {
 
     return (
         <Box>
-            <BreadCrumb linkText={[{ text: "Refer & Earn" }, { text: "Referral Tracking", href: "/refer-and-earn-user" }, { text:  `View ${userData?.userType} Referral` }]} />
+            <BreadCrumb linkText={[{ text: "Refer & Earn" }, { text: "Referral Tracking", href: "/refer-and-earn-user" }, { text: `View ${userData?.userType} Referral` }]} />
             <PagePath2 title={`View ${userData?.userType} Referral`} />
 
             {loading ? (
@@ -121,11 +122,10 @@ const ViewUserReferral = () => {
                                 <div>
                                     <h3 className="text-lg font-semibold text-gray-900">{userData?.name || 'User'}</h3>
                                     <div className="flex items-center gap-2 mt-1">
-                                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                                            userData?.userType === 'Staff' 
-                                                ? 'bg-purple-100 text-purple-800' 
-                                                : 'bg-blue-100 text-blue-800'
-                                        }`}>
+                                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${userData?.userType === 'Staff'
+                                            ? 'bg-purple-100 text-purple-800'
+                                            : 'bg-blue-100 text-blue-800'
+                                            }`}>
                                             {userData?.userType || 'User'}
                                         </span>
                                         <p className="text-sm text-gray-500">
@@ -148,8 +148,8 @@ const ViewUserReferral = () => {
                         <div className="bg-white p-4 rounded-md shadow-sm">
                             <p className="text-sm text-gray-500">Total {userData?.unit || "Coins"}</p>
                             <p className="text-2xl font-bold text-indigo-700">
-                                {userData?.calculatedTotal ? 
-                                    formatDisplay(userData.calculatedTotal.value, userData.calculatedTotal.unit) 
+                                {userData?.calculatedTotal ?
+                                    formatDisplay(userData.calculatedTotal.value, userData.calculatedTotal.unit)
                                     : '0 Coins'
                                 }
                             </p>
@@ -160,7 +160,7 @@ const ViewUserReferral = () => {
                             <p className="text-sm text-gray-500">{topEarners(userData?.users)[0]?.earning || ''}</p>
                         </div>
                     </Box>
-                    
+
                     {userData?.users && userData.users.length > 0 && (
                         <>
                             <Box>

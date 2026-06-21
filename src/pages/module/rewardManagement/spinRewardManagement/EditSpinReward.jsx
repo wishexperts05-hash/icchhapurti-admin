@@ -17,6 +17,50 @@ const validationSchema = Yup.object().shape({
   userType: Yup.string().required("User type is required"),
   rewardTitle: Yup.string().required("Reward title is required"),
   chooseReward: Yup.string().required("Please select a reward type"),
+  product: Yup.string().when("chooseReward", (chooseReward, schema) => {
+    return ["buy&Get", "flatOff", "discountOff", "freeDelivery"].includes(chooseReward)
+      ? schema.required("Product is required")
+      : schema.notRequired();
+  }),
+  purchaseOption: Yup.string().when("chooseReward", (chooseReward, schema) => {
+    return ["flatOff", "discountOff", "freeDelivery"].includes(chooseReward)
+      ? schema.required("Purchase option is required")
+      : schema.notRequired();
+  }),
+  buyQuantity: Yup.number().when("chooseReward", (chooseReward, schema) => {
+    return chooseReward === "buy&Get"
+      ? schema
+          .typeError("Must be a number")
+          .positive("Must be greater than 0")
+          .required("Buy quantity is required")
+      : schema.notRequired();
+  }),
+  getQuantity: Yup.number().when("chooseReward", (chooseReward, schema) => {
+    return chooseReward === "buy&Get"
+      ? schema
+          .typeError("Must be a number")
+          .positive("Must be greater than 0")
+          .required("Get quantity is required")
+      : schema.notRequired();
+  }),
+  offer: Yup.number().when("chooseReward", (chooseReward, schema) => {
+    return chooseReward === "flatOff"
+      ? schema
+          .typeError("Must be a number")
+          .min(1, "Offer must be at least 1%")
+          .max(100, "Offer cannot exceed 100%")
+          .required("Offer percentage is required")
+      : schema.notRequired();
+  }),
+  discount: Yup.number().when("chooseReward", (chooseReward, schema) => {
+    return chooseReward === "discountOff"
+      ? schema
+          .typeError("Must be a number")
+          .min(1, "Discount must be at least 1%")
+          .max(100, "Discount cannot exceed 100%")
+          .required("Discount percentage is required")
+      : schema.notRequired();
+  }),
 });
 
 const mapRewardTypeFromApi = (apiValue = "") => {
@@ -29,6 +73,10 @@ const mapRewardTypeFromApi = (apiValue = "") => {
       return "grabTicket";
     case "Buy & Get":
       return "buy&Get";
+    case "Discount Off":
+      return "discountOff";
+    case "FREE_DELIVERY":
+      return "freeDelivery";
     default:
       return "";
   }
@@ -44,6 +92,10 @@ const mapRewardTypeToApi = (formValue = "") => {
       return "Grab Ticket";
     case "buy&Get":
       return "Buy & Get";
+    case "discountOff":
+      return "Discount Off";
+    case "freeDelivery":
+      return "FREE_DELIVERY";
     default:
       return "";
   }
@@ -77,11 +129,11 @@ const EditSpinReward = () => {
     purchaseOption: "",
     product: "",
     offer: "",
+    discount: "",
     buyQuantity: "",
     getQuantity: "",
     ticketQuantity: "",
-   isSpinEligible: false,
-
+    isSpinEligible: "false",
   });
 
   useEffect(() => {
@@ -133,13 +185,15 @@ const EditSpinReward = () => {
             typeof data.rewardDetails?.offer === "number"
               ? data.rewardDetails.offer
               : "",
+          discount:
+            typeof data.rewardDetails?.discount === "number"
+              ? data.rewardDetails.discount
+              : "",
 
           buyQuantity: data.rewardDetails?.buyQuantity || "",
           getQuantity: data.rewardDetails?.getQuantity || "",
           ticketQuantity: data.rewardDetails?.ticketQuantity || "",
-        isSpinEligible: data.isSpinEligible ? "true" : "false",
-
-
+          isSpinEligible: data.isSpinEligible ? "true" : "false",
         }));
       }
     };
@@ -175,6 +229,21 @@ const EditSpinReward = () => {
         };
         break;
 
+      case "discountOff":
+        rewardDetails = {
+          product: values.product,
+          purchaseOption: values.purchaseOption,
+          discount: Number(values.discount) || 0,
+        };
+        break;
+
+      case "freeDelivery":
+        rewardDetails = {
+          product: values.product,
+          purchaseOption: values.purchaseOption,
+        };
+        break;
+
       case "grabTicket":
         rewardDetails = {
           ticketQuantity: Number(values.ticketQuantity) || 0,
@@ -190,7 +259,8 @@ const EditSpinReward = () => {
     const payload = {
       userType: values.userType,
       title: values.rewardTitle,
-      rewardType: rewardTypeApi, isSpinEligible: values.isSpinEligible === "true",
+      rewardType: rewardTypeApi,
+      isSpinEligible: values.isSpinEligible === "true",
       ...(rewardDetails && { rewardDetails }),
     };
 
@@ -261,15 +331,15 @@ const EditSpinReward = () => {
                     options={rewardTypeOptions}   
                   />
 
- <FormField
-  label="Spin Eligibility"
-  name="isSpinEligible"
-  fieldType="select"
-  options={[
-    { value: "true", label: "Eligible for Spin" },
-    { value: "false", label: "Not Eligible for Spin" },
-  ]}
-/>
+                  <FormField
+                    label="Spin Eligibility"
+                    name="isSpinEligible"
+                    fieldType="select"
+                    options={[
+                      { value: "true", label: "Eligible for Spin" },
+                      { value: "false", label: "Not Eligible for Spin" },
+                    ]}
+                  />
 
                 </div>
 
@@ -280,9 +350,7 @@ const EditSpinReward = () => {
                       label="Select Product"
                       name="product"
                       fieldType="select"
-                     options={productDrop}
-
-
+                      options={productDrop}
                       loading={dropdownLoading}
                     />
                     <FormField
@@ -315,8 +383,6 @@ const EditSpinReward = () => {
                       name="product"
                       fieldType="select"
                       options={productDrop}
-
-
                       loading={dropdownLoading}
                     />
                     <FormField
@@ -326,6 +392,53 @@ const EditSpinReward = () => {
                     />
                   </div>
                 )}
+
+                 {values.chooseReward === "discountOff" && (
+                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                     <FormField
+                       label="Purchase Option"
+                       name="purchaseOption"
+                       fieldType="select"
+                       options={[
+                         { value: "Next Purchase", label: "Next Purchase" },
+                         { value: "First Purchase", label: "First Purchase" },
+                       ]}
+                     />
+                     <FormField
+                       label="Select Product"
+                       name="product"
+                       fieldType="select"
+                       options={productDrop}
+                       loading={dropdownLoading}
+                     />
+                     <FormField
+                       label="Discount (%)"
+                       name="discount"
+                       placeholder="e.g. 15"
+                     />
+                   </div>
+                 )}
+
+                 {values.chooseReward === "freeDelivery" && (
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <FormField
+                       label="Purchase Option"
+                       name="purchaseOption"
+                       fieldType="select"
+                       options={[
+                         { value: "Next Purchase", label: "Next Purchase" },
+                         { value: "First Purchase", label: "First Purchase" },
+                       ]}
+                     />
+                     <FormField
+                       label="Select Product"
+                       name="product"
+                       fieldType="select"
+                       options={productDrop}
+                       loading={dropdownLoading}
+                     />
+                   </div>
+                 )}
 
                 {values.chooseReward === "grabTicket" && (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

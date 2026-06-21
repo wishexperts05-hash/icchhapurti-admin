@@ -53,15 +53,15 @@ const EditDomesticShippingCost = () => {
   useEffect(() => {
     const loadShippingData = async () => {
       const data = await fetchDomesticShippingRateById(id);
-      
 
-      if (data) {
+
+      if (data.item) {
         formik.setValues({
-          type:"Domestic",
-          country: data.region || "",
-          category: data.category || "",
-          currency: data.currency || "",
-          cost: data.shippingCost?.toString() || "",
+          type: "Domestic",
+          country: data.item.region || "",
+          category: data.item.category || "",
+          currency: data.item.currency || "",
+          cost: data.item.shippingCost?.toString() || "",
         });
       }
     };

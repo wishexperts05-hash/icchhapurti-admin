@@ -20,11 +20,11 @@ const ManageShippingCost = () => {
 
   const columns = [
     { header: "Sr.No", field: "srNo" },
-      { header: activeTab === "domestic" ? "Region Name" : "Country", field: "region" },
+    { header: activeTab === "domestic" ? "Region Name" : "Country", field: "region" },
     { header: "Shipping Cost", field: "cost" },
     { header: "Action", field: "action" },
   ];
-// fetch shippingdata on tab
+  // fetch shippingdata on tab
   const fetchShippingData = async () => {
     try {
       let data = null;
@@ -34,11 +34,11 @@ const ManageShippingCost = () => {
       } else {
         data = await fetchAllInternationalShippingRates();
       }
-
+      console.log("data", data)
       if (data && data.items) {
         const tableFormattedData = data.items.map((item, index) => ({
           srNo: index + 1,
-          region: item.region ||item.country,
+          region: item.region || item.country,
           cost: `₹ ${item.shippingCost}`,
           id: item._id,
         }));
@@ -55,19 +55,19 @@ const ManageShippingCost = () => {
   }, [activeTab]);
 
   const handleEdit = (row) => {
-    if (activeTab =="domestic")
-    navigate(`/product-management/shipping-cost/edit-shipping-cost/domestic/${row.id}`);
-     else{
+    if (activeTab == "domestic")
+      navigate(`/product-management/shipping-cost/edit-shipping-cost/domestic/${row.id}`);
+    else {
       navigate(`/product-management/shipping-cost/edit-shipping-cost/international/${row.id}`);
-     }
+    }
   };
 
   const actions = [
     {
-      icon:  <FaRegEdit
-                    className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
-                    title="Edit"
-                />,
+      icon: <FaRegEdit
+        className="w-5 h-5 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 cursor-pointer"
+        title="Edit"
+      />,
       title: "Edit",
       onClick: handleEdit,
     },
@@ -94,12 +94,12 @@ const ManageShippingCost = () => {
         addButtonText="Add Shipping Cost"
         // onClick={() => navigate("/product-management/shipping-cost/add-shipping-cost/domestic")}
         onClick={() => {
-        if (activeTab === "domestic") {
+          if (activeTab === "domestic") {
             navigate("/product-management/shipping-cost/add-shipping-cost/domestic");
-            } else {
-             navigate("/product-management/shipping-cost/add-shipping-cost/international");
-            }
-            }}
+          } else {
+            navigate("/product-management/shipping-cost/add-shipping-cost/international");
+          }
+        }}
 
       />
 
@@ -107,21 +107,19 @@ const ManageShippingCost = () => {
       <div className="flex justify-between border-b border-gray-300 mt-4">
         <button
           onClick={() => setActiveTab("domestic")}
-          className={`px-6 py-2 font-semibold w-full ${
-            activeTab === "domestic"
-              ? "border-b-4 border-red-700 text-red-700"
-              : "text-yellow-600"
-          }`}
+          className={`px-6 py-2 font-semibold w-full ${activeTab === "domestic"
+            ? "border-b-4 border-red-700 text-red-700"
+            : "text-yellow-600"
+            }`}
         >
           Domestic
         </button>
         <button
           onClick={() => setActiveTab("international")}
-          className={`px-6 py-2 font-semibold w-full ${
-            activeTab === "international"
-              ? "border-b-4 border-red-700 text-red-700"
-              : "text-yellow-600"
-          }`}
+          className={`px-6 py-2 font-semibold w-full ${activeTab === "international"
+            ? "border-b-4 border-red-700 text-red-700"
+            : "text-yellow-600"
+            }`}
         >
           International
         </button>
@@ -129,20 +127,20 @@ const ManageShippingCost = () => {
 
       {/* Table */}
       <div className="mt-6 bg-white p-4 rounded shadow">
-            {loading ? (
-                <div className="w-full flex items-center justify-center">
-                  <LoaderSpinner />
-                </div>
-              ) : (
-        <DataTable
-          columns={columns}
-          data={shippingData}
-          actions={actions}
-          usersPerPage={itemsPerPage}
-          currentPage={currentPage}
-          loading={loading}
-        />
-              )}
+        {loading ? (
+          <div className="w-full flex items-center justify-center">
+            <LoaderSpinner />
+          </div>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={shippingData}
+            actions={actions}
+            usersPerPage={itemsPerPage}
+            currentPage={currentPage}
+            loading={loading}
+          />
+        )}
       </div>
 
       {/* Pagination */}
@@ -154,7 +152,7 @@ const ManageShippingCost = () => {
         onPageChange={setCurrentPage}
         onItemsPerPageChange={setItemsPerPage}
       />
-           
+
     </div>
   );
 };

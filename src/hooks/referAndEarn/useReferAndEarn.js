@@ -132,10 +132,74 @@ const useReferAndEarn = () => {
                 toast.success(res?.message);
                 setRefferalDisSettingById(res?.data);
                 setLoading(false);
+                return res;
             }
         } catch (error) {
             console.error("Error updating refferal dis setting:", error);
             toast.error(error?.response?.data?.message);
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const createRefferalDisSetting = async (data) => {
+        setLoading(true);
+        try {
+            const res = await fetchData({
+                method: "POST",
+                url: `${conf.apiBaseUrl}admin/referralDiscounts/create`,
+                data: data,
+            });
+            if (res) {
+                toast.success(res?.message);
+                setLoading(false);
+                return res;
+            }
+        } catch (error) {
+            console.error("Error creating referral discount setting:", error);
+            toast.error(error?.response?.data?.message || "Something went wrong");
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const updateRefferalStatus = async (referralType, isActive) => {
+        setLoading(true);
+        try {
+            const res = await fetchData({
+                method: "PUT",
+                url: `${conf.apiBaseUrl}admin/referralDiscounts/updateStatus`,
+                data: { referralType, isActive },
+            });
+            if (res) {
+                toast.success(res?.message);
+                setLoading(false);
+                return res;
+            }
+        } catch (error) {
+            console.error("Error updating referral status:", error);
+            toast.error(error?.response?.data?.message || "Something went wrong");
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchReferralTypes = async () => {
+        setLoading(true);
+        try {
+            const res = await fetchData({
+                method: "GET",
+                url: `${conf.apiBaseUrl}admin/referralDiscounts/referralTypes`,
+            });
+            if (res) {
+                setLoading(false);
+                return res.data;
+            }
+        } catch (error) {
+            console.error("Error fetching referral types:", error);
             setLoading(false);
         } finally {
             setLoading(false);
@@ -169,7 +233,8 @@ const useReferAndEarn = () => {
 
     return {loading, referralVideo, referralTracking, referralTrackingById, refferalDisSetting, refferalDisSettingById, 
         fetchReferralVideo, fetchReferralTracking, fetchReferralTrackingById, fetchRefferalDisSetting, fetchRefferalDisSettingById,
-        updateRefferalDisSetting, updateRefferalVideo, resetRefferalDisSettingById
+        updateRefferalDisSetting, updateRefferalVideo, resetRefferalDisSettingById,
+        createRefferalDisSetting, updateRefferalStatus, fetchReferralTypes
     };
 }
 

@@ -4,7 +4,7 @@ import BreadCrumb from "../../../components/uiComponent/BreadCrumb";
 import DetailsField from "../../../components/uiComponent/DetailsField";
 import { LuWallet } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa6";
-import { MdAccountBalance } from "react-icons/md";
+import { MdAccountBalance, MdLocationOn } from "react-icons/md";
 import PagePath2 from "../../../components/uiComponent/PagePath2";
 import Button from "../../../components/uiComponent/Button";
 import useUserManagement from "../../../hooks/userManagement/useUserManagement";
@@ -19,6 +19,15 @@ export default function UserDetails() {
   const { id } = useParams();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+
+  const addressParts = [
+    userDetail?.user?.city,
+    userDetail?.user?.state,
+    userDetail?.user?.country
+  ].filter(Boolean);
+  const formattedAddress = addressParts.length > 0
+    ? `${addressParts.join(", ")}${userDetail?.user?.region ? ` (${userDetail.user.region} Region)` : ""}`
+    : "-";
 
   const directReferralFilterOptions = [
     { value: "today", label: "Today" },
@@ -46,7 +55,7 @@ export default function UserDetails() {
   const directReferralColumns = [
     { header: "Sr.No.", field: "srNo" },
     { header: "Refer To", field: "referToTheUserName" },
-    { header: "Product Name ", field: "productName" },
+    { header: "Product Name", field: "productName" },
     { header: "Quantity", field: "quantity" },
     { header: "Direct Sales", field: "directSaleAmount" },
     { header: "Referral Earnings", field: "referralEarning" },
@@ -59,6 +68,58 @@ export default function UserDetails() {
   const onItemsPerPageChange = (newLimit) => {
     setLimit(newLimit);
     setPage(1);
+  };
+
+  const getFormattedReferralData = () => {
+    const tableData = [];
+    const referrals = userDetail?.directReferrals?.data || [];
+    referrals.forEach((ref) => {
+      if (!ref.purchases || ref.purchases.length === 0) {
+        tableData.push({
+          id: ref._id,
+          referToTheUserName: ref.name || ref.email || ref.phoneNumber || "-",
+          productName: "-",
+          quantity: "-",
+          directSaleAmount: "₹ 0",
+          referralEarning: `${ref.totalCoinsEarned || 0} Coins`,
+          totalRevenue: "₹ 0",
+        });
+      } else {
+        ref.purchases.forEach((purchase) => {
+          if (!purchase.products || purchase.products.length === 0) {
+            tableData.push({
+              id: `${ref._id}-${purchase._id}`,
+              referToTheUserName: ref.name || ref.email || ref.phoneNumber || "-",
+              productName: "-",
+              quantity: "-",
+              directSaleAmount: `₹ ${purchase.grandTotal || 0}`,
+              referralEarning: `${ref.totalCoinsEarned || 0} Coins`,
+              totalRevenue: `₹ ${purchase.grandTotal || 0}`,
+            });
+          } else {
+            purchase.products.forEach((prod, idx) => {
+              tableData.push({
+                id: `${ref._id}-${purchase._id}-${prod.productId || idx}`,
+                referToTheUserName: ref.name || ref.email || ref.phoneNumber || "-",
+                productName: prod.name || "-",
+                quantity: prod.quantity || 1,
+                directSaleAmount: `₹ ${prod.subtotal || (prod.price * prod.quantity)}`,
+                referralEarning: idx === 0 ? `${ref.totalCoinsEarned || 0} Coins` : "-",
+                totalRevenue: `₹ ${prod.subtotal || (prod.price * prod.quantity)}`,
+              });
+            });
+          }
+        });
+      }
+    });
+    return tableData;
+  };
+
+  const getReferralSummary = () => {
+    const referrals = userDetail?.directReferrals?.data || [];
+    const totalPurchaseAmount = referrals.reduce((sum, ref) => sum + (ref.totalPurchasesAmount || 0), 0);
+    const totalCoinsEarned = referrals.reduce((sum, ref) => sum + (ref.totalCoinsEarned || 0), 0);
+    return { totalPurchaseAmount, totalCoinsEarned };
   };
 
   return (
@@ -92,7 +153,7 @@ export default function UserDetails() {
                   {userDetail?.user?.name}
                 </h2>
                 <p className="text-gray-600 text-base">
-                  {userDetail?.user?.address || "-"}
+                  {formattedAddress}
                 </p>
               </div>
             </div>
@@ -127,17 +188,75 @@ export default function UserDetails() {
 
                 <DetailsField label="DOB" value={userDetail?.user?.dob} />
 
-                <DetailsField
-                  label="Address"
-                  value={userDetail?.user?.address || "-"}
-                  className="md:col-span-2"
-                />
+                <DetailsField label="City" value={userDetail?.user?.city || "-"} />
+                <DetailsField label="State" value={userDetail?.user?.state || "-"} />
+                <DetailsField label="Country" value={userDetail?.user?.country || "-"} />
+                <DetailsField label="Region" value={userDetail?.user?.region || "-"} />
 
                 <DetailsField
-                  label="Referral Name"
+                  label="Referral Code"
                   value={userDetail?.user?.referralCodeUsed || "-"}
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Shipping Addresses Card */}
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 mt-4">
+            <div className="bg-white px-6 py-4 border-b border-gray-300">
+              <div className="flex items-center gap-3">
+                <MdLocationOn className="w-5 h-5 text-gray-800" />
+                <h3 className="text-lg font-bold text-gray-900">
+                  Shipping Addresses
+                </h3>
+              </div>
+            </div>
+            <div className="p-8 bg-white">
+              {userDetail?.user?.shippingAddress?.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {userDetail.user.shippingAddress.map((addr, idx) => (
+                    <div
+                      key={addr._id || idx}
+                      className="border border-gray-200 rounded-xl p-4 bg-gray-50 hover:bg-orange-50 hover:border-[#CCA547] transition-colors duration-200"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 rounded-full bg-[#CCA547]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <MdLocationOn className="w-4 h-4 text-[#CCA547]" />
+                        </div>
+                        <div className="flex-1">
+                          {addr.label && (
+                            <span className="inline-block bg-[#CCA547] text-white text-xs font-semibold px-2 py-0.5 rounded-full mb-2">
+                              {addr.label}
+                            </span>
+                          )}
+                          {addr.name && (
+                            <p className="text-sm font-semibold text-gray-800 mb-0.5">{addr.name}</p>
+                          )}
+                          {addr.phoneNumber && (
+                            <p className="text-sm text-gray-500 mb-1">{addr.phoneNumber}</p>
+                          )}
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            {[
+                              addr.street,
+                              addr.city,
+                              addr.state,
+                              addr.pinCode,
+                              addr.country,
+                            ]
+                              .filter(Boolean)
+                              .join(", ") || "-"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 text-gray-400">
+                  <MdLocationOn className="w-12 h-12 mb-2 opacity-40" />
+                  <p className="text-sm">No shipping addresses saved</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -216,6 +335,33 @@ export default function UserDetails() {
                 />
               </div>
 
+              {/* Referral Summary Stats */}
+              {!loading && (() => {
+                const { totalPurchaseAmount, totalCoinsEarned } = getReferralSummary();
+                return (
+                  <div className="grid grid-cols-2 gap-4 mb-5">
+                    <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-5 py-4">
+                      <div className="w-10 h-10 rounded-full bg-[#CCA547] flex items-center justify-center flex-shrink-0">
+                        <span className="text-white font-bold text-sm">₹</span>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 font-medium">Total Purchase Amount</p>
+                        <p className="text-lg font-bold text-gray-800">₹ {totalPurchaseAmount.toLocaleString()}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-5 py-4">
+                      <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                        <span className="text-white font-bold text-sm">🪙</span>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 font-medium">Total Coins Earned</p>
+                        <p className="text-lg font-bold text-gray-800">{totalCoinsEarned.toLocaleString()} Coins</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
               {loading ? (
                 <div className="flex w-full items-center justify-center py-10">
                   <LoaderSpinner />
@@ -224,7 +370,7 @@ export default function UserDetails() {
                 <div className="mt-4 rounded-2xl overflow-hidden shadow-lg border border-gray-200">
                   <DataTable
                     columns={directReferralColumns}
-                    data={userDetail?.directReferrals?.data || []}
+                    data={getFormattedReferralData()}
                     usersPerPage={limit}
                     currentPage={
                       userDetail?.directReferrals?.pagination?.currentPage

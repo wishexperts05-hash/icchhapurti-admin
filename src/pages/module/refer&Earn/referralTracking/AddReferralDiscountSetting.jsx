@@ -1,41 +1,51 @@
-import { Formik } from "formik";
-import { Form } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Button from "../../../../components/uiComponent/Button";
 import FormField from "../../../../components/uiComponent/FormField";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useReferAndEarn from "../../../../hooks/referAndEarn/useReferAndEarn";
 import LoaderSpinner from "../../../../components/uiComponent/LoaderSpinner";
 
-const EditReferralTracking = ({ onClose }) => {
-    const { refferalDisSettingById, loading, updateRefferalDisSetting,
-        fetchRefferalDisSetting, resetRefferalDisSettingById } = useReferAndEarn();
+const AddReferralDiscountSetting = ({ onClose }) => {
+    const { createRefferalDisSetting, fetchReferralTypes, fetchRefferalDisSetting, loading } = useReferAndEarn();
+    const [referralTypes, setReferralTypes] = useState([]);
+    const [fetchingTypes, setFetchingTypes] = useState(true);
 
     useEffect(() => {
-        return () => {
-            resetRefferalDisSettingById();
+        const getTypes = async () => {
+            try {
+                const types = await fetchReferralTypes();
+                if (types) {
+                    setReferralTypes(types);
+                }
+            } catch (error) {
+                console.error("Failed to fetch referral types", error);
+            } finally {
+                setFetchingTypes(false);
+            }
         };
+        getTypes();
     }, []);
 
     const validationSchema = Yup.object().shape({
+        referralType: Yup.string().required("Referral Type is required"),
         ReferrerCoins: Yup.number()
             .required("Referrer Coins is required")
-            .min(0, "Referrer Coins cannot be negative"),
+            .min(0, "Coins cannot be negative"),
         RefereeCoins: Yup.number()
             .required("Referee Coins is required")
-            .min(0, "Referee Coins cannot be negative"),
+            .min(0, "Coins cannot be negative"),
+        isActive: Yup.boolean().default(true),
     });
 
     const handleSave = async (values) => {
-        if (!refferalDisSettingById?._id) {
-            alert("Setting ID not found");
-            return;
-        }
-        const updateData = {
+        const payload = {
+            referralType: values.referralType,
             ReferrerCoins: values.ReferrerCoins,
             RefereeCoins: values.RefereeCoins,
+            isActive: values.isActive,
         };
-        const res = await updateRefferalDisSetting(refferalDisSettingById._id, updateData);
+        const res = await createRefferalDisSetting(payload);
         if (res) {
             fetchRefferalDisSetting();
             onClose();
@@ -45,35 +55,35 @@ const EditReferralTracking = ({ onClose }) => {
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
             <div className="bg-white p-8 rounded-2xl w-[420px] shadow-2xl">
-                {loading ? (
+                {fetchingTypes || loading ? (
                     <div className="flex justify-center items-center py-8">
                         <LoaderSpinner />
                     </div>
-                ) : refferalDisSettingById ? (
+                ) : (
                     <Formik
                         initialValues={{
-                            ReferrerCoins: refferalDisSettingById.ReferrerCoins ?? 0,
-                            RefereeCoins: refferalDisSettingById.RefereeCoins ?? 0,
-                            referralType: refferalDisSettingById.referralType || "",
+                            referralType: "",
+                            ReferrerCoins: 0,
+                            RefereeCoins: 0,
+                            isActive: true,
                         }}
                         validationSchema={validationSchema}
                         onSubmit={(values) => handleSave(values)}
                     >
-                        {({ isSubmitting, errors, touched }) => (
+                        {({ isSubmitting }) => (
                             <Form className="flex flex-col space-y-4">
                                 {/* Title */}
-                                <label className="font-semibold text-xl text-center text-gray-800">
-                                    Edit Referral Discount Setting
+                                <label className="font-semibold text-xl text-center text-gray-800 mb-2">
+                                    Add Referral Discount Setting
                                 </label>
 
-                                {/* Referral Type (Read-only) */}
+                                {/* Referral Type (Dropdown Select) */}
                                 <FormField
                                     name="referralType"
-                                    fieldType="input"
+                                    fieldType="select"
                                     label="Referral Type"
-                                    placeholder="Referral Type"
-                                    type="text"
-                                    readOnly
+                                    placeholder="Select Referral Type"
+                                    options={referralTypes}
                                 />
 
                                 {/* Referrer Coins */}
@@ -94,8 +104,18 @@ const EditReferralTracking = ({ onClose }) => {
                                     type="number"
                                 />
 
+                                {/* Is Active Checkbox */}
+                                <div className="py-2">
+                                    <FormField
+                                        name="isActive"
+                                        fieldType="input"
+                                        type="checkbox"
+                                        label="Is Active"
+                                    />
+                                </div>
+
                                 {/* Buttons */}
-                                <div className="flex justify-center gap-6 pt-1">
+                                <div className="flex justify-center gap-6 pt-2">
                                     <Button
                                         text="Cancel"
                                         variant={2}
@@ -112,14 +132,10 @@ const EditReferralTracking = ({ onClose }) => {
                             </Form>
                         )}
                     </Formik>
-                ) : (
-                      <div className="flex justify-center items-center py-8">
-                        <LoaderSpinner />
-                    </div>
                 )}
             </div>
         </div>
     );
 };
 
-export default EditReferralTracking;
+export default AddReferralDiscountSetting;
