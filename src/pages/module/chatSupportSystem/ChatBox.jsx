@@ -194,7 +194,7 @@ const ChatBox = () => {
                       >
                         {item.msg}
                       </Box>
-                      {item.type === "outgoing" && (
+                      {/* {item.type === "outgoing" && (
                         <img
                           src={adminProfile}
                           alt="admin"
@@ -205,7 +205,7 @@ const ChatBox = () => {
                             borderRadius: "50%",
                           }}
                         />
-                      )}
+                      )} */}
                     </Box>
 
                     <Box

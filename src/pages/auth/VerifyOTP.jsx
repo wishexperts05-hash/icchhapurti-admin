@@ -1,19 +1,23 @@
 import { useRef, useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import useLogin from "../../hooks/auth/useLogin";
 import verify from "../../assets/verify.png";
 import { allNavigationItems } from "../../utils/sidebarHelpers";
+import { useLoginForm } from "./useLoginForm";
 
 const VerifyOtp = () => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const inputRef = useRef([]);
   const [timer, setTimer] = useState(59);
   const navigate = useNavigate();
-  const { verifyOtp, resendOtp, loading, subAdminAccess } = useLogin();
+  const { verifyOtp, resendOtpForSubAdmin, resendOtp, loading, subAdminAccess } = useLogin();
   const location = useLocation();
   const [verified, setVerified] = useState(false);
   const [isResent, setIsResent] = useState(false);
+
+  const role = new URLSearchParams(location.search).get("role");
+
 
   const email = sessionStorage.getItem("email");
 
@@ -190,7 +194,12 @@ const VerifyOtp = () => {
   const handleResend = async () => {
     const isLogin = location.state?.isLogin;
     const payload = isLogin ? { email, isLogin } : { email };
-    const success = await resendOtp(payload);
+    let success;
+    if (role === "admin") {
+      success = await resendOtp(payload);
+    } else if (role === "subadmin") {
+      success = await resendOtpForSubAdmin(payload);
+    }
     if (success) {
       setTimer(30);
       setIsResent(true);

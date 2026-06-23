@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const ChatSupportSystem = () => {
   const navigate = useNavigate();
-    const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const {
     fetchAllChatConversations,
@@ -30,13 +30,13 @@ const ChatSupportSystem = () => {
       userId: item?.receiverId || "N/A",
       userName: item?.receiverName || "N/A",
       issueDetails: item?.lastMessage || "No message",
-      dateIssue:  new Date(item.lastMessageAt).toLocaleDateString() || "N/A",
+      dateIssue: new Date(item.lastMessageAt).toLocaleDateString() || "N/A",
       status: item?.status || "Pending",
       action: item,
     })) || [];
 
   const columns = [
-    { header: "User ID", field: "userId" },
+    { header: "Sr. No.", field: "srNo" },
     { header: "User Name", field: "userName" },
     { header: "Issue Details", field: "issueDetails" },
     { header: "Date Issue", field: "dateIssue" },
@@ -44,14 +44,14 @@ const ChatSupportSystem = () => {
     { header: "Action", field: "action" },
   ];
 
-    const handleSearchTermChange = (e) => {
+  const handleSearchTermChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
   return (
     <Box>
       <BreadCrumb linkText={[{ text: "Chat Support System" }]} />
-      <PagePath2 title="Chat Support System" showSearch  searchTerm={searchTerm}
+      <PagePath2 title="Chat Support System" showSearch searchTerm={searchTerm}
         handleSearchTerm={handleSearchTermChange} />
 
       <DataTable

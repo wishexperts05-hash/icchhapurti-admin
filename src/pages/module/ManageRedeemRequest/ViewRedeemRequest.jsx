@@ -91,9 +91,9 @@ const RejectRequestModal = ({ open, onClose, onSave }) => {
 const ViewRedeemRequest = () => {
   const { id } = useParams();
   const [openReject, setOpenReject] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  const { loading, fetchRedeemRequestDetails, redeemRequestsDetails, updateRedeemRequestStatus} =
+  const { loading, fetchRedeemRequestDetails, redeemRequestsDetails, updateRedeemRequestStatus } =
     useManageRedeemRequest();
 
   useEffect(() => {
@@ -156,7 +156,7 @@ const ViewRedeemRequest = () => {
                 gridTemplateColumns: "repeat(2,1fr)",
                 gap: 3,
                 p: 2,
-                width: "100%", 
+                width: "100%",
                 marginTop: "-40px",
               }}
             >
@@ -165,7 +165,7 @@ const ViewRedeemRequest = () => {
               <DetailsField label="Balance :" value={redeemRequestsDetails.walletBalance || "-"} />
               <DetailsField label="Redeem Request Amount :" value={redeemRequestsDetails.redeemRequestAmount || "-"} />
               <DetailsField label="Bank Name :" value={redeemRequestsDetails.bankName || "-"} />
-              <DetailsField label="Bank Account Number :" value={redeemRequestsDetails.bankAccountNumber || "-"} />
+              <DetailsField label="Bank Account Number :" value={redeemRequestsDetails.bankAccount || "-"} />
               <DetailsField label="IFSC Code :" value={redeemRequestsDetails.ifscCode || "-"} />
               <DetailsField label="Account Holder Name :" value={redeemRequestsDetails.accountHolderName || "-"} />
               <DetailsField label="Status by SubAdmin :" color={redeemRequestsDetails.statusBySubAdmin === "Approved" ? "green" : "red"} value={redeemRequestsDetails.statusBySubAdmin || "-"} />

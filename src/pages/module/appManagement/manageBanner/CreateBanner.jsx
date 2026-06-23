@@ -23,7 +23,7 @@ function CreateBanner() {
     appTypes,
     loadingAppTypes,
   } = useDropdown();
-
+  console.log(bannerTypes, "bannertypes")
   const {
     createBanner,
     loading: bannerLoading,
@@ -501,8 +501,8 @@ function CreateBanner() {
                         bannerLoading || isSubmitting
                           ? "Processing..."
                           : id
-                          ? "Update"
-                          : "Create"
+                            ? "Update"
+                            : "Create"
                       }
                       type="submit"
                       disabled={bannerLoading || isSubmitting}

@@ -15,7 +15,7 @@ export const loginValidationSchema = Yup.object({
 });
 
 export const useLoginForm = () => {
-  const {adminLogin, loading, subAdminLogin} = useLogin();
+  const { adminLogin, loading, subAdminLogin } = useLogin();
   const [selectedRole, setSelectedRole] = useState("admin");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ export const useLoginForm = () => {
       alert("Please select a role");
       return;
     }
-     try {
+    try {
       const sanitizedEmail = validator.trim(values.email);
       const sanitizedPassword = validator.trim(values.password);
       let isSuccess = false;
@@ -45,7 +45,7 @@ export const useLoginForm = () => {
       }
 
       if (isSuccess) {
-        navigate("/verify-otp", {
+        navigate(`/verify-otp?role=${selectedRole}`, {
           state: {
             isLogin: true,
             role: selectedRole
@@ -54,7 +54,7 @@ export const useLoginForm = () => {
       }
     } catch (error) {
       console.log(error);
-    } 
+    }
   };
 
   const formik = useFormik({

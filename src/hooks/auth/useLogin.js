@@ -70,7 +70,7 @@ const useLogin = () => {
       if (res) {
         setLoading(false);
         const otp = res?.data?.otp;
-        const msg = otp ? `${res?.message} OTP: ${otp}` : res?.message;
+        const msg = `${res?.message} `
         toast.success(msg);
         setSubAdminResponse(res);
         sessionStorage.setItem("email", res?.data?.email);
@@ -138,10 +138,30 @@ const useLogin = () => {
       });
       if (res) {
         setLoading(false);
-        const otp = res?.data?.otp;
         const baseMsg = res?.message || "OTP Resent Successfully!";
-        const msg = otp ? `${baseMsg} OTP: ${otp}` : baseMsg;
-        toast.success(msg);
+        toast.success(baseMsg);
+        return true;
+      }
+    } catch (error) {
+      console.error("Error fetching Resend OTP:", error);
+      toast.error(error.response?.data?.message);
+      setLoading(false);
+      return false;
+    }
+  };
+  const resendOtpForSubAdmin = async (data) => {
+    setLoading(true);
+    try {
+      const url = new URL(`${conf.apiBaseUrl}admin/adminUsers/resend-otp`);
+      const res = await fetchData({
+        method: "POST",
+        url: url.toString(),
+        data: data,
+      });
+      if (res) {
+        setLoading(false);
+        const baseMsg = res?.message || "OTP Resent Successfully!";
+        toast.success(baseMsg);
         return true;
       }
     } catch (error) {
@@ -165,8 +185,8 @@ const useLogin = () => {
       console.log("OTP", res?.data?.otp);
       if (res) {
         setLoading(false);
-        const otp = res?.data?.otp;
-        const msg = otp ? `${res?.message} OTP: ${otp}` : res?.message;
+        // const otp = res?.data?.otp;
+        const msg = res?.message;
         toast.success(msg);
         setPassword(res?.data);
         sessionStorage.setItem("email", res?.data?.email);
@@ -217,6 +237,7 @@ const useLogin = () => {
 
   return {
     adminLogin,
+    resendOtpForSubAdmin,
     adminResponse,
     loading,
     resetAdminLogin,
