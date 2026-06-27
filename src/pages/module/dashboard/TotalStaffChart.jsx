@@ -18,8 +18,8 @@ const TotalStaffChart = () => {
   const [country, setCountry] = useState("India");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
-  const [timeframe, setTimeframe] = useState("This Year");
-  const { fetchStaffCountByMonth, loading } = useDashboardManagement();
+  const currentYear = new Date().getFullYear();
+  const { fetchStaffCountByMonth } = useDashboardManagement();
   const staffState = useRecoilValue(totalstaffAtom);
   const monthlyData = staffState?.monthlyData || [];
   const {
@@ -31,7 +31,7 @@ const TotalStaffChart = () => {
     cities,
   } = useDropdown();
 
-  const [year, setYear] = useState(2025);
+  const [year, setYear] = useState(currentYear);
   const countryOptions = countries.map((c) => c.name);
   const stateOptions = states;
   const cityOptions = cities;
@@ -235,9 +235,11 @@ const TotalStaffChart = () => {
             onChange={(e) => setYear(Number(e.target.value))}
             className="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-500 min-w-[100px]"
           >
-            <option value={2025}>2025</option>
-            <option value={2024}>2024</option>
-            <option value={2023}>2023</option>
+            {Array.from({ length: 5 }, (_, i) => currentYear - i).map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
           </select>
         </div>
       </div>

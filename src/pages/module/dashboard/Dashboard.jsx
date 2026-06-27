@@ -56,8 +56,10 @@ const Dashboard = () => {
     fetchDashboardTotals();
   }, []);
 
-  const formatChange = (percent, trend) =>
-    `${trend === "increased" ? "+" : ""}${percent}%`;
+  const formatChange = (percent, trend) => {
+    if (percent === undefined || percent === null) return "0%";
+    return `${trend === "increased" ? "+" : ""}${percent}%`;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -82,8 +84,8 @@ const Dashboard = () => {
                   title="Total User"
                   value={dashboardTotals?.users?.total ?? 0}
                   change={formatChange(
-                    dashboardTotals.users.percent,
-                    dashboardTotals.users.trend
+                    dashboardTotals?.users?.percent,
+                    dashboardTotals?.users?.trend
                   )}
                   icon={Teamwork}
                   bgColor="bg-[#c4ffba]"
@@ -92,10 +94,10 @@ const Dashboard = () => {
 
                 <StatCard
                   title="Total Staff"
-                  value={dashboardTotals.staff.total}
+                  value={dashboardTotals?.staff?.total ?? 0}
                   change={formatChange(
-                    dashboardTotals.staff.percent,
-                    dashboardTotals.staff.trend
+                    dashboardTotals?.staff?.percent,
+                    dashboardTotals?.staff?.trend
                   )}
                   icon={Staff}
                   bgColor="bg-[#bdccf1]"
@@ -104,10 +106,10 @@ const Dashboard = () => {
 
                 <StatCard
                   title="Total Sales"
-                  value={`₹ ${dashboardTotals.sales.total.toLocaleString()}`}
+                  value={`₹ ${(dashboardTotals?.sales?.total ?? 0).toLocaleString()}`}
                   change={formatChange(
-                    dashboardTotals.sales.percent,
-                    dashboardTotals.sales.trend
+                    dashboardTotals?.sales?.percent,
+                    dashboardTotals?.sales?.trend
                   )}
                   icon={Analytics}
                   bgColor="bg-[#f1bdbd]"
@@ -116,10 +118,10 @@ const Dashboard = () => {
 
                 <StatCard
                   title="Total Orders"
-                  value={dashboardTotals.orders.total}
+                  value={dashboardTotals?.orders?.total ?? 0}
                   change={formatChange(
-                    dashboardTotals.orders.percent,
-                    dashboardTotals.orders.trend
+                    dashboardTotals?.orders?.percent,
+                    dashboardTotals?.orders?.trend
                   )}
                   icon={Order}
                   bgColor="bg-[#a8deed]"
@@ -130,10 +132,10 @@ const Dashboard = () => {
               {/* Full Width Stat Card - App Installed */}
               <StatCard
                 title="Total App Installed"
-                value={dashboardTotals.appInstalls.total}
+                value={dashboardTotals?.appInstalls?.total ?? 0}
                 change={formatChange(
-                  dashboardTotals.appInstalls.percent,
-                  dashboardTotals.appInstalls.trend
+                  dashboardTotals?.appInstalls?.percent,
+                  dashboardTotals?.appInstalls?.trend
                 )}
                 icon={Download}
                 bgColor="bg-[#f1bdea]"

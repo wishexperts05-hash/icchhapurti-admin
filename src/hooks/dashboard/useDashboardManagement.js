@@ -34,7 +34,6 @@ function useDashboardManagement() {
       });
       if (res) {
         setDashboardTotals(res.data);
-        setLoading(true);
         return res.data;
       } else {
         console.error(res.message);

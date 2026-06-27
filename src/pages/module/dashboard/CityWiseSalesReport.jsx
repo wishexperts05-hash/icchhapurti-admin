@@ -15,46 +15,26 @@ import { CityWiseSalesReportAtom } from "../../../state/dashboard/DashboardManag
 import useDropdown from "../../../hooks/dropdown/useDropdown";
 
 const CityWiseSalesReport = () => {
-  const [country, setCountry] = useState("");
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
-  const [year, setYear] = useState(2025);
+  const [country, setCountry] = useState("India");
+  const currentYear = new Date().getFullYear();
+  const [year, setYear] = useState(currentYear);
   const [type, setType] = useState("yearly");
 
   const {
     fetchCountryDropdown,
-    fetchStatesByCountry,
-    fetchCitiesByState,
     countries,
-    states,
-    cities,
   } = useDropdown();
 
-  const { fetchSalesReport, loading } = useDashboardManagement();
+  const { fetchSalesReport } = useDashboardManagement();
   const { monthlyData } = useRecoilValue(CityWiseSalesReportAtom);
 
   /* ---------- Options ---------- */
   const countryOptions = countries.map((c) => c.name);
-  const stateOptions = states;
-  const cityOptions = cities;
 
   /* ---------- Handlers ---------- */
   const onChangeCountry = (option) => {
     const value = option ? option.value : "";
     setCountry(value);
-    setState("");
-    setCity("");
-  };
-
-  const onChangeState = (option) => {
-    const value = option ? option.value : "";
-    setState(value);
-    setCity("");
-  };
-
-  const onChangeCity = (option) => {
-    const value = option ? option.value : "";
-    setCity(value);
   };
 
   /* ---------- Effects ---------- */
@@ -63,21 +43,7 @@ const CityWiseSalesReport = () => {
   }, []);
 
   useEffect(() => {
-    if (country) {
-      fetchStatesByCountry(country);
-      setState("");
-      setCity("");
-    }
-  }, [country]);
-
-  useEffect(() => {
-    if (country && state) {
-      fetchCitiesByState(country, state);
-    }
-  }, [state]);
-
-  useEffect(() => {
-    fetchSalesReport({ country, type, year });
+    fetchSalesReport({ country: country || "All", type, year });
   }, [country, type, year]);
 
   const cityData =
@@ -178,9 +144,11 @@ const CityWiseSalesReport = () => {
               onChange={(e) => setYear(Number(e.target.value))}
               className="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm"
             >
-              <option value={2025}>2025</option>
-              <option value={2024}>2024</option>
-              <option value={2023}>2023</option>
+              {Array.from({ length: 5 }, (_, i) => currentYear - i).map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
             </select>
           )}
         </div>

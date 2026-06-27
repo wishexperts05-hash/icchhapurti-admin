@@ -335,13 +335,19 @@ const fetchUserTypeFAQ = async () => {
 };
 
   const loading =
-    loadingSales || loadingRegion ||
+    loadingSales ||
+    loadingRegion ||
     loadingUser ||
     loadingProduct ||
     loadingOrderStatus ||
     countryLoading ||
-    loadingBannerTypes || loadingBankList || loadingStates || loadingCode
-    loadingAppTypes;
+    loadingBannerTypes ||
+    loadingBankList ||
+    loadingStates ||
+    loadingCode ||
+    loadingAppTypes ||
+    loadingCities ||
+    loadingOfferType;
 
   return {
     loading,

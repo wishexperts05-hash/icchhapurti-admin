@@ -109,12 +109,6 @@ const SalesChart = () => {
     "#EC4899",
   ];
 
-  // Custom label to show percentage
-  const renderLabel = (entry) => {
-    const percent = ((entry.percent || 0) * 100).toFixed(1);
-    return `${percent}%`;
-  };
-
   // Custom Legend Component
   const CustomLegend = ({ payload }) => {
     return (
